@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: 
 Description: Adds a shortcode to get content or field from any post type by name. For example: [custom type="room" name="room-name" field="rent"]
-Version: 0.1
+Version: 0.11
 Author: Lio Eters
 Author URI: eliotakira.com
 License: GPL2

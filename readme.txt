@@ -4,7 +4,7 @@ Donate link:
 Tags: custom post type, custom field, shortcode
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: trunk
+Stable tag: 0.11
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,20 +32,19 @@ More may be added as the need arises.
 
 == Frequently Asked Questions ==
 
-= A question that someone might have =
+= Any Questions? =
 
-An answer to that question.
-
-= What about foo bar? =
-
-Answer to foo bar dilemma.
+Not yet.
 
 == Screenshots ==
 
 == Changelog ==
 
+= 0.11 =
+*Simplified code, added a few parameters, better documentation
+
 = 0.1 =
-* List versions from most recent at top to oldest at bottom.
+* First release
 
 == Upgrade Notice ==
 
