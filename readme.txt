@@ -26,7 +26,7 @@ Add a shortcode to get content or field from any post type
 
 * Display fields from the current post:
 
-		[custom field="title"] was written by [custom field="author"] on [custom field="date"].
+		The Article <b>[custom field="title"]</b> by [custom field="author"] was written on [custom field="date"].
 
 
 = Available Parameters = <br />
