@@ -37,11 +37,13 @@ Here are some basic examples:
 <br />
 Here are the available parameters.
 
-* **type** - post / page / custom post type - if empty, default is "page"
+* **type** - define which post type to target (post / page / custom post type) - if empty, the default is "page"
  
-* **name** or **id** - get the post / page / custom post type by name/slug or ID - if empty, default is current post
+* **name** or **id** - define which entry to get by its name (slug not title) or ID - if empty, the default is current post
 
-* **field** - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+* **field** - define which field to get - if empty, default is the main content of the post.
+
+You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
 
 = Custom Content Layout =  
@@ -50,7 +52,7 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. Let's imagine a bicycle shop.  We create a custom post type called **bicycle**, and add custom fields such as **model**, **price**, and **description**.
 1. A bicycle is added as a new entry, with a featured image and other info fields.
-1. For the content, we create a basic template to display the information:
+1. For the content, we create a basic template to display the custom fields:
 
 		<div class="item-wrap">
 			Model: [custom field="model"]
