@@ -2,7 +2,7 @@
 Tags: custom post type, custom field, shortcode
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: trunk
+Stable tag: 0.121
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,14 +54,14 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. For the content, we create a basic template to display the information:
 
-	<div class="item-wrap">
+	`<div class="item-wrap">
 		Model: [custom field="model"]
 		<div class="image-wrap">
 			[custom field="image"]
 		</div>
 		Price: [custom field="price"]
 		Description: [custom field="description"]
-	</div>
+	</div>`
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
 
