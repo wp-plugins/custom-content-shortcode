@@ -10,7 +10,7 @@ Add a shortcode to get content or field from any post type
 
 == Description ==
 
-This tiny plugin adds a shortcode to get the content or a field from any post type.
+The plugin adds a shortcode to get the content or a field from any post type.
 
 
 = Basic Examples =
