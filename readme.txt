@@ -32,11 +32,11 @@ Add a shortcode to get content or field from any post type
 
 = Available Parameters =
 
-* *type* - post / page / custom post type - if empty, default is "page"
+* **type** - post / page / custom post type - if empty, default is "page"
  
-* *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
+* **name** or **id** - get the post / page / custom post type by name/slug or ID - if empty, default is current post
 
-* *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+* **field** - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
 <hr /–>
 
@@ -44,7 +44,7 @@ Add a shortcode to get content or field from any post type
 <br />
 Here is an example of how this shortcode can be used to create a layout template.
 
-1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
+1. Let's imagine a bicycle shop.  We create a custom post type called **bicycle**, and add custom fields such as **model**, **price**, and **description**.
 1. A bicycle is added as a new entry, with a featured image and other info fields.
 1. For the content, we create a basic template to display the information:
 
@@ -57,8 +57,13 @@ Here is an example of how this shortcode can be used to create a layout template
 			Description: [custom field="description"]
 		</div>
 
-1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
-1. We can display each product like this: \www.example-site.com/bicycle/product-name
+1. The same template can be used for all **bicycle** entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
+1. We can show each product on its own page (www.example-site.com/bicycle/product-name) or several on a page:
+
+		[custom type="bicycle" name="bmx-super-22"]
+		[custom type="bicycle" name="mongoose-rad-fx"]
+		[custom type="bicycle" name="freestyle-B5"]
+
 
 = Custom Content Management =  
 <br />
