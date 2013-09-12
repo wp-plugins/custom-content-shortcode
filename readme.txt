@@ -2,7 +2,7 @@
 Tags: custom post type, custom field, shortcode
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.12
+Stable tag: 0.121
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -10,7 +10,7 @@ Add a shortcode to get content or field from any post type
 
 == Description ==
 
-This plugin adds a shortcode to display the content or a field from any post type.
+This plugin adds a shortcode to get the content or a field from any post type.
 
 
 = Basic Examples =  

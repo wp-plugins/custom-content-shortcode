@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: 
 Description: Add a shortcode to get content or field from any post type
-Version: 0.12
+Version: 0.121
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
