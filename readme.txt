@@ -28,14 +28,13 @@ Add a shortcode to get content or field from any post type
 
     [custom field="title"] by [custom field="author"] written on [custom field="date"]
 
-<br />
 = Available Parameters =
 <br />
- * *type* - post / page / custom post type - if empty, default is "page"
- * *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
- * *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
-<br />
+* *type* - post / page / custom post type - if empty, default is "page"
+* *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
+* *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+
 = Custom Content Layout =
 <br />
 Here is an example of how this shortcode can be used to create a layout template.
@@ -46,14 +45,14 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. For the content, we create a basic template to display the information:
 
-	<pre><code><div class="item-wrap">
+```<div class="item-wrap">
 		Model: [custom field="model"]
 		<div class="image-wrap">
 			[custom field="image"]
 		</div>
 		Price: [custom field="price"]
 		Description: [custom field="description"]
-	</div></code></pre>
+```</div></code></pre>
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
 
