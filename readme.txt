@@ -14,23 +14,23 @@ Add a shortcode to get content or field from any post type
 <br />
 * Display post content by name (slug):
 
-   [custom type="post" name="hello-world"]
+	[custom type="post" name="hello-world"]
 
 * Display the featured image of a page:
 
-   [custom type="page" name="about-me" field="image"]
+	[custom type="page" name="about-me" field="image"]
 
 * Display a custom field from a custom post type:
 
-   [custom type="apartment" name="lux-suite-22" field="rent-per-day"]
+	[custom type="apartment" name="lux-suite-22" field="rent-per-day"]
 
 * Display fields from the current post:
 
-   [custom field="title"] was written by [custom field="author"] on [custom field="date"].
+	[custom field="title"] was written by [custom field="author"] on [custom field="date"].
 
-<hr />
 
 = Available Parameters =
+<br />
 
 * **type** - post / page / custom post type - if empty, default is "page"
  
