@@ -31,8 +31,11 @@ Add a shortcode to get content or field from any post type
 
 = Available Parameters =
 <br />
+
 * *type* - post / page / custom post type - if empty, default is "page"
+ 
 * *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
+
 * *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
 = Custom Content Layout =
@@ -53,8 +56,7 @@ Here is an example of how this shortcode can be used to create a layout template
 		</div>
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
-1. We can display each product like this: <code>www.example-site.com/bicycle/product-name</code>
-
+1. We can display each product like this: \www.example-site.com/bicycle/product-name
 
 = Custom Content Management =  
 <br />
@@ -74,7 +76,7 @@ This feature is not yet integrated into the shortcode, but I'm working on it.
 
 There is an apparently little-known but very powerful plugin called Query Shortcodes, that lets you easily create query loops inside post/page/custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
 
-To come back to the example of the bicycle shop, this would display all bicycles of the *freestyle* category:
+To come back to the example of the bicycle shop, this would display all bicycles of the category *freestyle*:
 
 	[query post_type="bicycle" category="freestyle"]
 		<div class="item-wrap">
