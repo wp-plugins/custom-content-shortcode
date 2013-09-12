@@ -1,8 +1,8 @@
-=== Custom content shortcode ===
+=== Custom Content Shortcode ===
 Tags: custom post type, custom field, shortcode
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.13
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Add a shortcode to get content or field from any post type
 
 This plugin adds a shortcode to get the content or a field from any post type.
 
-*Note: From version 0.13, the shortcode is [content]*
+*Note: From version 0.1.3, the shortcode is [content]*
 
 = Basic examples =  
 <br />
@@ -132,15 +132,16 @@ None.
 
 == Changelog ==
 
-= 0.13 =
+= 0.1.3 =
 
 * Changed shortcode to [content]
+* Added banner image to Wordpress plugin page
 
-= 0.12 =
+= 0.1.2 =
 
 * Better documentation - longer than the plugin code itself
 
-= 0.11 =
+= 0.1.1 =
 * Simplified code, added a few parameters
 
 = 0.1 =
