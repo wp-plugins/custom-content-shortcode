@@ -16,19 +16,19 @@ This plugin adds a shortcode to get the content or a field from any post type.
 <br />
 *Display post content by name*
 
-		[custom type="post" name="hello-world"]
+	[custom type="post" name="hello-world"]
 
 *Display the featured image of a page*
 
-		[custom type="page" name="about-me" field="image"]
+	[custom type="page" name="about-me" field="image"]
 
 *Display a custom field from a custom post type*
 
-		[custom type="apartment" name="lux-suite-22" field="rent-per-day"]
+	[custom type="apartment" name="lux-suite-22" field="rent-per-day"]
 
 *Display fields from the current post*
 
-		The Article <b>[custom field="title"]</b> by [custom field="author"] was written on [custom field="date"].
+	The Article <b>[custom field="title"]</b> by [custom field="author"] was written on [custom field="date"].
 
 
 = Available parameters =  
