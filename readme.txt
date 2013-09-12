@@ -37,9 +37,9 @@ Here are the available parameters.
 
 * **type** - define which post type to target (post / page / custom post type) - if empty, the default is "page"
  
-* **name** or **id** - define which entry to get by its name (slug not title) or ID - if empty, the default is current post
+* **name** or **id** - define which entry to target by its ID or name (slug not post title) - if empty, the default is the current post
 
-* **field** - define which field to get - if empty, default is the main content of the post.
+* **field** - define which field to get - if empty, default is the main content of the post
 
 You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
