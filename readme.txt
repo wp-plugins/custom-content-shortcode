@@ -11,7 +11,7 @@ Add a shortcode to get content or field from any post type
 == Description ==
 
 = Basic Examples =
-<br />
+<br>
 * Display post content by name (slug):
 
 ```[custom type="post" name="hello-world"]```
