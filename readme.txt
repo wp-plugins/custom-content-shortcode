@@ -99,7 +99,7 @@ Or, we can get the most important fields and display a list:
 
 	<ul>
 		[query post_type="bicycle" category="freestyle"]
-			<li>Model:[custom field="model"] - Price: [custom field="price"]</li>
+			<li>Model:[custom field="model"] - Price  [custom field="price"]</li>
 		[/query]
 	</ul>
 
