@@ -81,7 +81,7 @@ Here are some plugins that work well together for custom content management.
  * **Codepress Admin Columns** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
  * **Duplicate Post** - useful for making similar post items, backup posts, etc.
 
-= Custom content query loops =  
+= Custom content query loops? =  
 <br />
 This feature is not yet integrated into the shortcode, but I'm working on it.
 
