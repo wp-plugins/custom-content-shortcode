@@ -12,7 +12,7 @@ Add a shortcode to get content or field from any post type
 
 This plugin adds a shortcode to get the content or a field from any post type.
 
-Here are some basic examples:
+= Basic examples =
 
 *Display post content by name*
 
@@ -31,7 +31,7 @@ Here are some basic examples:
 		The Article <b>[custom field="title"]</b> by [custom field="author"] was written on [custom field="date"].
 
 
-= Available Parameters =  
+= Available parameters =  
 <br />
 Here are the available parameters.
 
@@ -44,7 +44,7 @@ Here are the available parameters.
 You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
 
-= Custom Content Layout =  
+= Custom content layout =  
 <br />
 Here is an example of how this shortcode can be used to create a layout template.
 
@@ -69,7 +69,7 @@ Here is an example of how this shortcode can be used to create a layout template
 		[custom type="bicycle" name="freestyle-B5"]
 
 
-= Custom Content Management =  
+= Custom content management =  
 <br />
 Here are some of the plugins that work well together for custom content management.
 
@@ -81,7 +81,7 @@ Here are some of the plugins that work well together for custom content manageme
  * **Codepress Admin Columns** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
  * **Duplicate Post** - useful for making similar post items, backup posts, etc.
 
-= Custom Content Query Loops =  
+= Custom content query loops =  
 <br />
 This feature is not yet integrated into the shortcode, but I'm working on it.
 
