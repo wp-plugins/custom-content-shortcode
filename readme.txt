@@ -10,8 +10,7 @@ Add a shortcode to get content or field from any post type
 
 == Description ==
 
-= Basic Examples =
-&nbsp;  
+## Basic Examples ##
 
 * Display post content by name (slug):
 
@@ -30,8 +29,8 @@ Add a shortcode to get content or field from any post type
 		The Article <b>[custom field="title"]</b> by [custom field="author"] was written on [custom field="date"].
 
 
-= Available Parameters =
-&nbsp;  
+## Available Parameters ##
+
 
 * **type** - post / page / custom post type - if empty, default is "page"
  
