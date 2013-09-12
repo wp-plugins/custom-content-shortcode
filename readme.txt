@@ -45,20 +45,18 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. For the content, we create a basic template to display the information:
 
-```<div class="item-wrap">
+	```\<div class="item-wrap"\>
 		Model: [custom field="model"]
 		<div class="image-wrap">
 			[custom field="image"]
-		</div>
+		\</div\>
 		Price: [custom field="price"]
 		Description: [custom field="description"]
-```</div></code></pre>
+	\</div\>```
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
 
-1. Now we can display each product like this:
-
-	<pre><code>"www.example-site.com/bicycle/bmx-super-22"</code></pre>
+1. Now we can display each product like this: "www.example-site.com/bicycle/bmx-super-22"
 
 <br />
 = Custom Content Management =  
