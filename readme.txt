@@ -45,14 +45,14 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. For the content, we create a basic template to display the information:
 
-	```<code><div class="item-wrap">
+	<code><div class="item-wrap">
 		Model: [custom field="model"]
 		<div class="image-wrap">
 			[custom field="image"]
 		</div>
 		Price: [custom field="price"]
 		Description: [custom field="description"]
-	</div></code>```
+	</div></code>
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
 
