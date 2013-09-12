@@ -93,16 +93,15 @@ To come back to the example of the bicycle shop, the following would display all
 		[custom id="{ID}"]
 	[/query]
 
-Or, we can display a list with the most important fields:
+Or, we can get the most important fields and display a list:
 
 	Freestyle bikes available:
 
-	[query post_type="bicycle" category="freestyle"]
-		Bicyle Name:[custom field=-"model"]
-		Price: [custom field="price"]
-		<br />
-	[/query]
-
+	<ul>
+		[query post_type="bicycle" category="freestyle"]
+		<li>Model:[custom field=-"model"] - Price: [custom field="price"]</li>
+		[/query]
+	</ul>
 
 This way you can run query loops for any custom post type, and display the content and fields in any layout.
 
