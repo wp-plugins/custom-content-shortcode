@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Custom content shortcode
+Plugin Name: Custom Content Shortcode
 Plugin URI: 
 Description: Add a shortcode to get content or field from any post type
-Version: 0.121
+Version: 0.13
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -77,5 +77,5 @@ function custom_func($atts) {
 	}
 }
 
+add_shortcode('content', 'custom_func');
 add_shortcode('custom', 'custom_func');
-add_shortcode('page', 'custom_func');
