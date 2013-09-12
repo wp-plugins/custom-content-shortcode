@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Custom Content Shortcode
+Plugin Name: Custom content shortcode
 Plugin URI: 
 Description: Add a shortcode to get content or field from any post type
 Version: 0.121
