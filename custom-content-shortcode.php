@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Custom content shortcode
+Plugin Name: Custom Content Shortcode
 Plugin URI: 
 Description: Add a shortcode to get content or field from any post type
-Version: 0.121
+Version: 0.122
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
