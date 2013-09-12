@@ -12,32 +12,28 @@ Add a shortcode to get content or field from any post type
 
 = Basic Examples =
 <br />
-Display post content by name (slug):
+* Display post content by name (slug):
 
     [custom type="post" name="hello-world"]
 
-Display the featured image of a page:
+* Display the featured image of a page:
 
     [custom type="page" name="about-me" field="image"]
 
-Display a custom field from a custom post type:
+* Display a custom field from a custom post type:
 
     [custom type="apartment" name="lux-suite-22" field="rent-per-day"]
 
-Display fields from the current post:
+* Display fields from the current post:
 
     [custom field="title"] by [custom field="author"] written on [custom field="date"]
 
 <br />
 = Available Parameters =
-<br />  
+<br />
  * *type* - post / page / custom post type - if empty, default is "page"
-
  * *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
-
- * *field* - get the field - if empty, default is the main content of the post
-
-You can display any custom field you create, as well as predefined fields: title, id, author, date, url, image, image-url, thumbnail, and excerpt.
+ * *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
 <br />
 = Custom Content Layout =
@@ -50,20 +46,20 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. For the content, we create a basic template to display the information:
 
-	`<div class="item-wrap">
+	<pre><code><div class="item-wrap">
 		Model: [custom field="model"]
 		<div class="image-wrap">
 			[custom field="image"]
 		</div>
 		Price: [custom field="price"]
 		Description: [custom field="description"]
-	</div>`
+	</div></code></pre>
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
 
 1. Now we can display each product like this:
 
-	<pre>www.example-site.com/bicycle/bmx-super-22</pre>
+	<pre><code>"www.example-site.com/bicycle/bmx-super-22"</code></pre>
 
 <br />
 = Custom Content Management =  
@@ -84,9 +80,9 @@ Here are some of the plugins that work well together for custom content manageme
 
  * *Duplicate Post* - useful for making similar post items, backup posts, etc.
 
-<pre>
+<br />
 = Custom Content Query Loops =  
-<pre>
+<br />
 This feature is not yet integrated into the shortcode, but I'm working on it.
 
 There is an apparently little-known but very powerful plugin called Query Shortcodes, that lets you easily create query loops inside post/page/custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
