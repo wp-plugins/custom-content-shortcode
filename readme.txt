@@ -10,7 +10,7 @@ Add a shortcode to get content or field from any post type
 
 == Description ==
 
-This tiny plugin adds a shortcode to get the content or a field from any post type.
+The plugin adds a shortcode to get the content or a field from any post type.
 
 
 = Basic Examples =
@@ -54,14 +54,14 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. For the content, we create a basic template to display the information:
 
-	<div class="item-wrap">
+	`<div class="item-wrap">
 		Model: [custom field="model"]
 		<div class="image-wrap">
 			[custom field="image"]
 		</div>
 		Price: [custom field="price"]
 		Description: [custom field="description"]
-	</div>
+	</div>`
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
 
