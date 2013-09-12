@@ -2,7 +2,7 @@
 Tags: custom post type, custom field, shortcode
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.122
+Stable tag: 0.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,23 +12,25 @@ Add a shortcode to get content or field from any post type
 
 This plugin adds a shortcode to get the content or a field from any post type.
 
+*Note: From version 0.13, the shortcode is [content]*
+
 = Basic examples =  
 <br />
 *Display post content by name*
 
-	[custom type="post" name="hello-world"]
+	[content type="post" name="hello-world"]
 
 *Display the featured image of a page*
 
-	[custom type="page" name="about-me" field="image"]
+	[content type="page" name="about-me" field="image"]
 
 *Display a custom field from a custom post type*
 
-	[custom type="apartment" name="lux-suite-22" field="rent-per-day"]
+	[content type="apartment" name="lux-suite-22" field="rent-per-day"]
 
 *Display fields from the current post*
 
-	The Article <b>[custom field="title"]</b> by [custom field="author"] was written on [custom field="date"].
+	The Article <b>[content field="title"]</b> by [content field="author"] was written on [content field="date"].
 
 
 = Available parameters =  
@@ -53,20 +55,20 @@ Here is an example of how this shortcode can be used to create a layout template
 1. For the content, we create a basic template to display the custom fields:
 
 		<div class="item-wrap">
-			Model: [custom field="model"]
+			Model: [content field="model"]
 			<div class="image-wrap">
-				[custom field="image"]
+				[content field="image"]
 			</div>
-			Price: [custom field="price"]
-			Description: [custom field="description"]
+			Price: [content field="price"]
+			Description: [content field="description"]
 		</div>
 
 1. The same template can be used for all **bicycle** entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
 1. We can show each product on its own page (www.example-site.com/bicycle/product-name) or several on a page:
 
-		[custom type="bicycle" name="bmx-super-22"]
-		[custom type="bicycle" name="mongoose-rad-fx"]
-		[custom type="bicycle" name="freestyle-B5"]
+		[content type="bicycle" name="bmx-super-22"]
+		[content type="bicycle" name="mongoose-rad-fx"]
+		[content type="bicycle" name="freestyle-B5"]
 
 
 = Custom content admin =  
@@ -90,7 +92,7 @@ There is an apparently little-known but very powerful plugin called **Query Shor
 To come back to the example of the bicycle shop, the following would display all entries in the **bicycle** post type with the category **freestyle**, according to the layout we created:
 
 	[query post_type="bicycle" category="freestyle"]
-		[custom] /* Content of each post found */
+		[content] /* Content of each post found */
 	[/query]
 
 Or, we can get the most important fields and display a list:
@@ -99,7 +101,7 @@ Or, we can get the most important fields and display a list:
 
 	<ul>
 		[query post_type="bicycle" category="freestyle"]
-			<li>Model:[custom field="model"] - Price: [custom field="price"]</li>
+			<li>Model:[content field="model"] - Price  [content field="price"]</li>
 		[/query]
 	</ul>
 
@@ -129,6 +131,10 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.13 =
+
+* Changed shortcode to [content]
 
 = 0.12 =
 
