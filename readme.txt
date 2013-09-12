@@ -12,8 +12,8 @@ Add a shortcode to get content or field from any post type
 
 This plugin adds a shortcode to get the content or a field from any post type.
 
-= Basic examples =
-
+= Basic examples =  
+<br />
 *Display post content by name*
 
 		[custom type="post" name="hello-world"]
