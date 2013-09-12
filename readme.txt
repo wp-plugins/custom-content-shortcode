@@ -28,10 +28,9 @@ Display fields from the current post:
 
     [custom field="title"] by [custom field="author"] written on [custom field="date"]
 
-  
-
+<br />
 = Available Parameters =
-  
+<br />  
  * *type* - post / page / custom post type - if empty, default is "page"
 
  * *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
@@ -40,9 +39,9 @@ Display fields from the current post:
 
 You can display any custom field you create, as well as predefined fields: title, id, author, date, url, image, image-url, thumbnail, and excerpt.
 
-
+<br />
 = Custom Content Layout =
-  
+<br />
 Here is an example of how this shortcode can be used to create a layout template.
 
 1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
@@ -64,11 +63,11 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. Now we can display each product like this:
 
-	`www.example-site.com/bicycle/bmx-super-22`
+	<pre>www.example-site.com/bicycle/bmx-super-22</pre>
 
-
+<br />
 = Custom Content Management =  
-  
+<br />
 Here are some of the plugins that work well together for custom content management.
 
  * *Custom Post Type UI* - easily create and manage custom post types and taxonomies
@@ -85,9 +84,9 @@ Here are some of the plugins that work well together for custom content manageme
 
  * *Duplicate Post* - useful for making similar post items, backup posts, etc.
 
-
+<pre>
 = Custom Content Query Loops =  
-  
+<pre>
 This feature is not yet integrated into the shortcode, but I'm working on it.
 
 There is an apparently little-known but very powerful plugin called Query Shortcodes, that lets you easily create query loops inside post/page/custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
