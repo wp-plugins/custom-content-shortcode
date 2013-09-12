@@ -71,7 +71,7 @@ Here is an example of how this shortcode can be used to create a layout template
 
 = Custom content admin =  
 <br />
-Here are some of the plugins that work well together for custom content management.
+Here are some plugins that work well together for custom content management.
 
  * **Custom Post Type UI** - easily create and manage custom post types and taxonomies
  * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. Actually, I need to work on my shortcode to be able to display these advanced fields also.
