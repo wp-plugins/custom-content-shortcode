@@ -75,7 +75,7 @@ Here are some plugins that work well together for custom content management.
 
  * **Custom Post Type UI** - easily create and manage custom post types and taxonomies
  * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. *Actually, I need to work on my shortcode to be able to display these advanced field types also.*
- * **Admin Menu Editor** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide unnecessary or sensitive setting menus; arrange and simplify the admin menu; and so on.
+ * **Admin Menu Editor** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide menu items for unnecessary or sensitive settings; arrange and simplify the admin menu; and so on.
  * **Intuitive Custom Post Order** - change the order of post/page/custom post types by drag-and-drop
  * **Post Type Converter** - convert a post from one post type to another
  * **Codepress Admin Columns** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
