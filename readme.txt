@@ -28,10 +28,9 @@ Add a shortcode to get content or field from any post type
 
 		[custom field="title"] was written by [custom field="author"] on [custom field="date"].
 
-***
+<hr />
 
 = Available Parameters =
-<br />
 
 * *type* - post / page / custom post type - if empty, default is "page"
  
@@ -39,7 +38,7 @@ Add a shortcode to get content or field from any post type
 
 * *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
-***
+<hr /–>
 
 = Custom Content Layout =
 <br />
