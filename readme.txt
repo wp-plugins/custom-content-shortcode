@@ -37,9 +37,9 @@ Here are the available parameters.
 
 * **type** - define which post type to target (post / page / custom post type) - if empty, the default is "page"
  
-* **name** or **id** - define which entry to get by its name (slug not title) or ID - if empty, the default is current post
+* **name** or **id** - define which entry to target by its ID or name (slug not post title) - if empty, the default is the current post
 
-* **field** - define which field to get - if empty, default is the main content of the post.
+* **field** - define which field to get - if empty, default is the main content of the post
 
 You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
@@ -69,13 +69,13 @@ Here is an example of how this shortcode can be used to create a layout template
 		[custom type="bicycle" name="freestyle-B5"]
 
 
-= Custom content management =  
+= Custom content admin =  
 <br />
-Here are some of the plugins that work well together for custom content management.
+Here are some plugins that work well together for custom content management.
 
  * **Custom Post Type UI** - easily create and manage custom post types and taxonomies
- * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. Actually, I need to work on my shortcode to be able to display these advanced fields also.
- * **Admin Menu Editor** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide unnecessary or sensitive setting menus; arrange and simplify the admin menu; and so on.
+ * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. *Actually, I need to work on my shortcode to be able to display these advanced field types also.*
+ * **Admin Menu Editor** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide menu items for unnecessary or sensitive settings; arrange and simplify the admin menu; and so on.
  * **Intuitive Custom Post Order** - change the order of post/page/custom post types by drag-and-drop
  * **Post Type Converter** - convert a post from one post type to another
  * **Codepress Admin Columns** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
@@ -85,7 +85,7 @@ Here are some of the plugins that work well together for custom content manageme
 <br />
 This feature is not yet integrated into the shortcode, but I'm working on it.
 
-There is an apparently little-known but very powerful plugin called Query Shortcodes, that lets you easily create query loops inside post/page/custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
+There is an apparently little-known but very powerful plugin called **Query Shortcodes**, that lets you easily create query loops inside a post / page /custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
 
 To come back to the example of the bicycle shop, this would display all bicycles of the category **freestyle**:
 
@@ -100,11 +100,13 @@ To come back to the example of the bicycle shop, this would display all bicycles
 		</div>
 	[/query]
 
-This way you can create custom layout templates and run query loops for any custom post type, using only shortcodes.  Possible future applications could include:
+This way you can run query loops for any custom post type, and display the content and fields in any layout.
+
+Possible future applications could include:
 
  * Display the next five up-coming events
  * Display product types in excerpts or individual pages
- * Display groups of images in different layouts (carousel, gallery view, etc.)
+ * Display the same group of images in different layouts - carousel, albums, thumbnails, etc.
 
 
 == Installation ==
