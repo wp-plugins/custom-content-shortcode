@@ -13,8 +13,8 @@ Add a shortcode to get content or field from any post type
 This plugin adds a shortcode to get the content or a field from any post type.
 
 
-= Basic Examples =  
-
+= Basic Examples =
+  
 Display post content by name/slug:
 
     [custom type="post" name="hello-world"]
@@ -33,8 +33,8 @@ Display fields from the current post:
 
   
 
-= Available Parameters =  
-
+= Available Parameters =
+  
  * *type* - post / page / custom post type - if empty, default is "page"
 
  * *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
@@ -45,7 +45,7 @@ You can display any custom field you create, as well as predefined fields: title
 
 
 = Custom Content Layout =
-
+  
 Here is an example of how this shortcode can be used to create a layout template.
 
 1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
@@ -71,7 +71,7 @@ Here is an example of how this shortcode can be used to create a layout template
 
 
 = Custom Content Management =  
-
+  
 Here are some of the plugins that work well together for custom content management.
 
  * *Custom Post Type UI* - easily create and manage custom post types and taxonomies
@@ -90,7 +90,7 @@ Here are some of the plugins that work well together for custom content manageme
 
 
 = Custom Content Query Loops =  
-
+  
 This feature is not yet integrated into the shortcode, but I'm working on it.
 
 There is an apparently little-known but very powerful plugin called Query Shortcodes, that lets you easily create query loops inside post/page/custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
