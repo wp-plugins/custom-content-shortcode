@@ -121,6 +121,8 @@ Not yet.
 
 == Screenshots ==
 
+None.
+
 == Changelog ==
 
 = 0.12 =
