@@ -1,4 +1,4 @@
-=== Custom Content Shortcode ===
+=== Custom content shortcode ===
 Tags: custom post type, custom field, shortcode
 Requires at least: 3.0.1
 Tested up to: 3.6
@@ -13,7 +13,7 @@ Add a shortcode to get content or field from any post type
 The plugin adds a shortcode to get the content or a field from any post type.
 
 
-= Basic Examples =
+## Basic Examples ##
   
 Display post content by name/slug:
 
