@@ -100,7 +100,9 @@ To come back to the example of the bicycle shop, this would display all bicycles
 		</div>
 	[/query]
 
-This way you can create custom layout templates and run query loops for any custom post type, using only shortcodes.  Possible future applications could include:
+This way you can run query loops for any custom post type, and display the content and fields in any layout.
+
+Possible future applications could include:
 
  * Display the next five up-coming events
  * Display product types in excerpts or individual pages
