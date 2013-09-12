@@ -106,7 +106,7 @@ Possible future applications could include:
 
  * Display the next five up-coming events
  * Display product types in excerpts or individual pages
- * Display groups of images in different layouts (carousel, gallery view, etc.)
+ * Display the same group of images in different layouts - carousel, albums, thumbnails, etc.
 
 
 == Installation ==
