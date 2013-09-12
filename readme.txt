@@ -87,10 +87,10 @@ This feature is not yet integrated into the shortcode, but I'm working on it.
 
 There is an apparently little-known but very powerful plugin called **Query Shortcodes**, that lets you easily create query loops inside a post / page /custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
 
-To come back to the example of the bicycle shop, this would display all bicycles of the category **freestyle**, according to the layout we created in each entry:
+To come back to the example of the bicycle shop, this would display all bicycles of the category **freestyle**, according to the layout we created for each entry:
 
 	[query post_type="bicycle" category="freestyle"]
-		[custom id="{ID}"] /* display the content */
+		[custom id="{ID}"]
 	[/query]
 
 This way you can run query loops for any custom post type, and display the content and fields in any layout.
