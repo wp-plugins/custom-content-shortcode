@@ -11,7 +11,7 @@ Add a shortcode to get content or field from any post type
 == Description ==
 
 = Basic Examples =
-
+<br />
 * Display post content by name (slug):
 
 		[custom type="post" name="hello-world"]
@@ -26,16 +26,17 @@ Add a shortcode to get content or field from any post type
 
 * Display fields from the current post:
 
-		[custom field="title"] by [custom field="author"] written on [custom field="date"]
+		[custom field="title"] by [custom field="author"]
+		Written on [custom field="date"]
 
 = Available Parameters =
-
+<br />
 * *type* - post / page / custom post type - if empty, default is "page"
 * *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
 * *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
 = Custom Content Layout =
-
+<br />
 Here is an example of how this shortcode can be used to create a layout template.
 
 1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
@@ -52,7 +53,7 @@ Here is an example of how this shortcode can be used to create a layout template
 		</div>
 
 1. The same template can be used for all *bicycle* entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
-1. We can display each product like this: `www.example-site.com/bicycle/product-name`
+1. We can display each product like this: <code>www.example-site.com/bicycle/product-name</code>
 
 
 = Custom Content Management =  
