@@ -67,7 +67,7 @@ Here is an example of how this shortcode can be used to create a layout template
 
 1. Now we can display each product like this:
 
-	www.example-site.com/bicycle/bmx-super-22
+	<pre>www.example-site.com/bicycle/bmx-super-22</pre>
 
 
 = Custom Content Management =  
