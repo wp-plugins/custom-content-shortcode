@@ -1,4 +1,4 @@
-=== Custom content shortcode ===
+=== Custom Content Shortcode ===
 Tags: custom post type, custom field, shortcode
 Requires at least: 3.0.1
 Tested up to: 3.6

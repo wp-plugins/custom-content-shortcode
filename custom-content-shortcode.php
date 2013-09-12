@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Custom Content Shortcode
-Plugin URI: 
+Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Add a shortcode to get content or field from any post type
 Version: 0.13
 Author: miyarakira
