@@ -69,7 +69,7 @@ Here is an example of how this shortcode can be used to create a layout template
 		[custom type="bicycle" name="freestyle-B5"]
 
 
-= Custom content management =  
+= Custom content admin =  
 <br />
 Here are some of the plugins that work well together for custom content management.
 
