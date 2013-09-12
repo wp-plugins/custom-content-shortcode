@@ -92,7 +92,7 @@ There is an apparently little-known but very powerful plugin called **Query Shor
 To come back to the example of the bicycle shop, the following would display all entries in the **bicycle** post type with the category **freestyle**, according to the layout we created:
 
 	[query post_type="bicycle" category="freestyle"]
-		[content] /* Content of each post found */
+		[content]
 	[/query]
 
 Or, we can get the most important fields and display a list:
@@ -101,7 +101,7 @@ Or, we can get the most important fields and display a list:
 
 	<ul>
 		[query post_type="bicycle" category="freestyle"]
-			<li>Model:[content field="model"] - Price  [content field="price"]</li>
+			<li>[content field="model"] - [content field="price"]</li>
 		[/query]
 	</ul>
 
