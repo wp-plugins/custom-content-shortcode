@@ -16,7 +16,7 @@ This plugin adds a shortcode to get the content or a field from any post type.
 <br />
 Here are some basic examples:
 
-* Display post content by name (slug)
+* Display post content by name
 
 		[custom type="post" name="hello-world"]
 
