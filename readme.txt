@@ -26,8 +26,9 @@ Add a shortcode to get content or field from any post type
 
 * Display fields from the current post:
 
-		[custom field="title"] by [custom field="author"]
-		Written on [custom field="date"]
+		[custom field="title"] was written by [custom field="author"] on [custom field="date"].
+
+***
 
 = Available Parameters =
 <br />
@@ -37,6 +38,8 @@ Add a shortcode to get content or field from any post type
 * *name or id* - get the post / page / custom post type by name/slug or ID - if empty, default is current post
 
 * *field* - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+
+***
 
 = Custom Content Layout =
 <br />
