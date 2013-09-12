@@ -14,31 +14,29 @@ Add a shortcode to get content or field from any post type
 <br />
 * Display post content by name (slug):
 
-	[custom type="post" name="hello-world"]
+		[custom type="post" name="hello-world"]
 
 * Display the featured image of a page:
 
-	[custom type="page" name="about-me" field="image"]
+		[custom type="page" name="about-me" field="image"]
 
 * Display a custom field from a custom post type:
 
-	[custom type="apartment" name="lux-suite-22" field="rent-per-day"]
+		[custom type="apartment" name="lux-suite-22" field="rent-per-day"]
 
 * Display fields from the current post:
 
-	[custom field="title"] was written by [custom field="author"] on [custom field="date"].
+		[custom field="title"] was written by [custom field="author"] on [custom field="date"].
 
 
 = Available Parameters =
 <br />
-
 * **type** - post / page / custom post type - if empty, default is "page"
  
 * **name** or **id** - get the post / page / custom post type by name/slug or ID - if empty, default is current post
 
 * **field** - get the field - if empty, default is the main content of the post. You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
-<hr /–>
 
 = Custom Content Layout =
 <br />
@@ -83,7 +81,7 @@ This feature is not yet integrated into the shortcode, but I'm working on it.
 
 There is an apparently little-known but very powerful plugin called Query Shortcodes, that lets you easily create query loops inside post/page/custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
 
-To come back to the example of the bicycle shop, this would display all bicycles of the category *freestyle*:
+To come back to the example of the bicycle shop, this would display all bicycles of the category **freestyle**:
 
 	[query post_type="bicycle" category="freestyle"]
 		<div class="item-wrap">
