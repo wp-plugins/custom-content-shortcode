@@ -43,7 +43,7 @@ Here are the available parameters.
 
 * **field** - define which field to get - if empty, default is the main content of the post
 
-You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
 
 = Custom content layout =  
@@ -76,7 +76,7 @@ Here is an example of how this shortcode can be used to create a layout template
 Here are some plugins that work well together for custom content management.
 
  * **Custom Post Type UI** - easily create and manage custom post types and taxonomies
- * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. *Actually, I need to work on my shortcode to be able to display these advanced field types also.*
+ * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. *Note: Some advanced fields types (such as **gallery**) are not yet supported by the Custom Content Shortcode.*
  * **Admin Menu Editor** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide menu items for unnecessary or sensitive settings; arrange and simplify the admin menu; and so on.
  * **Intuitive Custom Post Order** - change the order of post/page/custom post types by drag-and-drop
  * **Post Type Converter** - convert a post from one post type to another
@@ -87,7 +87,7 @@ Here are some plugins that work well together for custom content management.
 <br />
 This feature is not yet integrated into the shortcode, but I'm working on it.
 
-There is an apparently little-known but very powerful plugin called **Query Shortcodes**, that lets you easily create query loops inside a post / page /custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
+There is an apparently little-known but very powerful plugin called **Query Shortcodes**, that lets you easily create query loops inside a post / page / custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
 
 To come back to the example of the bicycle shop, the following would display all entries in the **bicycle** post type with the category **freestyle**, according to the layout we created:
 
