@@ -38,9 +38,7 @@ There is also a shortcode to perform query loops, with which you can create layo
 Here are the available parameters for the *content* shortcode.
 
 * **type** - which post type to target (post / page / custom post type) - if empty, the default is "page"
- 
 * **name** or **id** - which entry to target by its ID or name (slug not post title) - if empty, the default is the current post
-
 * **field** - which field to get - if empty, default is the main content of the post
 
 You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
@@ -68,11 +66,8 @@ Notice that inside a query loop, the *content* shortcode does not need *type* an
 Available parameters for the *loop* shortcode are:
 
  * **type** - which post type to query (post / page / custom post type) - if empty, the default is "page"
- 
  * **category** - display posts from a category
-
  * **count** - number of posts to show
-
  * **tag** - display posts with a specific tag (for multiple tags: *tags="apples, green"*)
 
 In addition, you can use parameters of the WP_Query class, such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
