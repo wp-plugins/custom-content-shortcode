@@ -73,7 +73,7 @@ Available parameters for the *loop* shortcode are:
 
  * **count** - number of posts to show
 
- * **tag** - display posts with a specified tag (for multiple tags: *tags="apples, green"*)
+ * **tag** - display posts with a specific tag (for multiple tags: *tags="apples, green"*)
 
 In addition, you can use parameters of the WP_Query class, such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
 
@@ -118,8 +118,6 @@ Here are some plugins that work well together for custom content management.
 
 = Features to be implemented =  
 <br />
-These are planned features to be implemented in the future.
-
 Additional query parameters for the *loop* shortcode:
 
 * custom field and taxonomy parameters
