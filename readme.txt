@@ -121,7 +121,7 @@ Additional query parameters for the *loop* shortcode:
 
 = Attribution =
 
-The *loop* shortcode is a simplified and custom version of the **[Query Shortcode](http://wordpress.org/plugins/query-shortcode/)** plugin. I took the core function and changed it so it can run shortcodes within the query loop, and pass the current post ID to the *content* shortcode.
+The *loop* shortcode is a simplified and custom version of the **[Query Shortcode](http://wordpress.org/plugins/query-shortcode/)** plugin. I took the core function and changed it so it can run shortcodes within the query loop, and pass each post ID to the *content* shortcode.
 
 == Installation ==
 
