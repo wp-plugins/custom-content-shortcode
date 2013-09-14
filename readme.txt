@@ -97,9 +97,9 @@ Here is an example of how the *loop* and *content* shortcodes can be used to cre
 		Freestyle bikes available:
 
 		<ul>
-			[query post_type="bicycle" category="freestyle"]
+			[loop post_type="bicycle" category="freestyle"]
 				<li>[content field="model"] - [content field="price"]</li>
-			[/query]
+			[/loop]
 		</ul>
 
 

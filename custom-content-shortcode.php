@@ -83,7 +83,9 @@ add_shortcode('custom', 'custom_content_shortcode');
 
 /*
  * Simple query loop shortcode
+ *
  * Based on the original Query Shortcode by Hassan Derakhshandeh
+ *
  */
 
 class Loop_Shortcode {
