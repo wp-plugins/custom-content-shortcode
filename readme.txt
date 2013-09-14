@@ -12,7 +12,7 @@ Add a shortcode to get content or field from any post type
 
 This plugin adds a shortcode to get the content or a field from any post type.
 
-There is also a shortcode to perform query loops, with which you can create layouts for displaying the content and fields of a post type, category, etc.
+There is also a shortcode to perform query loops, with which you can create layouts for displaying the content and fields of a specific post type, category, etc.
 
 = Basic examples =  
 <br />
