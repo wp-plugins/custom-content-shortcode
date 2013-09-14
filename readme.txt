@@ -119,7 +119,7 @@ Additional query parameters for the *loop* shortcode:
 * advanced fields, such as *gallery* and other arrays
 * galleries in the media library
 
-= Code attribution =
+= Attribution =
 
 The *loop* shortcode is a simplified and custom version of the **[Query Shortcode](http://wordpress.org/plugins/query-shortcode/)** plugin. I took the core function and changed it so it can run shortcodes within the query loop, and pass the current post ID to the *content* shortcode.
 
