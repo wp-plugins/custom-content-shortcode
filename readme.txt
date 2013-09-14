@@ -58,7 +58,7 @@ There is also a shortcode to perform query loops.
 
 Notice that inside a query loop, the *content* shortcode does not need *type* and *name* parameters, because it is targeting the current post in the loop.
 
-*Display fields from all posts of a custom post type by category*
+*Display fields from all posts of a custom post type, filtered by category*
 
 	[loop type="apartment" category="suite"]
 	  Apartment: [content field="title"]
