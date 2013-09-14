@@ -1,8 +1,8 @@
-=== Custom content shortcode ===
-Tags: custom post type, custom field, shortcode
+=== Custom Content Shortcode ===
+Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.13
+Stable tag: 0.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Add a shortcode to get content or field from any post type
 
 This plugin adds a shortcode to get the content or a field from any post type.
 
-*Note: From version 0.13, the shortcode is [content]*
+There is also a shortcode to perform query loops, with which you can create layouts for displaying the content and fields of a post type, category, etc.
 
 = Basic examples =  
 <br />
@@ -35,84 +35,96 @@ This plugin adds a shortcode to get the content or a field from any post type.
 
 = Available parameters =  
 <br />
-Here are the available parameters.
+Here are the available parameters for the *content* shortcode.
 
-* **type** - define which post type to target (post / page / custom post type) - if empty, the default is "page"
+* **type** - which post type to target (post / page / custom post type) - if empty, the default is "page"
  
-* **name** or **id** - define which entry to target by its ID or name (slug not post title) - if empty, the default is the current post
+* **name** or **id** - which entry to target by its ID or name (slug not post title) - if empty, the default is the current post
 
-* **field** - define which field to get - if empty, default is the main content of the post
+* **field** - which field to get - if empty, default is the main content of the post
 
-You can display any custom field you create, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+
+
+= Query loops =  
+<br />
+There is also a shortcode to perform query loops.
+
+*Display all posts*
+
+	[loop type="post"]
+	  [content]
+	[/loop]
+
+Notice that inside a query loop, the *content* shortcode does not need *type* and *name* parameters, because it is targeting the current post in the loop.
+
+*Display fields from all posts of a custom post type by category*
+
+	[loop type="apartment" category="suite"]
+	  Apartment: [content field="title"]
+	  Rent per day: [content field="rent-per-day"]
+	[/loop]
+
+Available parameters for the *loop* shortcode are:
+
+ * **type** - which post type to query (post / page / custom post type) - if empty, the default is "page"
+ 
+ * **category** - display posts from a category
+
+ * **count** - number of posts to show
+
+ * **tag** - display posts with a specified tag (for multiple tags: *tags="apples, green"*)
+
+In addition, you can use parameters of the WP_Query class, such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
 
 
 = Custom content layout =  
 <br />
-Here is an example of how this shortcode can be used to create a layout template.
+Here is an example of how the *loop* and *content* shortcodes can be used to create layout templates.
 
-1. Let's imagine a bicycle shop.  We create a custom post type called **bicycle**, and add custom fields such as **model**, **price**, and **description**.
-1. A bicycle is added as a new entry, with a featured image and other info fields.
-1. For the content, we create a basic template to display the custom fields:
+1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
+1. Add all bicycles as new entries, with featured image and other info in the fields.
+1. Create a new page to display the bicycles. A basic layout could be:
 
-		<div class="item-wrap">
+		[loop type="bicycle"]
+			[content field="image"]
 			Model: [content field="model"]
-			<div class="image-wrap">
-				[content field="image"]
-			</div>
-			Price: [content field="price"]
-			Description: [content field="description"]
-		</div>
+		    Price: [content field="price"]
+		    Description: [content field="description"]
+		[/loop]
+1. Another page could display a list of bicycles of the *freestyle* category:
 
-1. The same template can be used for all **bicycle** entries. We can copy & paste, or use a handy plugin called Duplicate Post for all new entries, and just edit the info fields.
-1. We can show each product on its own page (www.example-site.com/bicycle/product-name) or several on a page:
+		Freestyle bikes available:
 
-		[content type="bicycle" name="bmx-super-22"]
-		[content type="bicycle" name="mongoose-rad-fx"]
-		[content type="bicycle" name="freestyle-B5"]
+		<ul>
+			[query post_type="bicycle" category="freestyle"]
+				<li>[content field="model"] - [content field="price"]</li>
+			[/query]
+		</ul>
 
 
-= Custom content admin =  
+= Custom content management =  
 <br />
 Here are some plugins that work well together for custom content management.
 
  * **Custom Post Type UI** - easily create and manage custom post types and taxonomies
- * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. *Actually, I need to work on my shortcode to be able to display these advanced field types also.*
+ * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. *Note: Some advanced fields types (such as **gallery**) are not yet supported by the Custom Content Shortcode.*
  * **Admin Menu Editor** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide menu items for unnecessary or sensitive settings; arrange and simplify the admin menu; and so on.
  * **Intuitive Custom Post Order** - change the order of post/page/custom post types by drag-and-drop
  * **Post Type Converter** - convert a post from one post type to another
  * **Codepress Admin Columns** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
  * **Duplicate Post** - useful for making similar post items, backup posts, etc.
 
-= Custom content query loops? =  
+
+= Features to be implemented =  
 <br />
-This feature is not yet integrated into the shortcode, but I'm working on it.
+These are planned features to be implemented in the future.
 
-There is an apparently little-known but very powerful plugin called **Query Shortcodes**, that lets you easily create query loops inside a post / page /custom post type.  To make it work with the Custom Content Shortcode, I had to change it a bit to allow shortcodes inside the query loop, as well as pass each post ID.
+Additional query parameters for the *loop* shortcode:
 
-To come back to the example of the bicycle shop, the following would display all entries in the **bicycle** post type with the category **freestyle**, according to the layout we created:
-
-	[query post_type="bicycle" category="freestyle"]
-		[content]
-	[/query]
-
-Or, we can get the most important fields and display a list:
-
-	Freestyle bikes available:
-
-	<ul>
-		[query post_type="bicycle" category="freestyle"]
-			<li>[content field="model"] - [content field="price"]</li>
-		[/query]
-	</ul>
-
-With these shortcodes you could run query loops for any custom post type, and display the content and fields in any layout.
-
-Possible future applications could include:
-
- * Display the next five up-coming events
- * Display product types in excerpts or individual pages
- * Display the same group of images in different layouts - carousel, albums, thumbnails, etc.
-
+* custom field and taxonomy parameters
+* advanced fields, such as *gallery* and other arrays
+* galleries in the media library
 
 == Installation ==
 
@@ -132,15 +144,21 @@ None.
 
 == Changelog ==
 
-= 0.13 =
+= 0.1.4 =
+
+* Added shortcode for query loops
+* Format post content using the_content filter
+
+= 0.1.3 =
 
 * Changed shortcode to [content]
+* Added banner image to Wordpress plugin page
 
-= 0.12 =
+= 0.1.2 =
 
-* Better documentation - longer than the plugin code itself
+* Better documentation
 
-= 0.11 =
+= 0.1.1 =
 * Simplified code, added a few parameters
 
 = 0.1 =
