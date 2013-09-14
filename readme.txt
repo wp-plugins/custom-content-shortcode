@@ -70,7 +70,7 @@ Available parameters for the *loop* shortcode are:
  * **count** - number of posts to show
  * **tag** - display posts with a specific tag (for multiple tags: *tags="apples, green"*)
 
-In addition, you can use parameters of the WP_Query class, such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
+In addition, you can use parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
 
 
 = Custom content layout =  
@@ -102,13 +102,13 @@ Here is an example of how the *loop* and *content* shortcodes can be used to cre
 <br />
 Here are some plugins that work well together for custom content management.
 
- * **Custom Post Type UI** - easily create and manage custom post types and taxonomies
- * **Advanced Custom Fields** - create and manage all kinds of useful custom field types. *Note: Some advanced fields types (such as **gallery**) are not yet supported by the Custom Content Shortcode.*
- * **Admin Menu Editor** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide menu items for unnecessary or sensitive settings; arrange and simplify the admin menu; and so on.
- * **Intuitive Custom Post Order** - change the order of post/page/custom post types by drag-and-drop
- * **Post Type Converter** - convert a post from one post type to another
- * **Codepress Admin Columns** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
- * **Duplicate Post** - useful for making similar post items, backup posts, etc.
+ * **[Custom Post Type UI](http://wordpress.org/plugins/custom-post-type-ui/)** - easily create and manage custom post types and taxonomies
+ * **[Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/)** - create and manage all kinds of useful custom field types. *Note: Some advanced fields types (such as **gallery**) are not yet supported by the Custom Content Shortcode.*
+ * **[Admin Menu Editor](http://wordpress.org/plugins/admin-menu-editor/)** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide menu items for unnecessary or sensitive settings; arrange and simplify the admin menu; and so on.
+ * **[Intuitive Custom Post Order](http://wordpress.org/plugins/intuitive-custom-post-order/)** - change the order of post/page/custom post types by drag-and-drop
+ * **[Post Type Converter](http://wordpress.org/plugins/post-type-converter/)** - convert a post from one post type to another
+ * **[Codepress Admin Columns](http://wordpress.org/plugins/codepress-admin-columns/)** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
+ * **[Duplicate Post](http://wordpress.org/plugins/duplicate-post/)** - useful for quickly creating similar post items, backup posts, templates, etc.
 
 
 = Features to be implemented =  
@@ -118,6 +118,10 @@ Additional query parameters for the *loop* shortcode:
 * custom field and taxonomy parameters
 * advanced fields, such as *gallery* and other arrays
 * galleries in the media library
+
+= Code attribution =
+
+The *loop* shortcode is a simplified and custom version of the **[Query Shortcode](http://wordpress.org/plugins/query-shortcode/)** plugin. I took the core function and changed it so it can run shortcodes within the query loop, and pass the current post ID to the *content* shortcode.
 
 == Installation ==
 
