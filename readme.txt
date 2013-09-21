@@ -45,9 +45,9 @@ Here are the available parameters for the *content* shortcode.
 
 	You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
-* **menu** - display a menu by *name/slug*, *ID* or *title*
+* **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list.
+* **class** - add a `<div>` class to the menu for styling purpose
 * **area** or **sidebar** - display a widget area/sidebar by *title*
-* **class** - add a `<div>` class to the output, for styling purpose
 
 
 = Query examples =  
@@ -103,9 +103,9 @@ Here is an example of how the *loop* and *content* shortcodes can be used to cre
 			[/loop]
 		</ul>
 
-= Attachments =
-
-Get the attachments of the current post:
+= Attachments =  
+<br />
+Display details on all the attachments of the current post:
 
 	[loop type="attachment"]
 		Attachment ID: [content field="id"]
@@ -145,14 +145,14 @@ Gallery fields are displayed with the *loop* shortcode in a similar way to attac
 		Caption: [content field="caption"]
 	[/loop]
 
-Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap v3 carousel.
+Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap v3 carousel. These are used **without** the *loop* shortcode.
 
 	[content gallery="native"]
 	[content gallery="carousel"]
 
-= Use a field content as parameter to another shortcode =
-
-If you need to pass the content of a field (or the image IDs of the gallery field) as a parameter to another shortcode, here is the workaround solution. This is necessary because a shortcode cannot be used as a parameter for another shortcode.
+= Use a field content as parameter to another shortcode =  
+<br />
+If you need to pass the content of a field as a parameter to another shortcode, here is the workaround solution.
 
 *Display a map according to the address entered in a custom field*
 
@@ -161,6 +161,8 @@ If you need to pass the content of a field (or the image IDs of the gallery fiel
 *Display images in the gallery field using another shortcode*
 
 	[loop field="gallery"][isotope_gallery ids="{IDS}"][/loop]
+
+This is necessary because a shortcode cannot be used as a parameter for another shortcode. Note that when you're passing a field, the loop goes through only once.
 
 = Custom content management =  
 <br />
@@ -187,7 +189,8 @@ Here are some plugins that work well together for custom content management.
 Additional parameters:
 
 
-* Bootstrap style parameters for menus (navs, tabs, pills, dropdowns) and gallery (carousel, responsive columns)
+* Bootstrap style parameters for menus: *navs*, *tabs*, *pills*, *dropdowns*
+* Simple gallery layout with responsive columns
 * **header**, **footer** - include a field in the header or footer - useful for loading css or javascript per page
 * query for custom fields and taxonomies
 
