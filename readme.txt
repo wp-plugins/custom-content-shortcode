@@ -6,11 +6,11 @@ Stable tag: 0.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A shortcode to display content from posts, pages, custom post types, custom fields, images, menus, widget areas, and attachment files
+A shortcode to display content from posts, pages, custom post types, custom fields, images and attachment files
 
 == Description ==
 
-This plugin adds the shortcode **[content]** to display any of the following content types: posts, pages, custom post types, custom fields, images, menus, widget areas/sidebars, and attachment files.
+This plugin adds the shortcode **[content]** to display any of the following content types: posts, pages, custom post types, custom fields, images and attachment files.
 
 There is also the shortcode **[loop]** to perform query loops, with which you can create layout templates for displaying the content, for example, the five most recent posts, or products in a category.
 
