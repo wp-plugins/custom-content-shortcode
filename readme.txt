@@ -45,12 +45,6 @@ Here are the basic parameters for the *content* shortcode.
 
 	You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
-Advanced parameters:
-
-* **menu** - display a menu by *name/slug*, *ID* or *title*
-* **area** or **sidebar** - display a widget area/sidebar by *title*
-* **class** - add a `<div>` class to the output, for styling purpose
-* **header**, **footer** - include a field in the header or footer - useful for loading css or javascript
 
 = Query examples =  
 <br />
