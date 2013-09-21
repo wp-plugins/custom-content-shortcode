@@ -99,8 +99,8 @@ Here is an example of how the *loop* and *content* shortcodes can be used to cre
 			[/loop]
 		</ul>
 
-= Attachments =
-
+= Attachments =  
+<br>
 Get the attachments of the current post:
 
 	[loop type="attachment"]
