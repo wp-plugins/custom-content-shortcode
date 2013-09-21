@@ -2,17 +2,19 @@
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.1.4
+Stable tag: 0.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add a shortcode to get content or field from any post type
+A shortcode to display content from posts, pages, custom post types, custom fields, images, menus, widget areas, and attachment files
 
 == Description ==
 
-This plugin adds a shortcode to get the content or a field from any post type.
+This plugin adds the shortcode **[content]** to display any of the following content types: posts, pages, custom post types, custom fields, images, menus, widget areas/sidebars, and attachment files.
 
-There is also a shortcode to perform query loops, with which you can create layouts for displaying the content and fields of a specific post type, category, etc.
+There is also the shortcode **[loop]** to perform query loops, with which you can create layout templates for displaying the content, for example, the five most recent posts, or products in a category.
+
+In addition, there is an option to enable gallery fields for selected post types, which can be displayed using the *content* and *loop* shortcodes.
 
 = Basic examples =  
 <br />
@@ -35,18 +37,24 @@ There is also a shortcode to perform query loops, with which you can create layo
 
 = Available parameters =  
 <br />
-Here are the available parameters for the *content* shortcode.
+Here are the basic parameters for the *content* shortcode.
 
-* **type** - which post type to target (post / page / custom post type) - if empty, the default is "page"
-* **name** or **id** - which entry to target by its ID or name (slug not post title) - if empty, the default is the current post
-* **field** - which field to get - if empty, default is the main content of the post
+* **type** - which post type to target: *post*, *page*, or *custom post type* - if empty, the default is *any post type*
+* **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
+* **field** - which field to display - if empty, default is the main content of the post
 
-You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+	You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
+Advanced parameters:
 
-= Query loops =  
+* **menu** - display a menu by *name/slug*, *ID* or *title*
+* **area** or **sidebar** - display a widget area/sidebar by *title*
+* **class** - add a `<div>` class to the output, for styling purpose
+* **header**, **footer** - include a field in the header or footer - useful for loading css or javascript
+
+= Query examples =  
 <br />
-There is also a shortcode to perform query loops.
+Here are examples of query loops using the *content* and *loop* shortcodes.
 
 *Display all posts*
 
@@ -65,12 +73,12 @@ Notice that inside a query loop, the *content* shortcode does not need *type* an
 
 Available parameters for the *loop* shortcode are:
 
- * **type** - which post type to query (post / page / custom post type) - if empty, the default is "page"
+ * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
  * **count** - number of posts to show
- * **tag** - display posts with a specific tag (for multiple tags: *tags="apples, green"*)
+ * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
 
-In addition, you can use parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
+You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
 
 
 = Custom content layout =  
@@ -92,36 +100,99 @@ Here is an example of how the *loop* and *content* shortcodes can be used to cre
 		Freestyle bikes available:
 
 		<ul>
-			[loop post_type="bicycle" category="freestyle"]
+			[loop type="bicycle" category="freestyle"]
 				<li>[content field="model"] - [content field="price"]</li>
 			[/loop]
 		</ul>
+
+= Attachments =
+
+Get the attachments of the current post:
+
+	[loop type="attachment"]
+		Attachment ID: [content field="id"]
+		Title: [content field="title"]
+		Full-size image: [content field="image"]
+		Full-size image URL: [content field="image-url"]
+		Caption: [content field="caption"]
+		Description: [content field="description"]
+		Thumbnail: [content field="thumbnail"]
+		Thumbnail URL: [content field="thumbnail-url"]
+	[/loop]
+
+Get the attachments of all posts in the category *tree*, and display them using Bootstrap v3 columns:
+
+	<div class="row">
+		[loop type="attachment" category="tree"]
+			<div class="col-md-4" align="center">
+				<a href='[content field="image-url"]' rel="lightbox">
+					<img src='[content field="thumbnail-url"]'>
+				</a>
+			</div>  
+		[/loop]
+	</div> 
+
+
+= Gallery fields =  
+<br />
+In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable gallery fields for selected post types, where images can be added and ordered.
+
+Gallery fields are displayed in a similar way to attachments, using the same field names.
+
+*Display individual thumbnails linked to its full-size images*
+
+	[loop type="gallery"]
+		<a href='[content field="image-url"]'>
+			<img src='[content field="thumbnail-url"]'>
+		</a>
+	[/loop]
+
+Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap v3 carousel.
+
+	[content gallery="native"]
+	[content gallery="carousel"]
+
+Finally, if you need to pass the image IDs to another shortcode, here is the workaround solution. This is necessary because a shortcode cannot be used as a parameter for another shortcode.
+
+*Display using another gallery shortcode*
+
+	[loop field="gallery"][another_gallery ids="{IDS}"][/loop]
+
 
 
 = Custom content management =  
 <br />
 Here are some plugins that work well together for custom content management.
 
+*Custom post types and fields*
+
  * **[Custom Post Type UI](http://wordpress.org/plugins/custom-post-type-ui/)** - easily create and manage custom post types and taxonomies
- * **[Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/)** - create and manage all kinds of useful custom field types. *Note: Some advanced fields types (such as **gallery**) are not yet supported by the Custom Content Shortcode.*
+ * **[Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/)** - create and manage all kinds of useful custom field types. *Note: Some advanced fields types such as arrays and repeaters are not yet supported by the Custom Content Shortcode.*
+ * **[Simple Fields](http://)**
+ * **[Meta Boxes](http://)**
+ 
+*Admin Extensions*
+
  * **[Admin Menu Editor](http://wordpress.org/plugins/admin-menu-editor/)** - essential for customizing the admin menu, especially for client use. For example, you can move the edit menu for the Product post type near the top of the menu for easier access; hide menu items for unnecessary or sensitive settings; arrange and simplify the admin menu; and so on.
  * **[Intuitive Custom Post Order](http://wordpress.org/plugins/intuitive-custom-post-order/)** - change the order of post/page/custom post types by drag-and-drop
  * **[Post Type Converter](http://wordpress.org/plugins/post-type-converter/)** - convert a post from one post type to another
  * **[Codepress Admin Columns](http://wordpress.org/plugins/codepress-admin-columns/)** - customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
  * **[Duplicate Post](http://wordpress.org/plugins/duplicate-post/)** - useful for quickly creating similar post items, backup posts, templates, etc.
 
+*Front-end framework*
+
+ * **[Easy Bootstrap Shortcode](http://wordpress.org/plugins/easy-bootstrap-shortcodes/)**
+
 
 = Features to be implemented =  
 <br />
-Additional query parameters for the *loop* shortcode:
+Additional parameters:
 
-* custom field and taxonomy parameters
-* advanced fields, such as *gallery* and other arrays
-* galleries in the media library
 
-= Attribution =
+* Style parameters for menus (navs, tabs, pills, dropdowns) and gallery (carousel, responsive columns)
+* query for custom fields and taxonomies
+* advanced fields such as arrays
 
-The *loop* shortcode is a simplified and custom version of the **[Query Shortcode](http://wordpress.org/plugins/query-shortcode/)** plugin. I took the core function and changed it so it can run shortcodes within the query loop, and pass each post ID to the *content* shortcode.
 
 == Installation ==
 
@@ -140,6 +211,11 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.1.5 =
+
+* Added gallery fields
+* Added attachment type and fields
 
 = 0.1.4 =
 
