@@ -67,7 +67,7 @@ Notice that inside a query loop, the *content* shortcode does not need *type* an
 
 Available parameters for the *loop* shortcode are:
 
- * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
+ * **type** - which post type to query: *post*, *page*, *custom post type*, *gallery* or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
  * **count** - number of posts to show
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
