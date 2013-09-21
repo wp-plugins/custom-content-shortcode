@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: 
 Description: Add a shortcode to get content or field from any post type
-Version: 0.1.5
+Version: 0.1.6
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -40,18 +40,20 @@ function custom_content_shortcode($atts) {
 	extract(shortcode_atts(array(
 		'type' => null, 'name' => null, 'field' => null, 'id' => null,
 		'menu' => null, 'format' => null, 'shortcode' => null, 'gallery' => 'false',
-		'group' => null,
+		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null,
 		), $atts));
 
 	$custom_post_type = $type;
 	$custom_post_name = $name;
 	$custom_menu_name = $menu;
+	$custom_menu_class = $class;
 	$custom_field = $field;
 	$custom_id = $id;
 	$content_format = $format;
 	$shortcode_option = $shortcode;
 	$custom_gallery_type = $gallery;
 	$custom_gallery_name = $group;
+	$custom_area_name = $area;
 
 	$excerpt_out = null;
 
@@ -59,12 +61,30 @@ function custom_content_shortcode($atts) {
 		$custom_post_type = 'any';
 	}
 
-	if( $custom_menu_name != '' ) { // Menu
+	if( $sidebar != '') {
+		$custom_area_name = $sidebar;
+	}
+	if( $custom_area_name != '') { // Display sidebar/widget area
+		$back =  "<div id='" . str_replace( " ", "_", $name ) . "' class='sidebar_shortcode'>";
+		ob_start();
+		if ( ! function_exists('dynamic_sidebar') || ! dynamic_sidebar($custom_area_name) ) {}
+		$back .= ob_get_contents();
+		ob_end_clean();
+		$back .= "</div>";
+		return $back;
+	}
+
+
+	if( $custom_menu_name != '' ) { // Display menu
 		$menu_args = array (
 			'menu' => $custom_menu_name,
 			'echo' => false,
 			);
-		return wp_nav_menu( $menu_args );
+		if( $custom_menu_class == '') {
+			return wp_nav_menu( $menu_args );
+		} else {
+			return '<div class="' . $custom_menu_class . '">' . wp_nav_menu( $menu_args ) . '</div>';
+		}
 	}
 
 	if($custom_post_name != '') { // Specific post name/slug
@@ -404,6 +424,7 @@ class Loop_Shortcode {
 				'ID' => $attachment_id,
 				'TITLE' => get_post( $attachment_id )->post_title,
 				'CONTENT' => get_post( $attachment_id )->post_content,
+				'CAPTION' => get_post( $attachment_id )->post_excerpt,
 				'DESCRIPTION' => get_post( $attachment_id )->post_content,
 				'IMAGE' => $global_vars['current_image'],
 				'IMAGE_URL' => $global_vars['current_image_url'],
@@ -484,6 +505,7 @@ echo "Attachments ID: " . implode(" ", $attachment_ids) . "<br>";
 				'ID' => $attachment_id,
 				'TITLE' => get_post( $attachment_id )->post_title,
 				'CONTENT' => get_post( $attachment_id )->post_content,
+				'CAPTION' => get_post( $attachment_id )->post_excerpt,
 				'DESCRIPTION' => get_post( $attachment_id )->post_content,
 				'IMAGE' => $global_vars['current_image'],
 				'IMAGE_URL' => $global_vars['current_image_url'],
