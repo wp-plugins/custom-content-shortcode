@@ -12,7 +12,7 @@ A shortcode to display content from posts, pages, custom post types, custom fiel
 
 This plugin adds the shortcode **[content]** to display any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
 
-There is also the shortcode **[loop]** to perform query loops, with which you can create layout templates for displaying the content, for example, the five most recent posts, or products in a category.
+There is also the shortcode **[loop]** to perform query loops, with which you can create layout templates for displaying the content - for example, products in a category, or the 5 most recent posts.
 
 In addition, there is a setting to enable gallery fields for selected post types, where images can be added, removed and ordered.  They can be displayed using the *content* and *loop* shortcodes.
 
@@ -41,10 +41,7 @@ Here are the available parameters for the *content* shortcode.
 
 * **type** - which post type to target: *post*, *page*, or *custom post type* - if empty, the default is *any post type*
 * **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
-* **field** - which field to display - if empty, default is the main content of the post
-
-	You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
-
+* **field** - which field to display - if empty, default is the main content of the post. You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 * **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list.
 * **class** - add a `<div>` class to the menu for styling purpose
 * **area** or **sidebar** - display a widget area/sidebar by *title*
