@@ -226,10 +226,8 @@ Here are some plugins that work well together for custom content management.
 <br />
 Additional parameters:
 
-
 * Bootstrap style parameters for menus: *navs*, *tabs*, *pills*, *dropdowns*
 * Simple gallery layout with responsive columns
-* **header**, **footer** - include a field in the header or footer - useful for loading css or javascript per page
 * query for custom fields and taxonomies
 
 
