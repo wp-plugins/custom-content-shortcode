@@ -175,8 +175,6 @@ Create a custom field called *css*, and the content of the field will be automat
 
 Create a custom field called *js*, and the content of the field will be automatically added to the footer. This could be useful for loading page-specific JavaScript files, jQuery libraries or scripts.
 
-Some shortcodes are included to simplify the process.
-
 *To load a CSS file, include this in the **css** custom field*
 
 	[load css="bootstrap.min.css"]
@@ -187,7 +185,7 @@ Some shortcodes are included to simplify the process.
 
 The **[load]** shortcode gets the specified file under the *css* or *js* folder in your template directory.
 
-For short scripts, you can use the following shortcodes.
+For short scripts, the following shortcodes can be used.
 
 *Wrapping CSS script*
 
