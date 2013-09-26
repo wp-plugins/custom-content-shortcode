@@ -10,15 +10,17 @@ A shortcode to display content from posts, pages, custom post types, custom fiel
 
 == Description ==
 
-The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
+Here are the main features of the plugin.
 
-The shortcode **[loop]** performs query loops, with which you can create layout templates for displaying the content -- for example,  available products in a category, or excerpts from the 5 most recent posts with thumbnails.
+* The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
 
-Additional features:
+* The shortcode **[loop]** performs query loops, for creating content layouts -- for example, displaying available products in a category, or excerpts of the 5 most recent posts with thumbnails.
 
-* Enable gallery fields for chosen post types, where images can be added, removed and ordered.  They can be displayed using the **[content]** and **[loop]** shortcodes, the native gallery, a Bootstrap v3 carousel, or a gallery shortcode of your choice.
+Also:
 
-* Load CSS/JavaScript files or scripts from custom fields
+* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered.  They can be displayed using the native gallery; Bootstrap v3.x carousel; a gallery shortcode of your choice; or the **[loop]** and **[content]** shortcodes for custom styling.
+
+* Load CSS/JavaScript file or script from custom fields
 
 = Basic examples =  
 <br />
@@ -41,14 +43,17 @@ Additional features:
 
 = Available parameters =  
 <br />
-Here are the available parameters for the **[content]** shortcode.
+Here are the main parameters for the **[content]** shortcode.
 
 * **type** - which post type to target: *post*, *page*, or *custom post type* - if empty, the default is *any post type*
 * **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
 * **field** - which field to display - if empty, default is the main content of the post. You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+
+Additional parameters:
+
+* **area** or **sidebar** - display a widget area/sidebar by *title*
 * **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list.
 * **class** - add a `<div>` class to the menu for styling purpose
-* **area** or **sidebar** - display a widget area/sidebar by *title*
 
 
 = Query examples =  
@@ -119,7 +124,7 @@ Display details on all the attachments of the current post:
 		Thumbnail URL: [content field="thumbnail-url"]
 	[/loop]
 
-Get the attachments of all posts in the category *tree*, and display them using Bootstrap v3 columns:
+Get the attachments of all posts in the category *tree*, and display them using Bootstrap v3.x columns:
 
 	<div class="row">
 		[loop type="attachment" category="tree"]
@@ -146,7 +151,7 @@ Gallery fields are displayed with the **[loop]** shortcode in a similar way to a
 		Caption: [content field="caption"]
 	[/loop]
 
-Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap v3 carousel. These are used *without* the **[loop]** shortcode.
+Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap  v3.x carousel. These are used *without* the **[loop]** shortcode.
 
 	[content gallery="native"]
 	[content gallery="carousel"]
@@ -167,13 +172,11 @@ This is necessary because a shortcode cannot be used as a parameter for another 
 
 = Loading CSS or JavaScript =  
 <br />
-Create a custom field called *css*, and the content of the field will be automatically added to the header on page load. This could be useful for loading page-specific styles, or making variations quickly.
+Create a custom field called *css*, and the content of the field will be automatically added to the header on page load. This could be useful for loading page-specific styles, or rapid prototyping of theme variations.
 
-Create a custom field called *js*, and the content of the field will be automatically added to the footer. This could be useful for loading page-specific JavaScript files or scripts.
+Create a custom field called *js*, and the content of the field will be automatically added to the footer. This could be useful for loading page-specific JavaScript files, jQuery libraries or scripts.
 
-There are shortcodes to simplify the loading of scripts.
-
-The **[load]** shortcode gets the specified file under the *css* and *js* folder in your template directory.
+Some shortcodes are included to simplify the process.
 
 *To load a CSS file, include this in the **css** custom field*
 
@@ -182,6 +185,8 @@ The **[load]** shortcode gets the specified file under the *css* and *js* folder
 *To load a JavaScript file, include this in the **js** custom field*
 
 	[load js="bootstrap.min.js"]
+
+The **[load]** shortcode gets the specified file under the *css* or *js* folder in your template directory.
 
 For short scripts, you can use the following shortcodes.
 
