@@ -18,7 +18,7 @@ Here are the main features of the plugin.
 
 In addition:
 
-* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered.  They can be displayed using the native gallery; Bootstrap v3.x carousel; a gallery shortcode of your choice; or the **[loop]** and **[content]** shortcodes for custom styling.
+* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered
 
 * Load page-specific CSS/JavaScript file or script from custom fields
 
