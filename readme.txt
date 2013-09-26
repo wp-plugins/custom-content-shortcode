@@ -20,7 +20,7 @@ Also:
 
 * Enable **gallery fields** for chosen post types, where images can be added, removed and ordered.  They can be displayed using the native gallery; Bootstrap v3.x carousel; a gallery shortcode of your choice; or the **[loop]** and **[content]** shortcodes for custom styling.
 
-* Load CSS/JavaScript file or script from custom fields
+* Load page-specific CSS/JavaScript file or script from custom fields
 
 = Basic examples =  
 <br />
@@ -172,7 +172,7 @@ This is necessary because a shortcode cannot be used as a parameter for another 
 
 = Loading CSS or JavaScript =  
 <br />
-Create a custom field called *css*, and the content of the field will be automatically added to the header on page load. This could be useful for loading page-specific styles, or rapid prototyping of theme variations.
+Create a custom field called *css*, and the content of the field will be automatically added to the header on page load. This could be useful for loading page-specific styles or theme variations.
 
 Create a custom field called *js*, and the content of the field will be automatically added to the footer. This could be useful for loading page-specific JavaScript files, jQuery libraries or scripts.
 
