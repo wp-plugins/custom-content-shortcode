@@ -2,7 +2,7 @@
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.1.7
+Stable tag: 0.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -10,11 +10,15 @@ A shortcode to display content from posts, pages, custom post types, custom fiel
 
 == Description ==
 
-This plugin adds the shortcode **[content]** to display any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
+The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
 
-There is also the shortcode **[loop]** to perform query loops, with which you can create layout templates for displaying the content - for example, products in a category, or the 5 most recent posts.
+The shortcode **[loop]** performs query loops, with which you can create layout templates for displaying the content -- for example,  available products in a category, or excerpts from the 5 most recent posts with thumbnails.
 
-In addition, there is a setting to enable gallery fields for selected post types, where images can be added, removed and ordered.  They can be displayed using the *content* and *loop* shortcodes.
+Additional features:
+
+* Enable gallery fields for chosen post types, where images can be added, removed and ordered.  They can be displayed using the **[content]** and **[loop]** shortcodes, the native gallery, a Bootstrap v3 carousel, or a gallery shortcode of your choice.
+
+* Load CSS/JavaScript files or scripts from custom fields
 
 = Basic examples =  
 <br />
@@ -37,7 +41,7 @@ In addition, there is a setting to enable gallery fields for selected post types
 
 = Available parameters =  
 <br />
-Here are the available parameters for the *content* shortcode.
+Here are the available parameters for the **[content]** shortcode.
 
 * **type** - which post type to target: *post*, *page*, or *custom post type* - if empty, the default is *any post type*
 * **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
@@ -49,7 +53,7 @@ Here are the available parameters for the *content* shortcode.
 
 = Query examples =  
 <br />
-Here are examples of query loops using the *content* and *loop* shortcodes.
+Here are examples of query loops using the **[content]** and **[loop]** shortcodes.
 
 *Display all posts*
 
@@ -57,7 +61,7 @@ Here are examples of query loops using the *content* and *loop* shortcodes.
 	  [content]
 	[/loop]
 
-Notice that inside a query loop, the *content* shortcode does not need *type* and *name* parameters, because it is targeting the current post in the loop.
+Notice that inside a query loop, the **[content]** shortcode does not need *type* and *name* parameters, because it is targeting the current post in the loop.
 
 *Display fields from all posts of a custom post type, filtered by category*
 
@@ -66,7 +70,7 @@ Notice that inside a query loop, the *content* shortcode does not need *type* an
 	  Rent per day: [content field="rent-per-day"]
 	[/loop]
 
-Available parameters for the *loop* shortcode are:
+Available parameters for the **[loop]** shortcode are:
 
  * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
@@ -78,7 +82,7 @@ You can use other parameters of the [WP_Query class](http://codex.wordpress.org/
 
 = Custom content layout =  
 <br />
-Here is an example of how the *loop* and *content* shortcodes can be used to create layout templates.
+Here is an example of how the two shortcodes can be used to create layout templates.
 
 1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
 1. Add all bicycles as new entries, with featured image and other info in the fields.
@@ -132,7 +136,7 @@ Get the attachments of all posts in the category *tree*, and display them using 
 <br />
 In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable gallery fields for selected post types, where images can be added, removed and ordered.
 
-Gallery fields are displayed with the *loop* shortcode in a similar way to attachments, using the same content fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
+Gallery fields are displayed with the **[loop]** shortcode in a similar way to attachments, using the same content fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
 
 *Display images from the gallery field of a specific post*
 
@@ -142,7 +146,7 @@ Gallery fields are displayed with the *loop* shortcode in a similar way to attac
 		Caption: [content field="caption"]
 	[/loop]
 
-Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap v3 carousel. These are used **without** the *loop* shortcode.
+Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap v3 carousel. These are used *without* the **[loop]** shortcode.
 
 	[content gallery="native"]
 	[content gallery="carousel"]
@@ -160,6 +164,43 @@ If you need to pass the content of a field as a parameter to another shortcode, 
 	[loop field="gallery"][isotope_gallery ids="{IDS}"][/loop]
 
 This is necessary because a shortcode cannot be used as a parameter for another shortcode. Note that when you're passing a field, the loop goes through only once.
+
+= Loading CSS or JavaScript =  
+<br />
+Create a custom field called *css*, and the content of the field will be automatically added to the header on page load. This could be useful for loading page-specific styles, or making variations quickly.
+
+Create a custom field called *js*, and the content of the field will be automatically added to the footer. This could be useful for loading page-specific JavaScript files or scripts.
+
+There are shortcodes to simplify the loading of scripts.
+
+The **[load]** shortcode gets the specified file under the *css* and *js* folder in your template directory.
+
+*To load a CSS file, include this in the **css** custom field*
+
+	[load css="bootstrap.min.css"]
+
+*To load a JavaScript file, include this in the **js** custom field*
+
+	[load js="bootstrap.min.js"]
+
+For short scripts, you can use the following shortcodes.
+
+*Wrapping CSS script*
+
+	[css]
+	.entry-content {
+		background-color: black;
+	}
+	[/css]
+
+*Wrapping JS script*
+
+	[js]
+	jQuery( window ).load(function() {
+		jQuery('.isotope_container').isotope('reLayout');
+	});
+	[/js]
+
 
 = Custom content management =  
 <br />
@@ -211,14 +252,21 @@ None.
 
 == Changelog ==
 
+= 0.1.8 =
+
+* Cleaned code
+* Added function to load *css* and *js* fields into the header/footer
+* Added shortcodes: **[css]**, **[js]**, and **[load]**
+* Fixed attachment image showing only thumbnail size
+
 = 0.1.7 =
 
 * Better documentation
 
 = 0.1.6 =
 
-* [content] - Added menu and sidebar content
-* [loop] - Pass a field content as parameter to another shortcode
+* **[content]** - Added menu and sidebar content
+* **[loop]** - Pass a field content as parameter to another shortcode
 
 = 0.1.5 =
 
@@ -232,7 +280,7 @@ None.
 
 = 0.1.3 =
 
-* Changed shortcode to [content]
+* Changed shortcode to **[content]**
 * Added banner image to Wordpress plugin page
 
 = 0.1.2 =
