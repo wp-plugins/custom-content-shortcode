@@ -16,7 +16,7 @@ Here are the main features of the plugin.
 
 * The shortcode **[loop]** performs query loops, for creating content layouts -- for example, displaying available products in a category, or excerpts of the 5 most recent posts with thumbnails.
 
-Also:
+In addition:
 
 * Enable **gallery fields** for chosen post types, where images can be added, removed and ordered.  They can be displayed using the native gallery; Bootstrap v3.x carousel; a gallery shortcode of your choice; or the **[loop]** and **[content]** shortcodes for custom styling.
 
@@ -49,11 +49,10 @@ Here are the main parameters for the **[content]** shortcode.
 * **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
 * **field** - which field to display - if empty, default is the main content of the post. You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
 
-Additional parameters:
+In addition:
 
 * **area** or **sidebar** - display a widget area/sidebar by *title*
-* **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list.
-* **class** - add a `<div>` class to the menu for styling purpose
+* **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list. Use the **class** paramete to add a `<div>` class to the menu for styling purpose
 
 
 = Query examples =  
