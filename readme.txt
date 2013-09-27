@@ -10,20 +10,22 @@ A shortcode to display content from posts, pages, custom post types, custom fiel
 
 == Description ==
 
-Here are the main features of the plugin.
-
-* The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
-
-* The shortcode **[loop]** performs query loops, for creating content layouts -- for example, displaying available products in a category, or excerpts of the 5 most recent posts with thumbnails.
+The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
 
 In addition, you can:
 
-* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered
-* Display images from the gallery field using the native gallery, a gallery shortcode of your choice, or a Bootstrap carousel
-* Display a menu using Bootstrap navbar with dropdown
-* Load page-specific CSS/JavaScript file or script from custom fields
+* Use the shortcode **[loop]** to perform query loops -- for example, display available products in a category, or excerpts of the 5 most recent posts.
 
-Please note that you need the Bootstrap v3.x library for the carousel and navbar.
+* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. 
+
+	Currently, the images can be displayed using the native gallery, a gallery shortcode of your choice, or the *loop* shortcode for a custom layout.
+
+* Load page-specific **CSS/JavaScript** file or script from custom fields.
+
+If you're using the Bootstrap v3.x library, you can:
+
+* Display the gallery field in a carousel
+* Display a menu in a navigation bar with dropdown
 
 = Basic examples =  
 <br />
