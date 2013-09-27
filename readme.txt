@@ -2,7 +2,7 @@
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.1.8
+Stable tag: 0.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,11 +16,16 @@ Here are the main features of the plugin.
 
 * The shortcode **[loop]** performs query loops, for creating content layouts -- for example, displaying available products in a category, or excerpts of the 5 most recent posts with thumbnails.
 
-In addition:
+In addition, you can:
+
+* Load page-specific CSS/JavaScript file or script from custom fields
 
 * Enable **gallery fields** for chosen post types, where images can be added, removed and ordered
 
-* Load page-specific CSS/JavaScript file or script from custom fields
+* Display images from the gallery field using the native gallery, a gallery shortcode of you choice, or a Bootstrap carousel
+
+* Display a menu using Bootstrap navbar with dropdown
+
 
 = Basic examples =  
 <br />
@@ -52,7 +57,7 @@ Here are the main parameters for the **[content]** shortcode.
 In addition:
 
 * **area** or **sidebar** - display a widget area/sidebar by *title*
-* **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list. Use the **class** paramete to add a `<div>` class to the menu for styling purpose
+* **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list. Use the **class** parameter to add a `<div>` class to the menu for styling purpose
 
 
 = Query examples =  
@@ -65,7 +70,7 @@ Here are examples of query loops using the **[content]** and **[loop]** shortcod
 	  [content]
 	[/loop]
 
-Notice that inside a query loop, the **[content]** shortcode does not need *type* and *name* parameters, because it is targeting the current post in the loop.
+Notice that inside a query loop, the **[content]** shortcode does not need *type* and *name* parameters, because it is targeting each post in the loop.
 
 *Display fields from all posts of a custom post type, filtered by category*
 
@@ -110,7 +115,9 @@ Here is an example of how the two shortcodes can be used to create layout templa
 
 = Attachments =  
 <br />
-Display details on all the attachments of the current post:
+For attachments such as images attached to a post, query the post type *attachments*, and display necessary fields.
+
+*Display details on all the attachments of the current post*
 
 	[loop type="attachment"]
 		Attachment ID: [content field="id"]
@@ -123,7 +130,7 @@ Display details on all the attachments of the current post:
 		Thumbnail URL: [content field="thumbnail-url"]
 	[/loop]
 
-Get the attachments of all posts in the category *tree*, and display them using Bootstrap v3.x columns:
+*Display the attachment thumbnails of all posts in the category **tree**, linked to their full-sized images in a lightbox*
 
 	<div class="row">
 		[loop type="attachment" category="tree"]
@@ -140,7 +147,7 @@ Get the attachments of all posts in the category *tree*, and display them using 
 <br />
 In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable gallery fields for selected post types, where images can be added, removed and ordered.
 
-Gallery fields are displayed with the **[loop]** shortcode in a similar way to attachments, using the same content fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
+Images from the gallery field are displayed with the **[loop]** shortcode in a similar way to attachments, using the same content fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
 
 *Display images from the gallery field of a specific post*
 
@@ -150,7 +157,7 @@ Gallery fields are displayed with the **[loop]** shortcode in a similar way to a
 		Caption: [content field="caption"]
 	[/loop]
 
-Currently there are two gallery types included in the *content* shortcode: the native gallery and Bootstrap  v3.x carousel. These are used *without* the **[loop]** shortcode.
+Currently, the *content* shortcode can display the gallery field in two ways: the native gallery and a Bootstrap carousel. These are used *without* the **[loop]** shortcode.
 
 	[content gallery="native"]
 	[content gallery="carousel"]
@@ -185,7 +192,7 @@ Create a custom field called *js*, and the content of the field will be automati
 
 The **[load]** shortcode gets the specified file under the *css* or *js* folder in your template directory.
 
-For short scripts, the following shortcodes can be used.
+For shorter scripts, the following shortcodes can be used.
 
 *Wrapping CSS script*
 
@@ -198,11 +205,23 @@ For short scripts, the following shortcodes can be used.
 *Wrapping JS script*
 
 	[js]
-	jQuery( window ).load(function() {
+	jQuery(window).load(function() {
 		jQuery('.isotope_container').isotope('reLayout');
 	});
 	[/js]
 
+
+= Bootstrap navbar menu =  
+<br />
+To display a menu in a Bootstrap navbar with dropdown, use the following shortcode:
+
+	[navbar menu="Main Menu"]
+		Brand
+	[/navbar]
+
+The *menu* parameter is the title of the menu to be displayed. You can put text or image for the brand/logo area.
+
+Optionally, you can add the *navclass* parameter: *top-nav*, *navbar-fixed-top*, *navbar-fixed-bottom*, *navbar-static-top*. The default is *top-nav*. Please read the Bootstrap documentation for the description of these navbar types.
 
 = Custom content management =  
 <br />
@@ -228,7 +247,7 @@ Here are some plugins that work well together for custom content management.
 <br />
 Additional parameters:
 
-* Bootstrap style parameters for menus: *navs*, *tabs*, *pills*, *dropdowns*
+* Bootstrap navigation for menus: *tabs*, *pills*, *dropdowns*
 * Simple gallery layout with responsive columns
 * query for custom fields and taxonomies
 
@@ -251,6 +270,10 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.1.9 =
+
+* Added **[navbar]** - Bootstrap v3.x menu
 
 = 0.1.8 =
 
