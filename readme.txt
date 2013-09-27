@@ -22,10 +22,11 @@ In addition, you can:
 
 * Enable **gallery fields** for chosen post types, where images can be added, removed and ordered
 
-* Display images from the gallery field using the native gallery, a gallery shortcode of you choice, or a Bootstrap carousel
+* Display images from the gallery field using the native gallery, a gallery shortcode of your choice, or a Bootstrap carousel
 
 * Display a menu using Bootstrap navbar with dropdown
 
+Please note that you need the Bootstrap v3.x library for the carousel and navbar.
 
 = Basic examples =  
 <br />
