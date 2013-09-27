@@ -16,9 +16,7 @@ In addition, you can:
 
 * Use the shortcode **[loop]** to perform query loops -- for example, display available products in a category, or excerpts of the 5 most recent posts.
 
-* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. 
-
-	Currently, the images can be displayed using the native gallery, a gallery shortcode of your choice, or the *loop* shortcode for a custom layout.
+* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. The images can be displayed using the native gallery, a gallery shortcode of your choice, or the *loop* shortcode for a custom layout.
 
 * Load page-specific **CSS/JavaScript** file or script from custom fields.
 
@@ -48,7 +46,7 @@ If you're using the Bootstrap v3.x library, you can:
 
 = Available parameters =  
 <br />
-Here are the main parameters for the **[content]** shortcode.
+Here are the main parameters for the **[content]** shortcode:
 
 * **type** - which post type to target: *post*, *page*, or *custom post type* - if empty, the default is *any post type*
 * **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
@@ -57,7 +55,7 @@ Here are the main parameters for the **[content]** shortcode.
 In addition:
 
 * **area** or **sidebar** - display a widget area/sidebar by *title*
-* **menu** - display a menu by *name/slug*, *ID* or *title*. Currently, it's just a simple list. Use the **class** parameter to add a `<div>` class to the menu for styling purpose
+* **menu** - display a menu list by *name/slug*, *ID* or *title*. Use the **class** parameter to add a `<div>` class to the menu for styling purpose. For a Bootstrap navbar menu, please see the section for the **[navbar]** shortcode.
 
 
 = Query examples =  
