@@ -219,7 +219,7 @@ To display a menu in a Bootstrap navbar with dropdown, use the following shortco
 
 The *menu* parameter is the title of the menu to be displayed. You can put text or image for the brand/logo area.
 
-Optionally, you can add the *navclass* parameter: *top-nav*, *navbar-fixed-top*, *navbar-fixed-bottom*, *navbar-static-top*. The default is *top-nav*. Please read the Bootstrap documentation for the description of these navbar types.
+Optionally, you can add the *navclass* parameter: *top-nav*, *navbar-fixed-top*, *navbar-fixed-bottom*, *navbar-static-top*. The default is *top-nav*. Please read the [Bootstrap documentation](http://getbootstrap.com/components/#navbar) for the description of these navbar types.
 
 = Custom content management =  
 <br />
