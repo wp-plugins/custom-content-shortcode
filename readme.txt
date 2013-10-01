@@ -68,7 +68,7 @@ Here are examples of query loops using the **[content]** and **[loop]** shortcod
 	  [content]
 	[/loop]
 
-Notice that inside a query loop, the **[content]** shortcode does not need *type* and *name* parameters, because it is targeting each post in the loop.
+Note that inside a query loop, the **[content]** shortcode does not need *type* or *name* parameters, because it is targeting each post in the loop.
 
 *Display fields from all posts of a custom post type, filtered by category*
 
@@ -83,7 +83,6 @@ Available parameters for the **[loop]** shortcode are:
  * **category** - display posts from a category
  * **count** - number of posts to show
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
-* **s** - show posts based on a keyword search - *untested*
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
 
@@ -155,7 +154,7 @@ The *content* shortcode can display individual images, or all images in a galler
 
 A basic responsive gallery layout will be included soon.
 
-For a custom layout, images from the gallery field can be displayed with the **[loop]** shortcode in a similar way to attachments, using the same fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
+For a custom layout, images from the gallery field can be displayed with the **[loop]** shortcode just like attachments, using the same fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
 
 This could be useful if you want to present the images in different ways, for example, add borders to each image, link to lightbox, show captions, etc.
 
