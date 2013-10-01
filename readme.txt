@@ -16,14 +16,14 @@ In addition, you can:
 
 * Use the shortcode **[loop]** to perform query loops -- for example, display available products in a category, or excerpts of the 5 most recent posts.
 
-* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. The images can be displayed individually or in a gallery, as well as the *loop* shortcode for a custom layout.
+* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. The images can be displayed individually or in a gallery, as well as with the *loop* shortcode for a custom layout.
 
 * Load page-specific **CSS/JavaScript** file or script from custom fields.
 
-If you're using the Bootstrap v3.x library, you can also:
+If you're using the Bootstrap library (v3.x) you can also:
 
 * Display the gallery field in a carousel
-* Display a menu in a navigation bar with dropdown
+* Display a menu in a navigation bar
 
 = Basic examples =  
 <br />
@@ -188,15 +188,19 @@ Create a custom field called *css*, and the content of the field will be automat
 
 Create a custom field called *js*, and the content of the field will be automatically added to the footer. This could be useful for loading page-specific JavaScript files, jQuery libraries or scripts.
 
-*To load a CSS file, include this in the **css** custom field*
+*Load a CSS stylesheet*
 
 	[load css="bootstrap.min.css"]
 
-*To load a JavaScript file, include this in the **js** custom field*
+*Load a JavaScript file or jQuery plugin*
 
 	[load js="bootstrap.min.js"]
 
-The **[load]** shortcode gets the specified file under the *css* or *js* folder in your template directory.
+By default, the **[load]** shortcode gets the specified file under the *css* or *js* folder in your template directory.  You can choose a different directory using the *dir* parameter with *site*, *template*, or *child*. 
+
+*Load a CSS file from a different location*
+
+	[load dir="template" css="include/custom.css"]
 
 For shorter scripts, the following shortcodes can be used.
 
@@ -281,6 +285,7 @@ None.
 
 = 0.2.0 =
 
+* **[load]** - Added *dir* parameter to choose directory
 * **[content]** - Added *image* parameter for image fields
 * **[content]** - Get specific image from gallery field
 
