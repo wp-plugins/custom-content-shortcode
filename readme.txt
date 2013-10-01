@@ -2,7 +2,7 @@
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.1.9
+Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,7 @@ Here are the main parameters for the **[content]** shortcode:
 
 In addition:
 
+* **image** - display image fields by *name*
 * **area** or **sidebar** - display a widget area/sidebar by *title*
 * **menu** - display a menu list by *name/slug*, *ID* or *title*. Use the **class** parameter to add a `<div>` class to the menu for styling purpose. For a Bootstrap navbar menu, please see the section for the **[navbar]** shortcode.
 
@@ -279,7 +280,9 @@ None.
 
 = 0.2.0 =
 
-* Get specific image from gallery field
+* **[content]** - Added *image* parameter for image fields
+* **[content]** - Get specific image from gallery field
+
 
 = 0.1.9 =
 

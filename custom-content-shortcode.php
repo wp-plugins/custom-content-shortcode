@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Custom Content Shortcode
-Plugin URI: 
-Description: Add a shortcode to get content or field from any post type
-Version: 0.1.9
+Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
+Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
+Version: 0.2.0
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -42,6 +42,7 @@ function custom_content_shortcode($atts) {
 		'type' => null, 'name' => null, 'field' => null, 'id' => null,
 		'menu' => null, 'format' => null, 'shortcode' => null, 'gallery' => 'false',
 		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null, 
+		'height' => null, 'num' => null, 'image' => null,
 		), $atts));
 
 	$custom_post_type = $type;
@@ -57,6 +58,9 @@ function custom_content_shortcode($atts) {
 	$custom_area_name = $area;
 
 	$excerpt_out = null;
+	if($image != null) {
+		$custom_field = $image; // Search for the image field
+	}
 
 	if( $custom_post_type == '' ) { // If no post type is specified, then default is any
 		$custom_post_type = 'any';
@@ -143,12 +147,15 @@ function custom_content_shortcode($atts) {
 	}
 
 	
-	// Gallery types - carousel, native
+	// Gallery types - native or carousel
 
 	if( $custom_gallery_type == "carousel") {
 		$excerpt_out = '[gallery type="carousel" ';
 		if($custom_gallery_name != '') {
 			$excerpt_out .= 'name ="' . $custom_gallery_name . '" ';
+		}
+		if($height!='') {
+			$excerpt_out .= 'height ="' . $height . '" ';	
 		}
 		$excerpt_out .= 'ids="';
 		$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
@@ -167,6 +174,12 @@ function custom_content_shortcode($atts) {
 		}	
 	}
 
+	// Image field
+
+	if($image != null) {
+		$image_id = get_post_meta( $custom_id, $image, true );
+		return wp_get_attachment_image( $image_id, 'full' );
+	}
 
 	// If no field is specified, return content
 
@@ -190,8 +203,20 @@ function custom_content_shortcode($atts) {
 			case "thumbnail-url": wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); return $res['0']; break;
 			case "excerpt": return get_post($custom_id)->post_excerpt; break;
 			case "tags": return implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
-			case "gallery-ids": return get_post_meta( $custom_id, '_custom_gallery', true ); break;
 		}
+
+		if($custom_field == 'gallery') {
+
+			// Get specific image from gallery field
+
+			$attachment_ids = get_post_meta( $custom_id, '_custom_gallery', true );
+			$attachment_ids = array_filter( explode( ',', $attachment_ids ) );
+
+			if($num == null) { $num = '1'; }
+			return wp_get_attachment_image( $attachment_ids[$num-1], 'full' );
+		}
+
+
 
 		if($custom_field == 'excerpt') {
 
@@ -341,7 +366,7 @@ class Loop_Shortcode {
 			}
 
 			$keywords = apply_filters( 'query_shortcode_keywords', array(
-				'QUERY' => serialize($query), // Debug purpose
+				'QUERY' => serialize($query), // DEBUG purpose
 				'URL' => get_permalink(),
 				'ID' => get_the_ID(),
 				'TITLE' => get_the_title(),
@@ -475,7 +500,11 @@ class Loop_Shortcode {
 
 		else {
 
-			/** Gallery Loop **/
+			/*********************
+			 *
+			 * Gallery Loop
+			 *
+			 */
 
 		if( function_exists('custom_gallery_get_image_ids') ) {
 
@@ -490,7 +519,7 @@ class Loop_Shortcode {
 /** DEBUG
 echo "Current Gallery ID: " . $global_vars['current_gallery_id'] . "<br>";
 echo "Query: " . implode(" ", $query) . "<br>";
-echo "Attachments ID: " . implode(" ", $attachment_ids) . "<br>";
+echo "Attachment IDs: " . implode(" ", $attachment_ids) . "<br>";
 **/
 			if ( $attachment_ids ) { 
 				$has_gallery_images = get_post_meta( $global_vars['current_gallery_id'], '_custom_gallery', true );
@@ -512,10 +541,11 @@ echo "Attachments ID: " . implode(" ", $attachment_ids) . "<br>";
 					$global_vars['current_attachment_id'] = $attachment_id;
 
 					// get original image
-					$image_link	= wp_get_attachment_image_src( $attachment_id, apply_filters( 'linked_image_size', 'large' ) );
+					$image_link	= wp_get_attachment_image_src( $attachment_id, 'full' );
 					$image_link	= $image_link[0];	
 										
-					$global_vars['current_image']=wp_get_attachment_image( $attachment_id, apply_filters( 'linked_image_size', 'large' ) );
+					$global_vars['current_image']=wp_get_attachment_image( $attachment_id, 'full' );
+						/* apply_filters( 'linked_image_size', 'large' )? */
 					$global_vars['current_image_url']=$image_link;
 					$global_vars['current_image_thumb']=wp_get_attachment_image( $attachment_id, apply_filters( 'thumbnail_image_size', 'thumbnail' ), '', array( 'alt' => trim( strip_tags( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) ) );
 					$global_vars['current_image_thumb_url']= wp_get_attachment_thumb_url( $attachment_id ) ;
@@ -1283,7 +1313,7 @@ function custom_carousel_make_html_from( $shortcode_atts , $posts ) {
 	endif;
 
 	/* Initialize carousel HTML. */
-	$output = '<div id="' . $name . '" class="carousel slide ' . $containerclass . '" ' . $container_style . '>';
+	$output = '<div id="' . $name . '" class="carousel slide ' . $containerclass . '" ' . $container_style . ' align="center">';
 
 	/* Try to obtain indicators before inner. */
 	$output .= ( $indicators == 'before-inner' ) ? custom_carousel_make_indicators_html_from( $posts , $name ) : '' ;
