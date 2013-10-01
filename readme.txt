@@ -54,7 +54,7 @@ Here are the main parameters for the **[content]** shortcode:
 
 In addition:
 
-* **image** - display image fields by *name*
+* **image** - display image fields by *name/slug*
 * **area** or **sidebar** - display a widget area/sidebar by *title*
 * **menu** - display a menu list by *name/slug*, *ID* or *title*. Use the **class** parameter to add a `<div>` class to the menu for styling purpose. For a Bootstrap navbar menu, please see the section for the **[navbar]** shortcode.
 
