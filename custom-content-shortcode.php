@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Custom Content Shortcode
-Plugin URI: 
-Description: Add a shortcode to get content or field from any post type
-Version: 0.1.5
+Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
+Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
+Version: 0.2.0
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -26,6 +26,7 @@ $global_vars = array(
 	'is_attachment_loop' => 'false',
 	'current_attachment_id' => '',
 	'current_attachment_ids' => '',
+	'current_script' => '',
 );
 
 
@@ -40,35 +41,91 @@ function custom_content_shortcode($atts) {
 	extract(shortcode_atts(array(
 		'type' => null, 'name' => null, 'field' => null, 'id' => null,
 		'menu' => null, 'format' => null, 'shortcode' => null, 'gallery' => 'false',
-		'group' => null,
+		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null, 
+		'height' => null, 'num' => null, 'image' => null,
 		), $atts));
 
 	$custom_post_type = $type;
 	$custom_post_name = $name;
 	$custom_menu_name = $menu;
+	$custom_menu_class = $class;
 	$custom_field = $field;
 	$custom_id = $id;
 	$content_format = $format;
 	$shortcode_option = $shortcode;
 	$custom_gallery_type = $gallery;
 	$custom_gallery_name = $group;
+	$custom_area_name = $area;
 
 	$excerpt_out = null;
+	if($image != null) {
+		$custom_field = $image; // Search for the image field
+	}
 
-	if( $custom_post_type == '' ) { // If no post type is specified, then default is page
+	if( $custom_post_type == '' ) { // If no post type is specified, then default is any
 		$custom_post_type = 'any';
 	}
 
-	if( $custom_menu_name != '' ) { // Menu
+
+	// If we're in a gallery field or attachments loop, return requested field
+
+	if( ( $global_vars['is_gallery_loop'] == "true") ||
+		( $global_vars['is_attachment_loop'] == "true" ) ) {
+		switch($custom_field) {
+			case "image": return $global_vars['current_image']; break;
+			case "image-url": return $global_vars['current_image_url']; break;
+			case "thumbnail": return $global_vars['current_image_thumb']; break;
+			case "thumbnail-url": return $global_vars['current_image_thumb_url']; break;
+			case "caption": return $global_vars['current_image_caption']; break;
+			case "id": return $global_vars['current_attachment_id']; break;
+			case "title": return $global_vars['current_image_title']; break;
+			case "description": return $global_vars['current_image_description']; break;
+			case "alt": return $global_vars['current_image_alt']; break;
+		}
+	}
+
+
+	// Display sidebar/widget area
+
+	if( $sidebar != '') {
+		$custom_area_name = $sidebar;
+	}
+	if( $custom_area_name != '') {
+		$back =  "<div id='" . str_replace( " ", "_", $name ) . "' class='sidebar_shortcode'>";
+		ob_start();
+		if ( ! function_exists('dynamic_sidebar') || ! dynamic_sidebar($custom_area_name) ) {}
+		$back .= ob_get_contents();
+		ob_end_clean();
+		$back .= "</div>";
+		return $back;
+	}
+
+
+	// Display menu
+
+	if( $custom_menu_name != '' ) {
+
+		// Simple menu list
+
 		$menu_args = array (
 			'menu' => $custom_menu_name,
 			'echo' => false,
-			);
-		return wp_nav_menu( $menu_args );
+		);
+
+		$output = wp_nav_menu( $menu_args );
+
+		if( $custom_menu_class == '') {
+			return $output;
+		} else {
+			return '<div class="' . $custom_menu_class . '">' . $output . '</div>';
+		}
 	}
 
-	if($custom_post_name != '') { // Specific post name/slug
-		$args=array( // Get post ID from post slug
+
+	// If post name/slug is defined, get its ID
+
+	if($custom_post_name != '') {
+		$args=array(
 		  'name' => $custom_post_name,
 		  'post_type' => $custom_post_type,
 		  'post_status' => 'publish',
@@ -77,19 +134,36 @@ function custom_content_shortcode($atts) {
 		);
 
 		$my_posts = get_posts($args);
-		if( $my_posts ) { // Get post ID, then custom field from that ID
-			$custom_id=$my_posts[0]->ID;
-		} else { // No posts returned
-			return null;
+
+		if( $my_posts ) { $custom_id=$my_posts[0]->ID; }
+		else { return null; // No posts found by that name
 		}
 	}
 	else {
-		if($custom_id == '') { // if no name and id, then current post
-			$custom_id = get_the_ID();
-		}
+
+		// If no name or id, then current post
+
+		if($custom_id == '') { $custom_id = get_the_ID(); }
 	}
-		if( $custom_gallery_type == "carousel") {
-			$excerpt_out = '[gallery type="carousel" ';
+
+	
+	// Gallery types - native or carousel
+
+	if( $custom_gallery_type == "carousel") {
+		$excerpt_out = '[gallery type="carousel" ';
+		if($custom_gallery_name != '') {
+			$excerpt_out .= 'name ="' . $custom_gallery_name . '" ';
+		}
+		if($height!='') {
+			$excerpt_out .= 'height ="' . $height . '" ';	
+		}
+		$excerpt_out .= 'ids="';
+		$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
+		$excerpt_out .= '" ]';
+		return $res=do_shortcode( $excerpt_out );
+	} else {
+		if( $custom_gallery_type == "native") {
+			$excerpt_out = '[gallery " ';
 			if($custom_gallery_name != '') {
 				$excerpt_out .= 'name ="' . $custom_gallery_name . '" ';
 			}
@@ -97,85 +171,80 @@ function custom_content_shortcode($atts) {
 			$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
 			$excerpt_out .= '" ]';
 			return $res=do_shortcode( $excerpt_out );
-		} else {
-			if( $custom_gallery_type == "native") {
-				$excerpt_out = '[gallery " ';
-				if($custom_gallery_name != '') {
-					$excerpt_out .= 'name ="' . $custom_gallery_name . '" ';
-				}
-				$excerpt_out .= 'ids="';
-				$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
-				$excerpt_out .= '" ]';
-				return $res=do_shortcode( $excerpt_out );
-			}	
-		}
-
-
-			if($custom_field == '') { // If no field is specified, return content
-				if($content_format == 'true') {
-					$excerpt_out = do_shortcode( apply_filters('the_content', $my_posts[0]->post_content) );
-				} else {
-					$excerpt_out = do_shortcode($my_posts[0]->post_content);
-				}
-			} else { // else return specified field
-				if($custom_field == 'excerpt') {
-					$excerpt_out = $res=$my_posts[0]->post_excerpt;
-				} else {
-					if($shortcode_option == 'true') {
-						$excerpt_out = do_shortcode( get_post_meta($custom_id, $custom_field, $single=true) );
-					} else {
-						$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
-					}
-				}				
-			}
-
-
-		if($custom_field == '') { // If no field is specified, return content
-			$custom_content = apply_filters('the_content', get_post_field('post_content', $custom_id));
-			return $res=do_shortcode( $custom_content );
-		} else {
-			$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
-			if($shortcode_option == 'true') {
-				$excerpt_out = do_shortcode( $excerpt_out );
-			}
-			if($content_format == 'true') {
-				$excerpt_out = apply_filters('the_content', $excerpt_out );
-			}
-		}
-
-	if( ( $global_vars['is_gallery_loop'] == "true") || ( $global_vars['is_attachment_loop'] == "true" ) ) {
-		switch($custom_field) {
-			case "image": return $res=$global_vars['current_image']; break;
-			case "image-url": return $res=$global_vars['current_image_url']; break;
-			case "thumbnail": return $res=$global_vars['current_image_thumb']; break;
-			case "thumbnail-url": return $res=$global_vars['current_image_thumb_url']; break;
-			case "caption": return $res=$global_vars['current_image_caption']; break;
-			case "id": return $res=$global_vars['current_attachment_id']; break;
-			case "title": return $res=$global_vars['current_image_title']; break;
-			case "description": return $res=$global_vars['current_image_description']; break;
-			case "alt": return $res=$global_vars['current_image_alt']; break;
-		}
+		}	
 	}
 
+	// Image field
+
+	if($image != null) {
+		$image_id = get_post_meta( $custom_id, $image, true );
+		return wp_get_attachment_image( $image_id, 'full' );
+	}
+
+	// If no field is specified, return content
+
+	if($custom_field == '') { 
+
+		$excerpt_out = get_post_field('post_content', $custom_id);
+
+	} else { // else return specified field
+
+		// Predefined fields
+
 		switch($custom_field) {
-			case "title": return $res=get_the_title($custom_id); break;
-			case "author": return $res=get_the_author($custom_id); break;
-			case "date": return $res=mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
-			case "url": return $res=get_post_permalink($custom_id); break;
-			case "image": return $res=get_the_post_thumbnail($custom_id); break;
-			case "image-url": return $res=wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
-			case "thumbnail": return $res=get_the_post_thumbnail( $custom_id, 'thumbnail' ); break;
-			case "thumbnail-url": $res=wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); return $res['0']; break;
-			case "excerpt": return $res=get_post($custom_id)->post_excerpt; break;
-			case "id": return $res=$custom_id; break;
-			case "tags": return $res=implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
-			case "gallery-ids": return $res=get_post_meta( $custom_id, '_custom_gallery', true ); break;
-			default: return $res=$excerpt_out;
+			case "id": return $custom_id; break;
+			case "title": return get_the_title($custom_id); break;
+			case "author": return get_the_author($custom_id); break;
+			case "date": return mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
+			case "url": return get_post_permalink($custom_id); break;
+			case "image": return get_the_post_thumbnail($custom_id); break;
+			case "image-url": return wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
+			case "thumbnail": return get_the_post_thumbnail( $custom_id, 'thumbnail' ); break;
+			case "thumbnail-url": wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); return $res['0']; break;
+			case "excerpt": return get_post($custom_id)->post_excerpt; break;
+			case "tags": return implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
 		}
-	
+
+		if($custom_field == 'gallery') {
+
+			// Get specific image from gallery field
+
+			$attachment_ids = get_post_meta( $custom_id, '_custom_gallery', true );
+			$attachment_ids = array_filter( explode( ',', $attachment_ids ) );
+
+			if($num == null) { $num = '1'; }
+			return wp_get_attachment_image( $attachment_ids[$num-1], 'full' );
+		}
+
+
+
+		if($custom_field == 'excerpt') {
+
+			// Get excerpt
+
+			$excerpt_out = get_post_field('post_excerpt', $custom_id);
+		} else {
+
+			// Get other fields
+
+			$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
+		}				
+	}
+
+	if($content_format != 'false') { // Format?
+		$excerpt_out = apply_filters('the_content', $excerpt_out );
+	}
+
+	if($shortcode_option != 'false') { // Shortcode?
+		$excerpt_out = do_shortcode( $excerpt_out );
+	}
+
+	return $excerpt_out;
 }
 
 add_shortcode('content', 'custom_content_shortcode');
+
+
 
 /*
  * Simple query loop shortcode
@@ -297,7 +366,7 @@ class Loop_Shortcode {
 			}
 
 			$keywords = apply_filters( 'query_shortcode_keywords', array(
-				'QUERY' => serialize($query), // Debug purpose
+				'QUERY' => serialize($query), // DEBUG purpose
 				'URL' => get_permalink(),
 				'ID' => get_the_ID(),
 				'TITLE' => get_the_title(),
@@ -384,10 +453,11 @@ class Loop_Shortcode {
 					// get original image
 
 						$global_vars['current_attachment_id'] = $attachment_id;
+
 						$image_link	= wp_get_attachment_image_src( $attachment_id, "full" );
 						$image_link	= $image_link[0];	
 										
-						$global_vars['current_image'] = wp_get_attachment_image( $attachment_id );
+						$global_vars['current_image'] = wp_get_attachment_image( $attachment_id, "full" );
 						$global_vars['current_image_url'] = $image_link;
 						$global_vars['current_image_thumb'] = wp_get_attachment_image( $attachment_id, 'thumbnail', '', array( 'alt' => trim( strip_tags( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) ) );
 						$global_vars['current_image_thumb_url'] = wp_get_attachment_thumb_url( $attachment_id, 'thumbnail' ) ;
@@ -404,6 +474,7 @@ class Loop_Shortcode {
 				'ID' => $attachment_id,
 				'TITLE' => get_post( $attachment_id )->post_title,
 				'CONTENT' => get_post( $attachment_id )->post_content,
+				'CAPTION' => get_post( $attachment_id )->post_excerpt,
 				'DESCRIPTION' => get_post( $attachment_id )->post_content,
 				'IMAGE' => $global_vars['current_image'],
 				'IMAGE_URL' => $global_vars['current_image_url'],
@@ -429,7 +500,11 @@ class Loop_Shortcode {
 
 		else {
 
-			/** Gallery Loop **/
+			/*********************
+			 *
+			 * Gallery Loop
+			 *
+			 */
 
 		if( function_exists('custom_gallery_get_image_ids') ) {
 
@@ -444,7 +519,7 @@ class Loop_Shortcode {
 /** DEBUG
 echo "Current Gallery ID: " . $global_vars['current_gallery_id'] . "<br>";
 echo "Query: " . implode(" ", $query) . "<br>";
-echo "Attachments ID: " . implode(" ", $attachment_ids) . "<br>";
+echo "Attachment IDs: " . implode(" ", $attachment_ids) . "<br>";
 **/
 			if ( $attachment_ids ) { 
 				$has_gallery_images = get_post_meta( $global_vars['current_gallery_id'], '_custom_gallery', true );
@@ -463,11 +538,14 @@ echo "Attachments ID: " . implode(" ", $attachment_ids) . "<br>";
 
 				foreach ( $attachment_ids as $attachment_id ) {
 
+					$global_vars['current_attachment_id'] = $attachment_id;
+
 					// get original image
-					$image_link	= wp_get_attachment_image_src( $attachment_id, apply_filters( 'linked_image_size', 'large' ) );
+					$image_link	= wp_get_attachment_image_src( $attachment_id, 'full' );
 					$image_link	= $image_link[0];	
 										
-					$global_vars['current_image']=wp_get_attachment_image( $attachment_id, apply_filters( 'linked_image_size', 'large' ) );
+					$global_vars['current_image']=wp_get_attachment_image( $attachment_id, 'full' );
+						/* apply_filters( 'linked_image_size', 'large' )? */
 					$global_vars['current_image_url']=$image_link;
 					$global_vars['current_image_thumb']=wp_get_attachment_image( $attachment_id, apply_filters( 'thumbnail_image_size', 'thumbnail' ), '', array( 'alt' => trim( strip_tags( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) ) );
 					$global_vars['current_image_thumb_url']= wp_get_attachment_thumb_url( $attachment_id ) ;
@@ -484,6 +562,7 @@ echo "Attachments ID: " . implode(" ", $attachment_ids) . "<br>";
 				'ID' => $attachment_id,
 				'TITLE' => get_post( $attachment_id )->post_title,
 				'CONTENT' => get_post( $attachment_id )->post_content,
+				'CAPTION' => get_post( $attachment_id )->post_excerpt,
 				'DESCRIPTION' => get_post( $attachment_id )->post_content,
 				'IMAGE' => $global_vars['current_image'],
 				'IMAGE_URL' => $global_vars['current_image_url'],
@@ -1234,7 +1313,7 @@ function custom_carousel_make_html_from( $shortcode_atts , $posts ) {
 	endif;
 
 	/* Initialize carousel HTML. */
-	$output = '<div id="' . $name . '" class="carousel slide ' . $containerclass . '" ' . $container_style . '>';
+	$output = '<div id="' . $name . '" class="carousel slide ' . $containerclass . '" ' . $container_style . ' align="center">';
 
 	/* Try to obtain indicators before inner. */
 	$output .= ( $indicators == 'before-inner' ) ? custom_carousel_make_indicators_html_from( $posts , $name ) : '' ;
@@ -1350,3 +1429,278 @@ function custom_carousel_make_array( $string ) {
 
 }
 
+
+/*************************************
+ *
+ * Shortcodes for CSS and JS fields
+ *
+ */
+
+
+function custom_css_wrap($atts, $content = null) {
+    $result = '<style type="text/css">';
+    $result .= do_shortcode($content);
+    $result .= '</style>';
+    return $result;
+}
+
+add_shortcode('css', 'custom_css_wrap');
+
+function custom_js_wrap( $atts, $content = null ) {
+    $result = '<script type="text/javascript">';
+    $result .= do_shortcode( $content );
+    $result .= '</script>';
+    return $result;
+}
+
+add_shortcode('js', 'custom_js_wrap');
+
+
+function custom_load_script_file($atts) {
+
+	extract( shortcode_atts( array(
+		'css' => null, 'js' => null, 
+		), $atts ) );
+
+	if($css != '') {
+		echo '<link rel="stylesheet" type="text/css" href="';
+		echo get_template_directory_uri() . "/css/" . $css . '" />';
+	}
+	if($js != '') {
+		echo '<script src="' . get_template_directory_uri() . "/js/" . $js . '"></script>';
+	}
+	return null;
+}
+
+add_shortcode('load', 'custom_load_script_file');
+
+
+
+
+/** Load CSS field into header **/
+
+add_action('wp_head', 'load_custom_css');
+function load_custom_css() {
+	$custom_css = do_shortcode( get_post_meta( get_the_ID(), "css", $single=true ) );
+	if( $custom_css != '' ) {
+		echo $custom_css;
+	}
+}
+
+/** Load JS field into footer **/
+
+add_action('wp_footer', 'load_custom_js');
+function load_custom_js() {
+	$custom_js = do_shortcode( get_post_meta( get_the_ID(), "js", $single=true ) );
+	if( $custom_js != '' ) {
+		echo $custom_js;
+	}
+}
+
+
+
+/**********************************
+ *
+ * Bootstrap nav walker
+ *
+ */
+
+
+class custom_bootstrap_navwalker extends Walker_Nav_Menu {
+	
+	/**
+	 * @see Walker::start_lvl()
+	 * @since 3.0.0
+	 *
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @param int $depth Depth of page. Used for padding.
+	 */
+	function start_lvl( &$output, $depth = 0, $args = array() ) {
+		$indent = str_repeat("\t", $depth);
+		$output .= "\n$indent<ul role=\"menu\" class=\" dropdown-menu\">\n";
+	}
+
+	/**
+	 * @see Walker::start_el()
+	 * @since 3.0.0
+	 *
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @param object $item Menu item data object.
+	 * @param int $depth Depth of menu item. Used for padding.
+	 * @param int $current_page Menu item ID.
+	 * @param object $args
+	 */
+
+	function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
+		$indent = ( $depth ) ? str_repeat( "\t", $depth ) : '';
+
+		/**
+		 * Dividers, Headers or Disabled
+	         * =============================
+		 * Determine whether the item is a Divider, Header, Disabled or regular
+		 * menu item. To prevent errors we use the strcasecmp() function to so a
+		 * comparison that is not case sensitive. The strcasecmp() function returns
+		 * a 0 if the strings are equal.
+		 */
+		if (strcasecmp($item->attr_title, 'divider') == 0 && $depth === 1) {
+			$output .= $indent . '<li role="presentation" class="divider">';
+		} else if (strcasecmp($item->title, 'divider') == 0 && $depth === 1) {
+			$output .= $indent . '<li role="presentation" class="divider">';
+		} else if (strcasecmp($item->attr_title, 'dropdown-header') == 0 && $depth === 1) {
+			$output .= $indent . '<li role="presentation" class="dropdown-header">' . esc_attr( $item->title );
+		} else if (strcasecmp($item->attr_title, 'disabled') == 0) {
+			$output .= $indent . '<li role="presentation" class="disabled"><a href="#">' . esc_attr( $item->title ) . '</a>';
+		} else {
+
+			$class_names = $value = '';
+
+			$classes = empty( $item->classes ) ? array() : (array) $item->classes;
+			$classes[] = 'menu-item-' . $item->ID;
+
+			$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args ) );
+			
+			if($args->has_children) {	$class_names .= ' dropdown'; }
+			if(in_array('current-menu-item', $classes)) { $class_names .= ' active'; }
+
+			$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
+
+			$id = apply_filters( 'nav_menu_item_id', 'menu-item-'. $item->ID, $item, $args );
+			$id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
+
+			$output .= $indent . '<li' . $id . $value . $class_names .'>';
+
+			$atts = array();
+			$atts['title']  = ! empty( $item->title ) 	   ? $item->title 	   : '';
+			$atts['target'] = ! empty( $item->target )     ? $item->target     : '';
+			$atts['rel']    = ! empty( $item->xfn )        ? $item->xfn        : '';
+
+			//If item has_children add atts to a
+			if($args->has_children && $depth === 0) {
+				$atts['href']   		= '#';
+				$atts['data-toggle']	= 'dropdown';
+				$atts['class']			= 'dropdown-toggle';
+			} else {
+				$atts['href'] = ! empty( $item->url ) ? $item->url : '';
+			}
+
+			$atts = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args );
+
+			$attributes = '';
+			foreach ( $atts as $attr => $value ) {
+				if ( ! empty( $value ) ) {
+					$value = ( 'href' === $attr ) ? esc_url( $value ) : esc_attr( $value );
+					$attributes .= ' ' . $attr . '="' . $value . '"';
+				}
+			}
+
+			$item_output = $args->before;
+
+			/*
+			 * Glyphicons
+			 * ===========
+			 * Since the the menu item is NOT a Divider or Header we check the see
+			 * if there is a value in the attr_title property. If the attr_title
+			 * property is NOT null we apply it as the class name for the glyphicon.
+
+			if(! empty( $item->attr_title )){
+				$item_output .= '<a'. $attributes .'><span class="glyphicon ' . esc_attr( $item->attr_title ) . '"></span>&nbsp;';
+			} else {
+				$item_output .= '<a'. $attributes .'>';
+			}
+			 */
+
+			$item_output .= '<a'. $attributes .'>';
+			$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
+			$item_output .= ($args->has_children && $depth === 0) ? ' <span class="caret"></span></a>' : '</a>';
+			$item_output .= $args->after;
+
+			$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+		}
+	}
+
+	/**
+	 * Traverse elements to create list from elements.
+	 *
+	 * Display one element if the element doesn't have any children otherwise,
+	 * display the element and its children. Will only traverse up to the max
+	 * depth and no ignore elements under that depth. 
+	 *
+	 * This method shouldn't be called directly, use the walk() method instead.
+	 *
+	 * @see Walker::start_el()
+	 * @since 2.5.0
+	 *
+	 * @param object $element Data object
+	 * @param array $children_elements List of elements to continue traversing.
+	 * @param int $max_depth Max depth to traverse.
+	 * @param int $depth Depth of current element.
+	 * @param array $args
+	 * @param string $output Passed by reference. Used to append additional content.
+	 * @return null Null on failure with no changes to parameters.
+	 */
+
+	function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
+        if ( !$element ) {
+            return;
+        }
+
+        $id_field = $this->db_fields['id'];
+
+        //display this element
+        if ( is_object( $args[0] ) ) {
+           $args[0]->has_children = ! empty( $children_elements[$element->$id_field] );
+        }
+
+        parent::display_element($element, $children_elements, $max_depth, $depth, $args, $output);
+    }
+}
+
+/*
+ * Bootstrap navwalker shortcode
+ *
+ */
+
+function custom_bootstrap_navbar( $atts, $content = null ) {
+
+	extract( shortcode_atts( array(
+		'menu' => null, 'navclass' => null, 
+		), $atts ) );
+
+	$menu_args = array (
+			'menu' => $menu,
+			'echo' => false,
+			'depth' => 2,
+			'container' => false,
+			'menu_class' => 'nav navbar-nav',
+			'fallback_cb' => 'custom_bootstrap_navwalker::fallback',
+			'walker' => new custom_bootstrap_navwalker(),
+		);
+
+		if( $navclass=='' ) {
+			$navclass = "top-nav";
+		}
+
+		$output = '<nav class="navbar navbar-default '
+				. $navclass . '" role="navigation">';
+
+		// Brand and toggle get grouped for better mobile display -->
+		$output .= '
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="' . get_site_url() . '">' . $content .
+			'</a>
+		</div>
+
+		<div class="collapse navbar-collapse navbar-ex1-collapse">';
+
+		$output .= wp_nav_menu( $menu_args ) . '</div></nav>';
+
+    return $output;
+}
+
+add_shortcode('navbar', 'custom_bootstrap_navbar');
