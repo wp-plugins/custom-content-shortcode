@@ -1,4 +1,8 @@
 === Custom Content Shortcode ===
+Contributors: miyarakira
+Author: Eliot Akira
+Author URI: eliotakira.com
+Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
@@ -84,6 +88,7 @@ Available parameters for the **[loop]** shortcode are:
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
+ * **s** - 
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
 
