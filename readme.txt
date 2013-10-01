@@ -6,11 +6,11 @@ Stable tag: 0.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas
+A shortcode to display content from posts, pages, custom post types, custom fields, images, attachments, menus, or widget areas
 
 == Description ==
 
-The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus, and widget areas (also called sidebars).
+The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachments, menus, and widget areas.
 
 In addition, you can:
 
