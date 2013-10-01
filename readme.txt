@@ -6,21 +6,21 @@ Stable tag: 0.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas.
+A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas
 
 == Description ==
 
-The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus and widget areas (also called sidebars).
+The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachment files, menus, and widget areas (also called sidebars).
 
 In addition, you can:
 
 * Use the shortcode **[loop]** to perform query loops -- for example, display available products in a category, or excerpts of the 5 most recent posts.
 
-* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. The images can be displayed using the native gallery, a gallery shortcode of your choice, or the *loop* shortcode for a custom layout.
+* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. The images can be displayed individually or in a gallery, as well as the *loop* shortcode for a custom layout.
 
 * Load page-specific **CSS/JavaScript** file or script from custom fields.
 
-If you're using the Bootstrap v3.x library, you can:
+If you're using the Bootstrap v3.x library, you can also:
 
 * Display the gallery field in a carousel
 * Display a menu in a navigation bar with dropdown
@@ -83,8 +83,9 @@ Available parameters for the **[loop]** shortcode are:
  * **category** - display posts from a category
  * **count** - number of posts to show
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
+* **s** - show posts based on a keyword search - *untested*
 
-You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*. Custom field and taxonomy parameters are not yet supported.
+You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
 
 
 = Custom content layout =  
@@ -113,7 +114,7 @@ Here is an example of how the two shortcodes can be used to create layout templa
 
 = Attachments =  
 <br />
-For attachments such as images attached to a post, query the post type *attachments*, and display necessary fields.
+For attachments such as images attached to a post, query the post type *attachment*, and display necessary fields.
 
 *Display details on all the attachments of the current post*
 
@@ -130,24 +131,35 @@ For attachments such as images attached to a post, query the post type *attachme
 
 *Display the attachment thumbnails of all posts in the category **tree**, linked to their full-sized images in a lightbox*
 
-	<div class="row">
-		[loop type="attachment" category="tree"]
-			<div class="col-md-4" align="center">
-				<a href='[content field="image-url"]' rel="lightbox">
-					<img src='[content field="thumbnail-url"]'>
-				</a>
-			</div>  
-		[/loop]
-	</div> 
+	[loop type="attachment" category="tree"]
+		<a href='[content field="image-url"]' rel="lightbox">
+			<img src='[content field="thumbnail-url"]'>
+		</a>
+	[/loop]
 
 
 = Gallery fields =  
 <br />
 In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable gallery fields for selected post types, where images can be added, removed and ordered.
 
-Images from the gallery field are displayed with the **[loop]** shortcode in a similar way to attachments, using the same content fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
+The *content* shortcode can display individual images, or all images in a gallery.
 
-*Display images from the gallery field of a specific post*
+*Display the 3rd image in the gallery field*
+
+	[content field="gallery" num="3"]
+
+*Display images in a native gallery or a Bootstrap carousel*
+
+	[content gallery="native"]
+	[content gallery="carousel"]
+
+A basic responsive gallery layout will be included soon.
+
+For a custom layout, images from the gallery field can be displayed with the **[loop]** shortcode in a similar way to attachments, using the same fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
+
+This could be useful if you want to present the images in different ways, for example, add borders to each image, link to lightbox, show captions, etc.
+
+*Display image details from the gallery field of a specific post*
 
 	[loop type="gallery" name="hello-world"]
 		Title: [content field="title"]
@@ -155,10 +167,6 @@ Images from the gallery field are displayed with the **[loop]** shortcode in a s
 		Caption: [content field="caption"]
 	[/loop]
 
-Currently, the *content* shortcode can display the gallery field in two ways: the native gallery and a Bootstrap carousel. These are used *without* the **[loop]** shortcode.
-
-	[content gallery="native"]
-	[content gallery="carousel"]
 
 = Use a field content as parameter to another shortcode =  
 <br />
@@ -245,10 +253,10 @@ Here are some plugins that work well together for custom content management.
 <br />
 Additional parameters:
 
+* basic gallery layout with responsive columns
+* option to load JavaScript library in the header
 * Bootstrap navigation for menus: *tabs*, *pills*, *dropdowns*
-* Simple gallery layout with responsive columns
 * query for custom fields and taxonomies
-
 
 
 == Installation ==
@@ -268,6 +276,11 @@ Not yet.
 None.
 
 == Changelog ==
+
+
+= 0.2.0 =
+
+* Get specific image from gallery field
 
 = 0.1.9 =
 
