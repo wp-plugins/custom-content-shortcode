@@ -82,7 +82,7 @@ Available parameters for the **[loop]** shortcode are:
 
  * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
- * **count** - number of posts to show
+ * **count** - number of posts to show - default is *all*
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
@@ -236,7 +236,7 @@ Here are some plugins that work well together for custom content management.
 *Custom post types and fields*
 
  * **[Custom Post Type UI](http://wordpress.org/plugins/custom-post-type-ui/)** - Create and manage custom post types and taxonomies
- * **[Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/)** - Create and manage all kinds of useful custom field types. *Note: Some advanced fields types such as arrays and repeaters are not yet supported by the Custom Content Shortcode.*
+ * **[Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/)** - Create and manage all kinds of useful custom field types.
  * **[Simple Fields](http://wordpress.org/plugins/simple-fields/)** - Add any kind of custom fields to your pages, posts and attachments
  * **[Meta Boxes](http://wordpress.org/plugins/meta-box/)** - Easily implement multiple meta boxes in editing pages, with custom post types and vairous field types
  
