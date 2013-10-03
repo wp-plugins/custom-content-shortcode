@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
-Version: 0.2.0
+Version: 0.2.1
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -12,6 +12,10 @@ License: GPL2
 $global_vars = array(
 	'is_loop' => 'false',
 	'is_gallery_loop' => 'false',
+	'is_attachment_loop' => 'false',
+	'is_repeater_loop' => 'false',
+	'current_loop_id' => '',
+	'current_row' => '',
 	'current_image' => '',
 	'current_image_url' => '',
 	'current_image_thumb' => '',
@@ -23,7 +27,6 @@ $global_vars = array(
 	'current_image_ids' => '',
 	'current_gallery_name' => '',
 	'current_gallery_id' => '',
-	'is_attachment_loop' => 'false',
 	'current_attachment_id' => '',
 	'current_attachment_ids' => '',
 	'current_script' => '',
@@ -42,7 +45,8 @@ function custom_content_shortcode($atts) {
 		'type' => null, 'name' => null, 'field' => null, 'id' => null,
 		'menu' => null, 'format' => null, 'shortcode' => null, 'gallery' => 'false',
 		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null, 
-		'height' => null, 'num' => null, 'image' => null,
+		'height' => null, 'num' => null, 'image' => null, 'in' => null,
+		'row' => null, 'sub' => null,
 		), $atts));
 
 	$custom_post_type = $type;
@@ -91,7 +95,7 @@ function custom_content_shortcode($atts) {
 		$custom_area_name = $sidebar;
 	}
 	if( $custom_area_name != '') {
-		$back =  "<div id='" . str_replace( " ", "_", $name ) . "' class='sidebar_shortcode'>";
+		$back =  "<div id='" . str_replace( " ", "_", $name ) . "' class='sidebar'>";
 		ob_start();
 		if ( ! function_exists('dynamic_sidebar') || ! dynamic_sidebar($custom_area_name) ) {}
 		$back .= ob_get_contents();
@@ -146,7 +150,51 @@ function custom_content_shortcode($atts) {
 		if($custom_id == '') { $custom_id = get_the_ID(); }
 	}
 
+	// If repeater field loop then get sub field
+
+	if($global_vars['is_repeater_loop'] != 'false') {
+
+		$custom_id = $global_vars['current_loop_id'];
+
+
+		if($custom_field=='row') {
+			return $global_vars['current_row'];
+		}
+		if( function_exists('the_sub_field') ) {
+
+			$excerpt_out = get_sub_field($custom_field, $custom_id);
+			switch($in) {
+				case 'id' : $excerpt_out = wp_get_attachment_image( $excerpt_out, 'full' ); break;
+				case 'url' : $excerpt_out = '<img src="' . $excerpt_out . '">'; break;
+				default : if(is_array($excerpt_out)) {
+					$excerpt_out = wp_get_attachment_image( $excerpt_out[id], 'full' );
+				}
+			}
+		} else {
+			$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
+		}
+		return $excerpt_out;
+	}
 	
+	// Repeater field subfield
+
+	if($sub != '') {
+		$excerpt_out = null;
+		if( function_exists('get_field') ) {
+			$rows = get_field($custom_field); // Get all rows
+			$row = $rows[$row-1]; // Get the specific row (first, second, ...)
+			$excerpt_out = $row[$sub]; // Get the subfield
+			switch($in) {
+				case 'id' : $excerpt_out = wp_get_attachment_image( $excerpt_out, 'full' ); break;
+				case 'url' : $excerpt_out = '<img src="' . $excerpt_out . '">'; break;
+				default : if(is_array($excerpt_out)) {
+					$excerpt_out = wp_get_attachment_image( $excerpt_out[id], 'full' );
+				}
+			}
+		}
+		return $excerpt_out;
+	}
+
 	// Gallery types - native or carousel
 
 	if( $custom_gallery_type == "carousel") {
@@ -160,7 +208,7 @@ function custom_content_shortcode($atts) {
 		$excerpt_out .= 'ids="';
 		$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
 		$excerpt_out .= '" ]';
-		return $res=do_shortcode( $excerpt_out );
+		return do_shortcode( $excerpt_out );
 	} else {
 		if( $custom_gallery_type == "native") {
 			$excerpt_out = '[gallery " ';
@@ -170,7 +218,7 @@ function custom_content_shortcode($atts) {
 			$excerpt_out .= 'ids="';
 			$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
 			$excerpt_out .= '" ]';
-			return $res=do_shortcode( $excerpt_out );
+			return do_shortcode( $excerpt_out );
 		}	
 	}
 
@@ -188,6 +236,7 @@ function custom_content_shortcode($atts) {
 		$excerpt_out = get_post_field('post_content', $custom_id);
 
 	} else { // else return specified field
+
 
 		// Predefined fields
 
@@ -216,8 +265,6 @@ function custom_content_shortcode($atts) {
 			return wp_get_attachment_image( $attachment_ids[$num-1], 'full' );
 		}
 
-
-
 		if($custom_field == 'excerpt') {
 
 			// Get excerpt
@@ -228,6 +275,7 @@ function custom_content_shortcode($atts) {
 			// Get other fields
 
 			$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
+
 		}				
 	}
 
@@ -249,8 +297,6 @@ add_shortcode('content', 'custom_content_shortcode');
 /*
  * Simple query loop shortcode
  *
- * Based on the original Query Shortcode by Hassan Derakhshandeh
- *
  */
 
 class Loop_Shortcode {
@@ -261,16 +307,19 @@ class Loop_Shortcode {
 
 	function register() {
 		add_shortcode( 'loop', array( &$this, 'simple_query_shortcode' ) );
+		add_shortcode( 'pass', array( &$this, 'simple_query_shortcode' ) );
 	}
 
-	function simple_query_shortcode( $atts, $template = null ) {
+	function simple_query_shortcode( $atts, $template = null, $shortcode_name ) {
 
 		global $global_vars;
 
 		$global_vars['is_loop'] = "true";
 		$global_vars['current_gallery_name'] = '';
 		$global_vars['current_gallery_id'] = '';
+		$global_vars['is_gallery_loop'] = "false";
 		$global_vars['is_attachment_loop'] = "false";
+		$global_vars['is_repeater_loop'] = "false";
 
 		if( ! is_array( $atts ) ) return;
 
@@ -286,10 +335,26 @@ class Loop_Shortcode {
 			'id' => '',
 			'name' => '',
 			'field' => '',
+			'repeater' => '',
+			'x' => '',
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
 		extract( $all_args );
+
+
+		if($x != '') { // Simple loop without query
+
+			$output = array();
+			ob_start();
+
+			while($x > 0) {
+				echo do_shortcode($template);
+				$x--;
+			}
+			return ob_get_clean();
+		}
+
 
 		$query = array_merge( $atts, $all_args );
 
@@ -300,9 +365,6 @@ class Loop_Shortcode {
 
 		$current_name = $name;
 		$custom_field = $field;
-		if( $field == "gallery" ) {
-			$custom_field = "_custom_gallery";
-		}
 
 		if( $category != '' ) {
 			$query['category_name'] = $category;
@@ -320,30 +382,71 @@ class Loop_Shortcode {
 				$global_vars['current_gallery_name'] = $current_name;
 				$posts = get_posts( $query );
 				if( $posts ) { $global_vars['current_gallery_id'] = $posts[0]->ID;
-			}
+				}
 			} else {
 				$query['p'] = get_the_ID(); $query['post_type'] = "any";
 			}
 		}
 
+		if(( $custom_field == 'gallery' ) && ($shortcode_name != 'pass') ){
+			$gallery = 'true';
+		}
 		if( $type == '' ) {
 			$query['post_type'] = 'any';
 		} else {
-			if( $type == 'gallery' ) {
-				$gallery = "true"; $query['post_type'] = 'any';
-			} else {
-					$query['post_type'] = $type; $query['p'] = '';
+			$query['post_type'] = $type;
+			if( $custom_field != 'gallery' ) {
+				$query['p'] = '';
 			}
 		}
 
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
-		$global_vars['is_gallery_loop'] = "false";
+		if( $custom_field == "gallery" ) {
+			$custom_field = "_custom_gallery";
+		}
+
 		$output = array();
 		ob_start();
 		$posts = new WP_Query( $query );
 
+
+		// For each post found
+
 		if( $posts->have_posts() ) : while( $posts->have_posts() ) : $posts->the_post();
+
+
+/*********
+ * Repeater field
+ */
+
+			if($repeater != '') {
+				$global_vars['is_repeater_loop'] = "true";
+				$global_vars['current_loop_id'] = get_the_ID();
+
+				if( function_exists('get_field') ) {
+
+					if( get_field($repeater, get_the_ID()) ) { // If the field exists
+
+						$count=1;
+
+						while( has_sub_field($repeater) ) : // For each row
+
+						// Pass details onto content shortcode
+
+						$keywords = apply_filters( 'query_shortcode_keywords', array(
+							'ROW' => $count,
+						) );
+						$global_vars['current_row'] = $count;
+						$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
+						$count++;
+						endwhile;
+					}
+				}
+
+				$global_vars['is_repeater_loop'] = "false";
+			} else {
+
 
 			if($custom_field == "attachment") {
 				$attachments =& get_children( array(
@@ -386,7 +489,10 @@ class Loop_Shortcode {
 			) );
 
 			$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
-		endwhile; endif;
+
+		} // End of not repeater
+
+		endwhile; endif; // End for each post
 
 		wp_reset_query();
 		wp_reset_postdata();
@@ -394,7 +500,10 @@ class Loop_Shortcode {
 		echo implode( $posts_separator, $output );
 
 		return ob_get_clean();
+
 	} else {
+
+// Loop for attachments
 
 		if( $type == 'attachment' ) {
 
@@ -1430,74 +1539,6 @@ function custom_carousel_make_array( $string ) {
 }
 
 
-/*************************************
- *
- * Shortcodes for CSS and JS fields
- *
- */
-
-
-function custom_css_wrap($atts, $content = null) {
-    $result = '<style type="text/css">';
-    $result .= do_shortcode($content);
-    $result .= '</style>';
-    return $result;
-}
-
-add_shortcode('css', 'custom_css_wrap');
-
-function custom_js_wrap( $atts, $content = null ) {
-    $result = '<script type="text/javascript">';
-    $result .= do_shortcode( $content );
-    $result .= '</script>';
-    return $result;
-}
-
-add_shortcode('js', 'custom_js_wrap');
-
-
-function custom_load_script_file($atts) {
-
-	extract( shortcode_atts( array(
-		'css' => null, 'js' => null, 
-		), $atts ) );
-
-	if($css != '') {
-		echo '<link rel="stylesheet" type="text/css" href="';
-		echo get_template_directory_uri() . "/css/" . $css . '" />';
-	}
-	if($js != '') {
-		echo '<script src="' . get_template_directory_uri() . "/js/" . $js . '"></script>';
-	}
-	return null;
-}
-
-add_shortcode('load', 'custom_load_script_file');
-
-
-
-
-/** Load CSS field into header **/
-
-add_action('wp_head', 'load_custom_css');
-function load_custom_css() {
-	$custom_css = do_shortcode( get_post_meta( get_the_ID(), "css", $single=true ) );
-	if( $custom_css != '' ) {
-		echo $custom_css;
-	}
-}
-
-/** Load JS field into footer **/
-
-add_action('wp_footer', 'load_custom_js');
-function load_custom_js() {
-	$custom_js = do_shortcode( get_post_meta( get_the_ID(), "js", $single=true ) );
-	if( $custom_js != '' ) {
-		echo $custom_js;
-	}
-}
-
-
 
 /**********************************
  *
@@ -1704,3 +1745,85 @@ function custom_bootstrap_navbar( $atts, $content = null ) {
 }
 
 add_shortcode('navbar', 'custom_bootstrap_navbar');
+
+
+/*************************************
+ *
+ * Shortcodes for CSS and JS fields
+ *
+ */
+
+
+function custom_css_wrap($atts, $content = null) {
+    $result = '<style type="text/css">';
+    $result .= do_shortcode($content);
+    $result .= '</style>';
+    return $result;
+}
+
+add_shortcode('css', 'custom_css_wrap');
+
+function custom_js_wrap( $atts, $content = null ) {
+    $result = '<script type="text/javascript">';
+    $result .= do_shortcode( $content );
+    $result .= '</script>';
+    return $result;
+}
+
+add_shortcode('js', 'custom_js_wrap');
+
+
+function custom_load_script_file($atts) {
+
+	extract( shortcode_atts( array(
+		'css' => null, 'js' => null, 'dir' => null,
+		), $atts ) );
+
+	switch($dir) {
+		case 'child' : $dir = get_stylesheet_directory_uri() . '/'; break;
+		case 'site' : $dir = get_site_url() . '/'; break;
+		default:
+			$dir = get_template_directory_uri();
+			if($dir!='template') {
+				if($css != '') {
+					$dir .= '/css/';
+				}
+				if($js != '') {
+					$dir .= '/js/';
+				}
+			}
+	}
+
+	if($css != '') {
+		echo '<link rel="stylesheet" type="text/css" href="';
+		echo $dir . $css . '" />';
+	}
+	if($js != '') {
+		echo '<script src="' . $dir . $js . '"></script>';
+	}
+	return null;
+}
+
+add_shortcode('load', 'custom_load_script_file');
+
+
+/** Load CSS field into header **/
+
+add_action('wp_head', 'load_custom_css');
+function load_custom_css() {
+	$custom_css = do_shortcode( get_post_meta( get_the_ID(), "css", $single=true ) );
+	if( $custom_css != '' ) {
+		echo $custom_css;
+	}
+}
+
+/** Load JS field into footer **/
+
+add_action('wp_footer', 'load_custom_js');
+function load_custom_js() {
+	$custom_js = do_shortcode( get_post_meta( get_the_ID(), "js", $single=true ) );
+	if( $custom_js != '' ) {
+		echo $custom_js;
+	}
+}
+

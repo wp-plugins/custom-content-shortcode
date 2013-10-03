@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.0
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,7 +88,7 @@ Available parameters for the **[loop]** shortcode are:
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
- * **s** - 
+ * **x** - just loop *x* times - no query
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
 
@@ -166,30 +166,30 @@ This could be useful if you want to present the images in different ways, for ex
 
 *Display image details from the gallery field of a specific post*
 
-	[loop type="gallery" name="hello-world"]
+	[loop field="gallery" name="hello-world"]
 		Title: [content field="title"]
 		Full-size image: [content field="image"]
 		Caption: [content field="caption"]
 	[/loop]
 
 
-= Use a field content as parameter to another shortcode =  
+= Pass a field content as parameter to another shortcode =  
 <br />
-If you need to pass the content of a field as a parameter to another shortcode, here is the workaround solution.
+To use the content of a field as a parameter to another shortcode, use the *pass* shortcode.
 
 *Display a map according to the address entered in a custom field*
 
-	[loop field="address"][google_map address="{FIELD}"][/loop]
+	[pass field="address"][google_map address="{FIELD}"][/pass]
 
 *Display images in the gallery field using another shortcode*
 
-	[loop field="gallery"][isotope_gallery ids="{IDS}"][/loop]
+	[pass field="gallery"][isotope_gallery ids="{FIELD}"][/pass]
 
-This is necessary because a shortcode cannot be used as a parameter for another shortcode. Note that when you're passing a field, the loop goes through only once.
+This is necessary because a shortcode cannot be used as a parameter for another shortcode.
 
 = Loading CSS or JavaScript =  
 <br />
-Create a custom field called *css*, and the content of the field will be automatically added to the header on page load. This could be useful for loading page-specific styles or theme variations.
+Create a custom field called *css*, and the content of the field will be automatically added to the header on page load. This could be useful for loading page-specific style changes, Google Fonts, etc.
 
 Create a custom field called *js*, and the content of the field will be automatically added to the footer. This could be useful for loading page-specific JavaScript files, jQuery libraries or scripts.
 
@@ -237,6 +237,25 @@ To display a menu in a Bootstrap navbar with dropdown, use the following shortco
 The *menu* parameter is the title of the menu to be displayed. You can put text or image for the brand/logo area.
 
 Optionally, you can add the *navclass* parameter: *top-nav*, *navbar-fixed-top*, *navbar-fixed-bottom*, *navbar-static-top*. The default is *top-nav*. Please read the [Bootstrap documentation](http://getbootstrap.com/components/#navbar) for the description of these navbar types.
+
+= Repeater fields =
+
+For repeater fields made in Advanced Custom Fields, use the *repeater* parameter of the *loop* shortcode. You can display subfields using the *content* shortcode.
+
+	[loop repeater="boxes"]
+		[content field="row"]
+		[content field="title"]
+		[content field="image"]
+	[/loop]
+
+For an image field, Advanced Custom Fields gives you an option of return value as: image ID, image URL, or image object. Tell the *content* shortcode how to handle the image by setting the *in* parameter as: *id*, *url*, or *image object*. The default is *image object*.
+
+	[content field="image" in="url"]
+
+To display a specific subfield only, use the *content* shortcode by itself like this:
+
+	[content field="boxes" row="1" sub="title"]
+
 
 = Custom content management =  
 <br />
@@ -287,6 +306,11 @@ None.
 
 == Changelog ==
 
+
+= 0.2.1 =
+
+* **[loop]** - Added x parameter; simply repeats content x times
+* Added support for repeater fields
 
 = 0.2.0 =
 
