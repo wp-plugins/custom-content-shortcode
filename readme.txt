@@ -20,15 +20,11 @@ The shortcode **[loop]** performs query loops to display, for example, available
 
 In addition, you can choose to:
 
-* Enable a simple **gallery field** for any post type, where images can be added, removed and ordered. They can be displayed individually, in a gallery, or in a custom layout.
-
-* Load page-specific **CSS/JavaScript** file or script from custom fields.
-
-* Display a Bootstrap v3 **navbar** menu
-
+* Enable a simple **gallery field** for any post type, where images can be added, removed and ordered - they can be displayed individually, in a gallery, or in a custom layout
+* Load page-specific **CSS/JavaScript** file or script from custom fields
 * Display images from the gallery field in a Bootstrap v3 **carousel**
-
-* Enable front-end editing of content and fields using **Live Edit**
+* Display a Bootstrap v3 **navbar** menu
+* Enable front-end editing using **Live Edit**
 
 = Basic examples =  
 <br />
