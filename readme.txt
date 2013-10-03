@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,17 +16,19 @@ A shortcode to display content from posts, pages, custom post types, custom fiel
 
 The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachments, menus, and widget areas.
 
-The shortcode **[loop]** performs query loops: to display, for example, available products in a category, or excerpts from the 5 most recent posts.
+The shortcode **[loop]** performs query loops to display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
-In addition, you can:
+In addition, you can choose to:
 
-* Enable a simple **gallery field** for chosen post types, where images can be added, removed and ordered. They can be displayed individually, in a gallery, or in a custom layout.
+* Enable a simple **gallery field** for any post type, where images can be added, removed and ordered. They can be displayed individually, in a gallery, or in a custom layout.
 
 * Load page-specific **CSS/JavaScript** file or script from custom fields.
 
-* Display a Bootstrap v3 navbar menu and slider/carousel
+* Display a Bootstrap v3 **navbar** menu
 
-* Enable front-end editing of content and fields using Live Edit
+* Display images from the gallery field in a Bootstrap v3 **carousel**
+
+* Enable front-end editing of content and fields using **Live Edit**
 
 = Basic examples =  
 <br />
