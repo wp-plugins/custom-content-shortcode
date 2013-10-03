@@ -16,18 +16,17 @@ A shortcode to display content from posts, pages, custom post types, custom fiel
 
 The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachments, menus, and widget areas.
 
+The shortcode **[loop]** performs query loops: to display, for example, available products in a category, or excerpts from the 5 most recent posts.
+
 In addition, you can:
 
-* Use the shortcode **[loop]** to perform query loops -- for example, display available products in a category, or excerpts of the 5 most recent posts.
-
-* Enable **gallery fields** for chosen post types, where images can be added, removed and ordered. The images can be displayed individually or in a gallery, as well as with the *loop* shortcode for a custom layout.
+* Enable a simple **gallery field** for chosen post types, where images can be added, removed and ordered. They can be displayed individually, in a gallery, or in a custom layout.
 
 * Load page-specific **CSS/JavaScript** file or script from custom fields.
 
-If you're using the Bootstrap library (v3.x) you can also:
+* Display a Bootstrap v3 navbar menu and slider/carousel
 
-* Display the gallery field in a carousel
-* Display a menu in a navigation bar
+* Enable front-end editing of content and fields using Live Edit
 
 = Basic examples =  
 <br />
@@ -248,13 +247,37 @@ For repeater fields made in Advanced Custom Fields, use the *repeater* parameter
 		[content field="image"]
 	[/loop]
 
-For an image field, Advanced Custom Fields gives you an option of return value as: image ID, image URL, or image object. Tell the *content* shortcode how to handle the image by setting the *in* parameter as: *id*, *url*, or *image object*. The default is *image object*.
+For an image field, Advanced Custom Fields gives you an option to return its value as: image ID, image URL, or image object. Tell the *content* shortcode how to handle the image by setting the *in* parameter as: *id*, *url*, or *image object*. The default is *image object*.
 
 	[content field="image" in="url"]
 
 To display a specific subfield only, use the *content* shortcode by itself like this:
 
 	[content field="boxes" row="1" sub="title"]
+
+= Live Edit for content and fields =
+
+To enable front-end editing, install and activate [Live Edit](http://wordpress.org/plugins/live-edit/), and wrap the content you'd like to edit with the following shortcode.
+
+*Enable live edit of post title and content*
+
+	[live-edit]
+	Here is an article you can edit from the front-end.
+	[/live-edit]
+
+*Enable live edit for title, content and additional fields*
+
+	[live-edit field="product-name, image, description"]
+	...
+	[/live-edit]
+
+*Enable live edit for specific fields only*
+
+	[live-edit only="post_content"]	
+	...
+	[/live-edit]
+
+If Live Edit is active, and the user is logged-in and has *post edit* capability, there will be an Edit button on the top right corner of the container. Otherwise the shortcode just displays the content normally.
 
 
 = Custom content management =  
@@ -306,6 +329,9 @@ None.
 
 == Changelog ==
 
+= 0.2.2 =
+
+* Added shortcode for Live Edit
 
 = 0.2.1 =
 

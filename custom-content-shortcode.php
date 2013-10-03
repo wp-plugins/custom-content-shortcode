@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
-Version: 0.2.1
+Version: 0.2.2
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -233,7 +233,11 @@ function custom_content_shortcode($atts) {
 
 	if($custom_field == '') { 
 
-		$excerpt_out = get_post_field('post_content', $custom_id);
+		$excerpt_out = get_post( $custom_id );
+		$excerpt_out = $excerpt_out->post_content;
+/*		$excerpt_out = get_post_field('post_content', $custom_id); */
+
+
 
 	} else { // else return specified field
 
@@ -1827,3 +1831,38 @@ function load_custom_js() {
 	}
 }
 
+/*
+ *
+ * Shortcode support for Live Edit
+ *
+ */
+
+function sLiveEdit($atts, $content = null) {
+	extract(shortcode_atts(array(
+		'field' => '',
+		'only' => '',
+	), $atts));
+
+	if( (function_exists('live_edit') && current_user_can('edit_posts')) ){
+		echo '<div ';
+
+		$edit_field = 'post_title, post_content';
+
+		if($field == '') {
+			$field = $edit_field;
+		} else {
+			$field = $edit_field . $field;
+		}
+		if($only != '') {
+			$edit_field = $only;
+		}
+		$output .= live_edit($edit_field);
+		echo '>';
+		$output .= do_shortcode($content) . '</div>';
+
+		return $output;
+	} else {
+		return do_shortcode($content);
+	}
+}
+add_shortcode('live-edit', 'sLiveEdit');
