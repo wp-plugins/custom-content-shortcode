@@ -304,7 +304,6 @@ Here are some plugins that work well together for custom content management.
 Additional parameters:
 
 * basic gallery layout with responsive columns
-* option to load JavaScript library in the header
 * Bootstrap navigation for menus: *tabs*, *pills*, *dropdowns*
 * query for custom fields and taxonomies
 
