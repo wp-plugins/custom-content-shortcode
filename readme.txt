@@ -23,8 +23,8 @@ In addition, you can choose to:
 * Enable a simple **gallery field** for any post type, where images can be added, removed and ordered - they can be displayed individually, in a gallery, or in a custom layout
 * Load page-specific **CSS/JavaScript** file or script from custom fields
 * Display images from the gallery field in a Bootstrap v3 **carousel**
-* Display a Bootstrap v3 **navbar** menu
-* Enable front-end editing using **Live Edit**
+* Display a menu in a Bootstrap **navbar** with drop-down
+* Enable front-end editing of content and fields using **Live Edit**
 
 = Basic examples =  
 <br />
