@@ -235,8 +235,8 @@ The *menu* parameter is the title of the menu to be displayed. You can put text 
 
 Optionally, you can add the *navclass* parameter: *top-nav*, *navbar-fixed-top*, *navbar-fixed-bottom*, *navbar-static-top*. The default is *top-nav*. Please read the [Bootstrap documentation](http://getbootstrap.com/components/#navbar) for the description of these navbar types.
 
-= Repeater fields =
-
+= Repeater fields =  
+<br />
 For repeater fields made in Advanced Custom Fields, use the *repeater* parameter of the *loop* shortcode. You can display subfields using the *content* shortcode.
 
 	[loop repeater="boxes"]
@@ -253,8 +253,8 @@ To display a specific subfield only, use the *content* shortcode by itself like 
 
 	[content field="boxes" row="1" sub="title"]
 
-= Live Edit for content and fields =
-
+= Live Edit for content and fields =  
+<br />
 To enable front-end editing, install and activate [Live Edit](http://wordpress.org/plugins/live-edit/), and wrap the content you'd like to edit with the following shortcode.
 
 *Enable live edit of post title and content*
