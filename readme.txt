@@ -142,7 +142,7 @@ For attachments such as images attached to a post, query the post type *attachme
 
 = Gallery fields =  
 <br />
-In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable gallery fields for selected post types, where images can be added, removed and ordered.
+In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable a simple gallery field for any post type. Images can be added, removed and ordered.
 
 The *content* shortcode can display individual images, or all images in a gallery.
 
@@ -157,9 +157,9 @@ The *content* shortcode can display individual images, or all images in a galler
 
 A basic responsive gallery layout will be included soon.
 
-For a custom layout, images from the gallery field can be displayed with the **[loop]** shortcode just like attachments, using the same fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
+For a custom layout, the **[loop]** shortcode handles the gallery field just like attachments. Inside the loop, display each image with the **[content]** shortcode: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
 
-This could be useful if you want to present the images in different ways, for example, add borders to each image, link to lightbox, show captions, etc.
+This could be useful if you want to present the images in different ways, for example, show captions, link to lightbox, etc.
 
 *Display image details from the gallery field of a specific post*
 
