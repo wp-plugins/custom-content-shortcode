@@ -1851,7 +1851,7 @@ function sLiveEdit($atts, $content = null) {
 		if($field == '') {
 			$field = $edit_field;
 		} else {
-			$field = $edit_field . $field;
+			$field = $edit_field . ', ' . $field;
 		}
 		if($only != '') {
 			$edit_field = $only;
