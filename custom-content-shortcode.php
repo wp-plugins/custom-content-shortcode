@@ -1846,17 +1846,15 @@ function sLiveEdit($atts, $content = null) {
 	if( (function_exists('live_edit') && current_user_can('edit_posts')) ){
 		echo '<div ';
 
-		$edit_field = 'post_title, post_content';
+		$edit_field = 'post_title,post_content';
 
-		if($field == '') {
-			$field = $edit_field;
-		} else {
-			$field = $edit_field . ', ' . $field;
+		if($field != '') {
+			$edit_field .= ',' . $field;
 		}
 		if($only != '') {
 			$edit_field = $only;
 		}
-		$output .= live_edit($edit_field);
+		$output = live_edit($edit_field);
 		echo '>';
 		$output .= do_shortcode($content) . '</div>';
 
