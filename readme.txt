@@ -24,8 +24,8 @@ In addition, you can choose to:
 * Load page-specific **CSS/JavaScript** file or script from custom fields
 * Display images from the gallery field in a Bootstrap v3 **carousel**
 * Display a menu in a Bootstrap **navbar** with drop-down
+* Display Advanced Custom Fields - **image**, **gallery**, **repeater**
 * Enable front-end editing of content and fields with **Live Edit**
-* Display Advanced Custom Fields - *image*, *gallery*, *repeater*
 
 = Basic examples =  
 <br />
