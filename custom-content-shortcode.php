@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
-Version: 0.2.2
+Version: 0.2.3
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -14,6 +14,7 @@ $global_vars = array(
 	'is_gallery_loop' => 'false',
 	'is_attachment_loop' => 'false',
 	'is_repeater_loop' => 'false',
+	'is_acf_gallery_loop' => 'false',
 	'current_loop_id' => '',
 	'current_row' => '',
 	'current_image' => '',
@@ -73,8 +74,9 @@ function custom_content_shortcode($atts) {
 
 	// If we're in a gallery field or attachments loop, return requested field
 
-	if( ( $global_vars['is_gallery_loop'] == "true") ||
-		( $global_vars['is_attachment_loop'] == "true" ) ) {
+	if( ( $global_vars['is_gallery_loop'] == "true") || 
+		( $global_vars['is_attachment_loop'] == "true" ) || 
+		 ( $global_vars['is_acf_gallery_loop'] == "true" ) ) {
 		switch($custom_field) {
 			case "image": return $global_vars['current_image']; break;
 			case "image-url": return $global_vars['current_image_url']; break;
@@ -85,6 +87,7 @@ function custom_content_shortcode($atts) {
 			case "title": return $global_vars['current_image_title']; break;
 			case "description": return $global_vars['current_image_description']; break;
 			case "alt": return $global_vars['current_image_alt']; break;
+			case "count": return $global_vars['current_row']; break;
 		}
 	}
 
@@ -156,7 +159,6 @@ function custom_content_shortcode($atts) {
 
 		$custom_id = $global_vars['current_loop_id'];
 
-
 		if($custom_field=='row') {
 			return $global_vars['current_row'];
 		}
@@ -194,6 +196,7 @@ function custom_content_shortcode($atts) {
 		}
 		return $excerpt_out;
 	}
+
 
 	// Gallery types - native or carousel
 
@@ -336,6 +339,7 @@ class Loop_Shortcode {
 			'thumbnail_size' => 'thumbnail',
 			'posts_separator' => '',
 			'gallery' => '',
+			'acf_gallery' => '',
 			'id' => '',
 			'name' => '',
 			'field' => '',
@@ -452,6 +456,62 @@ class Loop_Shortcode {
 			} else {
 
 
+/*********
+ * ACF Gallery field
+ */
+
+			if($acf_gallery != '') {
+				$global_vars['is_acf_gallery_loop'] = "true";
+				$global_vars['current_loop_id'] = get_the_ID();
+
+				if( function_exists('get_field') ) {
+
+					$images = get_field($acf_gallery, get_the_ID());
+					if( $images ) { // If images exist
+
+						$count=1;
+
+						$global_vars['current_image_ids'] = implode(',', get_field($acf_gallery, get_the_ID(), false));
+
+						if($shortcode_name == 'pass') {
+
+							// Pass details onto content shortcode
+
+							$keywords = apply_filters( 'query_shortcode_keywords', array(
+								'FIELD' => $global_vars['current_image_ids'],
+							) );
+							$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
+							
+						} else { // For each image
+
+							foreach( $images as $image ) :
+
+							$global_vars['current_row'] = $count;
+							$global_vars['current_image'] = '<img src="' . $image['sizes']['large'] . '">';
+							$global_vars['current_image_id'] = $image['id'];
+							$global_vars['current_attachment_id'] = $image['id'];
+							$global_vars['current_image_url'] = $image['url'];
+							$global_vars['current_image_title'] = $image['title'];
+							$global_vars['current_image_caption'] = $image['caption'];
+							$global_vars['current_image_description'] = $image['description'];
+							$global_vars['current_image_thumb'] = '<img src="' . $image['sizes']['thumbnail'] . '">';
+							$global_vars['current_image_thumb_url'] = $image['sizes']['thumbnail'];
+							$global_vars['current_image_alt'] = $image['alt'];
+
+							$output[] = do_shortcode($template);
+							$count++;
+							endforeach;
+						} // End for each image
+					}
+				}
+
+				$global_vars['is_acf_gallery_loop'] = "false";
+			} else {
+
+			// Not gallery field
+
+			// Attachments?
+
 			if($custom_field == "attachment") {
 				$attachments =& get_children( array(
 					'post_parent' => get_the_ID(),
@@ -493,6 +553,8 @@ class Loop_Shortcode {
 			) );
 
 			$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
+
+			} // End of not gallery field
 
 		} // End of not repeater
 
@@ -1840,20 +1902,45 @@ function load_custom_js() {
 function sLiveEdit($atts, $content = null) {
 	extract(shortcode_atts(array(
 		'field' => '',
+		'admin' => '',
+		'editor' => '',
+		'edit' => '',
 		'only' => '',
+		'title' => '',
 	), $atts));
 
-	if( (function_exists('live_edit') && current_user_can('edit_posts')) ){
+	if( (function_exists('live_edit') && current_user_can('edit_posts') &&
+		($edit!='off')) ){
+
+		if($title!='') {
+			$edit_field = 'post_title,post_content';	
+		} else {
+			$edit_field = 'post_content';
+		}
+
+		if($admin!=''){
+			if ( current_user_can( 'manage_options' ) ) { // Admin user
+				$edit_field .= ',' . $admin;
+			} else { // Editor
+				if(($editor=='') && ($only=='')) { // Edit only for admin
+					return do_shortcode($content);
+				}
+				if($editor!='') {
+					$edit_field .= ',' . $editor;
+				}
+				if($only != '') {
+					$edit_field = $only;
+				}
+			}
+		} else {
+			if($field != '') {
+				$edit_field .= ',' . $field;
+			}
+			if($only != '') {
+				$edit_field = $only;
+			}
+		}
 		echo '<div ';
-
-		$edit_field = 'post_title,post_content';
-
-		if($field != '') {
-			$edit_field .= ',' . $field;
-		}
-		if($only != '') {
-			$edit_field = $only;
-		}
 		$output = live_edit($edit_field);
 		echo '>';
 		$output .= do_shortcode($content) . '</div>';

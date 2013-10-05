@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.2
+Stable tag: 0.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,8 @@ In addition, you can choose to:
 * Load page-specific **CSS/JavaScript** file or script from custom fields
 * Display images from the gallery field in a Bootstrap v3 **carousel**
 * Display a menu in a Bootstrap **navbar** with drop-down
-* Enable front-end editing of content and fields using **Live Edit**
+* Enable front-end editing of content and fields with **Live Edit**
+* Display Advanced Custom Fields - *image*, *gallery*, *repeater*
 
 = Basic examples =  
 <br />
@@ -198,7 +199,7 @@ Create a custom field called *js*, and the content of the field will be automati
 
 	[load js="bootstrap.min.js"]
 
-By default, the **[load]** shortcode gets the specified file under the *css* or *js* folder in your template directory.  You can choose a different directory using the *dir* parameter with *site*, *template*, or *child*. 
+By default, the **[load]** shortcode gets the specified file under the *css* or *js* folder in the template directory.  You can choose a different directory using the *dir* parameter with *site*, *template*, or *child*. 
 
 *Load a CSS file from a different location*
 
@@ -235,7 +236,26 @@ The *menu* parameter is the title of the menu to be displayed. You can put text 
 
 Optionally, you can add the *navclass* parameter: *top-nav*, *navbar-fixed-top*, *navbar-fixed-bottom*, *navbar-static-top*. The default is *top-nav*. Please read the [Bootstrap documentation](http://getbootstrap.com/components/#navbar) for the description of these navbar types.
 
-= Repeater fields =  
+= Advanced Custom Fields: Gallery =  
+<br />
+For gallery fields made in Advanced Custom Fields, use the *acf_gallery* parameter of the *loop* shortcode. For each image, the *content* shortcode can display these fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, *thumbnail-url*, *count*.
+
+*Display images with title*
+
+	[loop acf_gallery="images"]
+		[content field="title"]
+		[content field="image"]
+	[/loop]
+
+You can also pass the image IDs to another shortcode to display.
+
+*Pass the images to another shortcode*
+
+	[pass acf_gallery="images"]
+		[isotope_gallery ids="{FIELD}"]
+	[/pass]
+
+= Advanced Custom Fields: Repeater =  
 <br />
 For repeater fields made in Advanced Custom Fields, use the *repeater* parameter of the *loop* shortcode. You can display subfields using the *content* shortcode.
 
@@ -255,27 +275,29 @@ To display a specific subfield only, use the *content* shortcode by itself like 
 
 = Live Edit for content and fields =  
 <br />
-To enable front-end editing, install and activate [Live Edit](http://wordpress.org/plugins/live-edit/), and wrap the content you'd like to edit with the following shortcode.
+To enable front-end editing, install and activate [Live Edit](http://wordpress.org/plugins/live-edit/), and wrap the content you'd like to edit with the **[live-edit]** shortcode.
 
-*Enable live edit of post title and content*
+If Live Edit is active, and the user is logged in and has *post edit* capability, there will be an Edit button on the top right corner of the container. Otherwise the shortcode just displays the content normally.
+
+*Enable live edit of post content*
 
 	[live-edit]
 	Here is an article you can edit from the front-end.
 	[/live-edit]
 
-*Enable live edit for title, content and additional fields*
+Here are the available parameters:
 
-	[live-edit field="product-name, image, description"]
+ * **field** - enable Live Edit for content and additional fields
+ * **admin** - enable content and additional fields for administrator
+ * **editor** - enable content and additional fields for editor
+ * **only** - edit specific fields only, e.g., *post_content*, *images*, etc. - you can override this with the *admin* parameter, so only the editor is limited to these fields
+ * **title** - set to *true* to enable *post_title* edit - note that unless the post title is inside the **[live-edit]** shortcode, you cannot view the change until page reload
+
+*Admin can edit post content and images; editor can only edit content*
+
+	[live-edit admin="images" only="post_content"]	
 	...
 	[/live-edit]
-
-*Enable live edit for specific fields only*
-
-	[live-edit only="post_content"]	
-	...
-	[/live-edit]
-
-If Live Edit is active, and the user is logged-in and has *post edit* capability, there will be an Edit button on the top right corner of the container. Otherwise the shortcode just displays the content normally.
 
 
 = Custom content management =  
@@ -326,14 +348,19 @@ None.
 
 == Changelog ==
 
+= 0.2.3 =
+
+* Added support for Advanced Custom Fields: *acf_gallery*
+* Added *admin* and *editor* parameters for Live Edit
+
 = 0.2.2 =
 
-* Added shortcode for Live Edit
+* Added **[live-edit]**
 
 = 0.2.1 =
 
-* **[loop]** - Added x parameter; simply repeats content x times
-* Added support for repeater fields
+* **[loop]** - Added *x* parameter - repeat content x times
+* Added support for Advanced Custom Fields: *repeater*
 
 = 0.2.0 =
 
@@ -344,12 +371,12 @@ None.
 
 = 0.1.9 =
 
-* Added **[navbar]** - Bootstrap v3.x menu
+* Added **[navbar]** - Bootstrap navbar menu
 
 = 0.1.8 =
 
 * Cleaned code
-* Added function to load *css* and *js* fields into the header/footer
+* Load *css* and *js* fields into the header/footer
 * Added shortcodes: **[css]**, **[js]**, and **[load]**
 * Fixed attachment image showing only thumbnail size
 
@@ -364,12 +391,12 @@ None.
 
 = 0.1.5 =
 
-* Added gallery fields
+* Added simple gallery fields
 * Added attachment type and fields
 
 = 0.1.4 =
 
-* Added shortcode for query loops
+* Added **[loop]** shortcode for query loops
 * Format post content using the_content filter
 
 = 0.1.3 =
@@ -382,9 +409,11 @@ None.
 * Better documentation
 
 = 0.1.1 =
+
 * Simplified code, added a few parameters
 
 = 0.1 =
+
 * First release
 
 == Upgrade Notice ==
