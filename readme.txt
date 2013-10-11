@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.3
+Stable tag: 0.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,7 @@ In addition, you can choose to:
 
 * Enable a simple **gallery field** for any post type, where images can be added, removed and ordered - they can be displayed individually, in a gallery, or in a custom layout
 * Load page-specific **CSS/JavaScript** file or script from custom fields
+* Use **relative URLs** for links, images, etc.
 * Display images from the gallery field in a Bootstrap v3 **carousel**
 * Display a menu in a Bootstrap **navbar** with drop-down
 * Display Advanced Custom Fields - **image**, **gallery**, **repeater**
@@ -86,7 +87,7 @@ Available parameters for the **[loop]** shortcode are:
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
- * **x** - just loop *x* times - no query
+ * **x** - repeat the loop *x* times - no query
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
 
@@ -145,22 +146,9 @@ For attachments such as images attached to a post, query the post type *attachme
 <br />
 In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable a simple gallery field for any post type. Images can be added, removed and ordered.
 
-The *content* shortcode can display individual images, or all images in a gallery.
+The **[loop]** shortcode handles the gallery field just like attachments. For each image, the **[content]** shortcode can display these fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
 
-*Display the 3rd image in the gallery field*
-
-	[content field="gallery" num="3"]
-
-*Display images in a native gallery or a Bootstrap carousel*
-
-	[content gallery="native"]
-	[content gallery="carousel"]
-
-A basic responsive gallery layout will be included soon.
-
-For a custom layout, the **[loop]** shortcode handles the gallery field just like attachments. Inside the loop, display each image with the **[content]** shortcode: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
-
-This could be useful if you want to present the images in different ways, for example, show captions, link to lightbox, etc.
+This could be useful if you want to show captions, link the thumbnails to their full-size images, add a lightbox, etc.
 
 *Display image details from the gallery field of a specific post*
 
@@ -170,6 +158,18 @@ This could be useful if you want to present the images in different ways, for ex
 		Caption: [content field="caption"]
 	[/loop]
 
+The *content* shortcode can display individual images of the gallery field, or all images in a gallery layout.
+
+*Display the 3rd image in the gallery field*
+
+	[content field="gallery" num="3"]
+
+*Display the images in a native gallery or a Bootstrap carousel*
+
+	[content gallery="native"]
+	[content gallery="carousel"]
+
+A basic responsive gallery layout will be included soon.
 
 = Pass a field content as parameter to another shortcode =  
 <br />
@@ -199,11 +199,18 @@ Create a custom field called *js*, and the content of the field will be automati
 
 	[load js="bootstrap.min.js"]
 
-By default, the **[load]** shortcode gets the specified file under the *css* or *js* folder in the template directory.  You can choose a different directory using the *dir* parameter with *site*, *template*, or *child*. 
+By default, the **[load]** shortcode gets the specified file under the *css* or *js* folder in the theme directory.  You can choose a different directory using the *dir* parameter:
+
+* *web* - http://
+* *site* - site address
+* *wordpress* - Wordpress directory
+* *content* - /wp-content/
+* *theme* - theme directory - /wp-content/theme
+* *child* - child theme directory - /wp-content/child_theme
 
 *Load a CSS file from a different location*
 
-	[load dir="template" css="include/custom.css"]
+	[load dir="theme" css="include/custom.css"]
 
 For shorter scripts, the following shortcodes can be used.
 
@@ -223,6 +230,30 @@ For shorter scripts, the following shortcodes can be used.
 	});
 	[/js]
 
+= Display any file =  
+<br />
+Use the *file* parameter of the **[load]** shortcode to include any file into the post.
+
+	[load dir="content" file="folder/readme.txt"]
+
+If you don't set the *dir* parameter, it gets the file from the theme directory. To format the output with line breaks and paragraph tags, set the parameter *format* to *true*. If you want to disable shortcodes, set the parameter *shortcode* to *false*.
+
+= Relative URLs =  
+<br />
+Use relative URLs for links, images, etc. with the **[url]** shortcode.
+
+*Display an image from a relative location*
+
+	<img src='[url uploads]/assets/logo.png'>
+
+Available parameters:
+
+* *site* - site address
+* *wordpress* - WordPress directory
+* *content* - /wp-content/
+* *uploads* - /wp-content/uploads/
+* *theme* - /wp-content/theme - theme directory
+* *child* - /wp-content/child_theme - child theme directory
 
 = Bootstrap navbar menu =  
 <br />
@@ -279,19 +310,22 @@ To enable front-end editing, install and activate [Live Edit](http://wordpress.o
 
 If Live Edit is active, and the user is logged in and has *post edit* capability, there will be an Edit button on the top right corner of the container. Otherwise the shortcode just displays the content normally.
 
-*Enable live edit of post content*
+*Enable live edit of post title and content*
 
 	[live-edit]
 	Here is an article you can edit from the front-end.
 	[/live-edit]
 
+Please note that unless the post title is wrapped inside the shortcode, you cannot view the change until the page is reloaded.
+
 Here are the available parameters:
 
- * **field** - enable Live Edit for content and additional fields
- * **admin** - enable content and additional fields for administrator
- * **editor** - enable content and additional fields for editor
- * **only** - edit specific fields only, e.g., *post_content*, *images*, etc. - you can override this with the *admin* parameter, so only the editor is limited to these fields
- * **title** - set to *true* to enable *post_title* edit - note that unless the post title is inside the **[live-edit]** shortcode, you cannot view the change until page reload
+ * **field** - enable Live Edit for title, content and fields
+ * **admin** - enable title, content and fields for administrator
+ * **editor** - enable title, content and fields for editor
+ * **only** - enable specific fields only, e.g., *post_title*, *post_content*, *images*, etc. - applies only to the editor if the *admin* parameter is set
+ * **title** - set to *false* to disable *post_title* edit
+ * **content** - set to *false* to disable *post_content* edit
 
 *Admin can edit post content and images; editor can only edit content*
 
@@ -347,6 +381,14 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.2.4 =
+
+* Added **[url]** shortcode
+* Added a few parameters to **[load]** and **[live-edit]** shortcode
+* Added Bootstrap carousel support for *acf_gallery*
+* Fixed live-edit when not logged in
+* Support for older version of PHP
 
 = 0.2.3 =
 

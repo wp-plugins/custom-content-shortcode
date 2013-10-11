@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
-Version: 0.2.3
+Version: 0.2.4
 Author: miyarakira
 Author URI: eliotakira.com
 License: GPL2
@@ -47,7 +47,7 @@ function custom_content_shortcode($atts) {
 		'menu' => null, 'format' => null, 'shortcode' => null, 'gallery' => 'false',
 		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null, 
 		'height' => null, 'num' => null, 'image' => null, 'in' => null,
-		'row' => null, 'sub' => null,
+		'row' => null, 'sub' => null, 'acf_gallery' => null,
 		), $atts));
 
 	$custom_post_type = $type;
@@ -172,6 +172,9 @@ function custom_content_shortcode($atts) {
 					$excerpt_out = wp_get_attachment_image( $excerpt_out[id], 'full' );
 				}
 			}
+			if($custom_field == 'id') {
+				$excerpt_out = $global_vars['current_loop_id'];
+			}
 		} else {
 			$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
 		}
@@ -209,7 +212,14 @@ function custom_content_shortcode($atts) {
 			$excerpt_out .= 'height ="' . $height . '" ';	
 		}
 		$excerpt_out .= 'ids="';
-		$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
+
+		if($acf_gallery!='') {
+			if( function_exists('get_field') ) {
+				$excerpt_out .= implode(',', get_field($acf_gallery, $custom_id, false));
+			}
+		} else {
+			$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
+		}
 		$excerpt_out .= '" ]';
 		return do_shortcode( $excerpt_out );
 	} else {
@@ -219,7 +229,14 @@ function custom_content_shortcode($atts) {
 				$excerpt_out .= 'name ="' . $custom_gallery_name . '" ';
 			}
 			$excerpt_out .= 'ids="';
-			$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
+
+			if($acf_gallery!='') {
+				if( function_exists('get_field') ) {
+					$excerpt_out .= implode(',', get_field($acf_gallery, $custom_id, false));
+				}
+			} else {
+				$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
+			}
 			$excerpt_out .= '" ]';
 			return do_shortcode( $excerpt_out );
 		}	
@@ -238,9 +255,6 @@ function custom_content_shortcode($atts) {
 
 		$excerpt_out = get_post( $custom_id );
 		$excerpt_out = $excerpt_out->post_content;
-/*		$excerpt_out = get_post_field('post_content', $custom_id); */
-
-
 
 	} else { // else return specified field
 
@@ -277,6 +291,7 @@ function custom_content_shortcode($atts) {
 			// Get excerpt
 
 			$excerpt_out = get_post_field('post_excerpt', $custom_id);
+
 		} else {
 
 			// Get other fields
@@ -287,7 +302,8 @@ function custom_content_shortcode($atts) {
 	}
 
 	if($content_format != 'false') { // Format?
-		$excerpt_out = apply_filters('the_content', $excerpt_out );
+/*		$excerpt_out = apply_filters('the_content', $excerpt_out ); */
+		$excerpt_out = wpautop( $excerpt_out );
 	}
 
 	if($shortcode_option != 'false') { // Shortcode?
@@ -434,7 +450,7 @@ class Loop_Shortcode {
 
 				if( function_exists('get_field') ) {
 
-					if( get_field($repeater, get_the_ID()) ) { // If the field exists
+					if( get_field($repeater, $global_vars['current_loop_id']) ) { // If the field exists
 
 						$count=1;
 
@@ -598,8 +614,6 @@ class Loop_Shortcode {
 					while ( $my_query->have_posts() ) {
 						$my_query->the_post();
 
-// DEBUG					echo "Found post ID:" . get_the_ID() . "<br>";
-
 						$new_children =& get_children( array (
 							'post_parent' => get_the_ID(),
 							'post_type' => 'attachment',
@@ -607,7 +621,6 @@ class Loop_Shortcode {
 						) );
 
 						foreach( $new_children as $attachment_id => $attachment ) {
-// DEBUG					echo "&nbsp;&nbsp;Attached: " . $attachment_id . "<br>";
 							$attachment_ids .= $attachment_id . " ";
 						}
 					}
@@ -691,11 +704,7 @@ class Loop_Shortcode {
 			}
 			$posts = new WP_Query( $query );
 			$attachment_ids = custom_gallery_get_image_ids();
-/** DEBUG
-echo "Current Gallery ID: " . $global_vars['current_gallery_id'] . "<br>";
-echo "Query: " . implode(" ", $query) . "<br>";
-echo "Attachment IDs: " . implode(" ", $attachment_ids) . "<br>";
-**/
+
 			if ( $attachment_ids ) { 
 				$has_gallery_images = get_post_meta( $global_vars['current_gallery_id'], '_custom_gallery', true );
 				if ( !$has_gallery_images )
@@ -720,7 +729,6 @@ echo "Attachment IDs: " . implode(" ", $attachment_ids) . "<br>";
 					$image_link	= $image_link[0];	
 										
 					$global_vars['current_image']=wp_get_attachment_image( $attachment_id, 'full' );
-						/* apply_filters( 'linked_image_size', 'large' )? */
 					$global_vars['current_image_url']=$image_link;
 					$global_vars['current_image_thumb']=wp_get_attachment_image( $attachment_id, apply_filters( 'thumbnail_image_size', 'thumbnail' ), '', array( 'alt' => trim( strip_tags( get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) ) ) ) );
 					$global_vars['current_image_thumb_url']= wp_get_attachment_thumb_url( $attachment_id ) ;
@@ -1242,14 +1250,14 @@ function custom_gallery_save_post( $post_id ) {
     $post_types = custom_gallery_allowed_post_types();
 
     // check user permissions
-    if ( isset( $_POST[ 'post_type' ] ) && !array_key_exists( $_POST[ 'post_type' ], $post_types ) ) {
+/*    if ( isset( $_POST[ 'post_type' ] ) && !array_key_exists( $_POST[ 'post_type' ], $post_types ) ) {
         if ( !current_user_can( 'edit_page', $post_id ) )
             return;
     }
-    else {
+    else { */
         if ( !current_user_can( 'edit_post', $post_id ) )
             return;
-    }
+/*    } */
 
     if ( ! isset( $_POST[ 'custom_gallery' ] ) || ! wp_verify_nonce( $_POST[ 'custom_gallery' ], 'custom_gallery' ) )
         return;
@@ -1438,36 +1446,25 @@ function custom_carousel_get_html_from( $shortcode_atts ) {
 	extract( $shortcode_atts );
 
 	$images = custom_carousel_make_array( $ids );
-
 	$output = '';
 
-	if ( is_array( $images ) and !empty( $images ) ) :
-
-		$posts = array();
+	if ( is_array( $images ) and !empty( $images ) ) : $posts = array();
 
 		foreach ( $images as $image_id ) :
-
 			$posts[] = get_post( intval( $image_id ) , ARRAY_A );
-
 		endforeach;
 
 		if ( is_array( $posts ) and !empty( $posts ) ) :
-
 			$output = custom_carousel_make_html_from( $shortcode_atts , $posts );
-
 		endif;
 
 	endif;
 
 	return $output;
-
 }
 
 
-
 function custom_carousel_make_html_from( $shortcode_atts , $posts ) {
-
-	/* The important stuff happens here! */
 
 	extract( $shortcode_atts );
 
@@ -1594,8 +1591,6 @@ function custom_carousel_make_control_html_with( $name ) {
 
 }
 
-
-
 /* Obtain array of id given comma-separated values in a string. */
 function custom_carousel_make_array( $string ) {
 
@@ -1603,7 +1598,6 @@ function custom_carousel_make_array( $string ) {
 	return $array;
 
 }
-
 
 
 /**********************************
@@ -1798,10 +1792,12 @@ function custom_bootstrap_navbar( $atts, $content = null ) {
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="' . get_site_url() . '">' . $content .
-			'</a>
-		</div>
+			</button>';
+		if($content!='') {
+			$output .= '<a class="navbar-brand" href="' . get_site_url() . '">' . $content .
+			'</a>';
+		}
+		$output .= '</div>
 
 		<div class="collapse navbar-collapse navbar-ex1-collapse">';
 
@@ -1843,19 +1839,26 @@ function custom_load_script_file($atts) {
 
 	extract( shortcode_atts( array(
 		'css' => null, 'js' => null, 'dir' => null,
+		'file' => null,'format' => null, 'shortcode' => null,
 		), $atts ) );
 
 	switch($dir) {
+		case 'web' : $dir = "http://"; break;
+        case 'site' : $dir = home_url() . '/'; break; /* Site address */
+		case 'wordpress' : $dir = get_site_url() . '/'; break; /* WordPress directory */
+		case 'content' : $dir = get_site_url() . '/wp-content/'; break;
 		case 'child' : $dir = get_stylesheet_directory_uri() . '/'; break;
-		case 'site' : $dir = get_site_url() . '/'; break;
 		default:
-			$dir = get_template_directory_uri();
-			if($dir!='template') {
+
+			if(($dir=='theme')||($dir=='template')) {
+				$dir = get_template_directory_uri() . '/';
+			} else {
+				$dir = get_template_directory_uri() . '/';
 				if($css != '') {
-					$dir .= '/css/';
+					$dir .= 'css/';
 				}
 				if($js != '') {
-					$dir .= '/js/';
+					$dir .= 'js/';
 				}
 			}
 	}
@@ -1867,6 +1870,21 @@ function custom_load_script_file($atts) {
 	if($js != '') {
 		echo '<script src="' . $dir . $js . '"></script>';
 	}
+
+	if($file != '') {
+		$output = @file_get_contents($dir . $file);
+
+		if(($format == 'on')||($format == 'true')) { // Format?
+			$output = wpautop( $output );
+/*			$output = apply_filters('the_content', $output); */
+		}
+		if(($shortcode != 'false')||($shortcode != 'off')) { // Shortcode?
+			$output = do_shortcode( $output );
+		}
+		return $output;
+
+	}
+
 	return null;
 }
 
@@ -1899,34 +1917,38 @@ function load_custom_js() {
  *
  */
 
-function sLiveEdit($atts, $content = null) {
+function sLiveEdit($atts, $inside_content = null) {
 	extract(shortcode_atts(array(
 		'field' => '',
 		'admin' => '',
 		'editor' => '',
 		'edit' => '',
 		'only' => '',
+		'content' => '',
 		'title' => '',
 	), $atts));
 
 	if( (function_exists('live_edit') && current_user_can('edit_posts') &&
 		($edit!='off')) ){
 
-		if($title!='') {
-			$edit_field = 'post_title,post_content';	
-		} else {
-			$edit_field = 'post_content';
+		$edit_field = '';
+
+		if(($title!='false')&&($title!='off')) {
+			$edit_field .= 'post_title,';	
+		}
+		if(($content!='false')&&($content!='off')) {
+			$edit_field .= 'post_content,';	
 		}
 
 		if($admin!=''){
 			if ( current_user_can( 'manage_options' ) ) { // Admin user
-				$edit_field .= ',' . $admin;
+				$edit_field .= $admin;
 			} else { // Editor
 				if(($editor=='') && ($only=='')) { // Edit only for admin
-					return do_shortcode($content);
+					return do_shortcode($inside_content);
 				}
 				if($editor!='') {
-					$edit_field .= ',' . $editor;
+					$edit_field .= $editor;
 				}
 				if($only != '') {
 					$edit_field = $only;
@@ -1934,20 +1956,116 @@ function sLiveEdit($atts, $content = null) {
 			}
 		} else {
 			if($field != '') {
-				$edit_field .= ',' . $field;
+				$edit_field .= $field;
 			}
 			if($only != '') {
 				$edit_field = $only;
 			}
 		}
+		$edit_field = trim($edit_field, ',');
 		echo '<div ';
 		$output = live_edit($edit_field);
 		echo '>';
-		$output .= do_shortcode($content) . '</div>';
+		$output .= do_shortcode($inside_content) . '</div>';
 
 		return $output;
 	} else {
-		return do_shortcode($content);
+		return do_shortcode($inside_content);
 	}
 }
 add_shortcode('live-edit', 'sLiveEdit');
+
+
+/*
+ * Site URL shortcode [url site/theme/child/content/uploads]
+ */
+
+class urlShortcode
+{
+    public static function userSettings()
+    {
+        $blogurl_settings = array();
+
+        $blogurl_settings['home'] = get_option( 'home' );
+        $blogurl_settings['wordpress'] = get_option( 'siteurl' );
+        $blogurl_settings['content'] = get_option( 'siteurl' ) . '/' . 'wp-content';
+        $blogurl_settings['templateurl'] = get_bloginfo( 'template_directory' );
+        $blogurl_settings['childtemplateurl'] = get_bloginfo( 'stylesheet_directory' );
+        
+        $blogurl_settings['insertslash'] = false;
+        
+        return $blogurl_settings;
+    }
+    
+    public static function custom_url( $attributes )
+    {
+        $blogurl_settings = urlShortcode::getSettings();
+
+        if( is_array( $attributes ) )
+        {
+            $attributes = array_flip( $attributes );
+        }
+        
+        if( isset( $attributes['wordpress'] ) )
+        {
+            $return_blogurl = $blogurl_settings['wordpress'];
+        }
+        elseif( isset( $attributes['uploads'] ) )
+        {
+            $return_blogurl = $blogurl_settings['uploads'];
+        }
+        elseif( isset( $attributes['content'] ) )
+        {
+            $return_blogurl = $blogurl_settings['content'];
+        }
+        elseif( isset( $attributes['theme'] ) )
+        {
+            $return_blogurl = $blogurl_settings['templateurl'];
+        }
+        elseif( isset( $attributes['child'] ) )
+        {
+            $return_blogurl = $blogurl_settings['childtemplateurl'];
+        }
+        else
+        {
+            $return_blogurl = $blogurl_settings['home'];
+        }
+
+        if( isset( $attributes['slash'] ) || ( $blogurl_settings['insertslash'] && !isset( $attributes['noslash'] ) ) )
+        {
+            $return_blogurl .= '/';
+        }
+
+        return $return_blogurl;
+    }
+    
+    public static function getSettings()
+    {
+        $blogurl_settings = urlShortcode::userSettings();
+        $upload_dir = wp_upload_dir();
+        
+        if( !$upload_dir['error'] )
+        {
+            $blogurl_settings['uploads'] = $upload_dir['baseurl'];
+        }
+        elseif( '' != get_option( 'upload_url_path' ) )
+        {
+            // Prior to WordPress 3.5, this was set in Settings > Media > Full URL path to files
+            // In WordPress 3.5+ this is now hidden
+            $blogurl_settings['uploads'] = get_option( 'upload_url_path' );
+        }
+        else
+        {
+            $blogurl_settings['uploads'] = $blogurl_settings['wordpress'] . '/' . get_option( 'upload_path' );
+        }
+
+        return $blogurl_settings;
+    }
+}
+
+add_shortcode( 'url', array( 'urlShortcode', 'custom_url' ) );
+
+
+
+
+?>
