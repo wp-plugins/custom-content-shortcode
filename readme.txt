@@ -316,7 +316,7 @@ If Live Edit is active, and the user is logged in and has *post edit* capability
 	Here is an article you can edit from the front-end.
 	[/live-edit]
 
-Please note that unless the post title is wrapped inside the shortcode, you cannot view the change until the page is reloaded.
+When you press the *update* button, the changes will be saved to the post. Changes made to any ccontent not wrapped inside the shortcode will be visible after reloading the page.
 
 Here are the available parameters:
 
@@ -385,7 +385,7 @@ None.
 = 0.2.4 =
 
 * Added **[url]** shortcode
-* Added a few parameters to **[load]** and **[live-edit]** shortcode
+* Added a few parameters to **[load]** and **[live-edit]** shortcodes
 * Added Bootstrap carousel support for *acf_gallery*
 * Fixed live-edit when not logged in
 * Support for older version of PHP
