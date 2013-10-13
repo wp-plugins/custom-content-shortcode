@@ -6,27 +6,29 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.4
+Stable tag: 0.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A shortcode to display content from posts, pages, custom post types, custom fields, images, attachments, menus, or widget areas
+A shortcode to display content from posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas
 
 == Description ==
 
-The shortcode **[content]** displays any of the following content types: posts, pages, custom post types, custom fields, images, attachments, menus, and widget areas.
+The **[content]** shortcode displays any of the following content: posts, pages, custom post types, custom fields, files, images, attachments, menus, and widget areas.
 
-The shortcode **[loop]** performs query loops to display, for example, available products in a category, or excerpts from the 5 most recent posts.
+The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
 In addition, you can choose to:
 
-* Enable a simple **gallery field** for any post type, where images can be added, removed and ordered - they can be displayed individually, in a gallery, or in a custom layout
-* Load page-specific **CSS/JavaScript** file or script from custom fields
-* Use **relative URLs** for links, images, etc.
-* Display images from the gallery field in a Bootstrap v3 **carousel**
-* Display a menu in a Bootstrap **navbar** with drop-down
+* Enable a simple **gallery field** for any post type
+* Use **relative URLs** for links and images
+* Include fonts from **Google Fonts**
+* Include **HTML/CSS/JavaScript** in the header, footer or content area
 * Display Advanced Custom Fields - **image**, **gallery**, **repeater**
-* Enable front-end editing of content and fields with **Live Edit**
+* Display a Bootstrap **carousel** (v3.0.0)
+* Display a Bootstrap **navbar menu** with drop-down
+* Easily include **Live Edit** - front-end editing of content and fields
+
 
 = Basic examples =  
 <br />
@@ -230,6 +232,20 @@ For shorter scripts, the following shortcodes can be used.
 	});
 	[/js]
 
+= Include fonts from Google Fonts =  
+<br />
+Use the *gfonts* parameter of the **[load]** shortcode to include fonts from Google Fonts.
+
+*Include fonts and apply them to page elements*
+
+	[load gfonts="Lato|Lora:400,700"]
+	[css]
+		h1, h2 { font-family: Lora, serif; }
+		p { font-family: 'Lato', sans-serif; }
+	[/css]
+
+It should be placed in the *css* field, so the fonts are included in the header.
+
 = Display any file =  
 <br />
 Use the *file* parameter of the **[load]** shortcode to include any file into the post.
@@ -381,6 +397,10 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.2.5 =
+
+* Added *gfonts* parameter for loading Google Fonts
 
 = 0.2.4 =
 

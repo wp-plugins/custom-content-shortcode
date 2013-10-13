@@ -3,8 +3,8 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
-Version: 0.2.4
-Author: miyarakira
+Version: 0.2.5
+Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
 */
@@ -812,10 +812,9 @@ function custom_clean_shortcodes($content){
 }
 
 
-/*
+/************************
  *
- * Custom Gallery Fields
- *
+ * Custom gallery field
  *
  */
 
@@ -881,9 +880,9 @@ function custom_gallery_get_post_types() {
 
 /*
  * Retrieve the allowed post types from the option row
- * Defaults to post and page when the settings have not been saved
  *
  */
+
 function custom_gallery_allowed_post_types() {
 	
 /*	$defaults['post_types']['post'] = '';
@@ -966,6 +965,7 @@ function custom_gallery_shortcode() {
 
 	return custom_gallery();
 }
+
 add_shortcode( 'custom_gallery', 'custom_gallery_shortcode' );
 
 
@@ -1840,6 +1840,7 @@ function custom_load_script_file($atts) {
 	extract( shortcode_atts( array(
 		'css' => null, 'js' => null, 'dir' => null,
 		'file' => null,'format' => null, 'shortcode' => null,
+		'gfonts' => null,
 		), $atts ) );
 
 	switch($dir) {
@@ -1866,6 +1867,10 @@ function custom_load_script_file($atts) {
 	if($css != '') {
 		echo '<link rel="stylesheet" type="text/css" href="';
 		echo $dir . $css . '" />';
+	}
+	if($gfonts != '') {
+		echo '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=';
+		echo $gfonts . '" />';
 	}
 	if($js != '') {
 		echo '<script src="' . $dir . $js . '"></script>';
