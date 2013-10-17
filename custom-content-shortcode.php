@@ -2,8 +2,8 @@
 /*
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
-Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, attachment files, menus, or widget areas.
-Version: 0.2.5
+Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, comments, attachments, menus, or widget areas
+Version: 0.2.6
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -1794,7 +1794,7 @@ function custom_bootstrap_navbar( $atts, $content = null ) {
 				<span class="icon-bar"></span>
 			</button>';
 		if($content!='') {
-			$output .= '<a class="navbar-brand" href="' . get_site_url() . '">' . $content .
+			$output .= '<a class="navbar-brand" href="' . get_site_url() . '">' . do_shortcode($content) .
 			'</a>';
 		}
 		$output .= '</div>
@@ -1931,9 +1931,10 @@ function sLiveEdit($atts, $inside_content = null) {
 		'only' => '',
 		'content' => '',
 		'title' => '',
+		'all' => '',
 	), $atts));
 
-	if( (function_exists('live_edit') && current_user_can('edit_posts') &&
+	if( (function_exists('live_edit') && ( (current_user_can('edit_posts')) || ($all=="true") ) &&
 		($edit!='off')) ){
 
 		$edit_field = '';
@@ -1959,8 +1960,7 @@ function sLiveEdit($atts, $inside_content = null) {
 					$edit_field = $only;
 				}
 			}
-		} else {
-			if($field != '') {
+		} else {			if($field != '') {
 				$edit_field .= $field;
 			}
 			if($only != '') {
@@ -2070,7 +2070,58 @@ class urlShortcode
 
 add_shortcode( 'url', array( 'urlShortcode', 'custom_url' ) );
 
+/*
+ * Comment form/template/count
+ *
+ */
 
+function return_comment_form() {
+	ob_start();
+	comment_form( $args = array(
+		'id_form'           => 'commentform',  // that's the wordpress default value! delete it or edit it ;)
+		'id_submit'         => 'commentsubmit',
+		'title_reply'       => __( '' ),  // Leave a Reply - that's the wordpress default value! delete it or edit it ;)
+		'title_reply_to'    => __( '' ),  // Leave a Reply to %s - that's the wordpress default value! delete it or edit it ;)
+		'cancel_reply_link' => __( 'Cancel Reply' ),  // that's the wordpress default value! delete it or edit it ;)
+		'label_submit'      => __( 'Post Comment' ),  // that's the wordpress default value! delete it or edit it ;)
+			
+		'comment_field' =>  '<p><textarea placeholder="" id="comment" class="form-control" name="comment" cols="45" rows="8" aria-required="true"></textarea></p>', 
+			
+		'comment_notes_after' => ''
+	));
+	$form = ob_get_contents();
+    ob_end_clean();
+    return $form;
+}
 
+function return_comments_template($file) {
+	ob_start();
+	comments_template($file);
+	$form = ob_get_contents();
+    ob_end_clean();
+    return $form;
+}
+
+function custom_comment_shortcode( $atts, $content, $tag ) {
+
+	if( is_array( $atts ) ) {
+		$atts = array_flip( $atts );
+	}
+
+	if( ($tag=='comments') || isset( $atts['template'] ) ) {
+		$content = return_comments_template($atts['template']);
+		return $content;
+	}
+
+	if( isset( $atts['form'] ) ) {
+		$content = return_comment_form();
+		return $content;
+	}
+	if( isset( $atts['count'] ) ) {
+		return get_comments_number();
+	}
+}
+add_shortcode('comment', 'custom_comment_shortcode');
+add_shortcode('comments', 'custom_comment_shortcode');
 
 ?>

@@ -6,11 +6,11 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.5
+Stable tag: 0.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A shortcode to display content from posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas
+Display content from posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
 
 == Description ==
 
@@ -24,6 +24,7 @@ In addition, you can choose to:
 * Use **relative URLs** for links and images
 * Include fonts from **Google Fonts**
 * Include **HTML/CSS/JavaScript** in the header, footer or content area
+* Display a **comments** list, input form or comment count
 * Display Advanced Custom Fields - **image**, **gallery**, **repeater**
 * Display a Bootstrap **carousel** (v3.0.0)
 * Display a Bootstrap **navbar menu** with drop-down
@@ -117,6 +118,30 @@ Here is an example of how the two shortcodes can be used to create layout templa
 				<li>[content field="model"] - [content field="price"]</li>
 			[/loop]
 		</ul>
+
+= Comments =  
+<br />
+For displaying comments of the current post, or in a query loop, use the **[comment]** shortcode.
+
+*Display comment count, input form, or comments list*
+
+	Comment count: [comment count]
+	Comment input form: [comment form]
+	Comments list: [comment template] or [comments]
+
+By default, the comments list is displayed by *comments.php* in the theme directory. If you want to specify a different template:
+
+	[comment template="/short-comments.php"]
+
+Here is an example of using Bootstrap accordion/collapse for a comments list that shows when clicked.
+
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion" href="#comments-area">
+		Comments ([comment count])
+	</a>
+	<div id="comments-area" class="panel-collapse collapse">
+		[comments]
+	</div>
+
 
 = Attachments =  
 <br />
@@ -262,6 +287,8 @@ Use relative URLs for links, images, etc. with the **[url]** shortcode.
 
 	<img src='[url uploads]/assets/logo.png'>
 
+This could be useful when you're migrating sites, for example, from local server to public. When inserting an image, replace the specific web address with the **[url]** shortcode. Then the image location doesn't depend on where the site is located.
+
 Available parameters:
 
 * *site* - site address
@@ -358,8 +385,6 @@ Here are some plugins that work well together for custom content management.
 
  * **[Custom Post Type UI](http://wordpress.org/plugins/custom-post-type-ui/)** - Create and manage custom post types and taxonomies
  * **[Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/)** - Create and manage all kinds of useful custom field types.
- * **[Simple Fields](http://wordpress.org/plugins/simple-fields/)** - Add any kind of custom fields to your pages, posts and attachments
- * **[Meta Boxes](http://wordpress.org/plugins/meta-box/)** - Easily implement multiple meta boxes in editing pages, with custom post types and vairous field types
  
 *Admin Extensions*
 
@@ -376,7 +401,7 @@ Here are some plugins that work well together for custom content management.
 Additional parameters:
 
 * basic gallery layout with responsive columns
-* Bootstrap navigation for menus: *tabs*, *pills*, *dropdowns*
+* Bootstrap navigation for menus: *tabs*, *pills*, *vertical stack*
 * query for custom fields and taxonomies
 
 
@@ -397,6 +422,10 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.2.6 =
+
+* Added **[comment]** shortcode for displaying comment count, input form and template
 
 = 0.2.5 =
 
