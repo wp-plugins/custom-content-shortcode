@@ -21,10 +21,10 @@ The **[loop]** shortcode performs query loops. It can display, for example, avai
 In addition, you can choose to:
 
 * Enable a simple **gallery field** for any post type
-* Use **relative URLs** for links and images
-* Include fonts from **Google Fonts**
-* Include **HTML/CSS/JavaScript** in the header, footer or content area
 * Display a **comments** list, input form or comment count
+* Use **relative URLs** for links and images
+* Include **HTML/CSS/JavaScript** in the header, footer or content area
+* Include fonts from **Google Fonts**
 * Display Advanced Custom Fields - **image**, **gallery**, **repeater**
 * Display a Bootstrap **carousel** (v3.0.0)
 * Display a Bootstrap **navbar menu** with drop-down
