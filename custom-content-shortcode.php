@@ -2,8 +2,8 @@
 /*
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
-Description: A shortcode to display content from posts, pages, custom post types, custom fields, images, comments, attachments, menus, or widget areas
-Version: 0.2.6
+Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
+Version: 0.2.7
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -71,7 +71,6 @@ function custom_content_shortcode($atts) {
 		$custom_post_type = 'any';
 	}
 
-
 	// If we're in a gallery field or attachments loop, return requested field
 
 	if( ( $global_vars['is_gallery_loop'] == "true") || 
@@ -133,16 +132,15 @@ function custom_content_shortcode($atts) {
 
 	if($custom_post_name != '') {
 		$args=array(
-		  'name' => $custom_post_name,
-		  'post_type' => $custom_post_type,
-		  'post_status' => 'publish',
-		  'showposts' => 1,
-		  'caller_get_posts'=> 1,
-		);
+			'name' => $custom_post_name,
+			'post_type' => $custom_post_type,
+			'post_status' => 'publish',
+			'posts_per_page' => '1',
+  		);
 
 		$my_posts = get_posts($args);
-
-		if( $my_posts ) { $custom_id=$my_posts[0]->ID; }
+		if( $my_posts ) {
+			$custom_id=$my_posts[0]->ID; }
 		else { return null; // No posts found by that name
 		}
 	}
@@ -317,7 +315,8 @@ add_shortcode('content', 'custom_content_shortcode');
 
 
 
-/*
+/**********
+ *
  * Simple query loop shortcode
  *
  */
@@ -1900,7 +1899,8 @@ add_shortcode('load', 'custom_load_script_file');
 
 add_action('wp_head', 'load_custom_css');
 function load_custom_css() {
-	$custom_css = do_shortcode( get_post_meta( get_the_ID(), "css", $single=true ) );
+	global $wp_query;
+	$custom_css = do_shortcode( get_post_meta( $wp_query->post->ID, "css", $single=true ) );
 	if( $custom_css != '' ) {
 		echo $custom_css;
 	}
@@ -1910,7 +1910,8 @@ function load_custom_css() {
 
 add_action('wp_footer', 'load_custom_js');
 function load_custom_js() {
-	$custom_js = do_shortcode( get_post_meta( get_the_ID(), "js", $single=true ) );
+	global $wp_query;
+	$custom_js = do_shortcode( get_post_meta( $wp_query->post->ID, "js", $single=true ) );
 	if( $custom_js != '' ) {
 		echo $custom_js;
 	}
@@ -2006,11 +2007,27 @@ class urlShortcode
     {
         $blogurl_settings = urlShortcode::getSettings();
 
+		extract(shortcode_atts(array(
+			'login' => '',
+			'logout' => '',
+			'go' => '',
+		), $attributes));
+
         if( is_array( $attributes ) )
         {
             $attributes = array_flip( $attributes );
         }
         
+
+		if($go!='') {
+			if($go=='home')
+				$go = $blogurl_settings['home'];
+			elseif( (isset( $attributes['login'] )) || (isset( $attributes['logout'] )) )
+				if( !strpos ($go,"." ) )
+					$go = custom_content_shortcode(array('name'=>$go, 'field'=>'url'));
+		}
+
+
         if( isset( $attributes['wordpress'] ) )
         {
             $return_blogurl = $blogurl_settings['wordpress'];
@@ -2030,6 +2047,14 @@ class urlShortcode
         elseif( isset( $attributes['child'] ) )
         {
             $return_blogurl = $blogurl_settings['childtemplateurl'];
+        }
+        elseif( isset( $attributes['login'] ) )
+        {
+        	$return_blogurl = wp_login_url( $go );
+        }
+        elseif( isset( $attributes['logout'] ) )
+        {
+			$return_blogurl = wp_logout_url( $go );
         }
         else
         {
@@ -2123,5 +2148,81 @@ function custom_comment_shortcode( $atts, $content, $tag ) {
 }
 add_shortcode('comment', 'custom_comment_shortcode');
 add_shortcode('comments', 'custom_comment_shortcode');
+
+function custom_is_shortcode( $atts, $content, $tag ) {
+	global $current_user;
+
+	extract(shortcode_atts(array(
+		'user' => '',
+		'format' => '',
+		'shortcode' => '',
+	), $atts));
+
+	if($format == 'true') { // Format?
+		$content = wpautop( $content );
+	}
+	if($shortcode != 'false') { // Shortcode?
+		$content = do_shortcode( $content );
+	}
+
+	if($user!='') {
+		get_currentuserinfo();
+		$is_it = false;
+
+		if ( $user == ($current_user->user_login) )
+			$is_it = true;
+		if ( ( $user == ($current_user->ID) ) &&
+			ctype_digit($user) ) // $user is a number?
+				$is_it = true;
+		if($tag=="isnt")
+			$is_it = !$is_it;
+		if($is_it)
+			return $content;
+		return null;
+	}
+
+	if( is_array( $atts ) ) {
+		$atts = array_flip( $atts );
+	}
+
+	if 	( ($tag=='is') &&
+		( 
+		( isset( $atts['admin'] ) && current_user_can( 'manage_options' ) ) ||
+		( isset( $atts['login'] ) && is_user_logged_in() ) ||
+		( isset( $atts['logout'] ) && !is_user_logged_in() )
+		) ) {
+			return $content;
+	}
+	if 	( ($tag=='isnt') &&
+		( 
+		( isset( $atts['admin'] ) && !current_user_can( 'manage_options' ) ) ||
+		( isset( $atts['login'] ) && !is_user_logged_in() ) ||
+		( isset( $atts['logout'] ) && is_user_logged_in() )
+		) ) {
+			return $content;
+	}
+
+	return null;
+}
+add_shortcode('is', 'custom_is_shortcode');
+add_shortcode('isnt', 'custom_is_shortcode');
+
+function custom_user_shortcode( $atts, $content ) {
+
+	global $current_user;
+		get_currentuserinfo();
+
+	if( is_array( $atts ) )
+		$atts = array_flip( $atts );
+
+	if( isset( $atts['name'] ) )
+		return $current_user->user_login;
+
+	if( isset( $atts['id'] ) )
+		return $current_user->ID;
+
+}
+add_shortcode('user', 'custom_user_shortcode');
+
 
 ?>

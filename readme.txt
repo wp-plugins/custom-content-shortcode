@@ -6,11 +6,11 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.6
+Stable tag: 0.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Display content from posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
+Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
 
 == Description ==
 
@@ -18,18 +18,25 @@ The **[content]** shortcode displays any of the following content: posts, pages,
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
-In addition, you can choose to:
+From showing a single info field to building entire page templates, these commands let you take control of content layout.
 
-* Enable a simple **gallery field** for any post type
-* Display a **comments** list, input form or comment count
+= Features =  
+<br />
+You can also choose to:
+
+* Enable a simple **gallery field**
 * Use **relative URLs** for links and images
-* Include **HTML/CSS/JavaScript** in the header, footer or content area
-* Include fonts from **Google Fonts**
-* Display Advanced Custom Fields - **image**, **gallery**, **repeater**
-* Display a Bootstrap **carousel** (v3.0.0)
-* Display a Bootstrap **navbar menu** with drop-down
-* Easily include **Live Edit** - front-end editing of content and fields
+* Include **HTML/CSS/JavaScript**: stylesheets, jQuery libraries, Google Fonts, etc.
+* Display a **comments** list, input form or comment count
+* Display content based on **user status**: admin, non-admin, logged in/out, or user name
+* Display user name, ID, **login and logout links** with user redirect
 
+With other libraries:
+
+* Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**
+* Display content based on **device type** using [WP Mobile Detect](http://wordpress.org/plugins/wp-mobile-detect/)
+* Display [Bootstrap](http://getbootstrap.com/) **carousel** or **navbar menu**
+* Easily include [Live Edit](http://wordpress.org/plugins/live-edit/) - **front-end editing** of content and fields
 
 = Basic examples =  
 <br />
@@ -64,7 +71,6 @@ In addition:
 * **area** or **sidebar** - display a widget area/sidebar by *title*
 * **menu** - display a menu list by *name/slug*, *ID* or *title*. Use the **class** parameter to add a `<div>` class to the menu for styling purpose. For a Bootstrap navbar menu, please see the section for the **[navbar]** shortcode.
 
-
 = Query examples =  
 <br />
 Here are examples of query loops using the **[content]** and **[loop]** shortcodes.
@@ -95,9 +101,9 @@ Available parameters for the **[loop]** shortcode are:
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
 
 
-= Custom content layout =  
+= Content layout =  
 <br />
-Here is an example of how the two shortcodes can be used to create layout templates.
+Here is an example of how these shortcodes can be used to create a content layout.
 
 1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
 1. Add all bicycles as new entries, with featured image and other info in the fields.
@@ -133,7 +139,7 @@ By default, the comments list is displayed by *comments.php* in the theme direct
 
 	[comment template="/short-comments.php"]
 
-Here is an example of using Bootstrap accordion/collapse for a comments list that shows when clicked.
+Here is an example of using Bootstrap accordion for a comments list that shows when clicked.
 
 	<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion" href="#comments-area">
 		Comments ([comment count])
@@ -145,7 +151,7 @@ Here is an example of using Bootstrap accordion/collapse for a comments list tha
 
 = Attachments =  
 <br />
-For attachments such as images attached to a post, query the post type *attachment*, and display necessary fields.
+For attachments such as images attached to a post, you can query the post type *attachment* and display the necessary fields.
 
 *Display details on all the attachments of the current post*
 
@@ -160,7 +166,7 @@ For attachments such as images attached to a post, query the post type *attachme
 		Thumbnail URL: [content field="thumbnail-url"]
 	[/loop]
 
-*Display the attachment thumbnails of all posts in the category **tree**, linked to their full-sized images in a lightbox*
+*Display attachment thumbnails of all posts in the category **tree**, linked to full-sized images in a lightbox*
 
 	[loop type="attachment" category="tree"]
 		<a href='[content field="image-url"]' rel="lightbox">
@@ -171,7 +177,7 @@ For attachments such as images attached to a post, query the post type *attachme
 
 = Gallery fields =  
 <br />
-In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable a simple gallery field for any post type. Images can be added, removed and ordered.
+In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable a simple gallery field for any post type. Images can be added, ordered and removed.
 
 The **[loop]** shortcode handles the gallery field just like attachments. For each image, the **[content]** shortcode can display these fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
 
@@ -196,11 +202,9 @@ The *content* shortcode can display individual images of the gallery field, or a
 	[content gallery="native"]
 	[content gallery="carousel"]
 
-A basic responsive gallery layout will be included soon.
-
-= Pass a field content as parameter to another shortcode =  
+= Use a field as parameter to another shortcode =  
 <br />
-To use the content of a field as a parameter to another shortcode, use the *pass* shortcode.
+To use the content of a field as a parameter to another shortcode, use the **[pass]** shortcode.
 
 *Display a map according to the address entered in a custom field*
 
@@ -266,7 +270,7 @@ Use the *gfonts* parameter of the **[load]** shortcode to include fonts from Goo
 	[load gfonts="Lato|Lora:400,700"]
 	[css]
 		h1, h2 { font-family: Lora, serif; }
-		p { font-family: 'Lato', sans-serif; }
+		p { font-family: Lato, sans-serif; }
 	[/css]
 
 It should be placed in the *css* field, so the fonts are included in the header.
@@ -297,6 +301,66 @@ Available parameters:
 * *uploads* - /wp-content/uploads/
 * *theme* - /wp-content/theme - theme directory
 * *child* - /wp-content/child_theme - child theme directory
+
+= Login and logout links =  
+<br />
+The **[url]** shortcode is also used to display login/logout links.
+
+*Display a login link*
+
+	<a href="[url login]">User login</a>
+
+*Display a logout link with redirect to home*
+
+	<a href="[url logout go='home']">	Logout</a>
+
+Available parameters:
+
+* login - login link
+* logout - logout link
+* go - redirect user after login/logout
+
+For the redirect link, you can either use a full URL (*www.example.com*) or the name/slug of any post type. The slug *home* will return the user to the home page of your site.
+
+= Display content based on user status =  
+<br />
+
+The [is] shortcode is used to display content if the user is a specific user, an admin, non-admin, or logged in/out.
+
+*Display user status*
+
+	[is admin]You are an administrator.[/is]
+	[is login]You are logged in.[/is]	[is logout]You are logged out.[/is]
+	[is user="john"]You are John.[/is]
+
+Available parameters:
+
+* admin - administrator
+* login - logged in
+* logout - logged out
+* user - user name or ID
+
+You can also use the **[isnt]** shortcode, to see if the user is not admin, etc.
+
+Here is an example using both [is] and [url] to show a login/logout link based on user status.
+
+	[is logout]
+		<a href="[url login go='home']">
+			Login
+		</a>
+	[/is]
+	[is login]
+		<a href="[url logout go='somewhere']">
+			Logout
+		</a>
+	[/is]
+
+= Display user name or ID =  
+<br />
+Like this:
+
+	User name: [user name]
+	User ID: [user id]
 
 = Bootstrap navbar menu =  
 <br />
@@ -422,6 +486,12 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.2.7 =
+
+* Added **[is]** shortcode - display content when user is administrator, non-administrator, logged in, or logged out
+* Added *login* and *logout* parameter to **[url]** shortcode - display login/logout link url, also possible to redirect
+* Improved the way CSS/JS fields are loaded when outside the loop
 
 = 0.2.6 =
 
