@@ -18,11 +18,7 @@ The **[content]** shortcode displays any of the following content: posts, pages,
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
-From showing a single info field to building entire page templates, these commands let you take control of content layout.
-
-= Features =  
-<br />
-You can also choose to:
+In addition, you can choose to:
 
 * Enable a simple **gallery field**
 * Use **relative URLs** for links and images
