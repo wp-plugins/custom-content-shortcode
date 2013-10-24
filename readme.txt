@@ -14,7 +14,7 @@ Display posts, pages, custom post types, custom fields, files, images, comments,
 
 == Description ==
 
-The **[content]** shortcode displays any of the following content: posts, pages, custom post types, custom fields, files, images, attachments, menus, and widget areas.
+The **[content]** shortcode displays any of the following: posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas.
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
@@ -25,7 +25,7 @@ In addition, you can choose to:
 * Include **HTML/CSS/JavaScript**: stylesheets, jQuery libraries, Google Fonts, etc.
 * Display a **comments** list, input form or comment count
 * Display content based on **user status**: admin, non-admin, logged in/out, or user name
-* Display user name, ID, **login and logout links** with user redirect
+* Display user name, ID, **login/logout links** with user redirect
 
 With other libraries:
 
