@@ -96,7 +96,6 @@ Available parameters for the **[loop]** shortcode are:
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
 
-
 = Content layout =  
 <br />
 Here is an example of how these shortcodes can be used to create a content layout.
@@ -320,7 +319,6 @@ For the redirect link, you can either use a full URL (*www.example.com*) or the 
 
 = Display content based on user status =  
 <br />
-
 The [is] shortcode is used to display content if the user is a specific user, an admin, non-admin, or logged in/out.
 
 *Display user status*
