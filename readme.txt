@@ -324,7 +324,7 @@ The [is] shortcode is used to display content if the user is a specific user, an
 *Display user status*
 
 	[is admin]You are an administrator.[/is]
-	[is login]You are logged in.[/is]	[is logout]You are logged out.[/is]
+	[is login]You are logged in.[/is][is logout]You are logged out.[/is]
 	[is user="john"]You are John.[/is]
 
 Available parameters:
