@@ -38,7 +38,7 @@ With other libraries:
 <br />
 *Display post content by name*
 
-	[content type="post" name="hello-world"]
+	[content name="hello-world"]
 
 *Display the featured image of a page*
 
