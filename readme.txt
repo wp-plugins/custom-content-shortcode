@@ -34,6 +34,10 @@ With other libraries:
 * Display [Bootstrap](http://getbootstrap.com/) **carousel** or **navbar menu**
 * Easily include [Live Edit](http://wordpress.org/plugins/live-edit/) - **front-end editing** of content and fields
 
+= Website =  
+<br />
+Please visit the documentation page for a full description of available features: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)
+
 = Basic examples =  
 <br />
 *Display post content by name*
