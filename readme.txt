@@ -36,7 +36,7 @@ With other libraries:
 
 = Website =  
 <br />
-Please visit the documentation page for a full description of available features: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)
+Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)
 
 = Basic examples =  
 <br />
