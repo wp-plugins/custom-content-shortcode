@@ -63,10 +63,13 @@ Here are the main parameters for the **[content]** shortcode:
 * **type** - which post type to target: *post*, *page*, or *custom post type* - if empty, the default is *any post type*
 * **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
 * **field** - which field to display - if empty, default is the main content of the post. You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+
+In addition:
+
 * **class** - add a `<div>` class to the output for styling purpose.
 * **words** or **length**/**len** - limit number of words or characters
 
-In addition:
+Other types of content:
 
 * **area** or **sidebar** - display a widget area/sidebar by *title*
 * **menu** - display a menu list by *name/slug*, *ID* or *title*. Use an additional **ul** parameter to make Bootstrap nav-tabs, nav-pills and nav-pills-stacked. For a Bootstrap navbar-style menu, please see the section for the **[navbar]** shortcode.
