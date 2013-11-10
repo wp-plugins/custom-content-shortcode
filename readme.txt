@@ -64,9 +64,9 @@ Here are the main parameters for the **[content]** shortcode:
 
 In addition:
 
-* **image** - display image fields by *name/slug*
 * **area** or **sidebar** - display a widget area/sidebar by *title*
 * **menu** - display a menu list by *name/slug*, *ID* or *title*. Use an additional **ul** parameter to make Bootstrap nav-tabs, nav-pills and nav-pills-stacked. For a Bootstrap navbar-style menu, please see the section for the **[navbar]** shortcode.
+* **image** - display an image field by *name/slug*
 
 = Query examples =  
 <br />
