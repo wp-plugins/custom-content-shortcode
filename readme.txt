@@ -31,7 +31,7 @@ With other libraries:
 
 * Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**
 * Display content based on **device type** using [WP Mobile Detect](http://wordpress.org/plugins/wp-mobile-detect/)
-* Display [Bootstrap](http://getbootstrap.com/) **carousel** or **navbar menu**
+* Display [Bootstrap](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 * Easily include [Live Edit](http://wordpress.org/plugins/live-edit/) - **front-end editing** of content and fields
 
 = Basic examples =  
