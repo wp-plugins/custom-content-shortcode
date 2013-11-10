@@ -34,6 +34,9 @@ With other libraries:
 * Display [Bootstrap](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 * Easily include [Live Edit](http://wordpress.org/plugins/live-edit/) - **front-end editing** of content and fields
 
+*Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)*
+
+
 = Basic examples =  
 <br />
 *Display post content by name*
@@ -457,7 +460,7 @@ Here are some plugins that work well together for custom content management.
  * **[Post Type Converter](http://wordpress.org/plugins/post-type-converter/)** - Convert a post from one post type to another
  * **[Codepress Admin Columns](http://wordpress.org/plugins/codepress-admin-columns/)** - Customize the overview pages for post/page/custom post types, by showing/hiding custom fields as columns. I wish it could do sortable columns so custom post types are easier to organize. Perhaps another plugin is more fully featured?
  * **[Duplicate Post](http://wordpress.org/plugins/duplicate-post/)** - Useful for quickly creating similar post items, backup posts, etc.
-
+ * **[Admin Menu Post List](http://wordpress.org/plugins/admin-menu-post-list/)** - Display a post list in the admin menu for easy access
 
 = Features to be implemented =  
 <br />
