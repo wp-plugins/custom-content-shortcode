@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.1
+Version: 0.3.2
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -48,6 +48,7 @@ function custom_content_shortcode($atts) {
 		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null, 
 		'height' => null, 'num' => null, 'image' => null, 'in' => null,
 		'row' => null, 'sub' => null, 'acf_gallery' => null, 'ul' => null,
+		'words' => null, 'len' => null, 'length' => null,
 		), $atts));
 
 	$custom_post_type = $type;
@@ -60,6 +61,7 @@ function custom_content_shortcode($atts) {
 	$custom_gallery_type = $gallery;
 	$custom_gallery_name = $group;
 	$custom_area_name = $area;
+	if($len!='') $length=$len;
 
 	$out = null;
 	if($image != null) {
@@ -292,7 +294,7 @@ function custom_content_shortcode($atts) {
 			case "image-url": $out = wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
 			case "thumbnail": $out = get_the_post_thumbnail( $custom_id, 'thumbnail' ); break;
 			case "thumbnail-url": $res = wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); $out = $res['0']; break;
-			case "excerpt": $out = get_post($custom_id)->post_excerpt; break;
+//			case "excerpt": $out = get_post($custom_id)->post_excerpt; break;
 			case "tags": $out = implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
 			case 'gallery' :
 
@@ -302,14 +304,22 @@ function custom_content_shortcode($atts) {
 				$attachment_ids = array_filter( explode( ',', $attachment_ids ) );
 
 				if($num == null) { $num = '1'; }
-				$out = wp_get_attachment_image( $attachment_ids[$num-1], 'full' );
+					$out = wp_get_attachment_image( $attachment_ids[$num-1], 'full' );
 				break;
 
 			case 'excerpt' :
 
-				// Get excerpt
+				$out = get_post($custom_id);
 
-				$out = get_post_field('post_excerpt', $custom_id);
+				// Get excerpt
+				$excerpt = get_post($custom_id)->post_excerpt;
+				if( ($excerpt=='') || (is_wp_error($excerpt)) ) {
+					$out = $out->post_content;
+					if(($words=='') && ($length==''))
+						$words='35';
+				} else {
+					$out = $excerpt; 
+				}
 				break;
 
 			default :
@@ -321,6 +331,29 @@ function custom_content_shortcode($atts) {
 
 		}
 
+	}
+
+	if($words!='') {
+		$excerpt_length = $words;
+		$the_excerpt = $out;
+
+		$the_excerpt = strip_tags(strip_shortcodes($the_excerpt)); //Strips tags and images
+		$words = explode(' ', $the_excerpt, $excerpt_length + 1);
+
+		if(count($words) > $excerpt_length) :
+			array_pop($words);
+//			array_push($words, '…');
+			$the_excerpt = implode(' ', $words);
+		endif;
+
+		$out = $the_excerpt;
+	}
+	if($length!='') {
+
+		$the_excerpt = $out;
+		$the_excerpt = strip_tags(strip_shortcodes($the_excerpt)); //Strips tags and images
+
+		$out = mb_substr($the_excerpt, 0, $length, 'UTF-8');
 	}
 
 	if($class!='')
@@ -2029,7 +2062,7 @@ function load_custom_html($content) {
 				$output .= '[load file="' . $default_page_template . '" dir="layout"]';
 			}
 		} else {
-			$output .= $content;
+			$output .= $html_field;
 		}
 
 		// Load default footer
