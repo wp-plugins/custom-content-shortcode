@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.2.7
+Version: 0.3.1
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -47,13 +47,12 @@ function custom_content_shortcode($atts) {
 		'menu' => null, 'format' => null, 'shortcode' => null, 'gallery' => 'false',
 		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null, 
 		'height' => null, 'num' => null, 'image' => null, 'in' => null,
-		'row' => null, 'sub' => null, 'acf_gallery' => null,
+		'row' => null, 'sub' => null, 'acf_gallery' => null, 'ul' => null,
 		), $atts));
 
 	$custom_post_type = $type;
 	$custom_post_name = $name;
 	$custom_menu_name = $menu;
-	$custom_menu_class = $class;
 	$custom_field = $field;
 	$custom_id = $id;
 	$content_format = $format;
@@ -62,7 +61,7 @@ function custom_content_shortcode($atts) {
 	$custom_gallery_name = $group;
 	$custom_area_name = $area;
 
-	$excerpt_out = null;
+	$out = null;
 	if($image != null) {
 		$custom_field = $image; // Search for the image field
 	}
@@ -77,17 +76,20 @@ function custom_content_shortcode($atts) {
 		( $global_vars['is_attachment_loop'] == "true" ) || 
 		 ( $global_vars['is_acf_gallery_loop'] == "true" ) ) {
 		switch($custom_field) {
-			case "image": return $global_vars['current_image']; break;
-			case "image-url": return $global_vars['current_image_url']; break;
-			case "thumbnail": return $global_vars['current_image_thumb']; break;
-			case "thumbnail-url": return $global_vars['current_image_thumb_url']; break;
-			case "caption": return $global_vars['current_image_caption']; break;
-			case "id": return $global_vars['current_attachment_id']; break;
-			case "title": return $global_vars['current_image_title']; break;
-			case "description": return $global_vars['current_image_description']; break;
-			case "alt": return $global_vars['current_image_alt']; break;
-			case "count": return $global_vars['current_row']; break;
+			case "image": $out = $global_vars['current_image']; break;
+			case "image-url": $out = $global_vars['current_image_url']; break;
+			case "thumbnail": $out = $global_vars['current_image_thumb']; break;
+			case "thumbnail-url": $out = $global_vars['current_image_thumb_url']; break;
+			case "caption": $out = $global_vars['current_image_caption']; break;
+			case "id": $out = $global_vars['current_attachment_id']; break;
+			case "title": $out = $global_vars['current_image_title']; break;
+			case "description": $out = $global_vars['current_image_description']; break;
+			case "alt": $out = $global_vars['current_image_alt']; break;
+			case "count": $out = $global_vars['current_row']; break;
 		}
+		if($class!='')
+			return '<div class="' . $class . '">' . $out . '</div>';
+		else return $out;
 	}
 
 
@@ -97,7 +99,12 @@ function custom_content_shortcode($atts) {
 		$custom_area_name = $sidebar;
 	}
 	if( $custom_area_name != '') {
-		$back =  "<div id='" . str_replace( " ", "_", $name ) . "' class='sidebar'>";
+		$back =  '<div id="' . str_replace( " ", "_", $custom_area_name ) . '" class="sidebar';
+		if($class!='')
+			$back .=  ' ' . $class;
+
+		$back .= '">';
+
 		ob_start();
 		if ( ! function_exists('dynamic_sidebar') || ! dynamic_sidebar($custom_area_name) ) {}
 		$back .= ob_get_contents();
@@ -116,14 +123,15 @@ function custom_content_shortcode($atts) {
 		$menu_args = array (
 			'menu' => $custom_menu_name,
 			'echo' => false,
+			'menu_class' => $ul,
 		);
 
 		$output = wp_nav_menu( $menu_args );
 
-		if( $custom_menu_class == '') {
+		if( $class == '') {
 			return $output;
 		} else {
-			return '<div class="' . $custom_menu_class . '">' . $output . '</div>';
+			return '<div class="' . $class . '">' . $output . '</div>';
 		}
 	}
 
@@ -162,81 +170,92 @@ function custom_content_shortcode($atts) {
 		}
 		if( function_exists('the_sub_field') ) {
 
-			$excerpt_out = get_sub_field($custom_field, $custom_id);
+			$out = get_sub_field($custom_field, $custom_id);
 			switch($in) {
-				case 'id' : $excerpt_out = wp_get_attachment_image( $excerpt_out, 'full' ); break;
-				case 'url' : $excerpt_out = '<img src="' . $excerpt_out . '">'; break;
-				default : if(is_array($excerpt_out)) {
-					$excerpt_out = wp_get_attachment_image( $excerpt_out[id], 'full' );
+				case 'id' : $out = wp_get_attachment_image( $out, 'full' ); break;
+				case 'url' : $out = '<img src="' . $out . '">'; break;
+				default : if(is_array($out)) {
+					$out = wp_get_attachment_image( $out[id], 'full' );
 				}
 			}
 			if($custom_field == 'id') {
-				$excerpt_out = $global_vars['current_loop_id'];
+				$out = $global_vars['current_loop_id'];
 			}
 		} else {
-			$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
+			$out = get_post_meta($custom_id, $custom_field, $single=true);
 		}
-		return $excerpt_out;
+		if($class!='')
+			return '<div class="' . $class . '">' . $out . '</div>';
+		else return $out;
 	}
 	
 	// Repeater field subfield
 
 	if($sub != '') {
-		$excerpt_out = null;
+		$out = null;
 		if( function_exists('get_field') ) {
 			$rows = get_field($custom_field); // Get all rows
 			$row = $rows[$row-1]; // Get the specific row (first, second, ...)
-			$excerpt_out = $row[$sub]; // Get the subfield
+			$out = $row[$sub]; // Get the subfield
 			switch($in) {
-				case 'id' : $excerpt_out = wp_get_attachment_image( $excerpt_out, 'full' ); break;
-				case 'url' : $excerpt_out = '<img src="' . $excerpt_out . '">'; break;
-				default : if(is_array($excerpt_out)) {
-					$excerpt_out = wp_get_attachment_image( $excerpt_out[id], 'full' );
+				case 'id' : $out = wp_get_attachment_image( $out, 'full' ); break;
+				case 'url' : $out = '<img src="' . $out . '">'; break;
+				default : if(is_array($out)) {
+					$out = wp_get_attachment_image( $out[id], 'full' );
 				}
 			}
 		}
-		return $excerpt_out;
+		if($class!='')
+			return '<div class="' . $class . '">' . $out . '</div>';
+		else return $out;
 	}
 
 
 	// Gallery types - native or carousel
 
 	if( $custom_gallery_type == "carousel") {
-		$excerpt_out = '[gallery type="carousel" ';
+		$out = '[gallery type="carousel" ';
 		if($custom_gallery_name != '') {
-			$excerpt_out .= 'name ="' . $custom_gallery_name . '" ';
+			$out .= 'name ="' . $custom_gallery_name . '" ';
 		}
 		if($height!='') {
-			$excerpt_out .= 'height ="' . $height . '" ';	
+			$out .= 'height ="' . $height . '" ';	
 		}
-		$excerpt_out .= 'ids="';
+		$out .= 'ids="';
 
 		if($acf_gallery!='') {
 			if( function_exists('get_field') ) {
-				$excerpt_out .= implode(',', get_field($acf_gallery, $custom_id, false));
+				$out .= implode(',', get_field($acf_gallery, $custom_id, false));
 			}
 		} else {
-			$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
+			$out .= get_post_meta( $custom_id, '_custom_gallery', true );
 		}
-		$excerpt_out .= '" ]';
-		return do_shortcode( $excerpt_out );
+		$out .= '" ]';
+
+		if($class!='')
+			$out = '<div class="' . $class . '">' . $out . '</div>';
+		
+		return do_shortcode( $out );
 	} else {
 		if( $custom_gallery_type == "native") {
-			$excerpt_out = '[gallery " ';
+			$out = '[gallery " ';
 			if($custom_gallery_name != '') {
-				$excerpt_out .= 'name ="' . $custom_gallery_name . '" ';
+				$out .= 'name ="' . $custom_gallery_name . '" ';
 			}
-			$excerpt_out .= 'ids="';
+			$out .= 'ids="';
 
 			if($acf_gallery!='') {
 				if( function_exists('get_field') ) {
-					$excerpt_out .= implode(',', get_field($acf_gallery, $custom_id, false));
+					$out .= implode(',', get_field($acf_gallery, $custom_id, false));
 				}
 			} else {
-				$excerpt_out .= get_post_meta( $custom_id, '_custom_gallery', true );
+				$out .= get_post_meta( $custom_id, '_custom_gallery', true );
 			}
-			$excerpt_out .= '" ]';
-			return do_shortcode( $excerpt_out );
+			$out .= '" ]';
+
+			if($class!='')
+				$out = '<div class="' . $class . '">' . $out . '</div>';
+			return do_shortcode( $out );
 		}	
 	}
 
@@ -244,15 +263,18 @@ function custom_content_shortcode($atts) {
 
 	if($image != null) {
 		$image_id = get_post_meta( $custom_id, $image, true );
-		return wp_get_attachment_image( $image_id, 'full' );
+		$image_return = wp_get_attachment_image( $image_id, 'full' );
+		if($class!='')
+			$image_return = '<div class="' . $class . '">' . $image_return . '</div>';
+		return $image_return;
 	}
 
 	// If no field is specified, return content
 
 	if($custom_field == '') { 
 
-		$excerpt_out = get_post( $custom_id );
-		$excerpt_out = $excerpt_out->post_content;
+		$out = get_post( $custom_id );
+		$out = $out->post_content;
 
 	} else { // else return specified field
 
@@ -260,55 +282,60 @@ function custom_content_shortcode($atts) {
 		// Predefined fields
 
 		switch($custom_field) {
-			case "id": return $custom_id; break;
-			case "title": return get_the_title($custom_id); break;
-			case "author": return get_the_author($custom_id); break;
-			case "date": return mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
-			case "url": return get_post_permalink($custom_id); break;
-			case "image": return get_the_post_thumbnail($custom_id); break;
-			case "image-url": return wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
-			case "thumbnail": return get_the_post_thumbnail( $custom_id, 'thumbnail' ); break;
-			case "thumbnail-url": wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); return $res['0']; break;
-			case "excerpt": return get_post($custom_id)->post_excerpt; break;
-			case "tags": return implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
+			case "id": $out = $custom_id; break;
+			case "slug": $out = get_post($custom_id)->post_name; break;
+			case "title": $out = get_post($custom_id)->post_title; break;
+			case "author": $out = get_the_author($custom_id); break;
+			case "date": $out = mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
+			case "url": $out = get_post_permalink($custom_id); break;
+			case "image": $out = get_the_post_thumbnail($custom_id); break;
+			case "image-url": $out = wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
+			case "thumbnail": $out = get_the_post_thumbnail( $custom_id, 'thumbnail' ); break;
+			case "thumbnail-url": $res = wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); $out = $res['0']; break;
+			case "excerpt": $out = get_post($custom_id)->post_excerpt; break;
+			case "tags": $out = implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
+			case 'gallery' :
+
+				// Get specific image from gallery field
+
+				$attachment_ids = get_post_meta( $custom_id, '_custom_gallery', true );
+				$attachment_ids = array_filter( explode( ',', $attachment_ids ) );
+
+				if($num == null) { $num = '1'; }
+				$out = wp_get_attachment_image( $attachment_ids[$num-1], 'full' );
+				break;
+
+			case 'excerpt' :
+
+				// Get excerpt
+
+				$out = get_post_field('post_excerpt', $custom_id);
+				break;
+
+			default :
+
+				// Get other fields
+
+				$out = get_post_meta($custom_id, $custom_field, $single=true);
+				break;
+
 		}
 
-		if($custom_field == 'gallery') {
-
-			// Get specific image from gallery field
-
-			$attachment_ids = get_post_meta( $custom_id, '_custom_gallery', true );
-			$attachment_ids = array_filter( explode( ',', $attachment_ids ) );
-
-			if($num == null) { $num = '1'; }
-			return wp_get_attachment_image( $attachment_ids[$num-1], 'full' );
-		}
-
-		if($custom_field == 'excerpt') {
-
-			// Get excerpt
-
-			$excerpt_out = get_post_field('post_excerpt', $custom_id);
-
-		} else {
-
-			// Get other fields
-
-			$excerpt_out = get_post_meta($custom_id, $custom_field, $single=true);
-
-		}				
 	}
 
+	if($class!='')
+		$out = '<div class="' . $class . '">' . $out . '</div>';
+
+
 	if($content_format != 'false') { // Format?
-/*		$excerpt_out = apply_filters('the_content', $excerpt_out ); */
-		$excerpt_out = wpautop( $excerpt_out );
+		$out = wpautop( $out );
 	}
 
 	if($shortcode_option != 'false') { // Shortcode?
-		$excerpt_out = do_shortcode( $excerpt_out );
+		$out = do_shortcode( $out );
 	}
 
-	return $excerpt_out;
+	return $out;
 }
 
 add_shortcode('content', 'custom_content_shortcode');
@@ -375,6 +402,7 @@ class Loop_Shortcode {
 				echo do_shortcode($template);
 				$x--;
 			}
+			$global_vars['is_loop'] = "false";
 			return ob_get_clean();
 		}
 
@@ -580,6 +608,7 @@ class Loop_Shortcode {
 
 		echo implode( $posts_separator, $output );
 
+		$global_vars['is_loop'] = "false";
 		return ob_get_clean();
 
 	} else {
@@ -681,6 +710,7 @@ class Loop_Shortcode {
 				wp_reset_postdata();
 
 				echo implode( $posts_separator, $output );
+				$global_vars['is_loop'] = "false";
 				return ob_get_clean();
 			}
 		} // End type="attachment"
@@ -706,8 +736,10 @@ class Loop_Shortcode {
 
 			if ( $attachment_ids ) { 
 				$has_gallery_images = get_post_meta( $global_vars['current_gallery_id'], '_custom_gallery', true );
-				if ( !$has_gallery_images )
+				if ( !$has_gallery_images ) {
+					$global_vars['is_loop'] = "false";
 					return;
+				}
 				// convert string into array
 				$has_gallery_images = explode( ',', get_post_meta( $global_vars['current_gallery_id'], '_custom_gallery', true ) );
 
@@ -767,10 +799,12 @@ class Loop_Shortcode {
 				wp_reset_postdata();
 
 				echo implode( $posts_separator, $output );
+				$global_vars['is_loop'] = "false";
 				return ob_get_clean();
 	    	} // End if attachment IDs exist
 		} // End if function exists 
 		$global_vars['current_gallery_id'] = '';
+		$global_vars['is_loop'] = "false";
 		return;
 	} /* End of gallery loop */
 	}
@@ -864,11 +898,9 @@ function custom_gallery_has_linked_images() {
 
 function custom_gallery_get_post_types() {
 
-	$args = array(
-		'public' => true
-	);
+	$args = array( 'public' => true	);
 
-	$post_types = array_map( 'ucfirst', get_post_types( $args ) );
+	$post_types = get_post_types( $args );
 
 	// remove attachment
 	unset( $post_types[ 'attachment' ] );
@@ -1285,23 +1317,22 @@ add_action( 'save_post', 'custom_gallery_save_post' );
 /***** Admin page *****/
 
 function custom_gallery_menu() {
-	add_plugins_page( __( 'Gallery Fields', 'custom-gallery' ), __( 'Gallery Fields', 'custom-gallery' ), 'manage_options', 'custom-gallery', 'custom_gallery_admin_page' );
+	add_options_page( __( 'Gallery Fields', 'custom-gallery' ), __( 'Gallery Fields', 'custom-gallery' ), 'manage_options', 'custom-gallery', 'custom_gallery_admin_page' );
 }
 add_action( 'admin_menu', 'custom_gallery_menu' );
-
 
 /*
  * Admin page
  *
  */
 
-function custom_gallery_admin_page() { ?>
+function custom_gallery_admin_page() {
+	?>
     <div class="wrap">
     	 <?php /* screen_icon( 'plugins' ); */ ?>
         <h2><?php _e( 'Gallery Fields', 'custom-gallery' ); ?></h2>
 
         <form action="options.php" method="POST">
-        	<?php settings_errors(); ?>
             <?php settings_fields( 'my-settings-group' ); ?>
             <?php do_settings_sections( 'custom-gallery-settings' ); ?>
             <?php submit_button(); ?>
@@ -1366,7 +1397,7 @@ function custom_gallery_settings_sanitize( $input ) {
 			$output[ 'post_types' ][ $post_type ] = isset( $input[ 'post_types' ][ $post_type ] ) ? 'on' : '';	
 	}
 	
-	return apply_filters( 'sandbox_theme_validate_input_examples', $output, $input );
+	return apply_filters( 'validate_input_examples', $output, $input );
 }
 
 
@@ -1847,6 +1878,7 @@ function custom_load_script_file($atts) {
         case 'site' : $dir = home_url() . '/'; break; /* Site address */
 		case 'wordpress' : $dir = get_site_url() . '/'; break; /* WordPress directory */
 		case 'content' : $dir = get_site_url() . '/wp-content/'; break;
+		case 'layout' : $dir = get_site_url() . '/wp-content/layout/'; break;
 		case 'child' : $dir = get_stylesheet_directory_uri() . '/'; break;
 		default:
 
@@ -1872,23 +1904,23 @@ function custom_load_script_file($atts) {
 		echo $gfonts . '" />';
 	}
 	if($js != '') {
-		echo '<script src="' . $dir . $js . '"></script>';
+		echo '<script type="text/javascript" src="' . $dir . $js . '"></script>';
 	}
 
 	if($file != '') {
+
 		$output = @file_get_contents($dir . $file);
 
-		if(($format == 'on')||($format == 'true')) { // Format?
-			$output = wpautop( $output );
-/*			$output = apply_filters('the_content', $output); */
+		if($output!='') {
+			if(($format == 'on')||($format == 'true')) { // Format?
+				$output = wpautop( $output );
+			}
+			if(($shortcode != 'false')||($shortcode != 'off')) { // Shortcode?
+				$output = do_shortcode( $output );
+			}
+			return $output;
 		}
-		if(($shortcode != 'false')||($shortcode != 'off')) { // Shortcode?
-			$output = do_shortcode( $output );
-		}
-		return $output;
-
 	}
-
 	return null;
 }
 
@@ -1900,7 +1932,19 @@ add_shortcode('load', 'custom_load_script_file');
 add_action('wp_head', 'load_custom_css');
 function load_custom_css() {
 	global $wp_query;
-	$custom_css = do_shortcode( get_post_meta( $wp_query->post->ID, "css", $single=true ) );
+
+	$custom_css = get_post_meta( $wp_query->post->ID, "css", $single=true );
+
+/*	if($custom_css == '') { */
+		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+		$default_css = $default_layout_dir . 'style.css';
+
+		if(file_exists($default_css))
+			$custom_css .= '[load css="style.css" dir="layout"]';
+/*	} */
+
+	$custom_css = do_shortcode( $custom_css );
 	if( $custom_css != '' ) {
 		echo $custom_css;
 	}
@@ -1911,11 +1955,99 @@ function load_custom_css() {
 add_action('wp_footer', 'load_custom_js');
 function load_custom_js() {
 	global $wp_query;
-	$custom_js = do_shortcode( get_post_meta( $wp_query->post->ID, "js", $single=true ) );
+
+	$custom_js = get_post_meta( $wp_query->post->ID, "js", $single=true );
+
+/*	if($custom_js == '') { */
+
+		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+		$default_js = $default_layout_dir . 'scripts.js';
+
+		if(file_exists($default_js))
+			$custom_js .= '[load js="scripts.js" dir="layout"]';
+/*	} */
+
+	$custom_js = do_shortcode( $custom_js );
 	if( $custom_js != '' ) {
 		echo $custom_js;
 	}
 }
+
+/** Load HTML field instead of content **/
+
+add_action('the_content', 'load_custom_html');
+function load_custom_html($content) {
+	global $wp_query;
+	global $global_vars;
+
+	if(( $global_vars['is_loop'] == "false" ) &&
+		!is_admin() ) {
+
+		$html_field = get_post_meta( $wp_query->post->ID, "html", $single=true );
+
+		/* Set default layout filename */
+
+		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+		$default_header = 'header.html';
+
+		$current_post_type = $wp_query->post->post_type;
+		$current_post_slug = $wp_query->post->post_name;
+
+		$default_post_type_template = $current_post_type . '.html';
+		$default_current_post_type_template = $current_post_type . '-' . $current_post_slug . '.html';
+
+		$default_current_page_template = 'page-' . $current_post_slug . '.html';
+
+		$default_page_template = 'page.html';
+
+		$default_footer = 'footer.html';
+
+		$output = '';
+
+		// Load default header
+
+		if( file_exists( $default_layout_dir . $default_header ) ) {
+			$output .= '[load file="'. $default_header . '" dir="layout"]';
+		}
+
+		// Load default page template
+
+		if ( $html_field == '' ) {
+			if( file_exists( $default_layout_dir . $default_current_post_type_template ) ) {
+				$output .= '[load file="'. $default_current_post_type_template . '" dir="layout"]';
+			}
+			elseif( file_exists( $default_layout_dir . $default_post_type_template ) ) {
+				$output .= '[load file="'. $default_post_type_template . '" dir="layout"]';
+			}
+			elseif( ($current_post_type == 'page') &&
+				( file_exists( $default_layout_dir . $default_current_page_template ) ) ) {
+					$output .= '[load file="' . $default_current_page_template . '" dir="layout"]';
+			}
+			elseif( file_exists( $default_layout_dir . $default_page_template ) ) {
+				$output .= '[load file="' . $default_page_template . '" dir="layout"]';
+			}
+		} else {
+			$output .= $content;
+		}
+
+		// Load default footer
+
+		if( file_exists( $default_layout_dir . $default_footer ) ) {
+			$output .= '[load file="' . $default_footer . '" dir="layout"]';
+		}
+
+		$custom_html = do_shortcode( $output );
+		if( $custom_html != '' ) {
+			return $custom_html;
+		} else {
+			return $content;
+		}
+	}
+	return $content;
+}
+
 
 /*
  *

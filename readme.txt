@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.2.7
+Stable tag: 0.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,10 +34,6 @@ With other libraries:
 * Display [Bootstrap](http://getbootstrap.com/) **carousel** or **navbar menu**
 * Easily include [Live Edit](http://wordpress.org/plugins/live-edit/) - **front-end editing** of content and fields
 
-= Website =  
-<br />
-Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)
-
 = Basic examples =  
 <br />
 *Display post content by name*
@@ -64,12 +60,13 @@ Here are the main parameters for the **[content]** shortcode:
 * **type** - which post type to target: *post*, *page*, or *custom post type* - if empty, the default is *any post type*
 * **name**, **id**, or **title** - which entry to target: *name/slug*, *ID* or *title* - if empty, default is the current post
 * **field** - which field to display - if empty, default is the main content of the post. You can display custom fields you created, as well as predefined fields: *title*, *id*, *author, date*, *url*, *image*, *image-url*, *thumbnail*, and *excerpt*.
+* **class** - add a `<div>` class to the output for styling purpose.
 
 In addition:
 
 * **image** - display image fields by *name/slug*
 * **area** or **sidebar** - display a widget area/sidebar by *title*
-* **menu** - display a menu list by *name/slug*, *ID* or *title*. Use the **class** parameter to add a `<div>` class to the menu for styling purpose. For a Bootstrap navbar menu, please see the section for the **[navbar]** shortcode.
+* **menu** - display a menu list by *name/slug*, *ID* or *title*. Use an additional **ul** parameter to make Bootstrap nav-tabs, nav-pills and nav-pills-stacked. For a Bootstrap navbar-style menu, please see the section for the **[navbar]** shortcode.
 
 = Query examples =  
 <br />
@@ -176,7 +173,7 @@ For attachments such as images attached to a post, you can query the post type *
 
 = Gallery fields =  
 <br />
-In the admin menu, under *Plugins -> Gallery Fields*, there is an option to enable a simple gallery field for any post type. Images can be added, ordered and removed.
+In the admin menu, under *Settings -> Gallery Fields*, there is an option to enable a simple gallery field for any post type. Images can be added, ordered and removed.
 
 The **[loop]** shortcode handles the gallery field just like attachments. For each image, the **[content]** shortcode can display these fields: *id*, *title*, *image*, *image-url*, *caption*, *description*, *thumbnail*, and *thumbnail-url*.
 
@@ -276,11 +273,15 @@ It should be placed in the *css* field, so the fonts are included in the header.
 
 = Display any file =  
 <br />
-Use the *file* parameter of the **[load]** shortcode to include any file into the post.
+Use the *file* parameter of the **[load]** shortcode to include any file into the post.  The file can include HTML and shortcodes.
 
-	[load dir="content" file="folder/readme.txt"]
+	[load dir="content" file="docs/readme.txt"]
 
 If you don't set the *dir* parameter, it gets the file from the theme directory. To format the output with line breaks and paragraph tags, set the parameter *format* to *true*. If you want to disable shortcodes, set the parameter *shortcode* to *false*.
+
+= Content override =  
+<br />
+Create a custom field called *html*, the content of the field will be displayed *instead of* the post content. This could be useful for wrapping the post content in a different layout. More documentation later.
 
 = Relative URLs =  
 <br />
@@ -462,10 +463,8 @@ Here are some plugins that work well together for custom content management.
 <br />
 Additional parameters:
 
-* basic gallery layout with responsive columns
-* Bootstrap navigation for menus: *tabs*, *pills*, *vertical stack*
-* query for custom fields and taxonomies
-
+* Handle image sizes: *thumbnail, medium, large, full*
+* Query for custom fields and taxonomies
 
 == Installation ==
 
@@ -485,11 +484,23 @@ None.
 
 == Changelog ==
 
+= 0.3.1 =
+
+* Changed *class* parameter to work on all fields
+* Added *ul* parameter to **[content menu]** - ul class to allow Bootstrap or other customization
+* Moved **gallery field** settings from Plugins to Settings
+* Added ability to override post content with the *html* field
+
+= 0.2.8 =
+
+* Created documentation page
+* No change in code
+
 = 0.2.7 =
 
 * Added **[is]** shortcode - display content when user is administrator, non-administrator, logged in, or logged out
 * Added *login* and *logout* parameter to **[url]** shortcode - display login/logout link url, also possible to redirect
-* Improved the way CSS/JS fields are loaded when outside the loop
+* Improved the way *css* and *js* fields are loaded when outside the loop
 
 = 0.2.6 =
 
