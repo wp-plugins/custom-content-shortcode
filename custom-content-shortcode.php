@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.2
+Version: 0.3.3
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -277,6 +277,8 @@ function custom_content_shortcode($atts) {
 
 		$out = get_post( $custom_id );
 		$out = $out->post_content;
+		if($content_format=='')
+			$content_format = 'true';
 
 	} else { // else return specified field
 
@@ -360,7 +362,7 @@ function custom_content_shortcode($atts) {
 		$out = '<div class="' . $class . '">' . $out . '</div>';
 
 
-	if($content_format != 'false') { // Format?
+	if($content_format == 'true') { // Format?
 		$out = wpautop( $out );
 	}
 

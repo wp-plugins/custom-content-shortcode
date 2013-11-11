@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.3.2
+Stable tag: 0.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -66,7 +66,8 @@ Here are the main parameters for the **[content]** shortcode:
 
 In addition:
 
-* **class** - add a `<div>` class to the output for styling purpose.
+* **format** - set to *true* to add paragraph tags (`<p>`) and preserve line breaks`<br>` - post content is formatted by default
+* **class** - add a `<div>` class to the output for styling purpose
 * **words** or **length**/**len** - limit number of words or characters
 
 Other types of content:
@@ -490,6 +491,10 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.3.3 =
+
+* Changed *format* parameter - only post content is formatted (paragraph tags and line breaks) by default
 
 = 0.3.2 =
 
