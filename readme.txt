@@ -66,7 +66,7 @@ Here are the main parameters for the **[content]** shortcode:
 
 In addition:
 
-* **format** - add paragraph tags `<p>` and preserve line breaks `<br>` - set to *true* or *false* - post content is formatted by default
+* **format** - add paragraph tags `<p>` and preserve line breaks `<br>` - set to *true* or *false* - by default, post content is formatted and for all other fields, it's set to *false*
 * **class** - add a `<div>` class to the output for styling purpose
 * **words** or **length**/**len** - limit number of words or characters
 
