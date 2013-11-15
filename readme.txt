@@ -101,6 +101,7 @@ Available parameters for the **[loop]** shortcode are:
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
  * **orderby** - order by *ID*, *author*, *title*, *name*, *date*, *parent*, *meta_value*, *meta_value_num*
+* **meta_key** - when ordering by *meta_value* (string) or *meta_value_num* (number), you need to specify **meta_key** as the name of the custom field
 * **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date)
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
  * **taxonomy**, **value** - search for posts whose *taxonomy* equals *value*
@@ -497,7 +498,7 @@ None.
 
 = 0.3.4 =
 
-* Added *taxonomy*, *value*, *orderby*, *order*
+* Added *taxonomy*, *value*, *orderby*, *order*, *meta_key*
 * Added *align* parameter - left, center, right
 * Fixed fetching repeater subfield from post other than current
 
