@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.3
+Version: 0.3.4
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -43,13 +43,21 @@ function custom_content_shortcode($atts) {
 	global $global_vars;
 
 	extract(shortcode_atts(array(
-		'type' => null, 'name' => null, 'field' => null, 'id' => null,
-		'menu' => null, 'format' => null, 'shortcode' => null, 'gallery' => 'false',
-		'group' => null, 'class' => null, 'area' => null, 'sidebar' => null, 
-		'height' => null, 'num' => null, 'image' => null, 'in' => null,
-		'row' => null, 'sub' => null, 'acf_gallery' => null, 'ul' => null,
+		'type' => null,
+		'name' => null,
+		'field' => null,
+		'id' => null,
+		'menu' => null, 'ul' => null,
+		'format' => null, 'shortcode' => null,
+		'gallery' => 'false',
+		'group' => null,
+		'area' => null, 'sidebar' => null, 
+		'align' => null, 'class' => null, 'height' => null,
+		'num' => null, 'image' => null, 'in' => null,
+		'row' => null, 'sub' => null,
+		'acf_gallery' => null,
 		'words' => null, 'len' => null, 'length' => null,
-		), $atts));
+	), $atts));
 
 	$custom_post_type = $type;
 	$custom_post_name = $name;
@@ -177,7 +185,7 @@ function custom_content_shortcode($atts) {
 				case 'id' : $out = wp_get_attachment_image( $out, 'full' ); break;
 				case 'url' : $out = '<img src="' . $out . '">'; break;
 				default : if(is_array($out)) {
-					$out = wp_get_attachment_image( $out[id], 'full' );
+					$out = wp_get_attachment_image( $out['id'], 'full' );
 				}
 			}
 			if($custom_field == 'id') {
@@ -186,8 +194,15 @@ function custom_content_shortcode($atts) {
 		} else {
 			$out = get_post_meta($custom_id, $custom_field, $single=true);
 		}
-		if($class!='')
-			return '<div class="' . $class . '">' . $out . '</div>';
+		if(($class!='') || ($align!='')) {
+			$pre = '<div';
+			if($class!='')
+				$pre .= ' class="' . $class . '"';
+			if($align!='')
+				$pre .= ' align="' . $align . '"';
+			$pre .= '>' . $out . '</div>';
+			return $pre;
+		}
 		else return $out;
 	}
 	
@@ -196,19 +211,26 @@ function custom_content_shortcode($atts) {
 	if($sub != '') {
 		$out = null;
 		if( function_exists('get_field') ) {
-			$rows = get_field($custom_field); // Get all rows
+			$rows = get_field($custom_field, $custom_id); // Get all rows
 			$row = $rows[$row-1]; // Get the specific row (first, second, ...)
 			$out = $row[$sub]; // Get the subfield
 			switch($in) {
 				case 'id' : $out = wp_get_attachment_image( $out, 'full' ); break;
 				case 'url' : $out = '<img src="' . $out . '">'; break;
 				default : if(is_array($out)) {
-					$out = wp_get_attachment_image( $out[id], 'full' );
+					$out = wp_get_attachment_image( $out['id'], 'full' );
 				}
 			}
 		}
-		if($class!='')
-			return '<div class="' . $class . '">' . $out . '</div>';
+		if(($class!='') || ($align!='')) {
+			$pre = '<div';
+			if($class!='')
+				$pre .= ' class="' . $class . '"';
+			if($align!='')
+				$pre .= ' align="' . $align . '"';
+			$pre .= '>' . $out . '</div>';
+			return $pre;
+		}
 		else return $out;
 	}
 
@@ -298,7 +320,19 @@ function custom_content_shortcode($atts) {
 			case "thumbnail-url": $res = wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); $out = $res['0']; break;
 //			case "excerpt": $out = get_post($custom_id)->post_excerpt; break;
 			case "tags": $out = implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
-			case 'gallery' :
+/*
+case "terms": $terms=get_the_terms($custom_id, 'taxo');
+		$out = 'ID (' . $custom_id . ') Terms: ';
+	if(is_wp_error( $terms ))
+		$out .= 'Wrong term';
+	elseif($terms && ! is_wp_error( $terms )) {
+		foreach($terms as $term) {
+			$out .= $term->name . ' ';
+		}
+	}
+	$out = custom_taxonomies_terms_links($custom_id);
+	break;
+*/			case 'gallery' :
 
 				// Get specific image from gallery field
 
@@ -375,7 +409,39 @@ function custom_content_shortcode($atts) {
 
 add_shortcode('content', 'custom_content_shortcode');
 
+// For debugging purpose: list all taxonomies
 
+function custom_taxonomies_terms_links($id){
+  // get post by post id
+  $post = get_post( $id );
+
+  // get post type by post
+  $post_type = $post->post_type;
+
+  // get post type taxonomies
+  $taxonomies = get_object_taxonomies( $post_type, 'objects' );
+
+  $out = array();
+  foreach ( $taxonomies as $taxonomy_slug => $taxonomy ){
+
+    // get the terms related to post
+    $terms = get_the_terms( $post->ID, $taxonomy_slug );
+
+    if ( !empty( $terms ) ) {
+      $out[] = "<h2>" . $taxonomy->label . "</h2>\n<ul>";
+      foreach ( $terms as $term ) {
+        $out[] =
+          '  <li><a href="'
+        .    get_term_link( $term->slug, $taxonomy_slug ) .'">'
+        .    $term->name
+        . "</a></li>\n";
+      }
+      $out[] = "</ul>\n";
+    }
+  }
+
+  return implode('', $out );
+}
 
 /**********
  *
@@ -422,11 +488,14 @@ class Loop_Shortcode {
 			'field' => '',
 			'repeater' => '',
 			'x' => '',
+			'taxonomy' => '', 'tax' => '', 'value' => '',
+			'orderby' => '', 'keyname' => '', 'order' => ''
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
 		extract( $all_args );
 
+		$custom_value = $value;
 
 		if($x != '') { // Simple loop without query
 
@@ -451,6 +520,22 @@ class Loop_Shortcode {
 
 		$current_name = $name;
 		$custom_field = $field;
+
+		if($order!='')
+			$query['order'] = $order;
+
+		if( $orderby != '') {
+			$query['orderby'] = $orderby;
+			if(in_array($orderby, array('meta_value', 'meta_value_num') )) {
+				$query['meta_key'] = $keyname;
+			}
+			if($order=='') {
+				if($orderby=='meta_value_num')
+					$query['order'] = 'ASC';	
+				else
+					$query['order'] = 'DESC';
+			}				
+		}
 
 		if( $category != '' ) {
 			$query['category_name'] = $category;
@@ -486,6 +571,18 @@ class Loop_Shortcode {
 			}
 		}
 
+		if($tax!='') $taxonomy=$tax;
+		if($taxonomy!='') { // Custom taxonomy query
+
+			$query['tax_query'] = array (
+					array(
+					'taxonomy' => $taxonomy,
+					'field' => 'slug',
+					'terms' => array($custom_value),
+					)
+				);
+		}
+
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
 		if( $custom_field == "gallery" ) {
@@ -500,7 +597,6 @@ class Loop_Shortcode {
 		// For each post found
 
 		if( $posts->have_posts() ) : while( $posts->have_posts() ) : $posts->the_post();
-
 
 /*********
  * Repeater field

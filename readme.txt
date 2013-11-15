@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.6
-Stable tag: 0.3.3
+Stable tag: 0.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,7 +100,10 @@ Available parameters for the **[loop]** shortcode are:
  * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
+ * **orderby** - order by *ID*, *author*, *title*, *name*, *date*, *parent*, *meta_value*, *meta_value_num*
+* **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date)
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
+ * **taxonomy**, **value** - search for posts whose *taxonomy* equals *value*
  * **x** - repeat the loop *x* times - no query
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
@@ -491,6 +494,12 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.3.4 =
+
+* Added *taxonomy*, *value*, *orderby*, *order*
+* Added *align* parameter - left, center, right
+* Fixed fetching repeater subfield from post other than current
 
 = 0.3.3 =
 
