@@ -100,19 +100,18 @@ Available parameters for the **[loop]** shortcode are:
  * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
+ * **x** - repeat the loop *x* times - no query
+
+For more complex queries:
 
  * **taxonomy**, **value** - search for posts whose *taxonomy* equals *value*
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
-
  * **orderby** - order by *ID*, *author*, *title*, *name*, *date*, *parent*, *meta_value*, *meta_value_num*
  * **key** - when ordering by *meta_value* (string) or *meta_value_num* (number), you need to specify **key** as the name of the custom field to order by
- * **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date)
+ * **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date) when using *orderby*
+* **series**, **key** - order posts by a series of custom field values, where *key* is the name of the field - the series can includes ranges, for example: *1-15,30-40,42,44*
 
-* **series**, **key** - order posts by the custom field specified by *key*, in a series of values - for example: *1-15,30-40,42,44*
-
- * **x** - repeat the loop *x* times - no query
-
-You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name* and *order*.
+You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name*.
 
 = Content layout =  
 <br />
