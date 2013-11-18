@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.4
+Version: 0.3.5
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -33,6 +33,7 @@ $global_vars = array(
 	'current_script' => '',
 );
 
+global $sort_posts; global $sort_key;
 
 /*
  * Get a field or content from a post type
@@ -261,6 +262,7 @@ function custom_content_shortcode($atts) {
 		
 		return do_shortcode( $out );
 	} else {
+
 		if( $custom_gallery_type == "native") {
 			$out = '[gallery " ';
 			if($custom_gallery_name != '') {
@@ -318,21 +320,8 @@ function custom_content_shortcode($atts) {
 			case "image-url": $out = wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
 			case "thumbnail": $out = get_the_post_thumbnail( $custom_id, 'thumbnail' ); break;
 			case "thumbnail-url": $res = wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); $out = $res['0']; break;
-//			case "excerpt": $out = get_post($custom_id)->post_excerpt; break;
 			case "tags": $out = implode(' ', wp_get_post_tags( $custom_id, array( 'fields' => 'names' ) ) ); break;
-/*
-case "terms": $terms=get_the_terms($custom_id, 'taxo');
-		$out = 'ID (' . $custom_id . ') Terms: ';
-	if(is_wp_error( $terms ))
-		$out .= 'Wrong term';
-	elseif($terms && ! is_wp_error( $terms )) {
-		foreach($terms as $term) {
-			$out .= $term->name . ' ';
-		}
-	}
-	$out = custom_taxonomies_terms_links($custom_id);
-	break;
-*/			case 'gallery' :
+			case 'gallery' :
 
 				// Get specific image from gallery field
 
@@ -443,9 +432,22 @@ function custom_taxonomies_terms_links($id){
   return implode('', $out );
 }
 
+
+// Sort series helper functions
+
+	function series_orderby_key( $a, $b ) {
+		global $sort_posts;global $sort_key;
+
+		$apos = array_search( get_post_meta( $a->ID, $sort_key, $single=true ), $sort_posts );
+		$bpos = array_search( get_post_meta( $b->ID, $sort_key, $single=true ), $sort_posts );
+
+		return ( $apos < $bpos ) ? -1 : 1;
+	}
+
+
 /**********
  *
- * Simple query loop shortcode
+ * Query loop shortcode
  *
  */
 
@@ -463,6 +465,8 @@ class Loop_Shortcode {
 	function simple_query_shortcode( $atts, $template = null, $shortcode_name ) {
 
 		global $global_vars;
+		global $sort_posts;
+		global $sort_key;
 
 		$global_vars['is_loop'] = "true";
 		$global_vars['current_gallery_name'] = '';
@@ -489,13 +493,15 @@ class Loop_Shortcode {
 			'repeater' => '',
 			'x' => '',
 			'taxonomy' => '', 'tax' => '', 'value' => '',
-			'orderby' => '', 'keyname' => '', 'order' => ''
+			'orderby' => '', 'keyname' => '', 'order' => '',
+			'series' => '', 'key' => ''
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
 		extract( $all_args );
 
 		$custom_value = $value;
+		if($key!='') $keyname=$key;
 
 		if($x != '') { // Simple loop without query
 
@@ -521,21 +527,6 @@ class Loop_Shortcode {
 		$current_name = $name;
 		$custom_field = $field;
 
-		if($order!='')
-			$query['order'] = $order;
-
-		if( $orderby != '') {
-			$query['orderby'] = $orderby;
-			if(in_array($orderby, array('meta_value', 'meta_value_num') )) {
-				$query['meta_key'] = $keyname;
-			}
-			if($order=='') {
-				if($orderby=='meta_value_num')
-					$query['order'] = 'ASC';	
-				else
-					$query['order'] = 'DESC';
-			}				
-		}
 
 		if( $category != '' ) {
 			$query['category_name'] = $category;
@@ -571,8 +562,10 @@ class Loop_Shortcode {
 			}
 		}
 
+// Custom taxonomy query
+
 		if($tax!='') $taxonomy=$tax;
-		if($taxonomy!='') { // Custom taxonomy query
+		if($taxonomy!='') {
 
 			$query['tax_query'] = array (
 					array(
@@ -582,6 +575,52 @@ class Loop_Shortcode {
 					)
 				);
 		}
+
+
+		if($order!='')
+			$query['order'] = $order;
+
+// Orderby
+
+		if( $orderby != '') {
+				$query['orderby'] = $orderby;
+				if(in_array($orderby, array('meta_value', 'meta_value_num') )) {
+					$query['meta_key'] = $keyname;
+				}
+				if($order=='') {
+					if($orderby=='meta_value_num')
+						$query['order'] = 'ASC';	
+					else
+						$query['order'] = 'DESC';
+				}				
+		}
+
+// Get posts in a series
+
+		if($series!='') {
+
+//			Expand range: 1-3 -> 1,2,3
+
+			$series = preg_replace_callback('/(\d+)-(\d+)/', function($m) {
+			    return implode(',', range($m[1], $m[2]));
+			}, $series);
+
+			$sort_posts = explode(',', $series);
+
+			$sort_key = $keyname;
+
+				$query['meta_query'] = array(
+						array(
+							'key' => $keyname,
+							'value' => $sort_posts,
+							'compare' => 'IN'
+						)
+					);
+
+		}
+
+
+	/** Main loop **/
 
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
@@ -593,6 +632,13 @@ class Loop_Shortcode {
 		ob_start();
 		$posts = new WP_Query( $query );
 
+// Re-order by series
+
+		if($series!='') {
+
+			usort($posts->posts, "series_orderby_key");
+
+		}
 
 		// For each post found
 
@@ -702,6 +748,9 @@ class Loop_Shortcode {
 					$custom_field_content = $attachment_ids;
 				}
 			} else {
+
+			// Normal custom fields
+
 				$custom_field_content = get_post_meta( get_the_ID(), $custom_field, $single=true );
 				$attachment_ids = get_post_meta( get_the_ID(), '_custom_gallery', true );
 			}
@@ -732,7 +781,7 @@ class Loop_Shortcode {
 
 		} // End of not repeater
 
-		endwhile; endif; // End for each post
+		endwhile; endif; // End loop for each post
 
 		wp_reset_query();
 		wp_reset_postdata();
