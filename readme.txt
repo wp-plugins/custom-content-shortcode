@@ -506,7 +506,7 @@ None.
 
 = 0.3.5 =
 
-* Added *series* parameter to order posts by series
+* Added *series* parameter to order posts by a series of custom field values
 
 = 0.3.4 =
 
