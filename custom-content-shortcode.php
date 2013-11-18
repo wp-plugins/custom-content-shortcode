@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.5
+Version: 0.3.6
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -601,9 +601,16 @@ class Loop_Shortcode {
 
 //			Expand range: 1-3 -> 1,2,3
 
+		/* PHP 5.3+
 			$series = preg_replace_callback('/(\d+)-(\d+)/', function($m) {
 			    return implode(',', range($m[1], $m[2]));
 			}, $series);
+		*/
+
+		/* Compatible with older versions of PHP */
+
+			$callback = create_function('$m', 'return implode(\',\', range($m[1], $m[2]));');
+			$series = preg_replace_callback('/(\d+)-(\d+)/', $callback, $series);
 
 			$sort_posts = explode(',', $series);
 
