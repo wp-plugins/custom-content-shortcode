@@ -108,8 +108,8 @@ For more complex queries:
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
  * **orderby** - order by *ID*, *author*, *title*, *name*, *date*, *parent*, *meta_value*, *meta_value_num*
  * **key** - when ordering by *meta_value* (string) or *meta_value_num* (number), you need to specify **key** as the name of the custom field to order by
- * **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date) when using *orderby*
-* **series**, **key** - order posts by a series of custom field values, where *key* is the name of the field - the series can includes ranges, for example: *1-15,30-40,42,44*
+ * **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date) when using the *orderby* parameter
+ * **series**, **key** - order posts by a series of custom field values, where *key* is the name of the field - the series can includes ranges, for example: *1-15,30-40,42,44*
 
 You can use other parameters of the [WP_Query class](http://codex.wordpress.org/Class_Reference/WP_Query), such as *author_name*.
 
