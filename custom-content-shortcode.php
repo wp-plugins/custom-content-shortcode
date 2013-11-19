@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.6
+Version: 0.3.7
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -58,6 +58,7 @@ function custom_content_shortcode($atts) {
 		'row' => null, 'sub' => null,
 		'acf_gallery' => null,
 		'words' => null, 'len' => null, 'length' => null,
+		'date_format' => null,
 	), $atts));
 
 	$custom_post_type = $type;
@@ -314,7 +315,14 @@ function custom_content_shortcode($atts) {
 			case "slug": $out = get_post($custom_id)->post_name; break;
 			case "title": $out = get_post($custom_id)->post_title; break;
 			case "author": $out = get_the_author($custom_id); break;
-			case "date": $out = mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
+			case "date":
+
+				if($date_format!='') {
+					$out = mysql2date($date_format, get_post($custom_id)->post_date); break;
+				}
+				else { // Default date format under Settings -> General
+					$out = mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
+				}
 			case "url": $out = get_post_permalink($custom_id); break;
 			case "image": $out = get_the_post_thumbnail($custom_id); break;
 			case "image-url": $out = wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
@@ -433,7 +441,7 @@ function custom_taxonomies_terms_links($id){
 }
 
 
-// Sort series helper functions
+// Sort series helper function
 
 	function series_orderby_key( $a, $b ) {
 		global $sort_posts;global $sort_key;

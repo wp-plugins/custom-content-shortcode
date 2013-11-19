@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.3.6
+Stable tag: 0.3.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -69,6 +69,7 @@ In addition:
 * **format** - add paragraph tags `<p>` and preserve line breaks `<br>` - set to *true* or *false* - by default, post content is formatted and for all other fields, it's set to *false*
 * **class** - add a `<div>` class to the output for styling purpose
 * **words** or **length**/**len** - limit number of words or characters
+* **date_format** - use a custom format when displaying *field="date"* - for example, "*d.m.Y*" will display as *18.11.2013*. Use double backslashes to escape characters - "*Y/m/d \\\a\\\t g:i A*" will show as *2013/11/17 at 11:06 PM*. For more info, see the Codex: [Formatting Date and Time](http://codex.wordpress.org/Formatting_Date_and_Time).
 
 Other types of content:
 
@@ -499,6 +500,10 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.3.7 =
+
+* Added *date_format* parameter to display post dates in a custom format
 
 = 0.3.6 =
 
