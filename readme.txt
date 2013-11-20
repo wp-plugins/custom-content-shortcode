@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.3.7
+Stable tag: 0.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -101,6 +101,7 @@ Available parameters for the **[loop]** shortcode are:
  * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
+ * **offset** - offset the loop by a number of posts, for example: start from the 3rd most recent post
  * **x** - repeat the loop *x* times - no query
 
 For more complex queries:
@@ -500,6 +501,10 @@ Not yet.
 None.
 
 == Changelog ==
+
+= 0.3.8 =
+
+* Added *offset* parameter to offset the query loop by a number of posts, for example: start from the 3rd most recent post
 
 = 0.3.7 =
 

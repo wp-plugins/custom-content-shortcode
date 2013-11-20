@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.7
+Version: 0.3.8
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -502,7 +502,8 @@ class Loop_Shortcode {
 			'x' => '',
 			'taxonomy' => '', 'tax' => '', 'value' => '',
 			'orderby' => '', 'keyname' => '', 'order' => '',
-			'series' => '', 'key' => ''
+			'series' => '', 'key' => '',
+			'post_offset' => '', 'offset' => ''
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -510,6 +511,7 @@ class Loop_Shortcode {
 
 		$custom_value = $value;
 		if($key!='') $keyname=$key;
+		if($offset!='') $post_offset=$offset;
 
 		if($x != '') { // Simple loop without query
 
@@ -542,8 +544,17 @@ class Loop_Shortcode {
 		if( $count != '' ) {
 			$query['posts_per_page'] = $count;
 		} else {
-			$query['posts_per_page'] = '-1'; // Show all posts
+
+			if($post_offset!='')
+				$query['posts_per_page'] = '9999'; // Show all posts (to make offset work)
+			else
+				$query['posts_per_page'] = '-1'; // Show all posts (normal method)
+
 		}
+
+		if($post_offset!='')
+			$query['offset'] = $post_offset;
+
 		if( $id != '' ) {
 			$query['p'] = $id; $query['post_type'] = "any";
 		} else {
@@ -635,7 +646,9 @@ class Loop_Shortcode {
 		}
 
 
-	/** Main loop **/
+	/*-----------------------
+	 * Main loop
+	 *-----------------------*/
 
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
