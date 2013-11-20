@@ -101,7 +101,7 @@ Available parameters for the **[loop]** shortcode are:
  * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
  * **category** - display posts from a category
  * **count** - number of posts to show - default is *all*
- * **offset** - offset the loop by a number of posts, for example: start from the 3rd most recent post
+ * **offset** - offset the loop by a number of posts, for example: skip the first 3 posts in the query
  * **x** - repeat the loop *x* times - no query
 
 For more complex queries:
