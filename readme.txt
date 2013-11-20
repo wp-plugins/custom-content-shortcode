@@ -14,8 +14,6 @@ Display posts, pages, custom post types, custom fields, files, images, comments,
 
 == Description ==
 
-= Overview =  
-<br />
 From a single field to entire pages, Custom Content Shortcode is a set of commands to display content where you need.
 
 The **[content]** shortcode displays any of the following: posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas.
