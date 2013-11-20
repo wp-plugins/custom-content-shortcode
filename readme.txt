@@ -14,11 +14,19 @@ Display posts, pages, custom post types, custom fields, files, images, comments,
 
 == Description ==
 
+= Overview =  
+<br />
+From a single field to entire pages, Custom Content Shortcode is a set of commands to display content where you need.
+
 The **[content]** shortcode displays any of the following: posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas.
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
-In addition, you can choose to:
+*Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)*
+
+= Additional features =  
+<br />
+In addition to the basic uses above, you can choose to:
 
 * Enable a simple **gallery field**
 * Use **relative URLs** for links and images
@@ -33,8 +41,6 @@ With other libraries:
 * Display content based on **device type** using [WP Mobile Detect](http://wordpress.org/plugins/wp-mobile-detect/)
 * Display [Bootstrap](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 * Easily include [Live Edit](http://wordpress.org/plugins/live-edit/) - **front-end editing** of content and fields
-
-*Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)*
 
 
 = Basic examples =  
@@ -139,55 +145,6 @@ Here is an example of how these shortcodes can be used to create a content layou
 			[/loop]
 		</ul>
 
-= Comments =  
-<br />
-For displaying comments of the current post, or in a query loop, use the **[comment]** shortcode.
-
-*Display comment count, input form, or comments list*
-
-	Comment count: [comment count]
-	Comment input form: [comment form]
-	Comments list: [comment template] or [comments]
-
-By default, the comments list is displayed by *comments.php* in the theme directory. If you want to specify a different template:
-
-	[comment template="/short-comments.php"]
-
-Here is an example of using Bootstrap accordion for a comments list that shows when clicked.
-
-	<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion" href="#comments-area">
-		Comments ([comment count])
-	</a>
-	<div id="comments-area" class="panel-collapse collapse">
-		[comments]
-	</div>
-
-
-= Attachments =  
-<br />
-For attachments such as images attached to a post, you can query the post type *attachment* and display the necessary fields.
-
-*Display details on all the attachments of the current post*
-
-	[loop type="attachment"]
-		Attachment ID: [content field="id"]
-		Title: [content field="title"]
-		Full-size image: [content field="image"]
-		Full-size image URL: [content field="image-url"]
-		Caption: [content field="caption"]
-		Description: [content field="description"]
-		Thumbnail: [content field="thumbnail"]
-		Thumbnail URL: [content field="thumbnail-url"]
-	[/loop]
-
-*Display attachment thumbnails of all posts in the category **tree**, linked to full-sized images in a lightbox*
-
-	[loop type="attachment" category="tree"]
-		<a href='[content field="image-url"]' rel="lightbox">
-			<img src='[content field="thumbnail-url"]'>
-		</a>
-	[/loop]
-
 
 = Gallery fields =  
 <br />
@@ -215,6 +172,56 @@ The *content* shortcode can display individual images of the gallery field, or a
 
 	[content gallery="native"]
 	[content gallery="carousel"]
+
+
+= Attachments =  
+<br />
+For attachments such as images attached to a post, you can query the post type *attachment* and display the necessary fields.
+
+*Display details on all the attachments of the current post*
+
+	[loop type="attachment"]
+		Attachment ID: [content field="id"]
+		Title: [content field="title"]
+		Full-size image: [content field="image"]
+		Full-size image URL: [content field="image-url"]
+		Caption: [content field="caption"]
+		Description: [content field="description"]
+		Thumbnail: [content field="thumbnail"]
+		Thumbnail URL: [content field="thumbnail-url"]
+	[/loop]
+
+*Display attachment thumbnails of all posts in the category **tree**, linked to full-sized images in a lightbox*
+
+	[loop type="attachment" category="tree"]
+		<a href='[content field="image-url"]' rel="lightbox">
+			<img src='[content field="thumbnail-url"]'>
+		</a>
+	[/loop]
+
+= Comments =  
+<br />
+For displaying comments of the current post, or in a query loop, use the **[comment]** shortcode.
+
+*Display comment count, input form, or comments list*
+
+	Comment count: [comment count]
+	Comment input form: [comment form]
+	Comments list: [comment template] or [comments]
+
+By default, the comments list is displayed by *comments.php* in the theme directory. If you want to specify a different template:
+
+	[comment template="/short-comments.php"]
+
+Here is an example of using Bootstrap accordion for a comments list that shows when clicked.
+
+	<a class="accordion-toggle" data-toggle="collapse" data-parent="accordion" href="#comments-area">
+		Comments ([comment count])
+	</a>
+	<div id="comments-area" class="panel-collapse collapse">
+		[comments]
+	</div>
+
 
 = Use a field as parameter to another shortcode =  
 <br />
