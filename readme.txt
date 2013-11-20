@@ -30,10 +30,10 @@ In addition, you can choose to:
 
 * Enable a simple **gallery field**
 * Use **relative URLs** for links and images
-* Include **HTML/CSS/JavaScript**: stylesheets, jQuery libraries, Google Fonts, etc.
 * Display a **comments** list, input form or comment count
 * Display content based on **user status**: admin, non-admin, logged in/out, or user name
 * Display user name, ID, **login/logout links** with user redirect
+* Include **HTML/CSS/JavaScript**: stylesheets, jQuery libraries, Google Fonts, etc.
 
 With other libraries:
 
@@ -110,10 +110,10 @@ Available parameters for the **[loop]** shortcode are:
  * **offset** - offset the loop by a number of posts, for example: skip the first 3 posts in the query
  * **x** - repeat the loop *x* times - no query
 
-For more complex queries:
+For more advanced queries:
 
- * **taxonomy**, **value** - search for posts whose *taxonomy* equals *value*
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
+ * **taxonomy**, **value** - search for posts whose *taxonomy* equals *value*
  * **orderby** - order by *ID*, *author*, *title*, *name*, *date*, *parent*, *meta_value*, *meta_value_num*
  * **key** - when ordering by *meta_value* (string) or *meta_value_num* (number), you need to specify **key** as the name of the custom field to order by
  * **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date) when using the *orderby* parameter
@@ -121,9 +121,9 @@ For more complex queries:
 
 
 
-= Content layout =  
+= Content views =  
 <br />
-Here is an example of how these shortcodes can be used to create a content layout.
+Here is an example of how to create content views.
 
 1. Let's imagine a bicycle shop.  We create a custom post type called *bicycle*, and add custom fields such as *model*, *price*, and *description*.
 1. Add all bicycles as new entries, with featured image and other info in the fields.
