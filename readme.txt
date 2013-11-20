@@ -26,7 +26,7 @@ The **[loop]** shortcode performs query loops. It can display, for example, avai
 
 = Additional features =  
 <br />
-In addition to the basic uses above, you can choose to:
+In addition, you can choose to:
 
 * Enable a simple **gallery field**
 * Use **relative URLs** for links and images
