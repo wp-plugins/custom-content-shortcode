@@ -508,10 +508,10 @@ Additional parameters:
 
 == Coming soon.. ==
 
+ <br />
+= WP Custom Toolbox =  
 <br />
-= Custom Toolbox =  
-<br />
-**Custom Toolbox** is a set of plugins under development, to take Custom Content Shortcode to another level: for building whole sites and even web applications.
+A set of plugins under development, to take Custom Content Shortcode to another level: for building whole sites and even web applications.
 
 == Screenshots ==
 
