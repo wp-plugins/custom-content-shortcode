@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.3.8
+Version: 0.3.9
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -497,21 +497,65 @@ class Loop_Shortcode {
 			'acf_gallery' => '',
 			'id' => '',
 			'name' => '',
-			'field' => '',
+			'field' => '', 'value' => '', 'compare' => '',
+			'f' => '', 'v' => '', 'c' => '', 
+			'field_2' => '', 'value_2' => '', 'compare_2' => '', 'relation' => '',
+			'f2' => '', 'v2' => '', 'c2' => '', 'r' => '', 
 			'repeater' => '',
 			'x' => '',
 			'taxonomy' => '', 'tax' => '', 'value' => '',
 			'orderby' => '', 'keyname' => '', 'order' => '',
 			'series' => '', 'key' => '',
-			'post_offset' => '', 'offset' => ''
+			'post_offset' => '', 'offset' => '',
+			'strip_tags' => '', 'strip' => ''
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
 		extract( $all_args );
 
+
+		/*---------------
+		 * Parameters
+		 *-------------*/
+
+
 		$custom_value = $value;
 		if($key!='') $keyname=$key;
 		if($offset!='') $post_offset=$offset;
+		if($strip!='') $strip_tags=$strip;
+		if($strip_tags=='true')
+			$strip_tags='<p><br />';
+		$current_name = $name;
+
+
+		/*
+		 * Meta query parameters
+		 */
+
+			if($f!='')
+				$field = $f;
+			if($v!='')
+				$value = $v;
+			if($c!='')
+				$compare = $c;
+			if($f2!='')
+				$field_2 = $f2;
+			if($v!='')
+				$value_2 = $v2;
+			if($c!='')
+				$compare_2 = $c2;
+			if($r!='')
+				$relation = $r;
+
+
+		if(( $field != 'gallery' ) && ($shortcode_name != 'pass') && ($value!='')) {
+
+			$query_field = $field;
+			$query_value = $value;
+
+		} else
+			$custom_field = $field;
+
 
 		if($x != '') { // Simple loop without query
 
@@ -526,7 +570,6 @@ class Loop_Shortcode {
 			return ob_get_clean();
 		}
 
-
 		$query = array_merge( $atts, $all_args );
 
 		// filter out non-wpquery arguments
@@ -534,8 +577,10 @@ class Loop_Shortcode {
 			unset( $query[$key] );
 		}
 
-		$current_name = $name;
-		$custom_field = $field;
+
+		/*----------------
+		 * Alter query
+		 *---------------*/
 
 
 		if( $category != '' ) {
@@ -559,12 +604,18 @@ class Loop_Shortcode {
 			$query['p'] = $id; $query['post_type'] = "any";
 		} else {
 			if( $current_name != '') {
+
+				// Get ID from post slug
+
 				$query['name']=$current_name; $query['post_type'] = "any";
 				$global_vars['current_gallery_name'] = $current_name;
 				$posts = get_posts( $query );
 				if( $posts ) { $global_vars['current_gallery_id'] = $posts[0]->ID;
 				}
 			} else {
+
+				// Current post
+
 				$query['p'] = get_the_ID(); $query['post_type'] = "any";
 			}
 		}
@@ -572,6 +623,8 @@ class Loop_Shortcode {
 		if(( $custom_field == 'gallery' ) && ($shortcode_name != 'pass') ){
 			$gallery = 'true';
 		}
+
+
 		if( $type == '' ) {
 			$query['post_type'] = 'any';
 		} else {
@@ -646,9 +699,57 @@ class Loop_Shortcode {
 		}
 
 
-	/*-----------------------
+		/*---------------------
+		 * Custom field query
+		 *--------------------*/
+
+
+			if( ($query_field!='') && ($query_value!='') ) {
+
+				$compare = strtoupper($compare);
+				switch ($compare) {
+					case '':
+					case 'EQUAL': $compare = 'LIKE'; break;
+					case 'NOT EQUAL': $compare = 'NOT LIKE'; break;
+					default: break;
+				}
+
+				$query['meta_query'][] =
+					array(
+							'key' => $query_field,
+							'value' => $query_value,
+							'compare' => $compare
+					);
+
+				if( ($field_2!='') && ($value_2!='') ) {
+
+					if($relation!='')
+						$query['meta_query']['relation'] = $relation;
+					else
+						$query['meta_query']['relation'] = 'AND';
+
+					$compare_2 = strtoupper($compare_2);
+					switch ($compare_2) {
+						case '':
+						case 'EQUAL': $compare_2 = 'LIKE'; break;
+						case 'NOT EQUAL': $compare_2 = 'NOT LIKE'; break;
+						default: break;
+					}
+
+					$query['meta_query'][] =
+						array(
+							'key' => $field_2,
+							'value' => $value_2,
+							'compare' => $compare_2
+					);
+				}
+
+
+			}
+
+	/*--------------
 	 * Main loop
-	 *-----------------------*/
+	 *-------------*/
 
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
@@ -803,9 +904,19 @@ class Loop_Shortcode {
 				'IDS' => $attachment_ids,
 			) );
 
-			$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
-
+			if($strip_tags!='')
+				$output[] = do_shortcode(
+					strip_tags($this->get_block_template( $template, $keywords ), $strip_tags)
+				);
+			else
+				$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
 			} // End of not gallery field
+
+
+/*					str_replace($strip_tags, '',
+						strip_tags( $this->get_block_template( $template, $keywords ), '<p>' )
+					)
+*/
 
 		} // End of not repeater
 
@@ -815,6 +926,8 @@ class Loop_Shortcode {
 		wp_reset_postdata();
 
 		echo implode( $posts_separator, $output );
+
+
 
 		$global_vars['is_loop'] = "false";
 		return ob_get_clean();
@@ -2563,6 +2676,16 @@ function custom_user_shortcode( $atts, $content ) {
 
 }
 add_shortcode('user', 'custom_user_shortcode');
+
+function custom_br_shortcode( $atts, $content ) {
+	return '<br>';
+}
+add_shortcode('br', 'custom_br_shortcode');
+
+function custom_p_shortcode( $atts, $content ) {
+	return '<p>' . $content . '</p>';
+}
+add_shortcode('p', 'custom_p_shortcode');
 
 
 ?>

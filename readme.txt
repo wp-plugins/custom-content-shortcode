@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.3.8
+Stable tag: 0.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,19 +103,31 @@ Note that inside a query loop, the **[content]** shortcode does not need *type* 
 Available parameters for the **[loop]** shortcode are:
 
  * **type** - which post type to query: *post*, *page*, *custom post type*, or *attachment* - if empty, the default is *any post type*
+
+Category, tags, and taxonomies:
+
  * **category** - display posts from a category
- * **count** - number of posts to show - default is *all*
- * **offset** - offset the loop by a number of posts, for example: skip the first 3 posts in the query
- * **x** - repeat the loop *x* times - no query
-
-For more advanced queries:
-
  * **tag** - display posts with a specific tag - for multiple tags: *tag="apples, green"*
- * **taxonomy**, **value** - search for posts whose *taxonomy* equals *value*
+ * **taxonomy**, **value** - display posts whose *taxonomy* equals *value*
+ 
+Custom field query:
+ 
+ * **field, compare, value** - display posts according to custom field value, where *compare* is *EQUAL* or *NOT EQUAL*
+ * **relation, field_2, compare_2, value_2** - Additional custom field query, where *relation* is *AND* or *OR*
+
+For sorting and series:
+ 
  * **orderby** - order by *ID*, *author*, *title*, *name*, *date*, *parent*, *meta_value*, *meta_value_num*
  * **key** - when ordering by *meta_value* (string) or *meta_value_num* (number), you need to specify **key** as the name of the custom field to order by
  * **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date) when using the *orderby* parameter
  * **series**, **key** - order posts by a series of custom field values, where *key* is the name of the field - the series can include ranges, for example: *1-15,30-40,42,44*.
+
+Other parameters:
+
+ * **count** - number of posts to show - default is *all*
+ * **offset** - offset the loop by a number of posts, for example: skip the first 3 posts in the query
+* **strip_tags** - set to *true* to remove `<p>` and `<br>` tags inside the loop; use **[p]** and **[br]** shortcodes to manually create paragraphs and break lines
+ * **x** - repeat the loop *x* times - no query
 
 
 
@@ -487,7 +499,6 @@ Here are some plugins that work well together for custom content management.
 Additional parameters:
 
 * Handle image sizes: *thumbnail, medium, large, full*
-* Query for custom fields and taxonomies
 
 == Installation ==
 
@@ -495,17 +506,23 @@ Additional parameters:
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Place the shortcode in a post, page, etc.
 
-== Frequently Asked Questions ==
+== Coming soon.. ==
 
-= Any Questions? =
+= Custom Toolbox =
 
-Not yet.
+**Custom Toolbox** is a set of plugins under development, to take Custom Content Shortcode to another level: for building whole sites and even web applications.
 
 == Screenshots ==
 
 None.
 
 == Changelog ==
+
+= 0.3.9 =
+
+* **[loop]** - Added meta query parameters: field, compare, value, relation, field_2, compare_2, value_2
+* **[loop]** - Added *strip_tags* parameter to remove `<p>` and `<br>` tags inside the loop
+* Added **[p]** and **[br]** shortcodes to manually create paragraphs and break lines
 
 = 0.3.8 =
 
