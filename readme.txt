@@ -112,8 +112,8 @@ Category, tags, and taxonomies:
  
 Custom field query:
  
- * **field, compare, value** - display posts according to custom field value, where *compare* is *EQUAL* or *NOT EQUAL*
- * **relation, field_2, compare_2, value_2** - Additional custom field query, where *relation* is *AND* or *OR*
+ * **field, compare, value** - display posts according to custom field value; where *compare* is *EQUAL* (default) or *NOT EQUAL*
+ * **relation, field_2, compare_2, value_2** - Additional query for custom field value, where *relation* is *AND* (default) or *OR*
 
 For sorting and series:
  
