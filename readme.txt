@@ -508,8 +508,9 @@ Additional parameters:
 
 == Coming soon.. ==
 
-= Custom Toolbox =
-
+<br />
+= Custom Toolbox =  
+<br />
 **Custom Toolbox** is a set of plugins under development, to take Custom Content Shortcode to another level: for building whole sites and even web applications.
 
 == Screenshots ==
