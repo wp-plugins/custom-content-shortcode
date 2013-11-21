@@ -529,11 +529,12 @@ Additional parameters:
 1. Place the shortcode in a post, page, etc.
 
 == Coming soon.. ==
-
- <br />
-= WP Custom Toolbox =  
+ 
+= Custom Toolbox =  
 <br />
 A set of plugins under development, to take Custom Content Shortcode to another level: for building whole sites and even web applications.
+
+Feature requests are welcome.
 
 == Screenshots ==
 
