@@ -156,6 +156,28 @@ Here is an example of how to create content views.
 		</ul>
 
 
+= Query for custom field values =  
+<br />
+Single field:
+
+`[loop type="hotels" field="star-hotel" value="4 star"]`
+
+Single field compare:
+
+`[loop type="hotels" field="star-hotel" compare="NOT EQUAL" value="3 star"]`
+
+Two field values:
+
+`[loop type="hotels" field="star-hotel" value="4 stars" field_2="service-hotel" value_2="all inclusive"]`
+
+Two field values relation:
+
+`[loop type="hotels" field="star-hotel" value="4 stars" relation="OR" field_2="service-hotel" value_2="all inclusive"]`
+
+Series:
+
+`[loop type="books" series="1,2,3,7-15,50-60" key="serial_number"]`
+
 = Gallery fields =  
 <br />
 In the admin menu, under *Settings -> Gallery Fields*, there is an option to enable a simple gallery field for any post type. Images can be added, ordered and removed.
