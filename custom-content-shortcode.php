@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.4.1
+Version: 0.4.2
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -2699,7 +2699,6 @@ function custom_p_shortcode( $atts, $content ) {
 }
 add_shortcode('p', 'custom_p_shortcode');
 
-
 function custom_list_shortcodes( ) {
 	global $shortcode_tags;
 
@@ -2713,41 +2712,6 @@ function custom_list_shortcodes( ) {
 add_shortcode('list_shortcodes', 'custom_list_shortcodes');
 
 
-function loop_flex_field( $atts, $content ) {
-
-	extract(shortcode_atts(array(
-		'field' => '',
-	), $atts));
-
-	while(has_sub_field($field)) {
-
-		$output[] = do_shortcode($content);
-
-	}
-
-	$output = implode( $posts_separator, $output );
-	return $output;
-
-}
-add_shortcode('flex', 'loop_flex_field');
-
-
-function if_get_row_layout( $atts, $content ) {
-
-	extract(shortcode_atts(array(
-		'field' => '',
-	), $atts));
-
-	if(get_row_layout() == $field) {
-		return do_shortcode($content);
-	} else {
-		return null;
-	}
-
-}
-add_shortcode('row_layout', 'if_get_row_layout');
-
-
 function custom_sub_field( $atts ) {
 
 	extract(shortcode_atts(array(
@@ -2758,21 +2722,25 @@ function custom_sub_field( $atts ) {
 	), $atts));
 
 
-	if($image!='') {
+	if ($image!='') {
+
 		$output = get_sub_field($image);
-		switch($in) {
-			case 'id' : $output = wp_get_attachment_image( $output, 'full' ); break;
-			case 'url' : $output = '<img src="' . $output . '">'; break;
-			default :
-				if(is_array($output)) {
-					$output = wp_get_attachment_image( $output['id'], 'full' );
-				}
+
+		if ( $output != '' ) {
+			switch($in) {
+				case 'id' : $output = wp_get_attachment_image( $output, 'full' ); break;
+				case 'url' : $output = '<img src="' . $output . '">'; break;
+				default : /* image object */
+					if(is_array($output)) {
+						$output = wp_get_attachment_image( $output['id'], 'full' );
+					}
+			}
 		}
 	} else {
 
 		$output = get_sub_field($field);
 
-		if($format=='true') {
+		if ( ($format=='true') && ($output!='') ) {
 			$output = wpautop($output);
 		}
 	}
@@ -2782,6 +2750,125 @@ function custom_sub_field( $atts ) {
 add_shortcode('sub', 'custom_sub_field');
 
 
+function loop_through_acf_field( $atts, $content ) {
 
+	/* For flex and repeater fields */
+
+	extract( shortcode_atts( array(
+		'field' => '',
+		'count' => '',
+		'start' => '',
+	), $atts ));
+
+	if ( get_field( $field ) ) {
+
+		$index_now = 0;
+		if ( $start == '' ) $start="1";
+
+
+		while ( has_sub_field( $field ) ) {
+
+			$index_now++;
+
+			if ( $index_now >= $start ) { /* Start loop */
+
+				if ( ( $count!= '' ) && ( $index_now >= ($start+$count) ) ) {
+						/* If over count, continue empty looping for has_sub_field */
+				} else {
+					$output[] = do_shortcode( $content );
+				}
+			}
+		}
+	}
+	if( $output != null)
+		$output = implode( '', $output );
+	return $output;
+}
+add_shortcode('flex', 'loop_through_acf_field');
+add_shortcode('repeat', 'loop_through_acf_field');
+
+
+
+function loop_through_acf_gallery_field( $atts, $content ) {
+
+	global $ccs_global_variable;
+
+	extract( shortcode_atts( array(
+		'field' => '',
+		'count' => '',
+		'start' => '',
+	), $atts ));
+
+	$images = get_field( $field );
+
+	if ( $images ) {
+
+		$index_now = 0;
+		if ( $start == '' ) $start="1";
+
+		foreach ( $images as $image ) {
+
+			$ccs_global_variable['current_image'] = $image;
+
+			$index_now++;
+
+			if ( $index_now >= $start ) { /* Start loop */
+
+				if ( ( $count!= '' ) && ( $index_now >= ($start+$count) ) ) {
+						break;				/* If over count, break the loop */
+				}
+
+				$output[] = do_shortcode( $content );
+			}
+		}
+	}
+	if( $output != null)
+		$output = implode( '', $output );
+
+	$ccs_global_variable['current_image'] = '';
+	return $output;
+}
+add_shortcode('acf_gallery', 'loop_through_acf_gallery_field');
+
+
+function get_image_details_from_acf_gallery( $atts ) {
+
+	global $ccs_global_variable;
+
+	extract(shortcode_atts(array(
+		'field' => '',
+		'sizes' => '',
+	), $atts));
+
+	if ( $field!='' ) {
+		if ( $sizes=='' ) {
+			$output = $ccs_global_variable['current_image'][$field];
+		} else {
+			$output = $ccs_global_variable['current_image']['sizes'][$field];
+		}
+	} else {
+		$output = '<img src="' . $ccs_global_variable['current_image']['url'] . '">';
+	}
+	return $output;
+}
+add_shortcode('sub_image', 'get_image_details_from_acf_gallery');
+
+
+
+
+function if_get_row_layout( $atts, $content ) {
+
+	extract(shortcode_atts(array(
+		'field' => '',
+	), $atts));
+
+	if( get_row_layout() == $field ) {
+		return do_shortcode( $content );
+	} else {
+		return null;
+	}
+
+}
+add_shortcode('row_layout', 'if_get_row_layout');
 
 ?>
