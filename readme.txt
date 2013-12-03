@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.3.9
+Stable tag: 0.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -532,7 +532,7 @@ Additional parameters:
  
 = Custom Toolbox =  
 <br />
-A set of plugins under development, to take Custom Content Shortcode to another level: for building whole sites and even web applications.
+A set of plugins under development, to take Custom Content Shortcode to another level: for building sites and applications.
 
 Feature requests are welcome.
 
@@ -541,6 +541,15 @@ Feature requests are welcome.
 None.
 
 == Changelog ==
+
+= 0.4.1 =
+
+* Fixed compatibility issue with a theme
+
+= 0.4.0 =
+
+* **[list_shortcodes]** - List shortcodes defined
+* More complete support for Advanced Custom Fields - flexible, repeater - more documentation later
 
 = 0.3.9 =
 
