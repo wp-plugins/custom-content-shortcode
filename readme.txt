@@ -14,6 +14,8 @@ Display posts, pages, custom post types, custom fields, files, images, comments,
 
 == Description ==
 
+= Overview =  
+<br />
 From a single field to entire pages, Custom Content Shortcode is a set of commands to display content where you need.
 
 The **[content]** shortcode displays any of the following: posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas.
@@ -22,23 +24,23 @@ The **[loop]** shortcode performs query loops. It can display, for example, avai
 
 *Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)*
 
-= Additional features =  
+= Included =  
 <br />
-In addition, you can choose to:
+You'll find many useful features in this tiny plugin:
 
-* Enable a simple **gallery field**
+* Add a simple **gallery field** to any post type
 * Use **relative URLs** for links and images
 * Display a **comments** list, input form or comment count
 * Display content based on **user status**: admin, non-admin, logged in/out, or user name
 * Display user name, ID, **login/logout links** with user redirect
 * Include **HTML/CSS/JavaScript**: stylesheets, jQuery libraries, Google Fonts, etc.
 
-With other libraries:
+It plays well with others:
 
-* Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**
+* Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**, **flexible content**
+* Display [Bootstrap v3](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 * Display content based on **device type** using [WP Mobile Detect](http://wordpress.org/plugins/wp-mobile-detect/)
-* Display [Bootstrap](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
-* Easily include [Live Edit](http://wordpress.org/plugins/live-edit/) - **front-end editing** of content and fields
+* Include [Live Edit](http://wordpress.org/plugins/live-edit/) with a shortcode - **front-end editing** of content and fields
 
 
 = Basic examples =  
@@ -336,9 +338,9 @@ Use the *file* parameter of the **[load]** shortcode to include any file into th
 
 If you don't set the *dir* parameter, it gets the file from the theme directory. To format the output with line breaks and paragraph tags, set the parameter *format* to *true*. If you want to disable shortcodes, set the parameter *shortcode* to *false*.
 
-= Content override =  
+= HTML templates with shortcodes =  
 <br />
-Create a custom field called *html*, the content of the field will be displayed *instead of* the post content. This could be useful for wrapping the post content in a different layout. More documentation later.
+Create a custom field called *html*, and the content of the field will be displayed *instead of* the post content. This could be useful for wrapping the post content in a different layout. You can also load template files built from HTML and shortcodes. More documentation on this later.
 
 = Relative URLs =  
 <br />
