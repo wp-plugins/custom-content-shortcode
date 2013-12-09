@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.4.4
+Stable tag: 0.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -130,7 +130,7 @@ Other parameters:
  * **count** - number of posts to show - default is *all*
  * **offset** - offset the loop by a number of posts, for example: skip the first 3 posts in the query
  * **strip_tags** - set to *true* to remove `<p>` and `<br>` tags inside the loop; use **[p]** and **[br]** shortcodes to manually create paragraphs and break lines
- * **title** - display only posts with a specific title
+ * **title** - display only posts with a specific title (case insensitive)
  * **if** - conditional: currently, only *all-no-comments* is supported, to display something when all the posts found have no comments
  * **x** - repeat the loop *x* times - no query
 
@@ -547,6 +547,11 @@ None.
 
 == Changelog ==
 
+= 0.4.5 =
+
+* **[pass]** - Added *varible* parameter - displayed using {VAR} or {VARIABLE}
+* **[loop]** - Made *title* parameter case-insensitive
+
 = 0.4.4 =
 
 * **[loop]** - Added *title* parameter; Added conditional statement: *if="all-no-comments"*
@@ -699,5 +704,8 @@ None.
 * First release
 
 == Upgrade Notice ==
+
+
+
 
 

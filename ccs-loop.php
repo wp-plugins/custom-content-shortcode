@@ -57,6 +57,7 @@ class Loop_Shortcode {
 			'post_offset' => '', 'offset' => '',
 			'strip_tags' => '', 'strip' => '',
 			'title' => '', 'if' => '',
+			'variable' => '', 'var' => '',
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -75,6 +76,7 @@ class Loop_Shortcode {
 		if($strip_tags=='true')
 			$strip_tags='<p><br />';
 		$current_name = $name;
+		if ($var!='') $variable=$var;
 
 
 		/*
@@ -452,12 +454,14 @@ class Loop_Shortcode {
 				'IMAGE' => get_the_post_thumbnail(),
 				'IMAGE_URL' => wp_get_attachment_url(get_post_thumbnail_id(get_the_ID())),
 				'FIELD' => $custom_field_content,
+				'VAR' => $variable,
+				'VARIABLE' => $variable,
 				'IDS' => $attachment_ids,
 			) );
 
 			$total_comment_count += get_comments_number();
 
-			if ( ($title == '') || ($title == get_the_title()) ) {
+			if ( ( $title == '' ) || ( strtolower($title) == strtolower(get_the_title()) ) ) {
 
 				if($strip_tags!='')
 					$output[] = do_shortcode(
