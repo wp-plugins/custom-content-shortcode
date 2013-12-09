@@ -547,7 +547,7 @@ None.
 
 == Changelog ==
 
-= 0.4.3 =
+= 0.4.4 =
 
 * **[loop]** - Added *title* parameter; Added conditional statement: *if="all-no-comments"*
 * Better code management (on-going)
