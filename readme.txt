@@ -22,9 +22,7 @@ The **[content]** shortcode displays any of the following: posts, pages, custom 
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
-*There's a new help page under Settings -> Custom Content. I'll be working on making it more comprehensive.*
-
-*Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)*
+*There's a new help page under Settings -> Custom Content. I'll be working on making it more comprehensive. Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)*
 
 
 = Included =  
