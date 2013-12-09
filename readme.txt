@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.4.2
+Stable tag: 0.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,10 @@ The **[content]** shortcode displays any of the following: posts, pages, custom 
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
 
+*There's a new help page under Settings -> Custom Content. I'll be working on making it more comprehensive.*
+
 *Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)*
+
 
 = Included =  
 <br />
@@ -128,7 +131,9 @@ Other parameters:
 
  * **count** - number of posts to show - default is *all*
  * **offset** - offset the loop by a number of posts, for example: skip the first 3 posts in the query
-* **strip_tags** - set to *true* to remove `<p>` and `<br>` tags inside the loop; use **[p]** and **[br]** shortcodes to manually create paragraphs and break lines
+ * **strip_tags** - set to *true* to remove `<p>` and `<br>` tags inside the loop; use **[p]** and **[br]** shortcodes to manually create paragraphs and break lines
+ * **title** - display only posts with a specific title
+ * **if** - conditional: currently, only *all-no-comments* is supported, to display something when all the posts found have no comments
  * **x** - repeat the loop *x* times - no query
 
 
@@ -543,6 +548,12 @@ Feature requests are welcome.
 None.
 
 == Changelog ==
+
+= 0.4.3 =
+
+* **[loop]** - Added *title* parameter; Added conditional statement: *if="all-no-comments"*
+* Better code management (on-going)
+* Started documentation page under Settings -> Custom Content
 
 = 0.4.2 =
 
