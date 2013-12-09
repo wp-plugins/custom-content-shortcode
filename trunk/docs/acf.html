@@ -1,0 +1,62 @@
+<h3>Advanced Custom Fields</h3>
+
+<h3>ACF - Gallery Field</h3>
+
+For gallery fields made in Advanced Custom Fields, use the <em>acf_gallery</em> parameter of the <strong>[loop]</strong> shortcode.
+
+For each image, the<strong> [content]</strong> shortcode can display these fields: <em>id</em>,<em> title</em>,<em> image</em>,<em> image-url</em>,<em> caption</em>,<em> description</em>,<em> thumbnail</em>,<em> thumbnail-url</em>,<em> count</em>.
+<h4>Display images with title</h4>
+<code>[loop acf_gallery="images"]
+&nbsp;&nbsp;&nbsp;&nbsp;[content field="title"]
+&nbsp;&nbsp;&nbsp;&nbsp;[content field="image"]
+[/loop]
+</code>
+You can also pass the image IDs to another shortcode to display.
+<h4>Pass the images to another shortcode</h4>
+<code>[pass acf_gallery="images"]
+&nbsp;&nbsp;&nbsp;&nbsp;[isotope_gallery ids="{FIELD}"]
+[/pass]</code>
+
+
+<h3>ACF - Repeater Field</h3>
+
+For repeater fields made in Advanced Custom Fields, use the <em>repeater</em> parameter of the <strong>[loop]</strong> shortcode. You can display subfields using the <strong>[content]</strong> shortcode.
+
+<h4>Display repeater fields with row number</h4>
+<code>[loop repeater="boxes"]
+    [content field="row"]
+    [content field="title"]
+    [content field="image"]
+[/loop]</code>For an image field, Advanced Custom Fields gives you an option to return its value as: image ID, image URL, or image object. Tell the <em>content</em> shortcode how to handle the image by setting the <em>in</em> parameter as: <em>id</em>, <em>url</em>, or <em>image object</em>. The default is <em>image object</em>.
+<code>[content field="image" in="url"]</code>
+To display a specific subfield only, use the <strong>[content]</strong> shortcode by itself:
+<code>[content field="boxes" row="1" sub="title"]</code>
+
+
+
+<h3>ACF - Flexible Content Field</h3>
+
+
+<h3>ACF - Live Edit</h3>
+
+To enable front-end editing, install <a href="http://wordpress.org/plugins/live-edit/" target="_blank">Live Edit</a> and wrap the content you'd like to edit with the <strong>[live-edit]</strong> shortcode.
+
+If Live Edit is active, and the user is logged in and has <em>post edit</em> capability, there will be an Edit button on the top right corner of the container. Otherwise the shortcode just displays the content normally.
+<h4>Enable live edit of post title and content</h4>
+<code>[live-edit]
+&nbsp;&nbsp;&nbsp;&nbsp;Here is an article you can edit from the front-end.
+[/live-edit]</code>When you press the <em>update</em> button, the changes will be saved to the post. Changes made to any ccontent not wrapped inside the shortcode will be visible after reloading the page.
+
+Here are the available parameters:
+<ul>
+	<li><strong>field</strong> - enable Live Edit for title, content and fields</li>
+	<li><strong>admin</strong> - enable title, content and fields for administrator</li>
+	<li><strong>editor</strong> - enable title, content and fields for editor</li>
+	<li><strong>only</strong> - enable specific fields only, such as post_title</em>, <em>post_content</em>, <em>images</em> - only applies to the editor if the<em> admin</em> parameter is set</li>
+	<li><strong>title</strong> - set to <em>false</em> to disable <em>post_title</em> edit</li>
+	<li><strong>content</strong> - set to <em>false</em> to disable <em>post_content</em> edit</li>
+</ul>
+<em>Admin can edit post content and images; editor can only edit content</em>
+<code>[live-edit admin="images" only="post_content"]
+...
+[/live-edit]</code>
