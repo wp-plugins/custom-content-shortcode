@@ -99,7 +99,7 @@ function ccs_docs_admin_css() {
    			}
    			.doc-style code {
    				font-size: 16px;
-   				padding: 5px 8px;
+   				padding: 10px;
 				line-height: 24px;
 				display: block;
    			}
@@ -130,32 +130,29 @@ function ccs_content_settings_page() {
 	<?php
 	*/
 
-	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview'; 
+	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
+	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'gallery',
+						'user', 'etc' );
 	?>
 		<div class="wrap">
 		<h2>Custom Content Shortcode</h2>
 		<h3>Documentation Page</h3>
 
 		<h2 class="nav-tab-wrapper">  
-			<a href="?page=ccs_content_shortcode_help&tab=overview"
-				class="nav-tab <?php echo $active_tab == 'overview' ? 'nav-tab-active' : ''; ?>">
-					Overview</a>
-			<a href="?page=ccs_content_shortcode_help&tab=content"
-				class="nav-tab <?php echo $active_tab == 'content' ? 'nav-tab-active' : ''; ?>">
-					Content</a>
-			<a href="?page=ccs_content_shortcode_help&tab=loop"
-				class="nav-tab <?php echo $active_tab == 'loop' ? 'nav-tab-active' : ''; ?>">
-					Loop</a>
-			<a href="?page=ccs_content_shortcode_help&tab=examples"
-				class="nav-tab <?php echo $active_tab == 'examples' ? 'nav-tab-active' : ''; ?>">
-					Examples</a>
-			<a href="?page=ccs_content_shortcode_help&tab=gallery"
-				class="nav-tab <?php echo $active_tab == 'gallery' ? 'nav-tab-active' : ''; ?>">
-					Gallery</a>
-			<a href="?page=ccs_content_shortcode_help&tab=bootstrap"
-				class="nav-tab <?php echo $active_tab == 'bootstrap' ? 'nav-tab-active' : ''; ?>">
-					Bootstrap</a>
+		
+		<?php
+
+			foreach ($all_tabs as $tab) {
+				?>
+				<a href="?page=ccs_content_shortcode_help&tab=<?php echo $tab; ?>"
+					class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>">
+						<?php echo ucwords($tab); ?></a>
+				<?php
+
+			}
+		?>
+
 		</h2>  
 
 	<?php

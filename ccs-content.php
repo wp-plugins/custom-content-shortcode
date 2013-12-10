@@ -30,6 +30,11 @@ function custom_content_shortcode($atts) {
 		'acf_gallery' => null,
 		'words' => null, 'len' => null, 'length' => null,
 		'date_format' => null,
+
+		/* Native gallery options: orderby, order, columns, size, link, include, exclude */
+
+		'orderby' => null, 'order' => null, 'columns' => null, 'size' => null,
+		'link' => null, 'include' => null, 'exclude' => null, 
 	), $atts));
 
 	$custom_post_type = $type;
@@ -43,6 +48,17 @@ function custom_content_shortcode($atts) {
 	$custom_gallery_name = $group;
 	$custom_area_name = $area;
 	if($len!='') $length=$len;
+
+
+	$native_gallery_options = array(
+		'orderby' => $orderby,
+		'order' => $order,
+		'columns' => $columns,
+		'size' => $size,
+		'link' => $link,
+		'include' => $include,
+		'exclude' => $exclude );
+
 
 	$out = null;
 	if($image != null) {
@@ -236,6 +252,7 @@ function custom_content_shortcode($atts) {
 	} else {
 
 		if( $custom_gallery_type == "native") {
+
 			$out = '[gallery " ';
 			if($custom_gallery_name != '') {
 				$out .= 'name ="' . $custom_gallery_name . '" ';
@@ -249,8 +266,23 @@ function custom_content_shortcode($atts) {
 			} else {
 				$out .= get_post_meta( $custom_id, '_custom_gallery', true );
 			}
-			$out .= '" ]';
+			$out .= '"';
 
+			/* Add other options: orderby, order, columns, size, link, include, exclude */
+
+			$native_gallery_options_list = array('orderby', 'order', 'columns',
+				'size', 'link', 'include', 'exclude');
+
+			foreach ($native_gallery_options_list as $each_option) {
+
+				if ($native_gallery_options[$each_option] != '') {
+
+					$out .= ' ' . $each_option . '="' . $native_gallery_options[$each_option] . '"';
+
+				}
+			}
+
+			$out .= ']';
 			if($class!='')
 				$out = '<div class="' . $class . '">' . $out . '</div>';
 			return do_shortcode( $out );

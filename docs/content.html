@@ -1,4 +1,16 @@
-<h3>Content shortcode</h3>
+<h3>Basic Examples</h3>
+
+Here are some examples of using the <strong>[content]</strong> shortcode.
+<h4>Display post content by name</h4>
+<code>[content name="hello-world"]</code>
+<h4>Display the featured image of a page</h4>
+<code>[content type="page" name="about-me" field="image"]</code>
+<h4>Display a custom field from a custom post type</h4>
+<code>[content type="apartment" name="lux-suite-22" field="rent-per-day"]</code>
+<h4>Display fields from the current post</h4>
+<code>The Article &lt;b&gt;[content field="title"]&lt;/b&gt; by [content field="author"] was written on [content field="date"].</code><br>
+
+<h3>Parameters</h3>
 
 Available parameters of the <strong>[content]</strong> shortcode:
 <ul>
@@ -15,7 +27,7 @@ In addition:
 </ul>
 For other types of content:
 <ul>
-	<li><strong>image</strong> - display image fields by <em>name/slug</em></li>
 	<li><strong>area</strong> or <strong>sidebar</strong> - display a widget area/sidebar by <em>title</em></li>
 	<li><strong>menu</strong> - display a menu list by <em>name/slug</em>, <em>title</em>, or <em>ID</em>. Use the <em>ul</em> parameter for Bootstrap <em>nav-tabs, nav-pills and nav-pills-stacked</em>. For a Bootstrap navbar menu, please see the section for the <strong>[navbar]</strong> shortcode.</li>
+	<li><strong>image</strong> - display image fields by <em>name/slug</em></li>
 </ul>

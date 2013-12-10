@@ -1,4 +1,18 @@
 <h3>Loop shortcode</h3>
+Here are examples of using the<b> [loop] </b>and<b> [content] </b>shortcodes.
+<h4>Display all posts</h4>
+<code>[loop type="post"]
+&nbsp;&nbsp;&nbsp;&nbsp;[content]
+[/loop]</code>
+
+Note that inside a query loop, the <strong>[content]</strong> shortcode does not need <em>type</em> or <em>name </em>parameters, because it is targeting each post in the loop.
+<h4>Display fields from all posts of a custom post type, filtered by category</h4>
+<code>[loop type="apartment" category="suite"]
+&nbsp;&nbsp;&nbsp;&nbsp;Apartment: [content field="title"]
+&nbsp;&nbsp;&nbsp;&nbsp;Rent per day: [content field="rent-per-day"]
+[/loop]</code><br>
+
+<h3>Parameters</h3>
 
 Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
@@ -31,3 +45,25 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 	<li><strong>strip_tags</strong> - set to *true* to remove &lt;p&gt; and &lt;br&gt; tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
 	<li><strong>x</strong> - repeat the loop <em>x</em> times - no query</li>
 </ul>
+<br>
+<h3>Query for custom field values</h3>
+
+<h4>Single field</h4>
+
+<code>[loop type="hotels" field="stars" value="4"]</code>
+
+<h4>Single field compare</h4>
+
+<code>[loop type="hotels" field="stars" compare="NOT EQUAL" value="3"]</code>
+
+<h4>Two field values</h4>
+
+<code>[loop type="hotels" field="stars" value="4" field_2="service" value_2="all inclusive"]</code>
+
+<h4>Two field values relation</h4>
+
+<code>[loop type="hotels" field="stars" value="4 stars" relation="OR" field_2="service" value_2="all inclusive"]</code>
+
+<h4>Series</h4>
+
+<code>[loop type="books" series="1,2,3,7-15,50-60" key="serial_number"]</code>
