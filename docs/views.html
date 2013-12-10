@@ -1,0 +1,95 @@
+
+
+<h3>Content Views</h3>
+
+Here is an example of how to create templates to display your content.
+
+Let's imagine a bicycle shop. We create a custom post type called <em>bicycle</em>, and add custom fields such as <em>model</em>, <em>price</em>, and <em>description</em>.
+
+Add all bicycles in the store as new entries, with featured image and other info in the fields.
+
+Create a new page to display the bicycles. A basic layout could be:
+
+<code>[loop type="bicycle"]
+&nbsp;&nbsp;&nbsp;&nbsp;[content field="image"]
+&nbsp;&nbsp;&nbsp;&nbsp;Model: [content field="model"]
+&nbsp;&nbsp;&nbsp;&nbsp;Price: [content field="price"]
+&nbsp;&nbsp;&nbsp;&nbsp;Description: [content field="description"]
+[/loop]</code>
+
+Another page can display a list of bicycles in the<em> freestyle</em> category:
+
+<code>Freestyle bikes available:
+&lt;ul&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;[loop type="bicycle" category="freestyle"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;[content field="model"] - [content field="price"]&lt;/li&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;[/loop]
+&lt;/ul&gt;</code><br>
+
+<h3>Advanced Content Views</h3>
+
+Use the <strong>[load]</strong> shortcode to include a file into your post. This could be useful for loading a font, stylesheet, jQuery plugin, HTML template, etc.
+<h3>Header - CSS</h3>
+Create a custom field called <em>css</em>, and the content of the field will be automatically added to the header of the page.
+<h4>Load a stylesheet from the <strong>css</strong> field</h4>
+<code>[load css="bootstrap.min.css"]</code>
+<h4>Wrapping CSS script</h4>
+<code>[css]
+&nbsp;&nbsp;&nbsp;&nbsp;.entry-content {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;background-color: black;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+[/css]</code><br>
+
+<h3>Google Fonts</h3>
+
+Use the <strong>[load]</strong> shortcode and the <em>gfonts</em> parameter to include fonts from Google Fonts.
+
+<h4>Include fonts and apply them to page elements</h4>
+
+<code>[load gfonts="Lato|Lora:400,700"]
+[css]
+    h1, h2 { font-family: Lora, serif; }
+    p { font-family: Lato, sans-serif; }
+[/css]</code>
+
+It should be placed in a custom field named <em>css</em>, so the fonts will be included in the header.
+<br>
+<h3>Footer - JS</h3>
+Create a custom field called <em>js</em>, and the content of the field will be automatically added to the footer of the page, just before <em>&lt;/body&gt;</em>.
+<h4>Load a JavaScript file from the <strong>js</strong> field</h4>
+<code>[load js="bootstrap.min.js"]</code>
+
+<h4>Wrapping JS script</h4>
+<code>[js]
+&nbsp;&nbsp;&nbsp;&nbsp;jQuery(window).load(function() {
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jQuery('.isotope_container').isotope('reLayout');
+&nbsp;&nbsp;&nbsp;&nbsp;});
+[/js]</code><br>
+
+<h3>File location</h3>
+By default, the <strong>[load]</strong> shortcode gets the specified file under the <em>css</em> or <em>js</em> folder in the theme directory. You can choose a different directory using the <em>dir</em> parameter.
+<h4>Load a CSS file from a different location</h4>
+<code>[load dir="content" css="includes/css/font-awesome.min.css"]</code>
+
+Available tags for the <em>dir</em> parameter:
+<ul>
+	<li>web - http://</li>
+	<li>site - site address</li>
+	<li>wordpress - WordPress directory</li>
+	<li>content - /wp-content/</li>
+	<li>theme - theme directory - /wp-content/theme</li>
+	<li>child - child theme directory - /wp-content/child_theme</li>
+</ul><br>
+
+<h3>HTML</h3>
+Use the <strong>[load]</strong> shortcode and the <em>file</em> parameter to include an HTML file. It can contain shortcodes.
+
+<code>[load dir="content" file="layout/sidebar.html"]</code>
+
+If you don't set the <em>dir</em> parameter, it gets the file from the theme directory.
+
+To format the output with line breaks and paragraph tags, set the parameter <em>format</em> to true. If you want to disable shortcodes, set the parameter <em>shortcode</em> to false.
+
+<h3>Layout templates</h3>
+
+Create a custom field called <em>html</em>, and the content of the field will be displayed <em>instead of</em> the post content. This is could be useful for wrapping the post content in different layout templates.
