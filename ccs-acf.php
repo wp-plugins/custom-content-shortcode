@@ -4,6 +4,7 @@
  *
  * Shortcodes for Advanced Custom Fields: gallery, repeater, flexible content
  *
+ *
  *====================================================================================================*/
 
 
@@ -15,6 +16,7 @@ function custom_sub_field( $atts ) {
 		'format' => '',
 		'image' => '',
 		'in' => '',
+		'size' => '',
 	), $atts));
 
 
@@ -23,12 +25,15 @@ function custom_sub_field( $atts ) {
 		$output = get_sub_field($image);
 
 		if ( $output != '' ) {
+
+			if ($size=='') $size='full';
+
 			switch($in) {
-				case 'id' : $output = wp_get_attachment_image( $output, 'full' ); break;
+				case 'id' : $output = wp_get_attachment_image( $output, $size ); break;
 				case 'url' : $output = '<img src="' . $output . '">'; break;
 				default : /* image object */
 					if(is_array($output)) {
-						$output = wp_get_attachment_image( $output['id'], 'full' );
+						$output = wp_get_attachment_image( $output['id'], $size );
 					}
 			}
 		}
@@ -56,11 +61,10 @@ function loop_through_acf_field( $atts, $content ) {
 		'start' => '',
 	), $atts ));
 
-	if ( get_field( $field ) ) {
+	if ( get_field( $field ) /* && ( strpos($content, '[sub ') !== FALSE ) */ ) {
 
 		$index_now = 0;
 		if ( $start == '' ) $start="1";
-
 
 		while ( has_sub_field( $field ) ) {
 
@@ -71,10 +75,14 @@ function loop_through_acf_field( $atts, $content ) {
 				if ( ( $count!= '' ) && ( $index_now >= ($start+$count) ) ) {
 						/* If over count, continue empty looping for has_sub_field */
 				} else {
+
 					$output[] = do_shortcode( $content );
+
 				}
 			}
 		}
+	} else {
+		$output = $content;
 	}
 	if( $output != null)
 		$output = implode( '', $output );
@@ -93,9 +101,14 @@ function loop_through_acf_gallery_field( $atts, $content ) {
 		'field' => '',
 		'count' => '',
 		'start' => '',
+		'sub' => '',
 	), $atts ));
 
-	$images = get_field( $field );
+	if ($sub=='') {
+		$images = get_field( $field );
+	} else {
+		$images = get_sub_field( $field );
+	}
 
 	if ( $images ) {
 
@@ -133,17 +146,21 @@ function get_image_details_from_acf_gallery( $atts ) {
 
 	extract(shortcode_atts(array(
 		'field' => '',
-		'sizes' => '',
+		'size' => '',
 	), $atts));
 
 	if ( $field!='' ) {
-		if ( $sizes=='' ) {
 			$output = $ccs_global_variable['current_image'][$field];
-		} else {
-			$output = $ccs_global_variable['current_image']['sizes'][$field];
-		}
 	} else {
-		$output = '<img src="' . $ccs_global_variable['current_image']['url'] . '">';
+
+		if ($size=='') {
+			$image_url = $ccs_global_variable['current_image']['url'];
+		} else {
+			$image_url = $ccs_global_variable['current_image']['sizes'][$size];
+		}
+
+		$output = '<img src="' . $image_url . '">';
+
 	}
 	return $output;
 }
@@ -153,26 +170,17 @@ add_shortcode('sub_image', 'get_image_details_from_acf_gallery');
 function if_get_row_layout( $atts, $content ) {
 
 	extract(shortcode_atts(array(
-		'field' => '',
+		'name' => '',
 	), $atts));
 
-	if( get_row_layout() == $field ) {
+	if( get_row_layout() == $name ) {
 		return do_shortcode( $content );
 	} else {
 		return null;
 	}
 
 }
-add_shortcode('row_layout', 'if_get_row_layout');
-
-
-
-
-
-
-
-
-
+add_shortcode('layout', 'if_get_row_layout');
 
 
 

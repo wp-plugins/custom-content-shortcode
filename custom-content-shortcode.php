@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.4.6
+Version: 0.4.7
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -38,13 +38,13 @@ $ccs_global_variable = array(
 global $sort_posts; global $sort_key;
 
 
-include (dirname(__FILE__).'/ccs-content.php');		// Content shortcode
-include (dirname(__FILE__).'/ccs-loop.php');			// Loop shortcode
-include (dirname(__FILE__).'/ccs-gallery.php');		// Simple gallery
-include (dirname(__FILE__).'/ccs-bootstrap.php');		// Bootstrap support
-include (dirname(__FILE__).'/ccs-field-loader.php');	// Load HTML, CSS, JS fields
-include (dirname(__FILE__).'/ccs-acf.php');			// Advanced Custom Fields support
-include (dirname(__FILE__).'/ccs-user.php');			// Miscellaneous user shortcodes
-include (dirname(__FILE__).'/ccs-docs.php');			// Documentation under Settings -> Content Shortcodes
+require_once (dirname(__FILE__).'/ccs-content.php');		// Content shortcode
+require_once (dirname(__FILE__).'/ccs-loop.php');			// Loop shortcode
+require_once (dirname(__FILE__).'/ccs-gallery.php');		// Simple gallery
+require_once (dirname(__FILE__).'/ccs-bootstrap.php');		// Bootstrap support
+require_once (dirname(__FILE__).'/ccs-field-loader.php');	// Load HTML, CSS, JS fields
+require_once (dirname(__FILE__).'/ccs-acf.php');			// Advanced Custom Fields support
+require_once (dirname(__FILE__).'/ccs-user.php');			// Miscellaneous user shortcodes
+require_once (dirname(__FILE__).'/ccs-docs.php');			// Documentation under Settings -> Content Shortcodes
 
 

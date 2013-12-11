@@ -1,43 +1,66 @@
 <h3>Advanced Custom Fields</h3>
+<hr>
+<h3>Gallery Field</h3>
 
-<h3>ACF - Gallery Field</h3>
+For gallery fields made in Advanced Custom Fields, use the <b>[acf_gallery]</b>  shortcode.
 
-For gallery fields made in Advanced Custom Fields, use the <em>acf_gallery</em> parameter of the <strong>[loop]</strong> shortcode.
-
-For each image, the<strong> [content]</strong> shortcode can display these fields: <em>id</em>,<em> title</em>,<em> image</em>,<em> image-url</em>,<em> caption</em>,<em> description</em>,<em> thumbnail</em>,<em> thumbnail-url</em>,<em> count</em>.
 <h4>Display images with title</h4>
-<code>[loop acf_gallery="images"]
-&nbsp;&nbsp;&nbsp;&nbsp;[content field="title"]
-&nbsp;&nbsp;&nbsp;&nbsp;[content field="image"]
-[/loop]
+<code>[acf_gallery field="images"]
+&nbsp;&nbsp;&nbsp;&nbsp;[sub_image]
+&nbsp;&nbsp;&nbsp;&nbsp;[sub_image field="title"]
+&nbsp;&nbsp;&nbsp;&nbsp;[sub_image size="thumbnail"]
+[/acf_gallery]
 </code>
+The<strong> [sub_image]</strong> shortcode displays each image in the gallery field. It can also display these fields: <em>id</em>,<em> title</em>,<em> caption</em>,<em> alt</em>,<em> url</em>, and<em> description</em>. You can set the <em>size</em> parameter to:<em> thumbnail</em>,<em> medium</em>,<em> large</em> - default is full-size.
+
 You can also pass the image IDs to another shortcode to display.
 <h4>Pass the images to another shortcode</h4>
 <code>[pass acf_gallery="images"]
 &nbsp;&nbsp;&nbsp;&nbsp;[isotope_gallery ids="{FIELD}"]
-[/pass]</code>
+[/pass]</code><br>
+
+<hr>
+<h3>Repeater Field</h3>
+
+For repeater fields made in Advanced Custom Fields, use the <b>[repeater]</b> shortcode. You can display sub-fields using the <strong>[sub]</strong> shortcode.
 
 
-<h3>ACF - Repeater Field</h3>
+<h4>Display repeater fields</h4>
+<code>[repeater field="boxes"]
+&nbsp;&nbsp;&nbsp;&nbsp;[sub field="title"]
+&nbsp;&nbsp;&nbsp;&nbsp;[sub image="image"]
+&nbsp;&nbsp;&nbsp;&nbsp;[sub field="description" format="true"]
+[/repeater]</code>
 
-For repeater fields made in Advanced Custom Fields, use the <em>repeater</em> parameter of the <strong>[loop]</strong> shortcode. You can display subfields using the <strong>[content]</strong> shortcode.
+For an image field, use the <em>image</em> parameter to display the field. You can set the <em>size</em> parameter to:<em> thumbnail</em>,<em> medium</em>,<em> large</em> - default is full-size.
 
-<h4>Display repeater fields with row number</h4>
-<code>[loop repeater="boxes"]
-    [content field="row"]
-    [content field="title"]
-    [content field="image"]
-[/loop]</code>For an image field, Advanced Custom Fields gives you an option to return its value as: image ID, image URL, or image object. Tell the <em>content</em> shortcode how to handle the image by setting the <em>in</em> parameter as: <em>id</em>, <em>url</em>, or <em>image object</em>. The default is <em>image object</em>.
-<code>[content field="image" in="url"]</code>
-To display a specific subfield only, use the <strong>[content]</strong> shortcode by itself:
-<code>[content field="boxes" row="1" sub="title"]</code>
+Advanced Custom Fields gives you an option to return the image value as: image ID, image URL, or image object. You can set the <em>in</em> parameter as: <em>id</em>, <em>url</em>, or <em>image object</em>. The default is <em>image object</em>.
+<br>
+<hr>
+<h3>Flexible Content Field</h3>
 
+<code>[flex field="flexible_content"]
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;[layout name="title_text"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[sub field="title"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[sub field="text"]
+&nbsp;&nbsp;&nbsp;&nbsp;[/layout]
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;[layout name="title_image_text"][sub field="title"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[sub image="image" size="thumbnail"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[sub field="text"]
+&nbsp;&nbsp;&nbsp;&nbsp;[/layout]
+&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;[layout name="gallery"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[acf_gallery field="gallery" sub="true"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[sub_image size="thumbnail"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[/acf_gallery]
+&nbsp;&nbsp;&nbsp;&nbsp;[/layout]
+&nbsp;
+[/flex]</code><br>
 
-
-<h3>ACF - Flexible Content Field</h3>
-
-
-<h3>ACF - Live Edit</h3>
+<hr>
+<h3>Live Edit</h3>
 
 To enable front-end editing, install <a href="http://wordpress.org/plugins/live-edit/" target="_blank">Live Edit</a> and wrap the content you'd like to edit with the <strong>[live-edit]</strong> shortcode.
 
@@ -57,6 +80,7 @@ Here are the available parameters:
 	<li><strong>content</strong> - set to <em>false</em> to disable <em>post_content</em> edit</li>
 </ul>
 <em>Admin can edit post content and images; editor can only edit content</em>
+
 <code>[live-edit admin="images" only="post_content"]
 ...
 [/live-edit]</code>
