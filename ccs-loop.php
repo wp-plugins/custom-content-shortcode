@@ -58,6 +58,7 @@ class Loop_Shortcode {
 			'strip_tags' => '', 'strip' => '',
 			'title' => '', 'if' => '',
 			'variable' => '', 'var' => '',
+			'year' => '', 'month' => '', 'day' => '',
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -183,6 +184,26 @@ class Loop_Shortcode {
 			if( $custom_field != 'gallery' ) {
 				$query['p'] = '';
 			}
+		}
+
+// Query by date
+
+
+		if ( ($year!='') || ($month!='') || ($day!='') ) {
+
+			$today = getdate();
+			if ($year=='today') $year=$today["year"];
+			if ($month=='today') $month=$today["mon"];
+			if ($day=='today') $day=$today["mday"];
+
+			$query['date_query'] = array(
+
+					array(
+						'year' => $year,
+						'month' => $month,
+						'day' => $day,
+					)
+				);
 		}
 
 // Custom taxonomy query
