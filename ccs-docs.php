@@ -99,7 +99,7 @@ function ccs_docs_admin_css() {
    			}
    			.doc-style code {
    				font-size: 16px;
-   				padding: 10px;
+   				padding: 10px 15px;
 				line-height: 24px;
 				display: block;
    			}
@@ -107,7 +107,7 @@ function ccs_docs_admin_css() {
    				font-weight:normal;
    				font-style:italic;
    			}
-   			ul {
+   			.doc-style ul {
    				list-style:disc; padding-left:40px;
    			}
          </style>';
@@ -132,13 +132,12 @@ function ccs_content_settings_page() {
 
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
-	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'gallery',
-						'user', 'etc' );
+	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'load', 'gallery',
+						'user', 'ACF', 'etc' );
 	?>
 		<div class="wrap">
 		<h2>Custom Content Shortcode</h2>
-		<h3>Documentation Page</h3>
-
+		<br>
 		<h2 class="nav-tab-wrapper">  
 		
 		<?php

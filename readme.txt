@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.4.6
+Stable tag: 0.4.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -63,6 +63,12 @@ None.
 
 == Changelog ==
 
+= 0.4.7 =
+
+* Better support for Advanced Custom Fields - *gallery*, *repeater* and *flexible content* fields: flex, repeat, layout, sub, sub_image, and acf_gallery
+* Added new pages to reference section
+* Fixed display of bullet points in the admin panel
+
 = 0.4.6 =
 
 * Improved reference page under *Settings -> Custom Content*, and simplified *readme.txt* to avoid duplicate content
@@ -81,7 +87,6 @@ None.
 
 = 0.4.2 =
 
-* Better support for Advanced Custom Fields: *gallery*, *flexible* and *repeater* fields - flex, repeat, row_layout, sub, sub_image, acf_gallery shortcodes (more documentation later)
 * **[list_shortcodes]** - Display a list of shortcodes defined
 * Fixed compatibility issue with a theme
 
