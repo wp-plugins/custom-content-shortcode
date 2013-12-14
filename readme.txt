@@ -65,7 +65,7 @@ None.
 
 = 0.4.9 =
 
-* Fixed compatibility issues with a theme
+* Fixed compatibility issue with a theme
 
 = 0.4.8 =
 
