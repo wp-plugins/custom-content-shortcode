@@ -21,8 +21,8 @@ Use the <strong>[load]</strong> shortcode and the <em>gfonts</em> parameter to i
 
 <code>[load gfonts="Lato|Lora:400,700"]
 [css]
-    h1, h2 { font-family: Lora, serif; }
-    p { font-family: Lato, sans-serif; }
+&nbsp;&nbsp;&nbsp;&nbsp;h1, h2 { font-family: Lora, serif; }
+&nbsp;&nbsp;&nbsp;&nbsp;p { font-family: Lato, sans-serif; }
 [/css]</code>
 
 It should be placed in a custom field named <em>css</em>, so the fonts will be included in the header.
@@ -32,7 +32,7 @@ It should be placed in a custom field named <em>css</em>, so the fonts will be i
 Create a custom field called <em>js</em>, and the content of the field will be automatically added to the footer of the page, just before <em>&lt;/body&gt;</em>.
 <h4>Load a JavaScript file from the <strong>js</strong> field</h4>
 <code>[load js="bootstrap.min.js"]</code><br>
-<hr>
+
 <h4>Wrapping JS script</h4>
 <code>[js]
 &nbsp;&nbsp;&nbsp;&nbsp;jQuery(window).load(function() {
@@ -56,7 +56,10 @@ Available tags for the <em>dir</em> parameter:
 </ul><br>
 <hr>
 <h3>HTML</h3>
-Use the <strong>[load]</strong> shortcode and the <em>file</em> parameter to include an HTML file. It can contain shortcodes.
+
+Create a custom field called <em>html</em>, and the content of the field will be displayed <em>instead of</em> the post content. This is could be useful for wrapping the post content in different layout templates.
+
+Use the <strong>[load]</strong> shortcode and the <em>file</em> parameter to include an HTML file. This can be done in the <em>html</em> field, or anywhere else. The file can contain shortcodes.
 
 <code>[load dir="content" file="layout/sidebar.html"]</code>
 
@@ -64,6 +67,3 @@ If you don't set the <em>dir</em> parameter, it gets the file from the theme dir
 
 To format the output with line breaks and paragraph tags, set the parameter <em>format</em> to true. If you want to disable shortcodes, set the parameter <em>shortcode</em> to false.
 <br>
-<h3>Layout templates</h3>
-
-Create a custom field called <em>html</em>, and the content of the field will be displayed <em>instead of</em> the post content. This is could be useful for wrapping the post content in different layout templates.

@@ -178,3 +178,19 @@ function ccs_content_settings_page() {
 }
 
 
+/* Add settings link on plugin page */
+
+add_filter( "plugin_action_links", 'ccs_plugin_settings_link', 10, 4 );
+ 
+function ccs_plugin_settings_link( $links, $file ) {
+	$plugin_file = 'custom-content-shortcode/custom-content-shortcode.php';
+	//make sure it is our plugin we are modifying
+	if ( $file == $plugin_file ) {
+		$settings_link = '<a href="' .
+			admin_url( 'admin.php?page=ccs_content_shortcode_help' ) . '">' .
+			__( 'Reference', 'ccs_content_shortcode_help' ) . '</a>';
+		array_unshift( $links, $settings_link );
+	}
+	return $links;
+}
+

@@ -131,7 +131,7 @@ add_shortcode( 'url', array( 'urlShortcode', 'custom_url' ) );
  *====================================================================================================*/
 
 
-function return_comment_form() {
+function ccs_return_comment_form() {
 	ob_start();
 	comment_form( $args = array(
 		'id_form'           => 'commentform',  // that's the wordpress default value! delete it or edit it ;)
@@ -150,7 +150,7 @@ function return_comment_form() {
     return $form;
 }
 
-function return_comments_template($file) {
+function ccs_return_comments_template($file) {
 	ob_start();
 	comments_template($file);
 	$form = ob_get_contents();
@@ -165,12 +165,12 @@ function custom_comment_shortcode( $atts, $content, $tag ) {
 	}
 
 	if( ($tag=='comments') || isset( $atts['template'] ) ) {
-		$content = return_comments_template($atts['template']);
+		$content = ccs_return_comments_template($atts['template']);
 		return $content;
 	}
 
 	if( isset( $atts['form'] ) ) {
-		$content = return_comment_form();
+		$content = ccs_return_comment_form();
 		return $content;
 	}
 	if( isset( $atts['count'] ) ) {
