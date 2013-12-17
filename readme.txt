@@ -62,7 +62,7 @@ None.
 * **Mobile Detect** - display content based on device type: *is_phone, isnt_phone, is_tablet, is_mobile, is_computer*
 * **[redirect]** - redirect user to another URL: based on login status, device type, etc.
 * **[load]** - now able to include files with HTML, PHP script, and shortcodes
-* **[content]** - added author ID, URL, avatar
+* **[content]** - added author ID, URL, avatar fields
 
 = 0.4.9 =
 
