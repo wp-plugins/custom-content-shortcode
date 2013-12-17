@@ -34,7 +34,7 @@ You'll find many useful features:
 * **Comments** list, input form or comment count
 * User name, ID, **login/logout links** with redirect
 * Display content for **admin, specific user, login status**
-* Include **HTML/PHP/CSS/JavaScript** files: stylesheets, jQuery libraries, Google Fonts, etc.
+* Include **HTML/PHP/CSS/JavaScript** files
 * Display content according to device type: **Mobile Detect**
 
 With other libraries:
