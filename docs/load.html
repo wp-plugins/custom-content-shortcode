@@ -1,9 +1,12 @@
-<h3>Loading HTML, CSS and JS</h3>
+<h3>Loading HTML/CSS/JS</h3>
 
-Use the <strong>[load]</strong> shortcode to include a file. This could be useful for loading page-specific stylesheets, jQuery scripts, HTML templates, etc.
+Use the <strong>[load]</strong> shortcode to include a file into a page. This could be useful for loading page-specific stylesheets, jQuery scripts, layout templates, etc.
+
+For ease of use, create a field group called <b>Scripts</b>, with custom fields named <em>html</em>, <em>css</em>, and <em>js</em>. These are loaded into the content, header and footer of the page.
+<br>
 <hr>
 <h3>Header - CSS</h3>
-Create a custom field called <em>css</em>, and the content of the field will be automatically added to the header of the page.
+Create a custom field called <em>css</em>, and the content of the field will be included in the header.
 <h4>Load a stylesheet from the <strong>css</strong> field</h4>
 <code>[load css="bootstrap.min.css"]</code>
 <h4>Wrapping CSS script</h4>
@@ -25,13 +28,15 @@ Use the <strong>[load]</strong> shortcode and the <em>gfonts</em> parameter to i
 &nbsp;&nbsp;&nbsp;&nbsp;p { font-family: Lato, sans-serif; }
 [/css]</code>
 
-It should be placed in a custom field named <em>css</em>, so the fonts will be included in the header.
+The code should be placed in a custom field named <em>css</em>, so the fonts will be included in the header.
 <br>
 <hr>
 <h3>Footer - JS</h3>
-Create a custom field called <em>js</em>, and the content of the field will be automatically added to the footer of the page, just before <em>&lt;/body&gt;</em>.
-<h4>Load a JavaScript file from the <strong>js</strong> field</h4>
-<code>[load js="bootstrap.min.js"]</code><br>
+Create a custom field called <em>js</em>, and the content of the field will be added at the end of the page, just before &lt;/body&gt;.
+<h4>Load a JavaScript file</h4>
+<code>[load js="bootstrap.min.js"]</code>
+
+You can also load JS files in the header by placing the above command in the <em>css</em> field.
 
 <h4>Wrapping JS script</h4>
 <code>[js]
@@ -51,19 +56,22 @@ Available tags for the <em>dir</em> parameter:
 	<li>site - site address</li>
 	<li>wordpress - WordPress directory</li>
 	<li>content - /wp-content/</li>
+	<li>layout - /wp-content/layout/</li>
 	<li>theme - theme directory - /wp-content/theme</li>
 	<li>child - child theme directory - /wp-content/child_theme</li>
 </ul><br>
 <hr>
 <h3>HTML</h3>
-
-Create a custom field called <em>html</em>, and the content of the field will be displayed <em>instead of</em> the post content. This is could be useful for wrapping the post content in different layout templates.
-
-Use the <strong>[load]</strong> shortcode and the <em>file</em> parameter to include an HTML file. This can be done in the <em>html</em> field, or anywhere else. The file can contain shortcodes.
-
-<code>[load dir="content" file="layout/sidebar.html"]</code>
-
-If you don't set the <em>dir</em> parameter, it gets the file from the theme directory.
-
-To format the output with line breaks and paragraph tags, set the parameter <em>format</em> to true. If you want to disable shortcodes, set the parameter <em>shortcode</em> to false.
+Create a custom field called <em>html</em>, and the content of the field will be displayed <em>instead of</em> the post content. This is could be useful for wrapping the post content in different layouts, especially using a blank page template.
 <br>
+<h3>Include files</h3>
+
+Use the <strong>[load]</strong> shortcode and the <em>file</em> parameter to include a file anywhere. The file can contain HTML, PHP script, and shortcodes. This can be used for creating flexible and reusable modules. 
+
+<h4>Load a sidebar</h4>
+
+<code>[load dir="layout" file="sidebar.html"]</code>
+
+By default, the <em>file</em> parameter looks in the theme folder.
+
+To format the output with line breaks and paragraph tags, set the parameter <em>format</em> to true. If you want to disable PHP or shortcodes, set the parameter <em>php</em> or <em>shortcode</em> to false.

@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.4.9
+Version: 0.5.0
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
@@ -37,14 +37,31 @@ $ccs_global_variable = array(
 
 global $sort_posts; global $sort_key;
 
+define('CCS_PATH', dirname(__FILE__));
+define('CCS_URL', untrailingslashit(plugins_url('/',__FILE__)));
 
-require_once (dirname(__FILE__).'/ccs-content.php');		// Content shortcode
-require_once (dirname(__FILE__).'/ccs-loop.php');			// Loop shortcode
-require_once (dirname(__FILE__).'/ccs-gallery.php');		// Simple gallery
-require_once (dirname(__FILE__).'/ccs-bootstrap.php');		// Bootstrap support
-require_once (dirname(__FILE__).'/ccs-field-loader.php');	// Load HTML, CSS, JS fields
-require_once (dirname(__FILE__).'/ccs-acf.php');			// Advanced Custom Fields support
-require_once (dirname(__FILE__).'/ccs-user.php');			// Miscellaneous user shortcodes
-require_once (dirname(__FILE__).'/ccs-docs.php');			// Documentation under Settings -> Content Shortcodes
+/**
+ * Set up mobile detect library
+ *
+ */
+
+if (!class_exists('Mobile_Detect')) {
+	require_once (dirname(__FILE__).'/includes/Mobile_Detect.php');	
+}
+
+$detect = new Mobile_Detect();
+$device_type = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+
+require_once (dirname(__FILE__).'/includes/ccs-mobile.php'); 		// Mobile detect shortcodes
+
+
+require_once (dirname(__FILE__).'/includes/ccs-content.php');		// Content shortcode
+require_once (dirname(__FILE__).'/includes/ccs-loop.php');			// Loop shortcode
+require_once (dirname(__FILE__).'/includes/ccs-gallery.php');		// Simple gallery
+require_once (dirname(__FILE__).'/includes/ccs-bootstrap.php');		// Bootstrap support
+require_once (dirname(__FILE__).'/includes/ccs-field-loader.php');	// Load HTML, CSS, JS fields
+require_once (dirname(__FILE__).'/includes/ccs-acf.php');			// Advanced Custom Fields support
+require_once (dirname(__FILE__).'/includes/ccs-user.php');			// Miscellaneous user shortcodes
+require_once (dirname(__FILE__).'/includes/ccs-docs.php');			// Documentation under Settings -> Content Shortcodes
 
 

@@ -318,6 +318,28 @@ function custom_content_shortcode($atts) {
 			case "slug": $out = get_post($custom_id)->post_name; break;
 			case "title": $out = get_post($custom_id)->post_title; break;
 			case "author": $out = get_the_author($custom_id); break;
+			case "author-id":
+
+				$current_post = get_post( $custom_id );
+				$author_id = $current_post->post_author;
+				$out = $author_id; break;
+
+			case "author-url":
+
+				$current_post = get_post( $custom_id );
+				$author_id = $current_post->post_author;
+				$out = get_author_posts_url($author_id); break;
+
+			case "avatar": 
+
+				$current_post = get_post( $custom_id );
+				$author_id = $current_post->post_author;
+				if( $size=='' )
+					$out = get_avatar($author_id);
+				else
+					$out = get_avatar($author_id, $size);
+				break;
+
 			case "date":
 
 				if($date_format!='') {

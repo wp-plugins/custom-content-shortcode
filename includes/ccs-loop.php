@@ -323,6 +323,14 @@ class Loop_Shortcode {
 	 * Main loop
 	 *-------------*/
 
+
+		/*--------------
+		 * Put a hook here
+		 *-------------*/
+
+
+
+
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
 		if( $custom_field == "gallery" ) {

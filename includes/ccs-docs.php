@@ -133,7 +133,7 @@ function ccs_content_settings_page() {
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
 	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'load', 'gallery',
-						'user', 'ACF', 'etc' );
+						'user', 'mobile', 'ACF', 'etc' );
 	?>
 		<div class="wrap">
 		<h2>Custom Content Shortcode</h2>
@@ -157,7 +157,7 @@ function ccs_content_settings_page() {
 	<?php
 
 		echo '<div class="doc-style">' .
-			wpautop( @file_get_contents( dirname(__FILE__).'/docs/' . $active_tab . '.html') )
+			wpautop( @file_get_contents( dirname(dirname(__FILE__)) .'/docs/' . $active_tab . '.html') )
 			. '</div>';
 
 /*		include (dirname(__FILE__).'/docs/' . $active_tab . '.html') );	// Load doc part

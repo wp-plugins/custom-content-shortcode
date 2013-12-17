@@ -165,6 +165,7 @@ function get_image_details_from_acf_gallery( $atts ) {
 	return $output;
 }
 add_shortcode('sub_image', 'get_image_details_from_acf_gallery');
+add_shortcode('acf_image', 'get_image_details_from_acf_gallery');
 
 
 function if_get_row_layout( $atts, $content ) {
