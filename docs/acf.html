@@ -6,12 +6,12 @@ For gallery fields made in Advanced Custom Fields, use the <b>[acf_gallery]</b>
 
 <h4>Display images with title</h4>
 <code>[acf_gallery field="images"]
-&nbsp;&nbsp;&nbsp;&nbsp;[sub_image]
-&nbsp;&nbsp;&nbsp;&nbsp;[sub_image field="title"]
-&nbsp;&nbsp;&nbsp;&nbsp;[sub_image size="thumbnail"]
+&nbsp;&nbsp;&nbsp;&nbsp;[acf_image]
+&nbsp;&nbsp;&nbsp;&nbsp;[acf_image field="title"]
+&nbsp;&nbsp;&nbsp;&nbsp;[acf_image size="thumbnail"]
 [/acf_gallery]
 </code>
-The<strong> [sub_image]</strong> shortcode displays each image in the gallery field. It can also display these fields: <em>id</em>,<em> title</em>,<em> caption</em>,<em> alt</em>,<em> url</em>, and<em> description</em>. You can set the <em>size</em> parameter to:<em> thumbnail</em>,<em> medium</em>,<em> large</em> - default is full-size.
+The<strong> [acf_image]</strong> shortcode displays each image in the gallery field. It can also display these fields: <em>id</em>,<em> title</em>,<em> caption</em>,<em> alt</em>,<em> url</em>, and<em> description</em>. You can set the <em>size</em> parameter to:<em> thumbnail</em>,<em> medium</em>,<em> large</em>. The default is full-size.
 
 You can also pass the image IDs to another shortcode to display.
 <h4>Pass the images to another shortcode</h4>

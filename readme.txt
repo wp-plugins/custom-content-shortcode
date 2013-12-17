@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.4.9
+Stable tag: 0.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -18,29 +18,28 @@ Display posts, pages, custom post types, custom fields, files, images, comments,
 <br />
 From a single field to entire pages, Custom Content Shortcode is a set of commands to display content where you need.
 
-The **[content]** shortcode displays any of the following: posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas.
+The **[content]** shortcode displays any of the following: *posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas*.
 
-The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts.
+The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query and sort the result by parameters such as: *date, category, tags, taxonomy, and custom field values*.
 
-There is an overview of the available shortcodes and parameters, under *Settings -> Custom Content*. Please visit the documentation page for a full description: [Custom Content Shortcode](http://eliotakira.com/wordpress/custom-content-shortcode/)
+There is a reference of available shortcodes and parameters, under *Settings -> Custom Content* in the admin panel.
 
 
 = Included =  
 <br />
-You'll find useful related features:
+You'll find many useful features:
 
-* Add a simple **gallery field** to any post type
-* Use **relative URLs** for links and images
-* Display a **comments** list, input form or comment count
-* Display content based on **user status**: admin, non-admin, logged in/out, or user name
-* Display user name, ID, **login/logout links** with user redirect
-* Include **HTML/CSS/JavaScript**: stylesheets, jQuery libraries, Google Fonts, etc.
+* Simple **gallery field** for any post type
+* **Relative URLs** for links and images
+* **Comments** list, input form or comment count
+* User name, ID, **login/logout links** with redirect
+* Display content for **admin, specific user, login status**
+* Include **HTML/PHP/CSS/JavaScript** files: stylesheets, jQuery libraries, Google Fonts, etc.
+* Display content according to device type: **Mobile Detect**
 
-It plays well with others:
-
+With other libraries:
 
 * Display [Bootstrap v3](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
-* Display content based on **device type** using [WP Mobile Detect](http://wordpress.org/plugins/wp-mobile-detect/)
 * Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**, **flexible content**
 * Include [Live Edit](http://wordpress.org/plugins/live-edit/) with a shortcode - **front-end editing** of content and fields
 
@@ -51,17 +50,19 @@ It plays well with others:
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. Place the shortcode in a post, page, etc.
 
-== Coming soon.. ==
- 
-= Custom Toolbox =  
-<br />
-A set of plugins under development, to take Custom Content Shortcode to another level: for building page layouts, websites and applications.
 
 == Screenshots ==
 
 None.
 
 == Changelog ==
+
+= 0.5.0 =
+
+* **Mobile Detect** - display content based on device type: *is_phone, isnt_phone, is_tablet, is_mobile, is_computer*
+* **[redirect]** - redirect user to another URL: based on login status, device type, etc.
+* **[load]** - now able to include files with HTML, PHP script, and shortcodes
+* **[content]** - added author ID, URL, avatar
 
 = 0.4.9 =
 
@@ -97,7 +98,6 @@ None.
 
 * **[list_shortcodes]** - Display a list of shortcodes defined
 * Fixed compatibility issue with a theme
-
 
 = 0.3.9 =
 

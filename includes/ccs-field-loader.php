@@ -26,12 +26,22 @@ function custom_js_wrap( $atts, $content = null ) {
 add_shortcode('js', 'custom_js_wrap');
 
 
+function ccs_safe_eval($code) {
+	$strip_tags='<p><br />';
+	ob_start();
+	eval('?>' . $code);
+	$code = ob_get_contents();
+	ob_end_clean();
+	return $code;
+}
+
 function custom_load_script_file($atts) {
 
 	extract( shortcode_atts( array(
 		'css' => null, 'js' => null, 'dir' => null,
 		'file' => null,'format' => null, 'shortcode' => null,
 		'gfonts' => null, 'cache' => 'false',
+		'php' => 'true', 'debug' => 'false',
 		), $atts ) );
 
 	switch($dir) {
@@ -77,7 +87,6 @@ function custom_load_script_file($atts) {
 	if($js != '') {
 		echo '<script type="text/javascript" src="' . $dir . $js . '"></script>';
 	}
-
 	if($file != '') {
 
 		$output = @file_get_contents($dir . $file);
@@ -86,6 +95,16 @@ function custom_load_script_file($atts) {
 			if(($format == 'on')||($format == 'true')) { // Format?
 				$output = wpautop( $output );
 			}
+
+			/* Put safe_eval here for executing PHP inside template files */
+
+
+			if($php=='true') {
+
+				$output = ccs_safe_eval( $output );
+
+			}
+
 			if(($shortcode != 'false')||($shortcode != 'off')) { // Shortcode?
 				$output = do_shortcode( $output );
 			}

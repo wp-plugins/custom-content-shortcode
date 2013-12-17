@@ -52,6 +52,25 @@ Here is an example using both [is] and [url] to show a login/logout link based o
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;/a&gt;
 [/is]</code><br>
 <hr>
+<h3>Redirect users</h3>
+To redirect users to a different URL according to user status, device type, etc., use the <b>[redirect]</b> shortcode. As soon as it is executed, the user will be taken to another page.
+
+<h4>Redirect if visitor is not logged in</h4>
+<code>[isnt login]
+&nbsp;&nbsp;&nbsp;&nbsp;[redirect]http://example.com/guest/[/redirect]
+[/isnt]
+</code>
+
+Please note that the destination URL is not a parameter, it is wrapped inside. This is to allow relative links such as:
+
+<code>[is login]
+&nbsp;&nbsp;&nbsp;&nbsp;[redirect][url site]/user-area/[/redirect]
+[/is]
+</code>
+
+The <b>[redirect]</b> shortcode can be placed anywhere, but the best place is in a custom field named <em>css</em>, so it can run at the beginning of the page.
+<br>
+<hr>
 <h3>Comments</h3>
 
 For displaying comments of the current post, or in a query loop, use the <strong>[comment] </strong>shortcode.
