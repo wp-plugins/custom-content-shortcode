@@ -18,9 +18,9 @@ Display posts, pages, custom post types, custom fields, files, images, comments,
 <br />
 From a single field to entire pages, Custom Content Shortcode is a set of commands to display content where you need.
 
-The **[content]** shortcode displays any of the following: *posts, pages, custom post types, custom fields, files, images, attachments, menus, or widget areas*.
+The **[content]** shortcode displays any of the following: *posts, pages, custom post types, custom fields, files, images, attachments, menus,* or *widget areas*.
 
-The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query and sort the result by parameters such as: *date, category, tags, taxonomy, and custom field values*.
+The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query and sort the result by parameters such as: *date, category, tags, taxonomy,* and *custom field values*.
 
 There is a reference of available shortcodes and parameters, under *Settings -> Custom Content* in the admin panel.
 
@@ -46,8 +46,8 @@ With other libraries:
 
 == Installation ==
 
-1. Upload `custom-content-shortcode.zip` through Plugins->Add New, or extract and upload the folder to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
+1. Upload `custom-content-shortcode.zip` through *Plugins->Add New*, or extract and upload the folder to the `/wp-content/plugins/` directory
+1. Activate the plugin from the *Plugins* menu
 1. Place the shortcode in a post, page, etc.
 
 
@@ -62,7 +62,7 @@ None.
 * **Mobile Detect** - display content based on device type: *is_phone, isnt_phone, is_tablet, is_mobile, is_computer*
 * **[redirect]** - redirect user to another URL: based on login status, device type, etc.
 * **[load]** - now able to include files with HTML, PHP script, and shortcodes
-* **[content]** - added author ID, URL, avatar fields
+* **[content]** - added author ID, URL, avatar
 
 = 0.4.9 =
 

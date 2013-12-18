@@ -157,7 +157,7 @@ function ccs_content_settings_page() {
 	<?php
 
 		echo '<div class="doc-style">' .
-			wpautop( @file_get_contents( dirname(dirname(__FILE__)) .'/docs/' . $active_tab . '.html') )
+			wpautop( @file_get_contents( dirname(dirname(__FILE__)) .'/docs/' . strtolower($active_tab) . '.html') )
 			. '</div>';
 
 /*		include (dirname(__FILE__).'/docs/' . $active_tab . '.html') );	// Load doc part
