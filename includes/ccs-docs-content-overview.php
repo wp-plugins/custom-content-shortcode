@@ -164,8 +164,8 @@
 				<?php
 
 			        $taxonomies = get_object_taxonomies($post_type);
-			        foreach ($taxonomies as $row => $taxonomy) {
 
+			        foreach ($taxonomies as $row => $taxonomy) {
 						echo '<a href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
 						echo $taxonomy . '</a><br>';
 
@@ -231,12 +231,17 @@
 				<?php
 
 				$post_types = get_post_types( array('public' => true), 'names' ); 
+		        $done = '';
+
 				foreach ($post_types as $post_type) {
 				
 					$taxonomies = get_object_taxonomies($post_type);
 
 			        foreach ($taxonomies as $row => $taxonomy) {
 
+			        	if ( ! in_array($taxonomy, $done) ) {	// Duplicate?
+
+			        	$done[] = $taxonomy;
 						$alternate = ( $alternate == '' ) ? 'class="alternate"' : '';
 
 						?>
@@ -264,6 +269,9 @@
 							</td>
 						</tr>
 						<?php
+
+						} // If not done already
+
 
 					}	// Each taxonomy
 
