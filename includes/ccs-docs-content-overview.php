@@ -126,7 +126,7 @@
 				/* Generate list of taxonomies and fields */
 
 				$args = $args = array(
-					'post_status' => array('publish','draft','pending','future'),
+					'post_status' => array('any'),
 					'post_type' => $post_type,
 					'posts_per_page' => -1,
 				);
