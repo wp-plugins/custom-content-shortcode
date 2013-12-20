@@ -183,8 +183,11 @@
 			        $taxonomies = get_object_taxonomies($post_type);
 
 			        foreach ($taxonomies as $row => $taxonomy) {
+
+			        	$the_tax = get_taxonomy( $taxonomy );
+
 						echo '<a href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
-						echo $taxonomy . '</a><br>';
+						echo $the_tax->labels->name . '</a><br>';
 
 					}
 
@@ -268,8 +271,10 @@
 
 								<?php
 
-				echo '<a class="row-title" href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
-				echo $taxonomy . '</a><br>';
+			        	$the_tax = get_taxonomy( $taxonomy );
+
+						echo '<a class="row-title" href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
+						echo $the_tax->labels->name . '</a><br>';
 
 								?>
 
