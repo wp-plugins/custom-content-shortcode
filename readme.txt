@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.0.1
 Tested up to: 3.7.1
-Stable tag: 0.5.0
+Stable tag: 0.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -20,9 +20,9 @@ From a single field to entire pages, Custom Content Shortcode is a set of comman
 
 The **[content]** shortcode displays any of the following: *posts, pages, custom post types, custom fields, files, images, attachments, menus,* or *widget areas*.
 
-The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query and sort the result by parameters such as: *date, category, tags, taxonomy,* and *custom field values*.
+The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query by parameters such as: *date, category, tags, taxonomy,* and *custom field values*.
 
-There is a reference of available shortcodes and parameters, under *Settings -> Custom Content* in the admin panel.
+There is a reference page under *Settings -> Custom Content*, as well as an overview of your site's content structure.
 
 
 = Included =  
@@ -30,12 +30,12 @@ There is a reference of available shortcodes and parameters, under *Settings -> 
 You'll find many useful features:
 
 * Simple **gallery field** for any post type
-* **Relative URLs** for links and images
-* **Comments** list, input form or comment count
-* User name, ID, **login/logout links** with redirect
-* Display content for **admin, specific user, login status**
 * Include **HTML/PHP/CSS/JavaScript** files
-* Display content according to device type: **Mobile Detect**
+* Selectively display content with **Mobile Detect**
+* Display content for **admin, specific user, login status**
+* User name, ID, **login/logout links** with redirect
+* **Comments** list, input form or comment count
+* **Relative URLs** for links and images
 
 With other libraries:
 
@@ -57,12 +57,24 @@ None.
 
 == Changelog ==
 
+= 0.5.3 =
+
+* Fixed last version..
+
+= 0.5.2 =
+
+* Improved performance of content overview page
+
+= 0.5.1 =
+
+* Added an overview of site content structure: *Dashboard -> Content*
+
 = 0.5.0 =
 
 * **Mobile Detect** - display content based on device type: *is_phone, isnt_phone, is_tablet, is_mobile, is_computer*
 * **[redirect]** - redirect user to another URL: based on login status, device type, etc.
 * **[load]** - now able to include files with HTML, PHP script, and shortcodes
-* **[content]** - added author ID, URL, avatar fields
+* **[content]** - added author ID, URL, avatar
 
 = 0.4.9 =
 
