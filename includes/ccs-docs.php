@@ -298,7 +298,7 @@ function ccs_dashboard_content_overview() {
 		<div class="wrap">
 	<?php
 
-		include('ccs-docs-content-overview.php');
+		include('ccs-content-overview.php');
 
 	?>
 		</div>

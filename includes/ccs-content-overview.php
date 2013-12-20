@@ -125,15 +125,32 @@
 
 				/* Generate list of taxonomies and fields */
 
-				$args = $args = array(
-					'post_status' => array('any'),
-					'post_type' => $post_type,
-					'posts_per_page' => -1,
-				);
+				if ( $post_type == 'attachment' ) {
 
-				$allposts = get_posts($args);
+					$args = array(
+						'post_type' => $post_type,
+						'posts_per_page' => -1,
+					);
+					$allposts = get_posts( $args );
+					$num_posts = count( $allposts );
 
-				$post_count[ $post_type ] = count($allposts);
+				} else {
+
+					$args = array(
+						'post_status' => array('any'),
+						'post_type' => $post_type,
+						'posts_per_page' => 1,
+					);
+					$allposts = get_posts($args);
+					$num_posts = wp_count_posts( $post_type );
+					$num_posts = $num_posts->publish + $num_posts->draft +
+									$num_posts->future + $num_posts->pending;
+
+				}
+
+				$post_count[ $post_type ] = $num_posts;
+
+/*				$post_count[ $post_type ] = count($allposts); */
 
 				$all_fields = null;
 				$all_taxonomies = null;

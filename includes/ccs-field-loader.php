@@ -227,7 +227,7 @@ function load_custom_html($content) {
 
 		/* Set default layout filename */
 
-		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+		$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
 
 		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
 
@@ -256,6 +256,13 @@ function load_custom_html($content) {
 
 		if ( $html_field == '' ) {
 
+			echo 'Searching templates<br>';
+
+			echo $default_layout_dir . $default_current_post_type_template . '<br>';
+			echo $default_layout_dir . $default_post_type_template . '<br>';
+			echo $default_layout_dir . $current_post_type . '/' . $current_post_slug . '.html' . '<br>';
+			echo $default_layout_dir . $current_post_type . '/' . $default_post_type_template . '<br>';
+
 
 			/*----  post-example.html  ----*/ 
 
@@ -270,10 +277,10 @@ function load_custom_html($content) {
 			}
 
 
-			/*----  post/post-example.html  ----*/ 
+			/*----  post/example.html  ----*/ 
 
-			elseif( file_exists( $default_layout_dir . $current_post_type . '/' . $default_current_post_type_template ) ) {
-				$output .= '[load file="'. $default_current_post_type_template . '" dir="layout"]';
+			elseif( file_exists( $default_layout_dir . $current_post_type . '/' . $current_post_slug . '.html' ) ) {
+				$output .= '[load file="'. $current_post_type . '/' . $current_post_slug . '.html' . '" dir="layout"]';
 			}
 
 			/*----  post/post.html  ----*/ 
