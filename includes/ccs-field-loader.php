@@ -255,7 +255,7 @@ function load_custom_html($content) {
 		// Load default page template
 
 		if ( $html_field == '' ) {
-
+/*
 			echo 'Searching templates<br>';
 
 			echo $default_layout_dir . $default_current_post_type_template . '<br>';
@@ -263,7 +263,7 @@ function load_custom_html($content) {
 			echo $default_layout_dir . $current_post_type . '/' . $current_post_slug . '.html' . '<br>';
 			echo $default_layout_dir . $current_post_type . '/' . $default_post_type_template . '<br>';
 
-
+*/
 			/*----  post-example.html  ----*/ 
 
 			if( file_exists( $default_layout_dir . $default_current_post_type_template ) ) {
