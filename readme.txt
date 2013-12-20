@@ -30,12 +30,12 @@ There is a reference page under *Settings -> Custom Content*, as well as an over
 You'll find many useful features:
 
 * Simple **gallery field** for any post type
-* **Relative URLs** for links and images
-* **Comments** list, input form or comment count
-* User name, ID, **login/logout links** with redirect
-* Display content for **admin, specific user, login status**
 * Include **HTML/PHP/CSS/JavaScript** files
-* Display content according to device type: **Mobile Detect**
+* Selectively display content with **Mobile Detect**
+* Display content for **admin, specific user, login status**
+* User name, ID, **login/logout links** with redirect
+* **Comments** list, input form or comment count
+* **Relative URLs** for links and images
 
 With other libraries:
 
