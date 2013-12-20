@@ -26,6 +26,14 @@ function custom_js_wrap( $atts, $content = null ) {
 add_shortcode('js', 'custom_js_wrap');
 
 
+
+/*====================================================================================================
+ *
+ * Load shortcode - include files with HTML, PHP script, and shortcodes
+ *
+ *====================================================================================================*/
+
+
 function ccs_safe_eval($code) {
 	$strip_tags='<p><br />';
 	ob_start();
@@ -34,6 +42,47 @@ function ccs_safe_eval($code) {
 	ob_end_clean();
 	return $code;
 }
+
+
+if ( ! shortcode_exists('php')) {
+
+
+	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. */
+
+	function undo_wptexturize($content) {
+		$content = strip_tags($content);
+		$content = preg_replace("/\[{1}([\/]*)([a-zA-z\/]{1}[a-zA-Z0-9]*[^\'\"])([a-zA-Z0-9 \!\"\£\$\%\^\&\*\*\(\)\_\-\+\=\|\\\,\.\/\?\:\;\@\'\#\~\{\}\¬\¦\`\<\>]*)([\/]*)([\]]{1})/ix","<$1$2$3>",$content,"-1");
+		$content = htmlspecialchars($content, ENT_NOQUOTES);
+		$content = str_replace("&amp;#8217;","'",$content);
+		$content = str_replace("&amp;#8216;","'",$content);
+		$content = str_replace("&amp;#8242;","'",$content);
+		$content = str_replace("&amp;#8220;","\"",$content);
+		$content = str_replace("&amp;#8221;","\"",$content);
+		$content = str_replace("&amp;#8243;","\"",$content);
+		$content = str_replace("&amp;#039;","'",$content);
+		$content = str_replace("&#039;","'",$content);
+		$content = str_replace("&amp;#038;","&",$content);
+		$content = str_replace("&amp;gt;",'>',$content);
+		$content = str_replace("&amp;lt;",'<',$content);
+		$content = htmlspecialchars_decode($content);
+
+		return $content;
+	}
+
+	function custom_php_shortcode($atts, $content) {
+
+		ob_start();
+
+		eval( undo_wptexturize( $content ) );
+
+		return ob_get_clean();
+
+	}
+
+	add_shortcode( 'php', 'custom_php_shortcode' );
+
+}
+
 
 function custom_load_script_file($atts) {
 
@@ -178,18 +227,19 @@ function load_custom_html($content) {
 
 		/* Set default layout filename */
 
-		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+		$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
+
 		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+
 		$default_header = 'header.html';
 
 		$current_post_type = $wp_query->post->post_type;
 		$current_post_slug = $wp_query->post->post_name;
 
-		$default_post_type_template = $current_post_type . '.html';
 		$default_current_post_type_template = $current_post_type . '-' . $current_post_slug . '.html';
+		$default_post_type_template = $current_post_type . '.html';
 
 		$default_current_page_template = 'page-' . $current_post_slug . '.html';
-
 		$default_page_template = 'page.html';
 
 		$default_footer = 'footer.html';
@@ -205,19 +255,69 @@ function load_custom_html($content) {
 		// Load default page template
 
 		if ( $html_field == '' ) {
+
+			echo 'Searching templates<br>';
+
+			echo $default_layout_dir . $default_current_post_type_template . '<br>';
+			echo $default_layout_dir . $default_post_type_template . '<br>';
+			echo $default_layout_dir . $current_post_type . '/' . $current_post_slug . '.html' . '<br>';
+			echo $default_layout_dir . $current_post_type . '/' . $default_post_type_template . '<br>';
+
+
+			/*----  post-example.html  ----*/ 
+
 			if( file_exists( $default_layout_dir . $default_current_post_type_template ) ) {
 				$output .= '[load file="'. $default_current_post_type_template . '" dir="layout"]';
 			}
+
+			/*----  post.html  ----*/ 
+
 			elseif( file_exists( $default_layout_dir . $default_post_type_template ) ) {
 				$output .= '[load file="'. $default_post_type_template . '" dir="layout"]';
 			}
+
+
+			/*----  post/example.html  ----*/ 
+
+			elseif( file_exists( $default_layout_dir . $current_post_type . '/' . $current_post_slug . '.html' ) ) {
+				$output .= '[load file="'. $current_post_type . '/' . $current_post_slug . '.html' . '" dir="layout"]';
+			}
+
+			/*----  post/post.html  ----*/ 
+
+			elseif( file_exists( $default_layout_dir . $current_post_type . '/' . $default_post_type_template ) ) {
+				$output .= '[load file="'.  $current_post_type . '/' . $default_post_type_template . '" dir="layout"]';
+			}
+
+
+			/*----  page-example.html  ----*/ 
+
 			elseif( ($current_post_type == 'page') &&
 				( file_exists( $default_layout_dir . $default_current_page_template ) ) ) {
 					$output .= '[load file="' . $default_current_page_template . '" dir="layout"]';
 			}
+
+			/*----  page.html  ----*/ 
+
 			elseif( file_exists( $default_layout_dir . $default_page_template ) ) {
 				$output .= '[load file="' . $default_page_template . '" dir="layout"]';
 			}
+
+
+			/*----  page/page-example.html  ----*/ 
+
+			elseif( ($current_post_type == 'page') &&
+				( file_exists( $default_layout_dir . 'page/' . $default_current_page_template ) ) ) {
+					$output .= '[load file="' . 'page/' . $default_current_page_template . '" dir="layout"]';
+			}
+
+			/*----  page/page.html  ----*/ 
+
+			elseif( file_exists( $default_layout_dir . 'page/' . $default_page_template ) ) {
+				$output .= '[load file="' . 'page/' . $default_page_template . '" dir="layout"]';
+			}
+
+
 		} else {
 			$output .= $html_field;
 		}
