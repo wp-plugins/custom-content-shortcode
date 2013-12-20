@@ -8,8 +8,9 @@
 		<thead>
 			<tr>
 				<th><b>Post type</b></th>
-				<th><b>Slug</b></th>
-				<th><b>Taxonomies</b></th>
+				<th><b></b></th>
+				<th><b>Taxonomy</b></th>
+				<th><b></b></th>
 				<th><b>Fields</b></th>
 				<th class="column-author"><b>Count</b></th>
 			</tr>
@@ -17,8 +18,9 @@
 		<tfoot>
 			<tr>
 				<th><b>Post type</b></th>
-				<th><b>Slug</b></th>
-				<th><b>Taxonomies</b></th>
+				<th><b></b></th>
+				<th><b>Taxonomy</b></th>
+				<th><b></b></th>
 				<th><b>Fields</b></th>
 				<th class="column-author"><b>Count</b></th>
 			</tr>
@@ -179,7 +181,6 @@
 
 		<td style="vertical-align:top">
 				<?php
-
 			        $taxonomies = get_object_taxonomies($post_type);
 
 			        foreach ($taxonomies as $row => $taxonomy) {
@@ -188,12 +189,17 @@
 
 						echo '<a href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
 						echo $the_tax->labels->name . '</a><br>';
-
 					}
+					/*		echo implode(', ', $taxonomies ); */
+				?>
+		</td>
+		<td style="vertical-align:top">
+				<?php
+			        foreach ($taxonomies as $row => $taxonomy) {
 
-/*
-					echo implode(', ', $taxonomies );
-*/
+			        	$the_tax = get_taxonomy( $taxonomy );
+						echo $taxonomy . '<br>';
+					}
 				?>
 		</td>
 
@@ -243,7 +249,9 @@
 		<thead>
 			<tr>
 				<th><b>Taxonomy</b></th>
+				<th><b></b></th>
 				<th><b>Terms</b></th>
+				<th><b></b></th>
 			</tr>
 		</thead>
 		<tbody id="the-list">
@@ -271,10 +279,21 @@
 
 								<?php
 
-			        	$the_tax = get_taxonomy( $taxonomy );
+						        	$the_tax = get_taxonomy( $taxonomy );
 
-						echo '<a class="row-title" href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
-						echo $the_tax->labels->name . '</a><br>';
+									echo '<a class="row-title" href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
+									echo $the_tax->labels->name . '</a><br>';
+
+								?>
+
+							</td>
+							<td style="vertical-align:top">
+
+								<?php
+
+						        	$the_tax = get_taxonomy( $taxonomy );
+
+									echo $taxonomy . '<br>';
 
 								?>
 
@@ -286,6 +305,14 @@
 
 								foreach ( $terms as $term ) {
 									echo $term->name . '<br>';
+								}
+								?>
+							</td>
+							<td style="vertical-align:top">
+								<?php
+
+								foreach ( $terms as $term ) {
+									echo $term->slug . '<br>';
 								}
 								?>
 							</td>
