@@ -8,8 +8,9 @@
 		<thead>
 			<tr>
 				<th><b>Post type</b></th>
-				<th><b>Slug</b></th>
-				<th><b>Taxonomies</b></th>
+				<th><b></b></th>
+				<th><b>Taxonomy</b></th>
+				<th><b></b></th>
 				<th><b>Fields</b></th>
 				<th class="column-author"><b>Count</b></th>
 			</tr>
@@ -17,8 +18,9 @@
 		<tfoot>
 			<tr>
 				<th><b>Post type</b></th>
-				<th><b>Slug</b></th>
-				<th><b>Taxonomies</b></th>
+				<th><b></b></th>
+				<th><b>Taxonomy</b></th>
+				<th><b></b></th>
 				<th><b>Fields</b></th>
 				<th class="column-author"><b>Count</b></th>
 			</tr>
@@ -125,15 +127,32 @@
 
 				/* Generate list of taxonomies and fields */
 
-				$args = $args = array(
-					'post_status' => array('publish','draft','pending','future'),
-					'post_type' => $post_type,
-					'posts_per_page' => -1,
-				);
+				if ( $post_type == 'attachment' ) {
 
-				$allposts = get_posts($args);
+					$args = array(
+						'post_type' => $post_type,
+						'posts_per_page' => -1,
+					);
+					$allposts = get_posts( $args );
+					$num_posts = count( $allposts );
 
-				$post_count[ $post_type ] = count($allposts);
+				} else {
+
+					$args = array(
+						'post_status' => array('any'),
+						'post_type' => $post_type,
+						'posts_per_page' => 1,
+					);
+					$allposts = get_posts($args);
+					$num_posts = wp_count_posts( $post_type );
+					$num_posts = $num_posts->publish + $num_posts->draft +
+									$num_posts->future + $num_posts->pending;
+
+				}
+
+				$post_count[ $post_type ] = $num_posts;
+
+/*				$post_count[ $post_type ] = count($allposts); */
 
 				$all_fields = null;
 				$all_taxonomies = null;
@@ -162,18 +181,25 @@
 
 		<td style="vertical-align:top">
 				<?php
-
 			        $taxonomies = get_object_taxonomies($post_type);
+
 			        foreach ($taxonomies as $row => $taxonomy) {
 
+			        	$the_tax = get_taxonomy( $taxonomy );
+
 						echo '<a href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
-						echo $taxonomy . '</a><br>';
-
+						echo $the_tax->labels->name . '</a><br>';
 					}
+					/*		echo implode(', ', $taxonomies ); */
+				?>
+		</td>
+		<td style="vertical-align:top">
+				<?php
+			        foreach ($taxonomies as $row => $taxonomy) {
 
-/*
-					echo implode(', ', $taxonomies );
-*/
+			        	$the_tax = get_taxonomy( $taxonomy );
+						echo $taxonomy . '<br>';
+					}
 				?>
 		</td>
 
@@ -223,7 +249,9 @@
 		<thead>
 			<tr>
 				<th><b>Taxonomy</b></th>
+				<th><b></b></th>
 				<th><b>Terms</b></th>
+				<th><b></b></th>
 			</tr>
 		</thead>
 		<tbody id="the-list">
@@ -231,12 +259,17 @@
 				<?php
 
 				$post_types = get_post_types( array('public' => true), 'names' ); 
+		        $done = '';
+
 				foreach ($post_types as $post_type) {
 				
 					$taxonomies = get_object_taxonomies($post_type);
 
 			        foreach ($taxonomies as $row => $taxonomy) {
 
+			        	if ( ! in_array($taxonomy, $done) ) {	// Duplicate?
+
+			        	$done[] = $taxonomy;
 						$alternate = ( $alternate == '' ) ? 'class="alternate"' : '';
 
 						?>
@@ -246,8 +279,21 @@
 
 								<?php
 
-				echo '<a class="row-title" href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
-				echo $taxonomy . '</a><br>';
+						        	$the_tax = get_taxonomy( $taxonomy );
+
+									echo '<a class="row-title" href="' . admin_url( 'edit-tags.php?taxonomy=' . $taxonomy ) . '">';
+									echo $the_tax->labels->name . '</a><br>';
+
+								?>
+
+							</td>
+							<td style="vertical-align:top">
+
+								<?php
+
+						        	$the_tax = get_taxonomy( $taxonomy );
+
+									echo $taxonomy . '<br>';
 
 								?>
 
@@ -262,8 +308,19 @@
 								}
 								?>
 							</td>
+							<td style="vertical-align:top">
+								<?php
+
+								foreach ( $terms as $term ) {
+									echo $term->slug . '<br>';
+								}
+								?>
+							</td>
 						</tr>
 						<?php
+
+						} // If not done already
+
 
 					}	// Each taxonomy
 
