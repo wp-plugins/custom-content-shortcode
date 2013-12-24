@@ -205,18 +205,19 @@
 
 		<td style="vertical-align:top">
 			<?php
+				if ( empty( $all_fields) ) {
+					echo '<br>'; // Prevent cell from collapsing
+				} else {
 
-				ksort( $all_fields );
+					ksort( $all_fields );
 
-				foreach ( $all_fields as $key => $value ) {
-					echo $key . '<br>';
+					foreach ( $all_fields as $key => $value ) {
+						echo $key . '<br>';
+					}
 				}
-
 /*
 			echo implode(', ', array_keys($all_fields) );
-*/				if ( empty( $all_fields) )
-					echo '<br>'; // Prevent cell from collapsing
-			?>
+*/			?>
 		
 		</td>
 
@@ -259,7 +260,7 @@
 				<?php
 
 				$post_types = get_post_types( array('public' => true), 'names' ); 
-		        $done = '';
+		        $done = array();
 
 				foreach ($post_types as $post_type) {
 				
