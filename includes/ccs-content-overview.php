@@ -141,7 +141,7 @@
 					$args = array(
 						'post_status' => array('any'),
 						'post_type' => $post_type,
-						'posts_per_page' => 1,
+						'posts_per_page' => 2,			// To make sure we get all fields..
 					);
 					$allposts = get_posts($args);
 					$num_posts = wp_count_posts( $post_type );
