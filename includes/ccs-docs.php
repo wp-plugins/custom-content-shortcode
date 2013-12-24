@@ -11,8 +11,14 @@
 add_action('admin_menu', 'ccs_content_settings_create_menu');
 
 function ccs_content_settings_create_menu() {
-	add_options_page('Custom Content Shortcode - Documentation', 'Custom Content', 'manage_options', 'ccs_content_shortcode_help', 'ccs_content_settings_page');
+
+	global $ccs_settings_page_hook;
+
+	$ccs_settings_page_hook = add_options_page('Custom Content Shortcode - Documentation', 'Custom Content', 'manage_options', 'ccs_content_shortcode_help', 'ccs_content_settings_page');
+	add_dashboard_page( 'Content', 'Content', 'edit_dashboard', 'content_overview',  'ccs_dashboard_content_overview' );
 }
+
+
 
 
 add_action( 'admin_init', 'ccs_content_settings_register_settings' );
@@ -87,32 +93,88 @@ function ccs_content_settings_field_validate($input) {
 }
 
 
+function ccs_is_current_plugin_screen() {
+
+	global $ccs_settings_page_hook;
+
+	$screen = get_current_screen();
+
+	if (is_object($screen) && $screen->id == $ccs_settings_page_hook) {  
+        return true;  
+    } else {  
+        return false;  
+    }  
+
+}
+
 function ccs_docs_admin_css() {
-   echo '<style type="text/css">
-   			.doc-style {
-   				max-width: 760px; /*margin: 0 auto;*/
-   				padding-top:10px;
-   				padding-left:10px;
-   			}
-   			.doc-style, .doc-style p {
-   				font-size: 16px;
-   			}
-   			.doc-style code {
-   				font-size: 16px;
-   				padding: 10px 15px;
-				line-height: 24px;
-				display: block;
-   			}
-   			.doc-style h4 {
-   				font-weight:normal;
-   				font-style:italic;
-   			}
-   			.doc-style ul {
-   				list-style:disc; padding-left:40px;
-   			}
-         </style>';
+
+	if ( ccs_is_current_plugin_screen() ) {
+
+		echo '<style type="text/css">
+					.doc-style {
+						max-width: 760px; /*margin: 0 auto;*/
+						padding-top:10px;
+						padding-left:10px;
+					}
+					.doc-style, .doc-style p {
+						font-size: 16px;
+					}
+					.doc-style code {
+						font-size: 16px;
+						padding: 10px 15px;
+					line-height: 24px;
+					display: block;
+					}
+					.doc-style h4 {
+						font-weight:normal;
+						font-style:italic;
+					}
+					.doc-style ul {
+						list-style:disc; padding-left:40px;
+					}
+		     </style>';
+	}
 }
 add_action('admin_head', 'ccs_docs_admin_css');
+
+
+
+/*====================================================================================================
+ *
+ * Display page under Settings -> Custom Content
+ *
+ *====================================================================================================*/
+
+
+function ccs_get_all_fields_from_post_type( $post_type ) {
+
+	$args = $args = array(
+		'post_status' => array('publish','draft','pending','future'),
+		'post_type' => $post_type,
+		'posts_per_page' => -1,
+	);
+
+	$allposts = get_posts($args);
+
+    foreach ( $allposts as $post ) : setup_postdata($post);
+        $post_id = $post->ID;
+        $fields = get_post_custom_keys($post_id);    // all keys for post as values of array
+        if ($fields) {
+            foreach ($fields as $key => $value) {
+
+                if ($value[0] != '_') {              // exclude where added by plugin
+                    $customfields[$value] = isset($customfields[$value]) ? $customfields[$value] + 1 : 1;
+                }
+/*
+                $customfields[$value] = isset($customfields[$value]) ? $customfields[$value] + 1 : 1;
+*/
+            }
+        }
+    endforeach; wp_reset_postdata();
+    return $customfields;
+}
+
 
 
 function ccs_content_settings_page() {
@@ -154,27 +216,62 @@ function ccs_content_settings_page() {
 
 		</h2>  
 
-	<?php
+		<div class="doc-style">
 
-		echo '<div class="doc-style">' .
-			wpautop( @file_get_contents( dirname(dirname(__FILE__)) .'/docs/' . strtolower($active_tab) . '.html') )
-			. '</div>';
+			<?php
 
-/*		include (dirname(__FILE__).'/docs/' . $active_tab . '.html') );	// Load doc part
-*/
-/*		switch ( $active_tab ) {
-		 	case 'overview':
-		 		break;
-		 	case 'content':
-				?>Content here
+			/*--- Show the doc file for active tab ---*/
+
+			echo wpautop(
+				@file_get_contents(
+						dirname(dirname(__FILE__)) .'/docs/' . strtolower($active_tab) . '.html'
+					)
+			);
+
+			if ( $active_tab == 'overview' ) {
+
+			 	/* Footnote */
+
+			 	?>
+				<br><hr><br>
+
+				<div align="center">
+					<img src="../wp-content/plugins/custom-content-shortcode/docs/logo/logo.png"><br><br>
+					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br>
+					For support and other inquiries, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
+				</div>
+
 				<?php
-		 		break;
-		 }
-*/
+
+			}
+
+			/*-- End of .doc-style --*/
 	?>
-		</div>
+
+
 	<?php
 
+			if ( $active_tab == 'your site' ) {
+
+				?>
+
+				</div>
+				<br><hr>
+
+				<?php include('ccs-docs-site-overview.php');
+
+			} else {
+
+
+				?>
+					</div>
+				<?php
+				/*-- End of .wrap --*/
+
+			 }
+	?>
+	</div>
+	<?php
 }
 
 
@@ -194,3 +291,18 @@ function ccs_plugin_settings_link( $links, $file ) {
 	return $links;
 }
 
+
+function ccs_dashboard_content_overview() {
+
+	?>
+		<div class="wrap">
+	<?php
+
+		include('ccs-content-overview.php');
+
+	?>
+		</div>
+	<?php
+
+
+}

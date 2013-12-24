@@ -59,6 +59,7 @@ class Loop_Shortcode {
 			'title' => '', 'if' => '',
 			'variable' => '', 'var' => '',
 			'year' => '', 'month' => '', 'day' => '',
+			'list' => '',
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -325,7 +326,7 @@ class Loop_Shortcode {
 
 
 		/*--------------
-		 * Put a hook here
+		 * Put a hook here?
 		 *-------------*/
 
 
@@ -437,6 +438,7 @@ class Loop_Shortcode {
 				}
 
 				$ccs_global_variable['is_acf_gallery_loop'] = "false";
+
 			} else {
 
 			// Not gallery field
@@ -492,12 +494,22 @@ class Loop_Shortcode {
 
 			if ( ( $title == '' ) || ( strtolower($title) == strtolower(get_the_title()) ) ) {
 
-				if($strip_tags!='')
+				if ($strip_tags!='') {
+
+					if ($strip_tags=='true')
+						$strip_tags='';
+
 					$output[] = do_shortcode(
 						strip_tags($this->get_block_template( $template, $keywords ), $strip_tags)
 					);
-				else
+
+				} else {
 					$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
+				}
+
+
+
+
 				} // End of not gallery field
 
 			}
