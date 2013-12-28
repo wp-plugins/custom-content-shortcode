@@ -49,7 +49,7 @@ if ( ! shortcode_exists('php')) {
 
 	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. */
 
-	function undo_wptexturize($content) {
+/*	function undo_wptexturize($content) {
 		$content = strip_tags($content);
 		$content = preg_replace("/\[{1}([\/]*)([a-zA-z\/]{1}[a-zA-Z0-9]*[^\'\"])([a-zA-Z0-9 \!\"\£\$\%\^\&\*\*\(\)\_\-\+\=\|\\\,\.\/\?\:\;\@\'\#\~\{\}\¬\¦\`\<\>]*)([\/]*)([\]]{1})/ix","<$1$2$3>",$content,"-1");
 		$content = htmlspecialchars($content, ENT_NOQUOTES);
@@ -80,7 +80,7 @@ if ( ! shortcode_exists('php')) {
 	}
 
 	add_shortcode( 'php', 'custom_php_shortcode' );
-
+*/
 }
 
 

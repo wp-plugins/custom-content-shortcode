@@ -1,8 +1,14 @@
 
 <div style="max-width:960px;">
 
-	<h2 style="padding-left:5px;">Content Overview</h2>
-	<br>
+	<h2  style="padding-left:10px">Content Overview</h2>
+
+	<div style="height:10px"></div>
+
+	<hr>
+
+	<h3 style="padding-left:10px">Post types and fields</h3>
+	<div style="height:10px"></div>
 
 	<table class="wp-list-table widefat fixed posts">
 		<thead>
@@ -11,6 +17,7 @@
 				<th><b></b></th>
 				<th><b>Taxonomy</b></th>
 				<th><b></b></th>
+				<th><b>Default</b></th>
 				<th><b>Fields</b></th>
 				<th class="column-author"><b>Count</b></th>
 			</tr>
@@ -21,6 +28,7 @@
 				<th><b></b></th>
 				<th><b>Taxonomy</b></th>
 				<th><b></b></th>
+				<th><b>Default</b></th>
 				<th><b>Fields</b></th>
 				<th class="column-author"><b>Count</b></th>
 			</tr>
@@ -69,6 +77,14 @@
 
 				$post_type_object = $sorted_post_objects[$label];
 				$post_type = $post_type_object->name;
+
+				$all_supports = array();
+				$support_types = array('title', 'author', 'thumbnail', 'excerpt');
+
+				foreach ($support_types as $support_type) {
+					if (post_type_supports($post_type, $support_type))
+					$all_supports[] = $support_type;
+				}
 
 				$alternate = ( $alternate == '' ) ? 'class="alternate"' : '';
 
@@ -179,6 +195,8 @@
 
 		?>
 
+
+
 		<td style="vertical-align:top">
 				<?php
 			        $taxonomies = get_object_taxonomies($post_type);
@@ -203,6 +221,46 @@
 				?>
 		</td>
 
+
+
+
+
+		<td style="vertical-align:top">
+
+		<?php
+
+			$default_supports = array('id', 'date', 'url', 'slug', );
+
+			$all_supports = array_merge($default_supports, $all_supports);
+
+			if (in_array('author', $all_supports)) {
+				$add_supports = array('avatar'); 
+/*				$add_supports = array('author-id', 'author-url', 'avatar'); */
+				$all_supports = array_merge($add_supports, $all_supports);
+			}
+
+			if (in_array('thumbnail', $all_supports)) {
+				$add_supports = array('image'); 
+/*				$add_supports = array('image', 'image-url', 'thumbnail-url'); */
+				$all_supports = array_merge($add_supports, $all_supports);
+			}
+
+			if ( empty( $all_supports ) ) {
+				echo '<br>'; // Prevent cell from collapsing
+			} else {
+
+				sort( $all_supports );
+/*				echo implode(', ', $all_supports);*/
+
+				foreach ( $all_supports as $key ) {
+					echo $key . '<br>';
+				}
+
+			}
+		?>
+
+
+		</td>
 		<td style="vertical-align:top">
 			<?php
 				if ( empty( $all_fields) ) {
@@ -220,6 +278,7 @@
 */			?>
 		
 		</td>
+
 
 
 		<td style="vertical-align:top;" class="column-author">
@@ -245,7 +304,11 @@
 	</table>
 
 	<div style="height:40px"></div>
+	<hr>
+	<h3 style="padding-left:10px">Taxonomies</h3>
+	<div style="height:10px"></div>
 
+	<div style="max-width:960px;">
 	<table class="wp-list-table widefat fixed posts">
 		<thead>
 			<tr>
@@ -255,6 +318,14 @@
 				<th><b></b></th>
 			</tr>
 		</thead>
+		<tfoot>
+			<tr>
+				<th><b>Taxonomy</b></th>
+				<th><b></b></th>
+				<th><b>Terms</b></th>
+				<th><b></b></th>
+			</tr>
+		</tfoot>
 		<tbody id="the-list">
 
 				<?php
@@ -331,7 +402,93 @@
 
 		</tbody>
 	</table>
+	</div>
 
+	<div style="height:40px"></div>
+	<hr>
+	<h3 style="padding-left:10px">Registered shortcodes</h3>
+	<div style="height:10px"></div>
+
+	<div style="max-width:960px;">
+
+	<table class="wp-list-table widefat fixed posts">
+		<thead>
+			<tr>
+				<th><b>Shortcode</b></th>
+				<th><b>Function</b></th>
+				<th><b>Shortcode</b></th>
+				<th><b>Function</b></th>
+			</tr>
+		</thead>
+		<tfoot>
+			<tr>
+				<th><b>Shortcode</b></th>
+				<th><b>Function</b></th>
+				<th><b>Shortcode</b></th>
+				<th><b>Function</b></th>
+			</tr>
+		</tfoot>
+		<tbody id="the-list">
+
+				<?php
+
+				global $shortcode_tags;
+				ksort($shortcode_tags); // Alphabetical sort
+
+				$row_num = 0;
+				$alternate = '';
+
+				foreach ( $shortcode_tags as $key => $value ) {
+
+					if ($row_num % 2 == 0) {
+
+						$alternate = ( $alternate == '' ) ? 'class="alternate"' : '';
+						echo '<tr ' . $alternate . '>';
+
+					}
+
+					?>
+						<td style="vertical-align:top">
+								<?php
+									echo '<a class="row-title">[' . $key . ']</a><br>';
+								?>
+						</td>
+
+						<td style="vertical-align:top">
+							<?php
+								if (! is_array($value)) {
+									echo $value . '<br>';
+								} else {
+									$class_name = get_class($value);
+									if ($class_name == '') {
+										$class_name = get_class($value[0]);
+										if ($class_name == '') {
+											print_r($value[0]);
+										}
+										else
+											echo $class_name . '<br>';
+
+									}
+									else
+										echo get_class($value) . '<br>';
+								}
+
+							?>
+						</td>
+
+					<?php
+
+					if ($row_num % 2 == 1) {
+						echo '</tr>';
+					}
+					$row_num++;
+				}	// Each shortcode
+
+				?>
+
+		</tbody>
+	</table>
+	</div>
 	<div style="height:40px"></div>
 
 	<div style="padding-left:5px;">

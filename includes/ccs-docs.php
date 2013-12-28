@@ -236,7 +236,7 @@ function ccs_content_settings_page() {
 				<br><hr><br>
 
 				<div align="center">
-					<img src="../wp-content/plugins/custom-content-shortcode/docs/logo/logo.png"><br><br>
+					<img src="<?php echo plugins_url();?>/custom-content-shortcode/docs/logo/logo.png"><br><br>
 					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br>
 					For support and other inquiries, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
 				</div>
