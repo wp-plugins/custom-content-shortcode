@@ -3,13 +3,17 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.5.0
+Version: 0.5.7
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
 */
 
 
+define('CCS_PATH', dirname(__FILE__));
+define('CCS_URL', untrailingslashit(plugins_url('/',__FILE__)));
+
+global $sort_posts; global $sort_key;
 
 $ccs_global_variable = array(
 	'is_loop' => 'false',
@@ -35,10 +39,6 @@ $ccs_global_variable = array(
 	'current_script' => '',
 );
 
-global $sort_posts; global $sort_key;
-
-define('CCS_PATH', dirname(__FILE__));
-define('CCS_URL', untrailingslashit(plugins_url('/',__FILE__)));
 
 /**
  * Set up mobile detect library
@@ -46,22 +46,22 @@ define('CCS_URL', untrailingslashit(plugins_url('/',__FILE__)));
  */
 
 if (!class_exists('Mobile_Detect')) {
-	require_once (dirname(__FILE__).'/includes/Mobile_Detect.php');	
+	require_once (CCS_PATH.'/includes/Mobile_Detect.php');	
 }
 
 $detect = new Mobile_Detect();
 $device_type = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
 
-require_once (dirname(__FILE__).'/includes/ccs-mobile.php'); 		// Mobile detect shortcodes
+require_once (CCS_PATH.'/includes/ccs-mobile.php'); 		// Mobile detect shortcodes
 
 
-require_once (dirname(__FILE__).'/includes/ccs-content.php');		// Content shortcode
-require_once (dirname(__FILE__).'/includes/ccs-loop.php');			// Loop shortcode
-require_once (dirname(__FILE__).'/includes/ccs-gallery.php');		// Simple gallery
-require_once (dirname(__FILE__).'/includes/ccs-bootstrap.php');		// Bootstrap support
-require_once (dirname(__FILE__).'/includes/ccs-field-loader.php');	// Load HTML, CSS, JS fields
-require_once (dirname(__FILE__).'/includes/ccs-acf.php');			// Advanced Custom Fields support
-require_once (dirname(__FILE__).'/includes/ccs-user.php');			// Miscellaneous user shortcodes
-require_once (dirname(__FILE__).'/includes/ccs-docs.php');			// Documentation under Settings -> Content Shortcodes
+require_once (CCS_PATH.'/includes/ccs-content.php');		// Content shortcode
+require_once (CCS_PATH.'/includes/ccs-loop.php');			// Loop shortcode
+require_once (CCS_PATH.'/includes/ccs-gallery.php');		// Simple gallery
+require_once (CCS_PATH.'/includes/ccs-bootstrap.php');		// Bootstrap support
+require_once (CCS_PATH.'/includes/ccs-field-loader.php');	// Load HTML, CSS, JS fields
+require_once (CCS_PATH.'/includes/ccs-acf.php');			// Advanced Custom Fields support
+require_once (CCS_PATH.'/includes/ccs-user.php');			// Miscellaneous user shortcodes
+require_once (CCS_PATH.'/includes/ccs-docs.php');			// Documentation under Settings -> Content Shortcodes
 
 
