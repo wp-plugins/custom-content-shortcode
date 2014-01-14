@@ -279,6 +279,9 @@ class Loop_Shortcode {
 
 			if( ($query_field!='') && ($query_value!='') ) {
 
+				$query_value = html_entity_decode($query_value);
+				$value_2 = html_entity_decode($value_2);
+
 				$compare = strtoupper($compare);
 				switch ($compare) {
 					case '':
