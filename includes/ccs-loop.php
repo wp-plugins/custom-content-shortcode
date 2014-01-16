@@ -59,6 +59,8 @@ class Loop_Shortcode {
 			'title' => '', 'if' => '',
 			'variable' => '', 'var' => '',
 			'year' => '', 'month' => '', 'day' => '',
+			'list' => '',
+			'allow' => '',
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -74,8 +76,9 @@ class Loop_Shortcode {
 		if($key!='') $keyname=$key;
 		if($offset!='') $post_offset=$offset;
 		if($strip!='') $strip_tags=$strip;
-		if($strip_tags=='true')
-			$strip_tags='<p><br />';
+		if($allow!='') $strip_tags=$allow;
+
+
 		$current_name = $name;
 		if ($var!='') $variable=$var;
 
@@ -278,6 +281,9 @@ class Loop_Shortcode {
 
 			if( ($query_field!='') && ($query_value!='') ) {
 
+				$query_value = html_entity_decode($query_value);
+				$value_2 = html_entity_decode($value_2);
+
 				$compare = strtoupper($compare);
 				switch ($compare) {
 					case '':
@@ -325,7 +331,7 @@ class Loop_Shortcode {
 
 
 		/*--------------
-		 * Put a hook here
+		 * Put a hook here?
 		 *-------------*/
 
 
@@ -437,6 +443,7 @@ class Loop_Shortcode {
 				}
 
 				$ccs_global_variable['is_acf_gallery_loop'] = "false";
+
 			} else {
 
 			// Not gallery field
@@ -492,12 +499,22 @@ class Loop_Shortcode {
 
 			if ( ( $title == '' ) || ( strtolower($title) == strtolower(get_the_title()) ) ) {
 
-				if($strip_tags!='')
+				if ($strip_tags!='') {
+
+					if ($strip_tags=='true')
+						$strip_tags='';
+
 					$output[] = do_shortcode(
 						strip_tags($this->get_block_template( $template, $keywords ), $strip_tags)
 					);
-				else
+
+				} else {
 					$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
+				}
+
+
+
+
 				} // End of not gallery field
 
 			}
