@@ -60,6 +60,7 @@ class Loop_Shortcode {
 			'variable' => '', 'var' => '',
 			'year' => '', 'month' => '', 'day' => '',
 			'list' => '',
+			'allow' => '',
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -75,8 +76,9 @@ class Loop_Shortcode {
 		if($key!='') $keyname=$key;
 		if($offset!='') $post_offset=$offset;
 		if($strip!='') $strip_tags=$strip;
-		if($strip_tags=='true')
-			$strip_tags='<p><br />';
+		if($allow!='') $strip_tags=$allow;
+
+
 		$current_name = $name;
 		if ($var!='') $variable=$var;
 
