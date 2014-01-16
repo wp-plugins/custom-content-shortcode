@@ -479,8 +479,13 @@
 											echo $class_name . '<br>';
 
 									}
-									else
-										echo get_class($value) . '<br>';
+									else {
+										if (is_object($value))
+											$value = get_class($value);
+										else
+											$value = 'Unknown';
+										echo $value . '<br>';
+									}
 								}
 
 							?>
