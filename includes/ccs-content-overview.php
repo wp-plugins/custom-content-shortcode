@@ -459,9 +459,19 @@
 								if (! is_array($value)) {
 									echo $value . '<br>';
 								} else {
-									$class_name = get_class($value);
+									if (is_object($value)) {
+										$class_name = get_class($value);
+									} else {
+										$class_name = '';
+									}
 									if ($class_name == '') {
-										$class_name = get_class($value[0]);
+
+										if (is_object($value[0])) {
+											$class_name = get_class($value[0]);
+										} else {
+											$class_name = '';
+										}
+
 										if ($class_name == '') {
 											print_r($value[0]);
 										}
