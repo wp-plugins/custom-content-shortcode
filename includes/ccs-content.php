@@ -25,15 +25,16 @@ function custom_content_shortcode($atts) {
 		'group' => null,
 		'area' => null, 'sidebar' => null, 
 		'align' => null, 'class' => null, 'height' => null,
-		'num' => null, 'image' => null, 'in' => null,
+		'num' => null, 'image' => null, 'in' => null, 'return' => null,
 		'row' => null, 'sub' => null,
 		'acf_gallery' => null,
 		'words' => null, 'len' => null, 'length' => null,
 		'date_format' => null,
 
+
 		/* Native gallery options: orderby, order, columns, size, link, include, exclude */
 
-		'orderby' => null, 'order' => null, 'columns' => null, 'size' => null,
+		'orderby' => null, 'order' => null, 'columns' => null, 'size' => 'full',
 		'link' => null, 'include' => null, 'exclude' => null, 
 	), $atts));
 
@@ -292,11 +293,39 @@ function custom_content_shortcode($atts) {
 	// Image field
 
 	if($image != null) {
-		$image_id = get_post_meta( $custom_id, $image, true );
-		$image_return = wp_get_attachment_image( $image_id, 'full' );
-		if($class!='')
-			$image_return = '<div class="' . $class . '">' . $image_return . '</div>';
-		return $image_return;
+
+		$image_field = get_post_meta( $custom_id, $image, true );
+
+		switch($in) {
+			case 'object' : if(is_array( $image_field )) {
+				$image_id = $image_field['id'];
+				$out = wp_get_attachment_image( $image_id , $size );
+			}
+			case 'url' : $out = '<img src="' . $out . '">'; break;
+			case 'id' : 
+			default :
+				$image_id = $image_field;
+				$out = wp_get_attachment_image( $image_field, $size ); break;
+		}
+
+		if ($return=='url') {
+
+			if ( $in=='url') return $out;
+
+			$image_info = wp_get_attachment_image_src( $image_id, 'full' );
+			$image_url = $image_info[0];
+			return $image_url;
+
+		} else {
+
+			$image_return = $out;
+/*
+			$image_return = wp_get_attachment_image( $image_id, 'full' );
+*/			if($class!='')
+				$image_return = '<div class="' . $class . '">' . $image_return . '</div>';
+
+			return $image_return;
+		}
 	}
 
 	// If no field is specified, return content
@@ -316,7 +345,7 @@ function custom_content_shortcode($atts) {
 		switch($custom_field) {
 			case "id": $out = $custom_id; break;
 			case "slug": $out = get_post($custom_id)->post_name; break;
-			case "title": $out = get_post($custom_id)->post_title; break;
+			case "title": $out = apply_filters( 'the_title', get_post($custom_id)->post_title ); break;
 			case "author": $out = get_the_author($custom_id); break;
 			case "author-id":
 
