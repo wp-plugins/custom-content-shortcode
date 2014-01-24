@@ -19,16 +19,16 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 	<li><strong>type</strong> - which post type to query: <em>post</em>, <em>page</em>, <em>custom post type</em>, or <em>attachment</em> - if empty, the default is <em>any post type</em></li>
 </ul>
 
-<h4>Date</h4>
-<ul>
-	<li><strong>year, month, day</strong> - filter posts by specific year, month, day; you can use <em>today</em> as a value</li>
-</ul>
-
 <h4>Category, tags and taxonomies</h4>
 <ul>
 	<li><strong>category</strong> - display posts from a category</li>
 	<li><strong>tag</strong> - display posts with a specific tag - for multiple tags:<em> tag="apples, green"</em></li>
 	<li><strong>taxonomy</strong>, <strong>value</strong> - search for posts whose <em>taxonomy</em> equals <em>value</em></li>
+</ul>
+
+<h4>Date</h4>
+<ul>
+	<li><strong>year, month, day</strong> - filter posts by specific year, month, day; you can use <em>today</em> as a value</li>
 </ul>
 
 <h4>Custom field value</h4>
@@ -48,7 +48,8 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>count</strong> - number of posts to show - default is <em>all</em></li>
 	<li><strong>offset</strong> - offset the loop by a number of posts, for example: skip the first 3 posts in the query</li>
-	<li><strong>strip_tags</strong> - set to *true* to remove &lt;p&gt; and &lt;br&gt; tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
+	<li><strong>strip_tags</strong> - set to *true* to remove all HTML tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
+	<li><strong>allow</strong> - strip all HTML tags except allowed; for example, <em>allow="<a><li><br>"
 	<li><strong>x</strong> - repeat the loop <em>x</em> times - no query</li>
 </ul><br>
 <hr>
