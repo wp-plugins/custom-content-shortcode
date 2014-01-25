@@ -44,6 +44,17 @@ function ccs_safe_eval($code) {
 }
 
 
+/*
+function ccs_safe_eval_file( $code ) {
+	$strip_tags='<p><br />';
+	ob_start();
+	eval('?>' . $code);
+	$code = ob_get_contents();
+	ob_end_clean();
+	return $code;
+}
+*/
+
 if ( ! shortcode_exists('php')) {
 
 
@@ -84,7 +95,7 @@ if ( ! shortcode_exists('php')) {
 }
 
 
-function custom_load_script_file($atts) {
+function custom_load_script_file( $atts ) {
 
 	extract( shortcode_atts( array(
 		'css' => null, 'js' => null, 'dir' => null,
@@ -94,7 +105,7 @@ function custom_load_script_file($atts) {
 		), $atts ) );
 
 	switch($dir) {
-		case 'web' : $dir = "http://"; break;
+		case 'web' : $dir = ""; break;
         case 'site' : $dir = home_url() . '/'; break; /* Site address */
 		case 'wordpress' : $dir = get_site_url() . '/'; break; /* WordPress directory */
 		case 'content' : $dir = get_site_url() . '/wp-content/'; break;
@@ -162,8 +173,61 @@ function custom_load_script_file($atts) {
 	}
 	return null;
 }
-
 add_shortcode('load', 'custom_load_script_file');
+
+
+
+
+/*====================================================================================================
+ *
+ * Do shortcode file - include files with HTML, PHP script, and shortcodes
+ *
+ *====================================================================================================*/
+
+
+function do_shortcode_file( $file, $dir ) {
+
+	switch($dir) {
+		case 'web' : $dir = "http://"; break;
+        case 'site' : $dir = home_url() . '/'; break; /* Site address */
+		case 'wordpress' : $dir = get_site_url() . '/'; break; /* WordPress directory */
+		case 'content' : $dir = get_site_url() . '/wp-content/'; break;
+		case 'layout' : $dir = get_site_url() . '/wp-content/layout/'; break;
+		case 'child' : $dir = get_stylesheet_directory_uri() . '/'; break;
+		default:
+			$dir = get_template_directory_uri() . '/';
+	}
+
+	$file = $dir . $file . '.html';
+
+
+	$output = @file_get_contents( $file );
+
+	if ( ( $output!='' ) && ($output != false) ) {
+
+		$output = ccs_safe_eval( $output );
+		$output = do_shortcode( $output );
+
+		echo $output;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+function do_short( $content )
+{
+	echo do_shortcode( $content );
+}
+
+/*====================================================================================================
+ *
+ * CSS field
+ *
+ *====================================================================================================*/
+
+
 
 
 /** Load CSS field into header **/
