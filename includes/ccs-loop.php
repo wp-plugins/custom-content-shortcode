@@ -60,7 +60,7 @@ class Loop_Shortcode {
 			'variable' => '', 'var' => '',
 			'year' => '', 'month' => '', 'day' => '',
 			'list' => '',
-			'allow' => '',
+			'allow' => '', 'checkbox' => '', 'checkbox_2' => '', 
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -101,6 +101,10 @@ class Loop_Shortcode {
 				$compare_2 = $c2;
 			if($r!='')
 				$relation = $r;
+			if($checkbox!='')
+				$field = $checkbox;
+			if($checkbox_2!='')
+				$field_2 = $checkbox_2;
 
 
 		if(( $field != 'gallery' ) && ($shortcode_name != 'pass') && ($value!='')) {
@@ -142,7 +146,14 @@ class Loop_Shortcode {
 			$query['category_name'] = $category;
 		}
 		if( $count != '' ) {
-			$query['posts_per_page'] = $count;
+
+			if ($orderby=='rand') {
+				$query['posts_per_page'] = '-1';
+			} else {
+				$query['posts_per_page'] = $count;
+			}
+
+
 		} else {
 
 			if($post_offset!='')
@@ -230,6 +241,7 @@ class Loop_Shortcode {
 // Orderby
 
 		if( $orderby != '') {
+
 				$query['orderby'] = $orderby;
 				if(in_array($orderby, array('meta_value', 'meta_value_num') )) {
 					$query['meta_key'] = $keyname;
@@ -287,7 +299,7 @@ class Loop_Shortcode {
 				$compare = strtoupper($compare);
 				switch ($compare) {
 					case '':
-					case 'EQUAL': $compare = 'LIKE'; break;
+					case 'EQUAL': $compare = "LIKE"; break;
 					case 'NOT EQUAL': $compare = 'NOT LIKE'; break;
 					default: break;
 				}
@@ -299,6 +311,8 @@ class Loop_Shortcode {
 							'compare' => $compare
 					);
 
+/*				print_r($query);
+*/
 				if( ($field_2!='') && ($value_2!='') ) {
 
 					if($relation!='')
@@ -307,6 +321,7 @@ class Loop_Shortcode {
 						$query['meta_query']['relation'] = 'AND';
 
 					$compare_2 = strtoupper($compare_2);
+
 					switch ($compare_2) {
 						case '':
 						case 'EQUAL': $compare_2 = 'LIKE'; break;
@@ -321,8 +336,6 @@ class Loop_Shortcode {
 							'compare' => $compare_2
 					);
 				}
-
-
 			}
 
 	/*--------------
@@ -335,31 +348,87 @@ class Loop_Shortcode {
 		 *-------------*/
 
 
-
-
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
 		if( $custom_field == "gallery" ) {
 			$custom_field = "_custom_gallery";
 		}
 
+
+		remove_all_filters('posts_orderby');
+
 		$output = array();
 		ob_start();
+
 		$posts = new WP_Query( $query );
 
 // Re-order by series
 
 		if($series!='') {
-
 			usort($posts->posts, "series_orderby_key");
+		}
 
+		if($orderby=='rand') {
+			shuffle($posts->posts);	// Randomize
+			if ($count == '')
+				$count = 9999;
 		}
 
 		$total_comment_count = 0;
 
+		$current_count = 1;
+
 		// For each post found
 
 		if( $posts->have_posts() ) : while( $posts->have_posts() ) : $posts->the_post();
+
+
+			// Filter by checkbox..
+
+			$skip_1 = false;
+			if ($checkbox!='') {
+				$values = explode(",", $query_value);
+				$check_field = get_post_meta( get_the_ID(), $checkbox, $single=true );
+
+				foreach ($values as $value) {
+					if ( ! in_array($value, $check_field) ) {
+						$skip_1 = true;
+/*						echo 'SKIPPED: ';
+						print_r($values);
+						echo ' not in ';
+						print_r($check_field);
+						echo '<br>';
+*/					}
+				}
+			}
+
+			$skip_2 = false;
+			if ($checkbox_2!='') {
+				$values = explode(",", $value_2);
+				$check_field = get_post_meta( get_the_ID(), $checkbox_2, $single=true );
+
+				foreach ($values as $value) {
+					if ( ! in_array($value, $check_field) ) {
+						$skip_2 = true;
+					}
+				}
+			}
+
+			$relation = strtoupper($relation);
+			if ($relation=='OR') {
+				if ( ( ! $skip_1 ) || ( ! $skip_2 ) )
+					$skip = false;
+				else
+					$skip = true;
+			} else {
+				if ( ( ! $skip_1 ) && ( ! $skip_2 ) )
+					$skip = false;
+				else
+					$skip = true;
+			}
+
+
+			if( ! $skip ) {
 
 /*********
  * Repeater field
@@ -520,6 +589,15 @@ class Loop_Shortcode {
 			}
 
 		} // End of not repeater
+
+		$current_count++;
+
+
+		if($orderby=='rand') {
+			if ($current_count > $count) break;
+		}
+
+		} /* Not skip */
 
 		endwhile; endif; // End loop for each post
 

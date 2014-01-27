@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
 Tested up to: 3.8
-Stable tag: 0.6.0
+Stable tag: 0.6.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,19 @@ With other libraries:
 None.
 
 == Changelog ==
+
+= 0.6.3 =
+
+* Fixed documentation
+
+= 0.6.2 =
+
+* **[loop]** - added parameter *checkbox* and *checkbox_2*, to query checkbox values
+* **[content]** - added parameter *checkbox* to display checked values
+
+= 0.6.1 =
+
+* **[load]** - added parameter *dir=“web”*
 
 = 0.6.0 =
 
