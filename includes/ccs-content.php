@@ -30,6 +30,8 @@ function custom_content_shortcode($atts) {
 		'acf_gallery' => null,
 		'words' => null, 'len' => null, 'length' => null,
 		'date_format' => null,
+		'taxonomy' => null, 'checkbox' => null,
+		'status' => null,
 
 
 		/* Native gallery options: orderby, order, columns, size, link, include, exclude */
@@ -49,7 +51,12 @@ function custom_content_shortcode($atts) {
 	$custom_gallery_name = $group;
 	$custom_area_name = $area;
 	if($len!='') $length=$len;
-
+	if ($checkbox != '')
+		$custom_field = $checkbox;
+	if($status != null)
+		$status = explode(",", $status);
+	else
+		$status = array("any");
 
 	$native_gallery_options = array(
 		'orderby' => $orderby,
@@ -59,7 +66,6 @@ function custom_content_shortcode($atts) {
 		'link' => $link,
 		'include' => $include,
 		'exclude' => $exclude );
-
 
 	$out = null;
 	if($image != null) {
@@ -142,7 +148,7 @@ function custom_content_shortcode($atts) {
 		$args=array(
 			'name' => $custom_post_name,
 			'post_type' => $custom_post_type,
-			'post_status' => 'publish',
+			'post_status' => $status,
 			'posts_per_page' => '1',
   		);
 
@@ -332,10 +338,27 @@ function custom_content_shortcode($atts) {
 
 	if($custom_field == '') { 
 
-		$out = get_post( $custom_id );
-		$out = $out->post_content;
-		if($content_format=='')
-			$content_format = 'true';
+		if ($taxonomy != '') {
+
+		    // Get taxonomy terms related to post
+
+		    $terms = get_the_terms( $custom_id, $taxonomy );
+
+		    if ( !empty( $terms ) ) {
+		    	foreach ($terms as $term) {
+		    		$out_all[] = $term->name;
+		    	}
+
+		    	$out = implode(", ", $out_all);
+		    }
+
+	    } else {
+
+			$out = get_post( $custom_id );
+			$out = $out->post_content;
+			if($content_format=='')
+				$content_format = 'true';
+		}
 
 	} else { // else return specified field
 
@@ -420,6 +443,10 @@ function custom_content_shortcode($atts) {
 
 	}
 
+	if ($checkbox != '') {
+		$out = implode(", ", $out);
+	}
+
 	if($words!='') {
 		$excerpt_length = $words;
 		$the_excerpt = $out;
@@ -446,7 +473,6 @@ function custom_content_shortcode($atts) {
 	if($class!='')
 		$out = '<div class="' . $class . '">' . $out . '</div>';
 
-
 	if($content_format == 'true') { // Format?
 		$out = wpautop( $out );
 	}
@@ -455,10 +481,21 @@ function custom_content_shortcode($atts) {
 		$out = do_shortcode( $out );
 	}
 
+
+	if ( $status!=array("any") ) {
+		$post_status = get_post_status($custom_id);
+		if ( ! in_array($post_status, $status) ) {
+			$out = null;
+		}
+	}
+
 	return $out;
 }
 
 add_shortcode('content', 'custom_content_shortcode');
+
+
+
 
 // For debugging purpose: list all taxonomies
 
