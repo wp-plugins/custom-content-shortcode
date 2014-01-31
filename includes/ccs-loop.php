@@ -61,6 +61,7 @@ class Loop_Shortcode {
 			'year' => '', 'month' => '', 'day' => '',
 			'list' => '',
 			'allow' => '', 'checkbox' => '', 'checkbox_2' => '', 
+			'status' => null,
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -77,6 +78,10 @@ class Loop_Shortcode {
 		if($offset!='') $post_offset=$offset;
 		if($strip!='') $strip_tags=$strip;
 		if($allow!='') $strip_tags=$allow;
+		if($status != null)
+			$status = explode(",", $status);
+		else
+			$status = array("publish");
 
 
 		$current_name = $name;
@@ -354,6 +359,7 @@ class Loop_Shortcode {
 			$custom_field = "_custom_gallery";
 		}
 
+		$query['post_status'] = $status;
 
 		remove_all_filters('posts_orderby');
 
@@ -628,7 +634,7 @@ class Loop_Shortcode {
 				$posts =& get_children( array (
 				'post_parent' => get_the_ID(),
 				'post_type' => 'attachment',
-				'post_status' => 'any'
+				'post_status' => $status
 				) );
 
 				foreach( $posts as $attachment_id => $attachment ) {
@@ -639,7 +645,7 @@ class Loop_Shortcode {
 
 				$my_query = new WP_Query( array(
 			    	'cat' => get_category_by_slug($category)->term_id, 
-					'post_type' => 'any',
+					'post_type' => $status,
 				));
 				if( $my_query->have_posts() ) {
 					$posts = array('');
@@ -649,7 +655,7 @@ class Loop_Shortcode {
 						$new_children =& get_children( array (
 							'post_parent' => get_the_ID(),
 							'post_type' => 'attachment',
-							'post_status' => 'any'
+							'post_status' => $status
 						) );
 
 						foreach( $new_children as $attachment_id => $attachment ) {

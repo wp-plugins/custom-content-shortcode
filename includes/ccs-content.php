@@ -31,6 +31,7 @@ function custom_content_shortcode($atts) {
 		'words' => null, 'len' => null, 'length' => null,
 		'date_format' => null,
 		'taxonomy' => null, 'checkbox' => null,
+		'status' => null,
 
 
 		/* Native gallery options: orderby, order, columns, size, link, include, exclude */
@@ -52,6 +53,10 @@ function custom_content_shortcode($atts) {
 	if($len!='') $length=$len;
 	if ($checkbox != '')
 		$custom_field = $checkbox;
+	if($status != null)
+		$status = explode(",", $status);
+	else
+		$status = array("any");
 
 	$native_gallery_options = array(
 		'orderby' => $orderby,
@@ -61,7 +66,6 @@ function custom_content_shortcode($atts) {
 		'link' => $link,
 		'include' => $include,
 		'exclude' => $exclude );
-
 
 	$out = null;
 	if($image != null) {
@@ -144,7 +148,7 @@ function custom_content_shortcode($atts) {
 		$args=array(
 			'name' => $custom_post_name,
 			'post_type' => $custom_post_type,
-			'post_status' => 'publish',
+			'post_status' => $status,
 			'posts_per_page' => '1',
   		);
 
@@ -469,13 +473,20 @@ function custom_content_shortcode($atts) {
 	if($class!='')
 		$out = '<div class="' . $class . '">' . $out . '</div>';
 
-
 	if($content_format == 'true') { // Format?
 		$out = wpautop( $out );
 	}
 
 	if($shortcode_option != 'false') { // Shortcode?
 		$out = do_shortcode( $out );
+	}
+
+
+	if ( $status!=array("any") ) {
+		$post_status = get_post_status($custom_id);
+		if ( ! in_array($post_status, $status) ) {
+			$out = null;
+		}
 	}
 
 	return $out;
