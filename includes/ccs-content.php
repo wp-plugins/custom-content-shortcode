@@ -30,9 +30,9 @@ function custom_content_shortcode($atts) {
 		'acf_gallery' => null,
 		'words' => null, 'len' => null, 'length' => null,
 		'date_format' => null,
-		'taxonomy' => null, 'checkbox' => null,
+		'taxonomy' => null, 'checkbox' => null, 'out' => null,
 		'status' => null,
-
+		'post' => null, 'page' => null,
 
 		/* Native gallery options: orderby, order, columns, size, link, include, exclude */
 
@@ -42,6 +42,17 @@ function custom_content_shortcode($atts) {
 
 	$custom_post_type = $type;
 	$custom_post_name = $name;
+
+	if($post!='') {
+		$custom_post_type = 'post';
+		$custom_post_name = $post;
+	}
+
+	if($page!='') {
+		$custom_post_type = 'page';
+		$custom_post_name = $page;
+	}
+
 	$custom_menu_name = $menu;
 	$custom_field = $field;
 	$custom_id = $id;
@@ -51,12 +62,21 @@ function custom_content_shortcode($atts) {
 	$custom_gallery_name = $group;
 	$custom_area_name = $area;
 	if($len!='') $length=$len;
+	if ( ($taxonomy != '') && ($out != '') ) {
+		$taxonomy_out = $out;
+		$out = null;
+	}
+
 	if ($checkbox != '')
 		$custom_field = $checkbox;
 	if($status != null)
 		$status = explode(",", $status);
 	else
-		$status = array("any");
+		$status = array("publish");
+
+
+
+
 
 	$native_gallery_options = array(
 		'orderby' => $orderby,
@@ -256,6 +276,7 @@ function custom_content_shortcode($atts) {
 			$out = '<div class="' . $class . '">' . $out . '</div>';
 		
 		return do_shortcode( $out );
+
 	} else {
 
 		if( $custom_gallery_type == "native") {
@@ -347,9 +368,16 @@ function custom_content_shortcode($atts) {
 		    if ( !empty( $terms ) ) {
 		    	foreach ($terms as $term) {
 		    		$out_all[] = $term->name;
+		    		$slugs_all[] = $term->slug;
 		    	}
 
-		    	$out = implode(", ", $out_all);
+		    	if ($taxonomy_out == 'slug') {
+			    	$out = implode(" ", $slugs_all);
+		    	} else {
+			    	$out = implode(", ", $out_all);
+		    	}
+		    } else {
+		    	$out = null;
 		    }
 
 	    } else {

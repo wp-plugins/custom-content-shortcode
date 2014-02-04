@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
 Tested up to: 3.8
-Stable tag: 0.6.4
+Stable tag: 0.6.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,6 +57,11 @@ None.
 
 == Changelog ==
 
+= 0.6.5 =
+
+* **[content]** - to output post taxonomy slug, add *out=“slug”*
+* **[content]** - improved check for published status
+* **[content]** - added *post* and *page* parameter, for example: *[content page=“about”]*
 
 = 0.6.4 =
 

@@ -104,6 +104,8 @@ function custom_load_script_file( $atts ) {
 		'php' => 'true', 'debug' => 'false',
 		), $atts ) );
 
+	$this_dir = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+
 	switch($dir) {
 		case 'web' : $dir = ""; break;
         case 'site' : $dir = home_url() . '/'; break; /* Site address */
@@ -151,6 +153,16 @@ function custom_load_script_file( $atts ) {
 	if($file != '') {
 
 		$output = @file_get_contents($dir . $file);
+
+		if( empty($output) ) {
+			$url = $dir . $file;
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$data = curl_exec($ch);
+			curl_close($ch);
+			$output = $data;
+		}
 
 		if($output!='') {
 			if(($format == 'on')||($format == 'true')) { // Format?
