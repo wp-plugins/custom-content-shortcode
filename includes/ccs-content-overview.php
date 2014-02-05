@@ -52,7 +52,7 @@
 
 			foreach ($post_type_objects as $post_type_object) {
 
-				$label = $post_type_object->labels->singular_name;
+				$label = $post_type_object->labels->singular_name; if(empty($label)) $label=$post_type_object->labels->name;
 				$labels[] = $label;
 				$sorted_post_objects[$label] = $post_type_object;
 
@@ -73,10 +73,17 @@
 /*			$post_types = array('page' => $post_types['page']) + $post_types;
 			$post_types = array('post' => $post_types['post']) + $post_types;
 */
+
+			$alternate = '';
+
 			foreach ( $labels as $label ) {
 
-				$post_type_object = $sorted_post_objects[$label];
-				$post_type = $post_type_object->name;
+				if(isset($sorted_post_objects[$label])) {
+					$post_type_object = $sorted_post_objects[$label];
+					$post_type = $post_type_object->name;
+				} else {
+					$post_type = '_undefined';
+				}
 
 				$all_supports = array();
 				$support_types = array('title', 'author', 'thumbnail', 'excerpt');
@@ -161,8 +168,15 @@
 					);
 					$allposts = get_posts($args);
 					$num_posts = wp_count_posts( $post_type );
-					$num_posts = $num_posts->publish + $num_posts->draft +
-									$num_posts->future + $num_posts->pending;
+
+					if( is_object($num_posts) && isset($num_posts->publish) &&
+						isset($num_posts->draft) && isset($num_posts->future) &&
+							isset($num_posts->pending)) {
+
+								$num_posts = $num_posts->publish + $num_posts->draft +
+											$num_posts->future + $num_posts->pending;
+					}
+					else $num_posts = 0;
 
 				}
 

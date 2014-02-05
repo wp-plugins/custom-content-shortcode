@@ -270,11 +270,16 @@ add_shortcode('p', 'custom_p_shortcode');
 
 function custom_list_shortcodes( ) {
 	global $shortcode_tags;
-
 	ksort($shortcode_tags); // Alphabetical sort
 
+	$out = '';
+
 	foreach ( $shortcode_tags as $key => $value ) {
+
+		if(is_array($value)) $value='Class object';
+
 		$out .= $key . ' = ' . $value . '<br>';
+
 	}
 	return $out;
 }

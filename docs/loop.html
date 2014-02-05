@@ -17,6 +17,7 @@ Note that inside a query loop, the <strong>[content]</strong> shortcode does n
 Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>type</strong> - which post type to query: <em>post</em>, <em>page</em>, <em>custom post type</em>, or <em>attachment</em> - if empty, the default is <em>any post type</em></li>
+	<li><strong>status</strong> - filter posts by status: <em>any</em>, <em>publish</em>, <em>pending</em>, <em>draft</em>, <em>future</em>, <em>private</em>; the default is <em>publish</em> - combination is possible, i.e., <em>status="publish, pending"</em></li>
 </ul>
 
 <h4>Category, tags and taxonomies</h4>
@@ -35,6 +36,8 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>field, compare, value</strong> - display posts according to custom field value; where <em>compare</em> is <em>EQUAL</em> (default) or <em>NOT EQUAL</em></li>
 	<li><strong>relation, field_2, compare_2, value_2</strong> - Additional query for custom field value, where <em>relation</em> is <em>AND</em> (default) or <em>OR</em></li>
+	<li><strong>checkbox, value</strong> - display posts according to custom field, whose checkbox contains value - combination is possible, i.e., <em>value="first, second"</em></li>
+	<li><strong>relation, checkbox_2, value_2</strong> - Additional query for checkbox value, where <em>relation</em> is <em>AND</em> (default) or <em>OR</em></li>
 </ul>
 
 <h4>Sorting and series</h4>
@@ -49,7 +52,7 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 	<li><strong>count</strong> - number of posts to show - default is <em>all</em></li>
 	<li><strong>offset</strong> - offset the loop by a number of posts, for example: skip the first 3 posts in the query</li>
 	<li><strong>strip_tags</strong> - set to *true* to remove all HTML tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
-	<li><strong>allow</strong> - strip all HTML tags except allowed; for example, <em>allow="<a><li><br>"
+	<li><strong>allow</strong> - strip all HTML tags except allowed; for example, <em>allow="&lt;a&gt;&lt;li&gt;&lt;br&gt;"</em>
 	<li><strong>x</strong> - repeat the loop <em>x</em> times - no query</li>
 </ul><br>
 <hr>

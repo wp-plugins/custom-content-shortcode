@@ -521,7 +521,7 @@ function post_types_callback() {
 /*	$defaults['post_types']['post'] = '';
 	$defaults['post_types']['page'] = '';
 */
-	$settings = (array) get_option( 'custom-gallery', $defaults );
+	$settings = (array) get_option( 'custom-gallery', $default = false );
 
 	 foreach ( custom_gallery_get_post_types() as $key => $label ) {
 		$post_types = isset( $settings['post_types'][ $key ] ) ? esc_attr( $settings['post_types'][ $key ] ) : '';
