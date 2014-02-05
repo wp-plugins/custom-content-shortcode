@@ -169,9 +169,13 @@
 					$allposts = get_posts($args);
 					$num_posts = wp_count_posts( $post_type );
 
-					if(is_object($num_posts))
-						$num_posts = $num_posts->publish + $num_posts->draft +
-									$num_posts->future + $num_posts->pending;
+					if( is_object($num_posts) && isset($num_posts->publish) &&
+						isset($num_posts->draft) && isset($num_posts->future) &&
+							isset($num_posts->pending)) {
+
+								$num_posts = $num_posts->publish + $num_posts->draft +
+											$num_posts->future + $num_posts->pending;
+					}
 					else $num_posts = 0;
 
 				}
