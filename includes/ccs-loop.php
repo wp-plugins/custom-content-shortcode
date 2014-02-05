@@ -83,6 +83,7 @@ class Loop_Shortcode {
 		else
 			$status = array("publish");
 
+		if(!isset($query_field)) $query_field='';
 
 		$current_name = $name;
 		if ($var!='') $variable=$var;
@@ -190,6 +191,8 @@ class Loop_Shortcode {
 				$query['p'] = get_the_ID(); $query['post_type'] = "any";
 			}
 		}
+
+		if(!isset($custom_field)) $custom_field='';
 
 		if(( $custom_field == 'gallery' ) && ($shortcode_name != 'pass') ){
 			$gallery = 'true';
@@ -825,16 +828,20 @@ class Loop_Shortcode {
 	 * Replaces {VAR} with $parameters['var'];
 	 */
 
-	function get_block_template( $string, $parameters = array() ) {
-		$searches = $replacements = array();
+	function get_block_template( $string, $parameters ) {
+		$searches = $replacements = null;
+
 
 		// replace {KEYWORDS} with variable values
 		foreach( $parameters as $find => $replace ) {
-			$searches[] = '{'.$find.'}';
-			$replacements[] = $replace;
+			$search = '{'.$find.'}';
+
+			if( ! is_array($replace) ) {
+				$string = str_replace( $search, $replace, $string );
+			}
 		}
 
-		return str_replace( $searches, $replacements, $string );
+		return $string;
 	}
 
 }

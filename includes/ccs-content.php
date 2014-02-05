@@ -371,7 +371,7 @@ function custom_content_shortcode($atts) {
 		    		$slugs_all[] = $term->slug;
 		    	}
 
-		    	if ($taxonomy_out == 'slug') {
+		    	if ( (isset($taxonomy_out)) && ($taxonomy_out == 'slug')) {
 			    	$out = implode(" ", $slugs_all);
 		    	} else {
 			    	$out = implode(", ", $out_all);
@@ -395,9 +395,9 @@ function custom_content_shortcode($atts) {
 
 		switch($custom_field) {
 			case "id": $out = $custom_id; break;
-			case "slug": $out = get_post($custom_id)->post_name; break;
+			case "slug": $this_post = get_post($custom_id); $out = $this_post->post_name; break;
 			case "title": $out = apply_filters( 'the_title', get_post($custom_id)->post_title ); break;
-			case "author": $out = get_the_author($custom_id); break;
+			case "author": $this_post = get_post($custom_id); $out = $this_post->post_author; break;
 			case "author-id":
 
 				$current_post = get_post( $custom_id );
@@ -472,7 +472,9 @@ function custom_content_shortcode($atts) {
 	}
 
 	if ($checkbox != '') {
-		$out = implode(", ", $out);
+		if(! empty($out) )
+			$out = implode(", ", $out);
+		else $out = '';
 	}
 
 	if($words!='') {
