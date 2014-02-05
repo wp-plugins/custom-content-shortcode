@@ -119,6 +119,7 @@ function ccs_docs_admin_css() {
 					}
 					.doc-style, .doc-style p {
 						font-size: 16px;
+						line-height: 1.4em; 
 					}
 					.doc-style code {
 						font-size: 16px;
