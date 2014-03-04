@@ -241,7 +241,8 @@ add_shortcode('isnt', 'custom_is_shortcode');
 function custom_user_shortcode( $atts, $content ) {
 
 	global $current_user;
-		get_currentuserinfo();
+
+	get_currentuserinfo();
 
 	if( is_array( $atts ) )
 		$atts = array_flip( $atts );
@@ -251,6 +252,15 @@ function custom_user_shortcode( $atts, $content ) {
 
 	if( isset( $atts['id'] ) )
 		return $current_user->ID;
+
+	if( isset( $atts['email'] ) )
+		return $current_user->user_email;
+
+	if( isset( $atts['fullname'] ) )
+		return $current_user->display_name;
+
+	if( isset( $atts['avatar'] ) )
+		return get_avatar( $current_user->ID );
 
 }
 add_shortcode('user', 'custom_user_shortcode');
@@ -270,11 +280,16 @@ add_shortcode('p', 'custom_p_shortcode');
 
 function custom_list_shortcodes( ) {
 	global $shortcode_tags;
-
 	ksort($shortcode_tags); // Alphabetical sort
 
+	$out = '';
+
 	foreach ( $shortcode_tags as $key => $value ) {
+
+		if(is_array($value)) $value='Class object';
+
 		$out .= $key . ' = ' . $value . '<br>';
+
 	}
 	return $out;
 }

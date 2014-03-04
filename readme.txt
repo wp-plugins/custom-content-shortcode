@@ -5,8 +5,8 @@ Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
-Tested up to: 3.8
-Stable tag: 0.6.0
+Tested up to: 3.8.1
+Stable tag: 0.6.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,40 @@ With other libraries:
 None.
 
 == Changelog ==
+
+= 0.6.9 =
+
+* [user] - user name, id, e-mail, full name, avatar
+* [loop] - added parameter *clean="true"* to remove extra <p> and <br> tags
+* [content] - added field *title-length*
+* Other minor improvements: performance and content overview page
+
+= 0.6.8 =
+
+* No change in function; improved code so there are no PHP notices when debug is on
+
+= 0.6.5 =
+
+* **[content]** - to output post taxonomy slug, add *out=“slug”*
+* **[content]** - improved check for published status
+* **[content]** - added *post* and *page* parameter, for example: *[content page=“about”]*
+
+= 0.6.4 =
+
+* **[loop]**, **[content]** - added parameter *status* to filter by post status: *any, publish, pending, draft, future, private*; the default is *publish*
+
+= 0.6.3 =
+
+* Fixed documentation
+
+= 0.6.2 =
+
+* **[loop]** - added parameter *checkbox* and *checkbox_2*, to query checkbox values
+* **[content]** - added parameter *checkbox* to display checked values
+
+= 0.6.1 =
+
+* **[load]** - added parameter *dir=“web”*
 
 = 0.6.0 =
 
