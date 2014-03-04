@@ -60,7 +60,7 @@ None.
 = 0.6.9 =
 
 * **[user]** - user name, id, e-mail, full name, avatar
-* **[loop]** - added parameter *clean="true"* to remove extra <p> and <br> tags
+* **[loop]** - added parameter *clean="true"* to remove extra *p* and *br* tags
 * **[content]** - added field *title-length*
 * **[content]** - display correct image sizes
 * Other minor improvements: performance and content overview page
