@@ -195,8 +195,10 @@ function ccs_content_settings_page() {
 
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
+
 	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'load', 'gallery',
 						'user', 'mobile', 'ACF', 'etc' );
+
 	?>
 		<div class="wrap">
 		<h2>Custom Content Shortcode</h2>

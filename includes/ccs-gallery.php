@@ -75,7 +75,7 @@ function custom_gallery_allowed_post_types() {
 	$defaults['post_types']['page'] = '';
 */
 	// get the allowed post type from the DB
-	$settings = ( array ) get_option( 'custom-gallery', $defaults );
+	$settings = ( array ) get_option( 'custom-gallery', $default = false );
 	$post_types = isset( $settings['post_types'] ) ? $settings['post_types'] : '';
 
 	// post types don't exist, bail

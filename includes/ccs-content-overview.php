@@ -104,9 +104,6 @@
 
 							<?php
 
-
-
-
 								if ( in_array( $post_type, $exclude_types ) ) {
 
 									$edit_url = '';
@@ -264,12 +261,12 @@
 			} else {
 
 				sort( $all_supports );
-/*				echo implode(', ', $all_supports);*/
-
+				echo implode(', ', $all_supports);
+/*
 				foreach ( $all_supports as $key ) {
 					echo $key . '<br>';
 				}
-
+*/
 			}
 		?>
 

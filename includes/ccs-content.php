@@ -76,8 +76,6 @@ function custom_content_shortcode($atts) {
 
 
 
-
-
 	$native_gallery_options = array(
 		'orderby' => $orderby,
 		'order' => $order,
@@ -397,6 +395,7 @@ function custom_content_shortcode($atts) {
 			case "id": $out = $custom_id; break;
 			case "slug": $this_post = get_post($custom_id); $out = $this_post->post_name; break;
 			case "title": $out = apply_filters( 'the_title', get_post($custom_id)->post_title ); break;
+			case "title-length": $out = strlen(apply_filters( 'the_title', get_post($custom_id)->post_title )); break;
 			case "author": $this_post = get_post($custom_id); $out = $this_post->post_author; break;
 			case "author-id":
 
@@ -429,7 +428,8 @@ function custom_content_shortcode($atts) {
 					$out = mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
 				}
 			case "url": $out = post_permalink( $custom_id ); break;
-			case "image": $out = get_the_post_thumbnail($custom_id); break;
+			case "image": $out = get_the_post_thumbnail($custom_id, $size); break;
+			case "image-full": $out = get_the_post_thumbnail( $custom_id, 'full' ); break;
 			case "image-url": $out = wp_get_attachment_url(get_post_thumbnail_id($custom_id)); break;
 			case "thumbnail": $out = get_the_post_thumbnail( $custom_id, 'thumbnail' ); break;
 			case "thumbnail-url": $res = wp_get_attachment_image_src( get_post_thumbnail_id($custom_id), 'thumbnail' ); $out = $res['0']; break;

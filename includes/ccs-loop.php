@@ -56,6 +56,7 @@ class Loop_Shortcode {
 			'series' => '', 'key' => '',
 			'post_offset' => '', 'offset' => '',
 			'strip_tags' => '', 'strip' => '',
+			'clean' => 'false',
 			'title' => '', 'if' => '',
 			'variable' => '', 'var' => '',
 			'year' => '', 'month' => '', 'day' => '',
@@ -586,12 +587,11 @@ class Loop_Shortcode {
 						strip_tags($this->get_block_template( $template, $keywords ), $strip_tags)
 					);
 
+				} elseif ($clean == 'true') {
+					$output[] = do_shortcode($this->get_block_template( custom_clean_shortcodes($template), $keywords ));
 				} else {
 					$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
 				}
-
-
-
 
 				} // End of not gallery field
 
@@ -715,7 +715,7 @@ class Loop_Shortcode {
 				'IDS' => get_post_meta( get_the_ID(), '_custom_gallery', true ),
 			) );
 
-						$output[] = do_shortcode(custom_clean_shortcodes($this->get_block_template( $template, $keywords ) ) );
+						$output[] = do_shortcode( $this->get_block_template( $template, $keywords ) );
 					} /** End for each attachment **/
 				}
 				$ccs_global_variable['is_attachment_loop'] = "false";
@@ -804,7 +804,7 @@ class Loop_Shortcode {
 				'IDS' => get_post_meta( get_the_ID(), '_custom_gallery', true ),
 			) );
 				
-					$output[] = do_shortcode(custom_clean_shortcodes($this->get_block_template( $template, $keywords ) ) );
+					$output[] = do_shortcode( $this->get_block_template( $template, $keywords ) );
 				} /** End for each attachment **/
 
 				$ccs_global_variable['is_gallery_loop'] = "false";
@@ -844,6 +844,11 @@ class Loop_Shortcode {
 		return $string;
 	}
 
+
+
+
+
+
 }
 
 $loop_shortcode = new Loop_Shortcode;
@@ -851,13 +856,18 @@ $loop_shortcode = new Loop_Shortcode;
 /*--------------------------------------*/
 /*    Clean up Shortcodes
 /*--------------------------------------*/
-function custom_clean_shortcodes($content){   
-/*    $array = array (
-        '<p>[' => '[', 
-        ']</p>' => ']', 
-        ']<br />' => ']'
-    );
-    $content = strtr($content, $array); */
-    return $content;
-}
 
+	function custom_clean_shortcodes($content){   
+	    $array = array (
+	        '<p>[' => '[', 
+	        ']</p>' => ']', 
+	        ']<br />' => ']',
+	        ']<br>' => ']',
+	        '<br />[' => '[',
+	        '<br>[' => '[',
+	        '<br />' => '',
+	        '<br/>' => ''
+	    );
+	    $content = strtr($content, $array);
+	    return $content;
+	}

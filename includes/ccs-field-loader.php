@@ -267,7 +267,7 @@ function load_custom_css() {
 	$custom_css = get_post_meta( $wp_query->post->ID, "css", $single=true );
 
 /*	if($custom_css == '') { */
-		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+		$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
 		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
 		$default_css = $default_layout_dir . 'style.css';
 
@@ -311,6 +311,7 @@ add_action('the_content', 'load_custom_html');
 function load_custom_html($content) {
 	global $wp_query;
 	global $ccs_global_variable;
+	global $ccs_content_template_loader;
 
 	if(( $ccs_global_variable['is_loop'] == "false" ) &&
 		!is_admin() ) {
@@ -340,13 +341,15 @@ function load_custom_html($content) {
 
 		// Load default header
 
-		if( file_exists( $default_layout_dir . $default_header ) ) {
+		if ( ($ccs_content_template_loader == true) &&
+			( file_exists( $default_layout_dir . $default_header ) ) ) {
 			$output .= '[load file="'. $default_header . '" dir="layout"]';
 		}
-
 		// Load default page template
 
-		if ( $html_field == '' ) {
+		if ( ($ccs_content_template_loader == true) &&
+			( $html_field == '' ) ) {
+
 /*
 			echo 'Searching templates<br>';
 
@@ -358,7 +361,13 @@ function load_custom_html($content) {
 */
 			/*----  post-example.html  ----*/ 
 
-			if( file_exists( $default_layout_dir . $default_current_post_type_template ) ) {
+			/*----  home.html  ----*/ 
+
+			if( (is_front_page()) && ( file_exists($default_layout_dir . 'home.html' ) ) ) {
+				$output .= '[load file="home.html" dir="layout"]';
+			}
+
+			elseif( file_exists( $default_layout_dir . $default_current_post_type_template ) ) {
 				$output .= '[load file="'. $default_current_post_type_template . '" dir="layout"]';
 			}
 
@@ -367,7 +376,6 @@ function load_custom_html($content) {
 			elseif( file_exists( $default_layout_dir . $default_post_type_template ) ) {
 				$output .= '[load file="'. $default_post_type_template . '" dir="layout"]';
 			}
-
 
 			/*----  post/example.html  ----*/ 
 
@@ -416,7 +424,8 @@ function load_custom_html($content) {
 
 		// Load default footer
 
-		if( file_exists( $default_layout_dir . $default_footer ) ) {
+		if ( ($ccs_content_template_loader == true) &&
+			( file_exists( $default_layout_dir . $default_footer ) ) ) {
 			$output .= '[load file="' . $default_footer . '" dir="layout"]';
 		}
 
