@@ -396,7 +396,10 @@ function custom_content_shortcode($atts) {
 			case "slug": $this_post = get_post($custom_id); $out = $this_post->post_name; break;
 			case "title": $out = apply_filters( 'the_title', get_post($custom_id)->post_title ); break;
 			case "title-length": $out = strlen(apply_filters( 'the_title', get_post($custom_id)->post_title )); break;
-			case "author": $this_post = get_post($custom_id); $out = $this_post->post_author; break;
+			case "author":
+				$this_post = get_post($custom_id);
+				$user = get_user_by('id',$this_post->post_author);
+				$out = $user->display_name; break;
 			case "author-id":
 
 				$current_post = get_post( $custom_id );
@@ -427,6 +430,17 @@ function custom_content_shortcode($atts) {
 				else { // Default date format under Settings -> General
 					$out = mysql2date(get_option('date_format'), get_post($custom_id)->post_date); break;
 				}
+
+
+			case "modified":
+
+				if($date_format!='') {
+					$out = get_post_modified_time( $date_format, $gmt=false, $custom_id, $translate=true ); break;
+				}
+				else { // Default date format under Settings -> General
+					$out = get_post_modified_time( get_option('date_format'), $gmt=false, $custom_id, $translate=true ); break;
+				}
+
 			case "url": $out = post_permalink( $custom_id ); break;
 			case "image": $out = get_the_post_thumbnail($custom_id, $size); break;
 			case "image-full": $out = get_the_post_thumbnail( $custom_id, 'full' ); break;

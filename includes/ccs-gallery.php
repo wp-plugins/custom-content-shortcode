@@ -143,7 +143,7 @@ function custom_gallery_get_image_ids() {
  * Shortcode
  */
 
-function custom_gallery_shortcode() {
+function ccs_gallery_shortcode() {
 
 	// return early if the post type is not allowed to have a gallery
 	if ( ! custom_gallery_allowed_post_type() )
@@ -152,7 +152,7 @@ function custom_gallery_shortcode() {
 	return custom_gallery();
 }
 
-add_shortcode( 'custom_gallery', 'custom_gallery_shortcode' );
+add_shortcode( 'custom_gallery', 'ccs_gallery_shortcode' );
 
 
 /*

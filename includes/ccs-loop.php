@@ -62,7 +62,7 @@ class Loop_Shortcode {
 			'year' => '', 'month' => '', 'day' => '',
 			'list' => '',
 			'allow' => '', 'checkbox' => '', 'checkbox_2' => '', 
-			'status' => null,
+			'status' => '', 'parent' => ''
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -74,6 +74,7 @@ class Loop_Shortcode {
 		 *-------------*/
 
 
+		if( $type == '' ) $type = 'any';
 		$custom_value = $value;
 		if($key!='') $keyname=$key;
 		if($offset!='') $post_offset=$offset;
@@ -125,11 +126,16 @@ class Loop_Shortcode {
 
 		if($x != '') { // Simple loop without query
 
+			$count = 0;
 			$output = array();
 			ob_start();
 
 			while($x > 0) {
-				echo do_shortcode($template);
+				$count++;
+				$keywords = array(
+					'COUNT' => $count
+					);
+				echo do_shortcode( $this->get_block_template( $template, $keywords ) );
 				$x--;
 			}
 			$ccs_global_variable['is_loop'] = "false";
@@ -180,16 +186,29 @@ class Loop_Shortcode {
 
 				// Get ID from post slug
 
-				$query['name']=$current_name; $query['post_type'] = "any";
+				$query['name']=$current_name; $query['post_type'] = $type;
 				$ccs_global_variable['current_gallery_name'] = $current_name;
 				$posts = get_posts( $query );
 				if( $posts ) { $ccs_global_variable['current_gallery_id'] = $posts[0]->ID;
 				}
 			} else {
 
-				// Current post
+				if( $parent != '') {
+					// Parent post by name
 
-				$query['p'] = get_the_ID(); $query['post_type'] = "any";
+
+					$posts = get_posts( array('name' => $parent, 'post_type' => $type) );
+
+					if( $posts ) $parent_id = $posts[0]->ID;
+					else return;
+
+					$query['post_parent'] = $parent_id; $query['post_type'] = $type;
+
+				} else {
+					// Current post
+
+					$query['p'] = get_the_ID(); $query['post_type'] = "any";
+				}
 			}
 		}
 
@@ -256,7 +275,7 @@ class Loop_Shortcode {
 					$query['meta_key'] = $keyname;
 				}
 				if($order=='') {
-					if($orderby=='meta_value_num')
+					if (($orderby=='meta_value_num') || ($orderby=='menu_order'))
 						$query['order'] = 'ASC';	
 					else
 						$query['order'] = 'DESC';
@@ -862,11 +881,14 @@ $loop_shortcode = new Loop_Shortcode;
 	        '<p>[' => '[', 
 	        ']</p>' => ']', 
 	        ']<br />' => ']',
+	        ']<br/>' => ']',
 	        ']<br>' => ']',
 	        '<br />[' => '[',
+	        '<br/>[' => '[',
 	        '<br>[' => '[',
 	        '<br />' => '',
-	        '<br/>' => ''
+	        '<br/>' => '',
+//	        '<br>' => ''
 	    );
 	    $content = strtr($content, $array);
 	    return $content;
