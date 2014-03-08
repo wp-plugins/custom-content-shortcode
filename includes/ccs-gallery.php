@@ -75,7 +75,7 @@ function custom_gallery_allowed_post_types() {
 	$defaults['post_types']['page'] = '';
 */
 	// get the allowed post type from the DB
-	$settings = ( array ) get_option( 'custom-gallery', $defaults );
+	$settings = ( array ) get_option( 'custom-gallery', $default = false );
 	$post_types = isset( $settings['post_types'] ) ? $settings['post_types'] : '';
 
 	// post types don't exist, bail
@@ -143,7 +143,7 @@ function custom_gallery_get_image_ids() {
  * Shortcode
  */
 
-function custom_gallery_shortcode() {
+function ccs_gallery_shortcode() {
 
 	// return early if the post type is not allowed to have a gallery
 	if ( ! custom_gallery_allowed_post_type() )
@@ -152,7 +152,7 @@ function custom_gallery_shortcode() {
 	return custom_gallery();
 }
 
-add_shortcode( 'custom_gallery', 'custom_gallery_shortcode' );
+add_shortcode( 'custom_gallery', 'ccs_gallery_shortcode' );
 
 
 /*
@@ -521,7 +521,7 @@ function post_types_callback() {
 /*	$defaults['post_types']['post'] = '';
 	$defaults['post_types']['page'] = '';
 */
-	$settings = (array) get_option( 'custom-gallery', $defaults );
+	$settings = (array) get_option( 'custom-gallery', $default = false );
 
 	 foreach ( custom_gallery_get_post_types() as $key => $label ) {
 		$post_types = isset( $settings['post_types'][ $key ] ) ? esc_attr( $settings['post_types'][ $key ] ) : '';

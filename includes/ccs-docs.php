@@ -119,6 +119,7 @@ function ccs_docs_admin_css() {
 					}
 					.doc-style, .doc-style p {
 						font-size: 16px;
+						line-height: 1.4em; 
 					}
 					.doc-style code {
 						font-size: 16px;
@@ -194,8 +195,10 @@ function ccs_content_settings_page() {
 
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
+
 	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'load', 'gallery',
 						'user', 'mobile', 'ACF', 'etc' );
+
 	?>
 		<div class="wrap">
 		<h2>Custom Content Shortcode</h2>

@@ -5,8 +5,8 @@ Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
-Tested up to: 3.8
-Stable tag: 0.6.0
+Tested up to: 3.8.1
+Stable tag: 0.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -57,11 +57,55 @@ None.
 
 == Changelog ==
 
+= 0.7.0 =
+
+* **[content]** - Display correct author name
+* **[content]** - Added field *modified* to display date of last post update
+* **[loop]** - Added field *parent* (by slug) to display children
+* **[loop]** - Improved *orderby="menu_order"*
+* **[loop]** - Improved *orderby="modified"*
+* Fixed compatibility with a theme
+
+= 0.6.9 =
+
+* **[user]** - User name, id, e-mail, full name, avatar
+* **[loop]** - Added parameter *clean="true"* to remove extra *p* and *br* tags
+* **[content]** - Added field *title-length*
+* **[content]** - Display correct image sizes
+* Other minor improvements: performance and content overview page
+
+= 0.6.8 =
+
+* No change in function; improved code so there are no PHP notices when debug is on
+
+= 0.6.5 =
+
+* **[content]** - Add *out=“slug”* to output post taxonomy slug
+* **[content]** - Improved check for published status
+* **[content]** - Added *post* and *page* parameter, for example: *[content page=“about”]*
+
+= 0.6.4 =
+
+* **[loop]**, **[content]** - Added parameter *status* to filter by post status: *any, publish, pending, draft, future, private*; the default is *publish*
+
+= 0.6.3 =
+
+* Fixed documentation
+
+= 0.6.2 =
+
+* **[loop]** - Added parameter *checkbox* and *checkbox_2*, to query checkbox values
+* **[content]** - Added parameter *checkbox* to display checked values
+
+= 0.6.1 =
+
+* **[load]** - Added parameter *dir=“web”*
+
 = 0.6.0 =
 
-* **[content]** - added *return=“url”* parameter, to return URL of an image; this can be used to set a background image according to a field
-* **[content]** - added *in* parameter, to specify if the image field contains an attachment ID, URL, or object; default is ID
-* **[content]** - added *size* parameter for image size; depending on the theme, you can set *thumbnail*, *medium*, *large*, or custom size
+* **[content]** - Added *return=“url”* parameter, to return URL of an image; this can be used to set a background image according to a field
+* **[content]** - Added *in* parameter, to specify if the image field contains an attachment ID, URL, or object; default is ID
+* **[content]** - Added *size* parameter for image size; depending on the theme, you can set *thumbnail*, *medium*, *large*, or custom size
 
 = 0.5.9 =
 
@@ -69,11 +113,11 @@ None.
 
 = 0.5.8 =
 
-* **[content]** - added *allow* parameter - strips all HTML tags except allowed
+* **[content]** - Added *allow* parameter - strips all HTML tags except allowed
 
 = 0.5.7 =
 
-* **[loop]** - fixed query when field value includes ampersand symbol
+* **[loop]** - Fixed query when field value includes ampersand symbol
 
 = 0.5.6 =
 

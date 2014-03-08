@@ -56,11 +56,13 @@ class Loop_Shortcode {
 			'series' => '', 'key' => '',
 			'post_offset' => '', 'offset' => '',
 			'strip_tags' => '', 'strip' => '',
+			'clean' => 'false',
 			'title' => '', 'if' => '',
 			'variable' => '', 'var' => '',
 			'year' => '', 'month' => '', 'day' => '',
 			'list' => '',
-			'allow' => '',
+			'allow' => '', 'checkbox' => '', 'checkbox_2' => '', 
+			'status' => '', 'parent' => ''
 		);
 
 		$all_args = shortcode_atts( $args , $atts, true );
@@ -72,12 +74,18 @@ class Loop_Shortcode {
 		 *-------------*/
 
 
+		if( $type == '' ) $type = 'any';
 		$custom_value = $value;
 		if($key!='') $keyname=$key;
 		if($offset!='') $post_offset=$offset;
 		if($strip!='') $strip_tags=$strip;
 		if($allow!='') $strip_tags=$allow;
+		if($status != null)
+			$status = explode(",", $status);
+		else
+			$status = array("publish");
 
+		if(!isset($query_field)) $query_field='';
 
 		$current_name = $name;
 		if ($var!='') $variable=$var;
@@ -101,6 +109,10 @@ class Loop_Shortcode {
 				$compare_2 = $c2;
 			if($r!='')
 				$relation = $r;
+			if($checkbox!='')
+				$field = $checkbox;
+			if($checkbox_2!='')
+				$field_2 = $checkbox_2;
 
 
 		if(( $field != 'gallery' ) && ($shortcode_name != 'pass') && ($value!='')) {
@@ -114,11 +126,16 @@ class Loop_Shortcode {
 
 		if($x != '') { // Simple loop without query
 
+			$count = 0;
 			$output = array();
 			ob_start();
 
 			while($x > 0) {
-				echo do_shortcode($template);
+				$count++;
+				$keywords = array(
+					'COUNT' => $count
+					);
+				echo do_shortcode( $this->get_block_template( $template, $keywords ) );
 				$x--;
 			}
 			$ccs_global_variable['is_loop'] = "false";
@@ -142,7 +159,14 @@ class Loop_Shortcode {
 			$query['category_name'] = $category;
 		}
 		if( $count != '' ) {
-			$query['posts_per_page'] = $count;
+
+			if ($orderby=='rand') {
+				$query['posts_per_page'] = '-1';
+			} else {
+				$query['posts_per_page'] = $count;
+			}
+
+
 		} else {
 
 			if($post_offset!='')
@@ -162,18 +186,33 @@ class Loop_Shortcode {
 
 				// Get ID from post slug
 
-				$query['name']=$current_name; $query['post_type'] = "any";
+				$query['name']=$current_name; $query['post_type'] = $type;
 				$ccs_global_variable['current_gallery_name'] = $current_name;
 				$posts = get_posts( $query );
 				if( $posts ) { $ccs_global_variable['current_gallery_id'] = $posts[0]->ID;
 				}
 			} else {
 
-				// Current post
+				if( $parent != '') {
+					// Parent post by name
 
-				$query['p'] = get_the_ID(); $query['post_type'] = "any";
+
+					$posts = get_posts( array('name' => $parent, 'post_type' => $type) );
+
+					if( $posts ) $parent_id = $posts[0]->ID;
+					else return;
+
+					$query['post_parent'] = $parent_id; $query['post_type'] = $type;
+
+				} else {
+					// Current post
+
+					$query['p'] = get_the_ID(); $query['post_type'] = "any";
+				}
 			}
 		}
+
+		if(!isset($custom_field)) $custom_field='';
 
 		if(( $custom_field == 'gallery' ) && ($shortcode_name != 'pass') ){
 			$gallery = 'true';
@@ -230,12 +269,13 @@ class Loop_Shortcode {
 // Orderby
 
 		if( $orderby != '') {
+
 				$query['orderby'] = $orderby;
 				if(in_array($orderby, array('meta_value', 'meta_value_num') )) {
 					$query['meta_key'] = $keyname;
 				}
 				if($order=='') {
-					if($orderby=='meta_value_num')
+					if (($orderby=='meta_value_num') || ($orderby=='menu_order'))
 						$query['order'] = 'ASC';	
 					else
 						$query['order'] = 'DESC';
@@ -287,7 +327,7 @@ class Loop_Shortcode {
 				$compare = strtoupper($compare);
 				switch ($compare) {
 					case '':
-					case 'EQUAL': $compare = 'LIKE'; break;
+					case 'EQUAL': $compare = "LIKE"; break;
 					case 'NOT EQUAL': $compare = 'NOT LIKE'; break;
 					default: break;
 				}
@@ -299,6 +339,8 @@ class Loop_Shortcode {
 							'compare' => $compare
 					);
 
+/*				print_r($query);
+*/
 				if( ($field_2!='') && ($value_2!='') ) {
 
 					if($relation!='')
@@ -307,6 +349,7 @@ class Loop_Shortcode {
 						$query['meta_query']['relation'] = 'AND';
 
 					$compare_2 = strtoupper($compare_2);
+
 					switch ($compare_2) {
 						case '':
 						case 'EQUAL': $compare_2 = 'LIKE'; break;
@@ -321,8 +364,6 @@ class Loop_Shortcode {
 							'compare' => $compare_2
 					);
 				}
-
-
 			}
 
 	/*--------------
@@ -335,31 +376,88 @@ class Loop_Shortcode {
 		 *-------------*/
 
 
-
-
 	if( ( $gallery!="true" ) && ( $type != "attachment") ) {
 
 		if( $custom_field == "gallery" ) {
 			$custom_field = "_custom_gallery";
 		}
 
+		$query['post_status'] = $status;
+
+		remove_all_filters('posts_orderby');
+
 		$output = array();
 		ob_start();
+
 		$posts = new WP_Query( $query );
 
 // Re-order by series
 
 		if($series!='') {
-
 			usort($posts->posts, "series_orderby_key");
+		}
 
+		if($orderby=='rand') {
+			shuffle($posts->posts);	// Randomize
+			if ($count == '')
+				$count = 9999;
 		}
 
 		$total_comment_count = 0;
 
+		$current_count = 1;
+
 		// For each post found
 
 		if( $posts->have_posts() ) : while( $posts->have_posts() ) : $posts->the_post();
+
+
+			// Filter by checkbox..
+
+			$skip_1 = false;
+			if ($checkbox!='') {
+				$values = explode(",", $query_value);
+				$check_field = get_post_meta( get_the_ID(), $checkbox, $single=true );
+
+				foreach ($values as $value) {
+					if ( ! in_array($value, $check_field) ) {
+						$skip_1 = true;
+/*						echo 'SKIPPED: ';
+						print_r($values);
+						echo ' not in ';
+						print_r($check_field);
+						echo '<br>';
+*/					}
+				}
+			}
+
+			$skip_2 = false;
+			if ($checkbox_2!='') {
+				$values = explode(",", $value_2);
+				$check_field = get_post_meta( get_the_ID(), $checkbox_2, $single=true );
+
+				foreach ($values as $value) {
+					if ( ! in_array($value, $check_field) ) {
+						$skip_2 = true;
+					}
+				}
+			}
+
+			$relation = strtoupper($relation);
+			if ($relation=='OR') {
+				if ( ( ! $skip_1 ) || ( ! $skip_2 ) )
+					$skip = false;
+				else
+					$skip = true;
+			} else {
+				if ( ( ! $skip_1 ) && ( ! $skip_2 ) )
+					$skip = false;
+				else
+					$skip = true;
+			}
+
+
+			if( ! $skip ) {
 
 /*********
  * Repeater field
@@ -508,18 +606,26 @@ class Loop_Shortcode {
 						strip_tags($this->get_block_template( $template, $keywords ), $strip_tags)
 					);
 
+				} elseif ($clean == 'true') {
+					$output[] = do_shortcode($this->get_block_template( custom_clean_shortcodes($template), $keywords ));
 				} else {
 					$output[] = do_shortcode($this->get_block_template( $template, $keywords ));
 				}
-
-
-
 
 				} // End of not gallery field
 
 			}
 
 		} // End of not repeater
+
+		$current_count++;
+
+
+		if($orderby=='rand') {
+			if ($current_count > $count) break;
+		}
+
+		} /* Not skip */
 
 		endwhile; endif; // End loop for each post
 
@@ -550,7 +656,7 @@ class Loop_Shortcode {
 				$posts =& get_children( array (
 				'post_parent' => get_the_ID(),
 				'post_type' => 'attachment',
-				'post_status' => 'any'
+				'post_status' => $status
 				) );
 
 				foreach( $posts as $attachment_id => $attachment ) {
@@ -561,7 +667,7 @@ class Loop_Shortcode {
 
 				$my_query = new WP_Query( array(
 			    	'cat' => get_category_by_slug($category)->term_id, 
-					'post_type' => 'any',
+					'post_type' => $status,
 				));
 				if( $my_query->have_posts() ) {
 					$posts = array('');
@@ -571,7 +677,7 @@ class Loop_Shortcode {
 						$new_children =& get_children( array (
 							'post_parent' => get_the_ID(),
 							'post_type' => 'attachment',
-							'post_status' => 'any'
+							'post_status' => $status
 						) );
 
 						foreach( $new_children as $attachment_id => $attachment ) {
@@ -628,7 +734,7 @@ class Loop_Shortcode {
 				'IDS' => get_post_meta( get_the_ID(), '_custom_gallery', true ),
 			) );
 
-						$output[] = do_shortcode(custom_clean_shortcodes($this->get_block_template( $template, $keywords ) ) );
+						$output[] = do_shortcode( $this->get_block_template( $template, $keywords ) );
 					} /** End for each attachment **/
 				}
 				$ccs_global_variable['is_attachment_loop'] = "false";
@@ -717,7 +823,7 @@ class Loop_Shortcode {
 				'IDS' => get_post_meta( get_the_ID(), '_custom_gallery', true ),
 			) );
 				
-					$output[] = do_shortcode(custom_clean_shortcodes($this->get_block_template( $template, $keywords ) ) );
+					$output[] = do_shortcode( $this->get_block_template( $template, $keywords ) );
 				} /** End for each attachment **/
 
 				$ccs_global_variable['is_gallery_loop'] = "false";
@@ -741,17 +847,26 @@ class Loop_Shortcode {
 	 * Replaces {VAR} with $parameters['var'];
 	 */
 
-	function get_block_template( $string, $parameters = array() ) {
-		$searches = $replacements = array();
+	function get_block_template( $string, $parameters ) {
+		$searches = $replacements = null;
+
 
 		// replace {KEYWORDS} with variable values
 		foreach( $parameters as $find => $replace ) {
-			$searches[] = '{'.$find.'}';
-			$replacements[] = $replace;
+			$search = '{'.$find.'}';
+
+			if( ! is_array($replace) ) {
+				$string = str_replace( $search, $replace, $string );
+			}
 		}
 
-		return str_replace( $searches, $replacements, $string );
+		return $string;
 	}
+
+
+
+
+
 
 }
 
@@ -760,13 +875,21 @@ $loop_shortcode = new Loop_Shortcode;
 /*--------------------------------------*/
 /*    Clean up Shortcodes
 /*--------------------------------------*/
-function custom_clean_shortcodes($content){   
-/*    $array = array (
-        '<p>[' => '[', 
-        ']</p>' => ']', 
-        ']<br />' => ']'
-    );
-    $content = strtr($content, $array); */
-    return $content;
-}
 
+	function custom_clean_shortcodes($content){   
+	    $array = array (
+	        '<p>[' => '[', 
+	        ']</p>' => ']', 
+	        ']<br />' => ']',
+	        ']<br/>' => ']',
+	        ']<br>' => ']',
+	        '<br />[' => '[',
+	        '<br/>[' => '[',
+	        '<br>[' => '[',
+	        '<br />' => '',
+	        '<br/>' => '',
+//	        '<br>' => ''
+	    );
+	    $content = strtr($content, $array);
+	    return $content;
+	}

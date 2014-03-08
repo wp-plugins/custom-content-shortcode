@@ -17,6 +17,7 @@ Note that inside a query loop, the <strong>[content]</strong> shortcode does n
 Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>type</strong> - which post type to query: <em>post</em>, <em>page</em>, <em>custom post type</em>, or <em>attachment</em> - if empty, the default is <em>any post type</em></li>
+	<li><strong>status</strong> - filter posts by status: <em>any</em>, <em>publish</em>, <em>pending</em>, <em>draft</em>, <em>future</em>, <em>private</em>; the default is <em>publish</em> - combination is possible, i.e., <em>status="publish, pending"</em></li>
 </ul>
 
 <h4>Category, tags and taxonomies</h4>
@@ -35,11 +36,14 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>field, compare, value</strong> - display posts according to custom field value; where <em>compare</em> is <em>EQUAL</em> (default) or <em>NOT EQUAL</em></li>
 	<li><strong>relation, field_2, compare_2, value_2</strong> - Additional query for custom field value, where <em>relation</em> is <em>AND</em> (default) or <em>OR</em></li>
+	<li><strong>checkbox, value</strong> - display posts according to custom field, whose checkbox contains value - combination is possible, i.e., <em>value="first, second"</em></li>
+	<li><strong>relation, checkbox_2, value_2</strong> - Additional query for checkbox value, where <em>relation</em> is <em>AND</em> (default) or <em>OR</em></li>
 </ul>
 
 <h4>Sorting and series</h4>
 <ul>
-	<li><strong>orderby</strong> - order by<em> ID</em>,<em> author</em>,<em> title</em>,<em> name</em>,<em> date</em>,<em> parent</em>,<em> meta_value</em> (custom field value: string), or<em> meta_value_num</em> (custom field value: number)</li>
+	<li><strong>parent</strong> - display all children of a parent, specified by slug</li>
+	<li><strong>orderby</strong> - order by<em> ID</em>,<em> author</em>,<em> title</em>,<em> name</em>,<em> date</em>,<em> modified</em>,<em> menu_order</em>,<em> parent</em>,<em> meta_value</em> (custom field value: string), or<em> meta_value_num</em> (custom field value: number)</li>
 	<li><strong>key</strong> - when ordering by<em> meta_value</em> or<em> meta_value_num</em>, you need to specify<strong> key</strong> as the name of the custom field to order by</li>
 	<li><strong>order</strong> - ASC (ascending/alphabetical) or DESC (descending/from most recent date) when using the <em>orderby</em> parameter</li>
 	<li><strong>series</strong>, <strong>key</strong> - order posts by a series of custom field values, where <em>key</em> is the name of the field - the series can include ranges, for example: <em>1-15,30-40,42,44</em>.</li>
@@ -48,8 +52,9 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>count</strong> - number of posts to show - default is <em>all</em></li>
 	<li><strong>offset</strong> - offset the loop by a number of posts, for example: skip the first 3 posts in the query</li>
-	<li><strong>strip_tags</strong> - set to *true* to remove all HTML tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
-	<li><strong>allow</strong> - strip all HTML tags except allowed; for example, <em>allow="<a><li><br>"
+	<li><strong>clean</strong> - set to <em>true</em> to remove all <em>&lt;p&gt;</em> and <em>&lt;br&gt;</em> tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
+	<li><strong>strip_tags</strong> - set to <em>true</em> to remove all HTML tags inside the loop
+	<li><strong>allow</strong> - strip all HTML tags except allowed; for example, <em>allow="&lt;a&gt;&lt;li&gt;&lt;br&gt;"</em>
 	<li><strong>x</strong> - repeat the loop <em>x</em> times - no query</li>
 </ul><br>
 <hr>
