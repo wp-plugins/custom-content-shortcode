@@ -200,11 +200,15 @@ function custom_is_shortcode( $atts, $content, $tag ) {
 		get_currentuserinfo();
 		$is_it = false;
 
-		if ( $user == ($current_user->user_login) )
-			$is_it = true;
-		if ( ( $user == ($current_user->ID) ) &&
-			ctype_digit($user) ) // $user is a number?
+		$user_array = explode(",", $user);
+
+		foreach ($user_array as $this_user) {
+			if ( $this_user == ($current_user->user_login) )
 				$is_it = true;
+			if ( ( $this_user == ($current_user->ID) ) &&
+				ctype_digit($this_user) ) // $user is a number?
+					$is_it = true;
+		}
 		if($tag=="isnt")
 			$is_it = !$is_it;
 		if($is_it)
@@ -241,7 +245,8 @@ add_shortcode('isnt', 'custom_is_shortcode');
 function custom_user_shortcode( $atts, $content ) {
 
 	global $current_user;
-		get_currentuserinfo();
+
+	get_currentuserinfo();
 
 	if( is_array( $atts ) )
 		$atts = array_flip( $atts );
@@ -251,6 +256,15 @@ function custom_user_shortcode( $atts, $content ) {
 
 	if( isset( $atts['id'] ) )
 		return $current_user->ID;
+
+	if( isset( $atts['email'] ) )
+		return $current_user->user_email;
+
+	if( isset( $atts['fullname'] ) )
+		return $current_user->display_name;
+
+	if( isset( $atts['avatar'] ) )
+		return get_avatar( $current_user->ID );
 
 }
 add_shortcode('user', 'custom_user_shortcode');
@@ -270,11 +284,16 @@ add_shortcode('p', 'custom_p_shortcode');
 
 function custom_list_shortcodes( ) {
 	global $shortcode_tags;
-
 	ksort($shortcode_tags); // Alphabetical sort
 
+	$out = '';
+
 	foreach ( $shortcode_tags as $key => $value ) {
+
+		if(is_array($value)) $value='Class object';
+
 		$out .= $key . ' = ' . $value . '<br>';
+
 	}
 	return $out;
 }

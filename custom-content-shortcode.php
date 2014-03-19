@@ -3,15 +3,16 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 0.6.0
+Version: 0.7.1
 Author: Eliot Akira
 Author URI: eliotakira.com
 License: GPL2
 */
 
-
 define('CCS_PATH', dirname(__FILE__));
 define('CCS_URL', untrailingslashit(plugins_url('/',__FILE__)));
+
+$ccs_content_template_loader = false; // Set true to enable template loader
 
 global $sort_posts; global $sort_key;
 
