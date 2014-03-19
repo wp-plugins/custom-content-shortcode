@@ -60,7 +60,7 @@ None.
 = 0.7.1 =
 
 * **[loop]** - Improved parameter *checkbox* to query by checkbox value(s)
-
+* **[is user]** - Multiple values possible, i.e., *user="1,3,7,guest"*
 
 = 0.7.0 =
 
