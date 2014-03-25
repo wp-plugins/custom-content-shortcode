@@ -565,7 +565,11 @@ function custom_content_shortcode($atts) {
 		if ($more!='none') {
 
 			if ($link != 'false') {
-				$out .= '<a class="more-tag" href="'. get_permalink($post->ID) . '">'
+				if ($field=='excerpt')
+					$out .= '<br>';
+/*				if ((substr($out, -3)!='</p>') && (substr($out, -4)!='</br>'))
+					$out .= '<br>';
+*/				$out .= '<a class="more-tag" href="'. get_permalink($post->ID) . '">'
 						. $more . '</a>';
 			} else {
 				$out .= $more;
