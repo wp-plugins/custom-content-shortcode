@@ -554,9 +554,6 @@ function custom_content_shortcode($atts) {
 
 	if (!empty($more)) {
 
-
-/*		$until = strstr($out, '<!--more-->', true);
-*/
 		$until_pos = strpos($out, '<!--more-->');
 		if ($until_pos!==false) {
 			$out = substr($out, 0, $until_pos);
