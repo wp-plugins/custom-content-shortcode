@@ -17,7 +17,9 @@ Note that inside a query loop, the <strong>[content]</strong> shortcode does n
 Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>type</strong> - which post type to query: <em>post</em>, <em>page</em>, <em>custom post type</em>, or <em>attachment</em> - if empty, the default is <em>any post type</em></li>
-	<li><strong>status</strong> - filter posts by status: <em>any</em>, <em>publish</em>, <em>pending</em>, <em>draft</em>, <em>future</em>, <em>private</em>; the default is <em>publish</em> - combination is possible, i.e., <em>status="publish, pending"</em></li>
+	<li><strong>status</strong> - filter posts by status: <em>any</em>, <em>publish</em>, <em>pending</em>, <em>draft</em>, <em>future</em>, <em>private</em>; the default is <em>publish</em> - multiple values possible, i.e., <em>status="publish, pending"</em></li>
+	<li><strong>id</strong> - only show posts by id; <em>id="1,3,5,7"</em></li>
+	<li><strong>exclude</strong> - exclude posts by id; <em>exclude="1,3,5,7"</em></li>
 </ul>
 
 <h4>Category, tags and taxonomies</h4>
@@ -29,7 +31,7 @@ Available parameters for the <strong>[loop]</strong> shortcode are:
 
 <h4>Date</h4>
 <ul>
-	<li><strong>year, month, day</strong> - filter posts by specific year, month, day; you can use <em>today</em> as a value</li>
+	<li><strong>year, month, day</strong> - filter posts by specific year, month, day; you can use <em>today</em> as a value, for example <em>month="today"</em> will show posts from this month</li>
 </ul>
 
 <h4>Custom field value</h4>
@@ -61,6 +63,7 @@ Multiple values are possible: <em>value="first, second"</em>. This will return a
 <ul>
 	<li><strong>count</strong> - number of posts to show - default is <em>all</em></li>
 	<li><strong>offset</strong> - offset the loop by a number of posts, for example: skip the first 3 posts in the query</li>
+	<li><strong>columns</strong> - display output in columns: <em>columns="3"</em></li>
 	<li><strong>clean</strong> - set to <em>true</em> to remove all <em>&lt;p&gt;</em> and <em>&lt;br&gt;</em> tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
 	<li><strong>strip_tags</strong> - set to <em>true</em> to remove all HTML tags inside the loop
 	<li><strong>allow</strong> - strip all HTML tags except allowed; for example, <em>allow="&lt;a&gt;&lt;li&gt;&lt;br&gt;"</em>
