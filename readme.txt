@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
 Tested up to: 3.8.1
-Stable tag: 0.7.3
+Stable tag: 0.7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ With other libraries:
 None.
 
 == Changelog ==
+
+= 0.7.4 =
+
+* **[content]** - Improve *more* tag display: *[content more="true"]*
 
 = 0.7.3 =
 
