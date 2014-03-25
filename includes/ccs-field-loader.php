@@ -35,12 +35,10 @@ add_shortcode('js', 'custom_js_wrap');
 
 
 function ccs_safe_eval($code) {
-	$strip_tags='<p><br />';
 	ob_start();
-	eval('?>' . $code);
-	$code = ob_get_contents();
-	ob_end_clean();
-	return $code;
+	$code = '?>' . $code;
+	eval($code);
+	return ob_get_clean();
 }
 
 
@@ -82,15 +80,10 @@ if ( ! function_exists('undo_wptexturize')) {
 if ( ! shortcode_exists('php')) {
 
 	function custom_php_shortcode($atts, $content) {
-
 		ob_start();
-
 		eval( undo_wptexturize( $content ) );
-
 		return ob_get_clean();
-
 	}
-
 	add_shortcode( 'php', 'custom_php_shortcode' );
 }
 
@@ -100,19 +93,30 @@ function custom_load_script_file( $atts ) {
 	extract( shortcode_atts( array(
 		'css' => null, 'js' => null, 'dir' => null,
 		'file' => null,'format' => null, 'shortcode' => null,
-		'gfonts' => null, 'cache' => 'false',
+		'gfonts' => null, 'cache' => 'true',
 		'php' => 'true', 'debug' => 'false',
 		), $atts ) );
 
-	$this_dir = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+	$root_path = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+	$path = $root_path . '/';
+	$site_url = get_site_url();
 
 	switch($dir) {
-		case 'web' : $dir = ""; break;
+		case 'web' : $dir = ""; $path = ""; break;
         case 'site' : $dir = home_url() . '/'; break; /* Site address */
-		case 'wordpress' : $dir = get_site_url() . '/'; break; /* WordPress directory */
-		case 'content' : $dir = get_site_url() . '/wp-content/'; break;
-		case 'layout' : $dir = get_site_url() . '/wp-content/layout/'; break;
-		case 'views' : $dir = get_site_url() . '/wp-content/views/'; break;
+		case 'wordpress' : $dir =  $site_url . '/'; break; /* WordPress directory */
+		case 'content' :
+			$dir = $site_url . '/wp-content/';
+			$path = $root_path . '/wp-content/';
+			break;
+		case 'layout' :
+			$dir = $site_url . '/wp-content/layout/';
+			$path = $root_path . '/wp-content/layout/';
+		break;
+		case 'views' :
+			$dir = $site_url . '/wp-content/views/';
+			$path = $root_path . '/wp-content/views/';
+			break;
 		case 'child' : $dir = get_stylesheet_directory_uri() . '/'; break;
 		default:
 
@@ -129,9 +133,11 @@ function custom_load_script_file( $atts ) {
 			}
 	}
 
+	$out = '';
+
 	if($css != '') {
-		echo '<link rel="stylesheet" type="text/css" href="';
-		echo $dir . $css;
+		$out .= '<link rel="stylesheet" type="text/css" href="';
+		$out .= $dir . $css;
 
 		if($cache=='false') {
 
@@ -139,29 +145,35 @@ function custom_load_script_file( $atts ) {
 				$tail .= rand(0,9) ; 
 			} 
 
-			echo '?' . $tail;
+			$out .= '?' . $tail;
 		}
-		echo '" />';
+		$out .= '" />';
 	}
 	if($gfonts != '') {
-		echo '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=';
-		echo $gfonts . '" />';
+		$out .= '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=';
+		$out .= $gfonts . '" />';
 	}
 	if($js != '') {
-		echo '<script type="text/javascript" src="' . $dir . $js . '"></script>';
+		$out .= '<script type="text/javascript" src="' . $dir . $js . '"></script>';
 	}
 	if($file != '') {
 
-		$output = @file_get_contents($dir . $file);
+		$output = '';
+
+		if ($dir != 'web')
+			$output = @file_get_contents($path . $file);
 
 		if( empty($output) ) {
-			$url = $dir . $file;
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$data = curl_exec($ch);
-			curl_close($ch);
-			$output = $data;
+			$output = @file_get_contents($dir . $file);
+			if( empty($output) ) {
+				$url = $dir . $file;
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$data = curl_exec($ch);
+				curl_close($ch);
+				$output = $data;
+			}
 		}
 
 		if($output!='') {
@@ -171,11 +183,8 @@ function custom_load_script_file( $atts ) {
 
 			/* Put safe_eval here for executing PHP inside template files */
 
-
 			if($php=='true') {
-
 				$output = ccs_safe_eval( $output );
-
 			}
 
 			if(($shortcode != 'false')||($shortcode != 'off')) { // Shortcode?
@@ -184,7 +193,7 @@ function custom_load_script_file( $atts ) {
 			return $output;
 		}
 	}
-	return null;
+	return $out;
 }
 add_shortcode('load', 'custom_load_script_file');
 
