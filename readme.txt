@@ -63,12 +63,12 @@ None.
 
 = 0.8.0 =
 
-* **[loop]** - Field and taxonomy queries: make parameters case-insensitive for *compare* and *relation*
+* **[loop]** - Field and taxonomy queries: make *compare* and *relation* parameters case-insensitive
 
 = 0.7.9 =
 
 * **[loop]** - Taxonomy query - multiple values possible: *value="apple, green"*
-* **[loop]** - Add parameter *compare="AND"*, *compare="NOT"* for taxonomy query
+* **[loop]** - Taxonomy query - add parameter *compare="AND"*, *compare="NOT"*
 * **[loop]** - Correctly display posts with tag(s): *tag="tag1,tag2"*
 * **[loop]** - Add parameter *pad* for column padding: *pad="0 10px"*
 
