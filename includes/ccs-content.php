@@ -33,11 +33,13 @@ function custom_content_shortcode($atts) {
 		'taxonomy' => null, 'checkbox' => null, 'out' => null,
 		'status' => null,
 		'post' => null, 'page' => null,
+		'embed' => '',
+		'more' => '', 'dots' => '...',
 
 		/* Native gallery options: orderby, order, columns, size, link, include, exclude */
 
 		'orderby' => null, 'order' => null, 'columns' => null, 'size' => 'full',
-		'link' => null, 'include' => null, 'exclude' => null, 
+		'link' => null, 'include' => null, 'exclude' => null
 	), $atts));
 
 	$custom_post_type = $type;
@@ -66,6 +68,10 @@ function custom_content_shortcode($atts) {
 		$taxonomy_out = $out;
 		$out = null;
 	}
+
+/*	if ((!empty($more)) && (empty($field)))
+		$words="55";
+*/
 
 	if ($checkbox != '')
 		$custom_field = $checkbox;
@@ -100,8 +106,16 @@ function custom_content_shortcode($atts) {
 		( $ccs_global_variable['is_attachment_loop'] == "true" ) || 
 		 ( $ccs_global_variable['is_acf_gallery_loop'] == "true" ) ) {
 		switch($custom_field) {
-			case "image": $out = $ccs_global_variable['current_image']; break;
+			case "image":
+				if (empty($size)) {
+					$out = $ccs_global_variable['current_image']['full'];
+				} else {
+					$out = $ccs_global_variable['current_image'][$size];
+				}
+
+				break;
 			case "image-url": $out = $ccs_global_variable['current_image_url']; break;
+			case "attach-link": $out = $ccs_global_variable['current_attachment_link']; break;
 			case "thumbnail": $out = $ccs_global_variable['current_image_thumb']; break;
 			case "thumbnail-url": $out = $ccs_global_variable['current_image_thumb_url']; break;
 			case "caption": $out = $ccs_global_variable['current_image_caption']; break;
@@ -353,13 +367,16 @@ function custom_content_shortcode($atts) {
 		}
 	}
 
-	// If no field is specified, return content
+	// If no field is specified..
 
 	if($custom_field == '') { 
 
-		if ($taxonomy != '') {
+		if ($taxonomy != '') { // Taxonomy query?
 
 		    // Get taxonomy terms related to post
+
+			if ($taxonomy == "tag")
+				$taxonomy="post_tag";
 
 		    $terms = get_the_terms( $custom_id, $taxonomy );
 
@@ -378,12 +395,14 @@ function custom_content_shortcode($atts) {
 		    	$out = null;
 		    }
 
-	    } else {
+	    } else { // no field or taxonomy, then just return post content
 
 			$out = get_post( $custom_id );
 			$out = $out->post_content;
 			if($content_format=='')
 				$content_format = 'true';
+			if($embed=='')
+				$embed = 'true';
 		}
 
 	} else { // else return specified field
@@ -492,6 +511,8 @@ function custom_content_shortcode($atts) {
 	}
 
 	if($words!='') {
+		$out = wp_trim_words( $out, $words );
+/*
 		$excerpt_length = $words;
 		$the_excerpt = $out;
 
@@ -505,7 +526,9 @@ function custom_content_shortcode($atts) {
 		endif;
 
 		$out = $the_excerpt;
+*/
 	}
+
 	if($length!='') {
 
 		$the_excerpt = $out;
@@ -514,17 +537,49 @@ function custom_content_shortcode($atts) {
 		$out = mb_substr($the_excerpt, 0, $length, 'UTF-8');
 	}
 
-	if($class!='')
+	if ($class!='')
 		$out = '<div class="' . $class . '">' . $out . '</div>';
 
-	if($content_format == 'true') { // Format?
-		$out = wpautop( $out );
-	}
-
-	if($shortcode_option != 'false') { // Shortcode?
+	if ($shortcode_option != 'false') {		// Shortcode
 		$out = do_shortcode( $out );
 	}
 
+	if ($embed == 'true') {					// Then auto-embed
+		if(isset($GLOBALS['wp_embed'])) {
+			$wp_embed = $GLOBALS['wp_embed'];
+			$out = $wp_embed->autoembed($out);
+		}
+	}
+
+	if ($content_format == 'true') {		// Then format
+		$out = wpautop( $out );
+	}
+
+	if (!empty($more)) {
+
+		$until_pos = strpos($out, '<!--more-->');
+		if ($until_pos!==false) {
+			$out = substr($out, 0, $until_pos);
+		}
+
+		if ($more=='true') {
+			$more = 'Read more';
+		}
+
+		if ($more!='none') {
+
+			if ($link != 'false') {
+				if ($field=='excerpt')
+					$out .= '<br>';
+/*				if ((substr($out, -3)!='</p>') && (substr($out, -4)!='</br>'))
+					$out .= '<br>';
+*/				$out .= '<a class="more-tag" href="'. get_permalink($post->ID) . '">'
+						. $more . '</a>';
+			} else {
+				$out .= $more;
+			}
+		}
+	}
 
 	if ( $status!=array("any") ) {
 		$post_status = get_post_status($custom_id);
@@ -586,27 +641,4 @@ function custom_custom_taxonomies_terms_links($id){
 
 		return ( $apos < $bpos ) ? -1 : 1;
 	}
-
-// Clean shortcode content from paragraphs and line breaks
-
-if (!function_exists('custom_clean_shortcode')) {
-	function custom_clean_shortcode( $atts, $content ){
-
-		$remove = array (
-			'<p>[' => '[', 
-			']</p>' => ']', 
-			']<br />' => ']',
-			']<br/>' => ']',
-			']<br>' => ']',
-			'<br />[' => '[',
-			'<br/>[' => '[',
-			'<br>[' => '[',
-			'<br />' => '',
-			'<br/>' => ''
-		);
-	    $content = strtr($content, $remove);
-	    return do_shortcode($content);
-	}
-	add_shortcode('clean', 'custom_clean_shortcode');
-}
 
