@@ -17,24 +17,27 @@ Note that inside a query loop, the <strong>[content]</strong> shortcode does n
 Available parameters for the <strong>[loop]</strong> shortcode are:
 <ul>
 	<li><strong>type</strong> - which post type to query: <em>post</em>, <em>page</em>, <em>custom post type</em>, or <em>attachment</em> - if empty, the default is <em>any post type</em></li>
-	<li><strong>status</strong> - filter posts by status: <em>any</em>, <em>publish</em>, <em>pending</em>, <em>draft</em>, <em>future</em>, <em>private</em>; the default is <em>publish</em> - combination is possible, i.e., <em>status="publish, pending"</em></li>
+	<li><strong>status</strong> - filter posts by status: <em>any</em>, <em>publish</em>, <em>pending</em>, <em>draft</em>, <em>future</em>, <em>private</em>; the default is <em>publish</em> - multiple values possible, i.e., <em>status="publish, pending"</em></li>
+	<li><strong>id</strong> - only show posts by id; <em>id="1,3,5,7"</em></li>
+	<li><strong>exclude</strong> - exclude posts by id; <em>exclude="1,3,5,7"</em></li>
 </ul>
 
 <h4>Category, tags and taxonomies</h4>
 <ul>
-	<li><strong>category</strong> - display posts from a category</li>
-	<li><strong>tag</strong> - display posts with a specific tag - for multiple tags:<em> tag="apples, green"</em></li>
-	<li><strong>taxonomy</strong>, <strong>value</strong> - search for posts whose <em>taxonomy</em> equals <em>value</em></li>
+	<li><strong>category</strong> - display posts from one or more categories: <em>category="sports, fashion"</em></li>
+	<li><strong>tag</strong> - display posts with one or more tags: <em>tag="apples, green"</em></li>
+	<li><strong>taxonomy</strong>, <strong>value</strong> - display posts whose <em>taxonomy</em> equals <em>value</em>; mutiple values are possible: <em>value="drama, comedy"</em> shows all posts whose taxonomy value is <em>drama</em> <b>or</b> <em>comedy</em></li>
+	<li><strong>compare</strong> - optional for taxonomy query: use <em>compare="NOT"</em> for posts whose <em>taxonomy</em> is <b>not</b> <em>value</em>; use <em>compare="AND"</em> when you want posts whose <em>taxonomy</em> contains all values</li>
 </ul>
 
 <h4>Date</h4>
 <ul>
-	<li><strong>year, month, day</strong> - filter posts by specific year, month, day; you can use <em>today</em> as a value</li>
+	<li><strong>year, month, day</strong> - filter posts by specific year, month, day; you can use <em>today</em> as a value, for example <em>month="today"</em> will show posts from this month</li>
 </ul>
 
 <h4>Custom field value</h4>
 <ul>
-	<li><strong>field, compare, value</strong> - display posts according to custom field value; where <em>compare</em> is <em>EQUAL</em> (default) or <em>NOT EQUAL</em></li>
+	<li><strong>field, compare, value</strong> - display posts according to custom field value; where <em>compare</em> is <em>EQUAL</em> (default) or <em>NOT</em></li>
 	<li><strong>relation, field_2, compare_2, value_2</strong> - additional query for custom field value, where <em>relation</em> is <em>AND</em> (default) or <em>OR</em></li>
 </ul>
 
@@ -61,6 +64,7 @@ Multiple values are possible: <em>value="first, second"</em>. This will return a
 <ul>
 	<li><strong>count</strong> - number of posts to show - default is <em>all</em></li>
 	<li><strong>offset</strong> - offset the loop by a number of posts, for example: skip the first 3 posts in the query</li>
+	<li><strong>columns</strong> - display output in columns: <em>columns="3"</em>; use <em>pad</em> for padding: <em>pad="0px 10px"</em></li>
 	<li><strong>clean</strong> - set to <em>true</em> to remove all <em>&lt;p&gt;</em> and <em>&lt;br&gt;</em> tags inside the loop; use <strong>[p]</strong> and <strong>[br]</strong> shortcodes to manually create paragraphs and break lines
 	<li><strong>strip_tags</strong> - set to <em>true</em> to remove all HTML tags inside the loop
 	<li><strong>allow</strong> - strip all HTML tags except allowed; for example, <em>allow="&lt;a&gt;&lt;li&gt;&lt;br&gt;"</em>
