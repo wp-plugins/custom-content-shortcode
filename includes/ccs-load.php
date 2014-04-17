@@ -41,19 +41,7 @@ function ccs_safe_eval($code) {
 	return ob_get_clean();
 }
 
-
-/*
-function ccs_safe_eval_file( $code ) {
-	$strip_tags='<p><br />';
-	ob_start();
-	eval('?>' . $code);
-	$code = ob_get_contents();
-	ob_end_clean();
-	return $code;
-}
-*/
-
-	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. */
+	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. 
 
 if ( ! function_exists('undo_wptexturize')) {
 	function undo_wptexturize($content) {
@@ -86,7 +74,7 @@ if ( ! shortcode_exists('php')) {
 	}
 	add_shortcode( 'php', 'custom_php_shortcode' );
 }
-
+*/
 
 function custom_load_script_file( $atts ) {
 
@@ -159,6 +147,8 @@ function custom_load_script_file( $atts ) {
 	if($file != '') {
 
 		$output = '';
+
+//		echo $path . $file;
 
 		if ($dir != 'web')
 			$output = @file_get_contents($path . $file);
@@ -234,7 +224,6 @@ function do_shortcode_file( $file, $dir = "" ) {
 			$dir = get_template_directory_uri() . '/';
 	}
 */
-
 
 	$file = $dir . $file . '.html';
 
@@ -318,14 +307,21 @@ function load_custom_js() {
 
 add_action('the_content', 'load_custom_html');
 function load_custom_html($content) {
-	global $wp_query;
+
 	global $ccs_global_variable;
-	global $ccs_content_template_loader;
 
 	if(( $ccs_global_variable['is_loop'] == "false" ) &&
 		!is_admin() ) {
 
+		/*--- Template loader ---*/
+
+		global $ccs_content_template_loader;
+		global $wp_query;
+
+
 		$html_field = get_post_meta( $wp_query->post->ID, "html", $single=true );
+
+		$output = '';
 
 		/* Set default layout filename */
 
@@ -346,18 +342,18 @@ function load_custom_html($content) {
 
 		$default_footer = 'footer.html';
 
-		$output = '';
-
 		// Load default header
 
 		if ( ($ccs_content_template_loader == true) &&
 			( file_exists( $default_layout_dir . $default_header ) ) ) {
 			$output .= '[load file="'. $default_header . '" dir="layout"]';
 		}
-		// Load default page template
 
-		if ( ($ccs_content_template_loader == true) &&
-			( $html_field == '' ) ) {
+		if (!empty($html_field)) {
+			$output .= $html_field;
+		} elseif ( $ccs_content_template_loader == true ) {
+
+			// Load default page template
 
 /*
 			echo 'Searching templates<br>';
@@ -366,8 +362,8 @@ function load_custom_html($content) {
 			echo $default_layout_dir . $default_post_type_template . '<br>';
 			echo $default_layout_dir . $current_post_type . '/' . $current_post_slug . '.html' . '<br>';
 			echo $default_layout_dir . $current_post_type . '/' . $default_post_type_template . '<br>';
-
 */
+
 			/*----  post-example.html  ----*/ 
 
 			/*----  home.html  ----*/ 
@@ -426,9 +422,6 @@ function load_custom_html($content) {
 				$output .= '[load file="' . 'page/' . $default_page_template . '" dir="layout"]';
 			}
 
-
-		} else {
-			$output .= $html_field;
 		}
 
 		// Load default footer
