@@ -5,7 +5,7 @@ Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
-Tested up to: 3.8.1
+Tested up to: 3.9
 Stable tag: 0.8.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
