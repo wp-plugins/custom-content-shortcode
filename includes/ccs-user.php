@@ -68,6 +68,10 @@ class urlShortcode
         {
             $return_blogurl = $blogurl_settings['content'] . '/layout/';
         }
+        elseif( isset( $attributes['views'] ) )
+        {
+            $return_blogurl = $blogurl_settings['content'] . '/views/';
+        }
         elseif( isset( $attributes['theme'] ) )
         {
             $return_blogurl = $blogurl_settings['templateurl'];
@@ -160,6 +164,8 @@ function ccs_return_comments_template($file) {
 
 function custom_comment_shortcode( $atts, $content, $tag ) {
 
+	global $ccs_global_variable;
+
 	if( is_array( $atts ) ) {
 		$atts = array_flip( $atts );
 	}
@@ -175,6 +181,9 @@ function custom_comment_shortcode( $atts, $content, $tag ) {
 	}
 	if( isset( $atts['count'] ) ) {
 		return get_comments_number();
+	}
+	if( isset( $atts['total'] ) ) {
+		return $ccs_global_variable['total_comments'];
 	}
 }
 add_shortcode('comment', 'custom_comment_shortcode');
@@ -242,11 +251,44 @@ function custom_is_shortcode( $atts, $content, $tag ) {
 add_shortcode('is', 'custom_is_shortcode');
 add_shortcode('isnt', 'custom_is_shortcode');
 
+function custom_blog_shortcode( $atts, $content ){
+
+	extract(shortcode_atts(array(
+		'id' => '',
+	), $atts));
+
+	$out = $content;
+
+	if ( empty($id) || !blog_exists($id))
+		return;
+
+	switch_to_blog($id);
+	$out = do_shortcode($out);
+	restore_current_blog();;
+
+	return $out;
+}
+add_shortcode('blog', 'custom_blog_shortcode');
+
 function custom_user_shortcode( $atts, $content ) {
 
 	global $current_user;
-
 	get_currentuserinfo();
+
+	extract(shortcode_atts(array(
+		'field' => '',
+		'meta' => ''
+	), $atts));
+
+	if(!empty($meta))
+		$field=$meta;
+
+	$out = null;
+
+	if (!empty($field)) {
+		return get_user_meta( $current_user->ID, $field, true );
+	}
+
 
 	if( is_array( $atts ) )
 		$atts = array_flip( $atts );
@@ -269,17 +311,6 @@ function custom_user_shortcode( $atts, $content ) {
 }
 add_shortcode('user', 'custom_user_shortcode');
 
-
-function custom_br_shortcode( $atts, $content ) {
-	return '<br>';
-}
-add_shortcode('br', 'custom_br_shortcode');
-
-
-function custom_p_shortcode( $atts, $content ) {
-	return '<p>' . $content . '</p>';
-}
-add_shortcode('p', 'custom_p_shortcode');
 
 
 function custom_list_shortcodes( ) {
@@ -312,3 +343,48 @@ function custom_search_form_shortcode() {
 }
 add_shortcode('search_form', 'custom_search_form_shortcode');
 
+if ( ! function_exists( 'blog_exists' ) ) {
+
+    /**
+     * Checks if a blog exists and is not marked as deleted.
+     *
+     * @link   http://wordpress.stackexchange.com/q/138300/73
+     * @param  int $blog_id
+     * @param  int $site_id
+     * @return bool
+     */
+    function blog_exists( $blog_id, $site_id = 0 ) {
+
+        global $wpdb;
+        static $cache = array ();
+
+        $site_id = (int) $site_id;
+
+       	if (!function_exists('get_current_site'))
+       		return false;
+
+        if ( 0 === $site_id ) {
+        	$current_site = get_current_site();
+            $site_id = $current_site->id;
+        }
+
+        if ( empty ( $cache ) or empty ( $cache[ $site_id ] ) ) {
+
+            if ( wp_is_large_network() ) // we do not test large sites.
+                return TRUE;
+
+            $query = "SELECT `blog_id` FROM $wpdb->blogs
+                    WHERE site_id = $site_id AND deleted = 0";
+
+            $result = $wpdb->get_col( $query );
+
+            // Make sure the array is always filled with something.
+            if ( empty ( $result ) )
+                $cache[ $site_id ] = array ( 'do not check again' );
+            else
+                $cache[ $site_id ] = $result;
+        }
+
+        return in_array( $blog_id, $cache[ $site_id ] );
+    }
+}
