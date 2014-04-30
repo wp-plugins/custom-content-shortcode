@@ -46,9 +46,9 @@ With other libraries:
 
 == Installation ==
 
-1. Upload `custom-content-shortcode.zip` through *Plugins->Add New*, or extract and upload the folder to the `/wp-content/plugins/` directory
+1. Install from *Plugins->Add New*
 1. Activate the plugin from the *Plugins* menu
-1. Place the shortcode in a post, page, etc.
+1. See: *Settings -> Custom Content*
 
 
 == Screenshots ==
