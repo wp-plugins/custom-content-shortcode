@@ -30,18 +30,17 @@ There is a reference page under *Settings -> Custom Content*, as well as an over
 You'll find many useful features:
 
 * Simple **gallery field** for any post type
+* **Relative URLs** for links and images
 * Include **HTML/PHP/CSS/JavaScript** files
-* Selectively display content with **Mobile Detect**
 * Display content for **admin, specific user, login status**
 * User name, ID, **login/logout links** with redirect
 * **Comments** list, input form or comment count
-* **Relative URLs** for links and images
+* Display content based on mobile detect
 
 With other libraries:
 
-* Display [Bootstrap v3](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 * Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**, **flexible content**
-* Include [Live Edit](http://wordpress.org/plugins/live-edit/) with a shortcode - **front-end editing** of content and fields
+* Display [Bootstrap](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 
 
 == Installation ==
