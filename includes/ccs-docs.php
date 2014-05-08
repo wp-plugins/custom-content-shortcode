@@ -121,6 +121,13 @@ function ccs_docs_admin_css() {
 						font-size: 16px;
 						line-height: 1.4em; 
 					}
+					.doc-style a {
+						text-decoration: none;
+						color: #000;
+					}
+					.doc-style a:hover {
+						color: #0074A2;
+					}
 					.doc-style code {
 						font-size: 16px;
 						padding: 10px 15px;
@@ -180,7 +187,7 @@ function ccs_get_all_fields_from_post_type( $post_type ) {
 
 function ccs_content_settings_page() {
 
-	/* -- For later, in case of option form is needed
+	/* -- For later, in case an option form is needed
 	?>
 		<div class="wrap">
 		<h2>Form title</h2>
@@ -196,8 +203,8 @@ function ccs_content_settings_page() {
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
 
-	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'load', 'gallery',
-						'user', 'mobile', 'ACF', 'etc' );
+	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'each', 'gallery',
+						'user', 'load', 'mobile', 'ACF', 'etc' );
 
 	?>
 		<div class="wrap">
@@ -208,10 +215,13 @@ function ccs_content_settings_page() {
 		<?php
 
 			foreach ($all_tabs as $tab) {
+
+				$tab_name = ucwords(str_replace('-', ' ', $tab));
+
 				?>
 				<a href="?page=ccs_content_shortcode_help&tab=<?php echo $tab; ?>"
 					class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>">
-						<?php echo ucwords($tab); ?></a>
+						<?php echo $tab_name; ?></a>
 				<?php
 
 			}
@@ -240,8 +250,9 @@ function ccs_content_settings_page() {
 
 				<div align="center">
 					<img src="<?php echo plugins_url();?>/custom-content-shortcode/docs/logo/logo.png"><br><br>
-					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br>
-					For support and other inquiries, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
+					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br><br>
+					For general questions, please visit the <a href="http://wordpress.org/support/plugin/custom-content-shortcode" target="_blank">WordPress plugin support forum</a>.<br>
+					For commercial support and other inquiries, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
 				</div>
 
 				<?php

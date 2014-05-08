@@ -5,8 +5,8 @@ Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
-Tested up to: 3.8.1
-Stable tag: 0.7.1
+Tested up to: 3.9
+Stable tag: 0.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,25 +30,25 @@ There is a reference page under *Settings -> Custom Content*, as well as an over
 You'll find many useful features:
 
 * Simple **gallery field** for any post type
+* **Relative URLs** for links and images
 * Include **HTML/PHP/CSS/JavaScript** files
-* Selectively display content with **Mobile Detect**
 * Display content for **admin, specific user, login status**
 * User name, ID, **login/logout links** with redirect
 * **Comments** list, input form or comment count
-* **Relative URLs** for links and images
+* Display content based on mobile detect
 
 With other libraries:
 
-* Display [Bootstrap v3](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 * Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**, **flexible content**
-* Include [Live Edit](http://wordpress.org/plugins/live-edit/) with a shortcode - **front-end editing** of content and fields
+* Display [Bootstrap](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 
 
 == Installation ==
 
-1. Upload `custom-content-shortcode.zip` through *Plugins->Add New*, or extract and upload the folder to the `/wp-content/plugins/` directory
+1. Install from *Plugins -> Add New*
+1. Or download the .zip and extract to *wp-contents/plugins*
 1. Activate the plugin from the *Plugins* menu
-1. Place the shortcode in a post, page, etc.
+1. See: *Settings -> Custom Content*
 
 
 == Screenshots ==
@@ -57,10 +57,85 @@ None.
 
 == Changelog ==
 
+= 0.9.0 =
+
+* **[if flag]** - if a field has value, then display something
+* **[if no_flag]** - if a field is empty, then display something
+* **[for each]** - now able to use inside loop; display for each category, tag or taxonomy
+* **[url login]** - updated *go* parameter
+* Content Overview - display all taxonomy terms, even unused ones
+
+= 0.8.8 =
+
+* **[content]** - Display multiple vales from checkbox or selector field
+* **[repeater]** - ACF: repeater field (correct shortcode name)
+* **[loop]** - get a post by name or ID, for repeater field to target
+
+= 0.8.7 =
+
+* Fixed compatibility with a theme
+
+= 0.8.6 =
+
+* Fixed compatibility with older versions of PHP
+
+= 0.8.5 =
+
+* **[loop]** - Improved parameter *clean*
+* **[loop]** - Testing parameter *blog* for multisite: *blog="2"*
+* **[content]** - Added parameter *meta* for displaying author meta
+* **[content]** - Enabled parameter *date_format* for custom field
+* **[user]** - Added parameter *field* to display user meta
+* **[clean], [format]** - Added format shortcodes
+
+= 0.8.3 =
+
+* **[load]** - Improve performance
+
+= 0.8.2 =
+
+* **[loop]** - Improve formatting parameters: *clean*, *strip_tags*, *allow*
+
+= 0.8.0 =
+
+* **[loop]** - Field and taxonomy queries: make *compare* and *relation* parameters case-insensitive
+
+= 0.7.9 =
+
+* **[loop]** - Taxonomy query - multiple values possible: *value="apple, green"*
+* **[loop]** - Taxonomy query - add parameter *compare="AND"*, *compare="NOT"*
+* **[loop]** - Correctly display posts with tag(s): *tag="tag1,tag2"*
+* **[loop]** - Add parameter *pad* for column padding: *pad="0 10px"*
+
+= 0.7.7 =
+
+* **[for]** - Create loops for each category, tag, or taxonomy; see reference page
+* **[loop]** - Improve simple columns
+
+= 0.7.6 =
+
+* **[content]** - Improve *more* tag display: *[content more="true"]*
+
+= 0.7.3 =
+
+* **[loop]** - Add parameter *columns* for simple columns feature: *columns="3"*
+* **[content]** - Add parameter *embed* to autoembed URLs: *embed="true"*; it's enabled by default for post content, i.e., [content] inside a loop
+
+= 0.7.2 =
+
+* **[loop]** - Enable multiple values for post ID: *id="1,3,7"*
+* **[loop]** - Add parameter *exclude* by post ID: *exclude="7,15,21"*
+* **[content]** - Add parameter *more* to display content up to the more tag
+* **[content]** - Add field *attach-link* to display image attachment page link
+* **[content]** - Process content in correct order: do_shortcode, then wpautop
+* **[comment total]** - New parameter to display total comment count of last loop
+* **[load]** - Return output instead of echo
+* **Gallery Field** - Add all image sizes for parameter *size*
+
 = 0.7.1 =
 
 * **[loop]** - Improved parameter *checkbox* to query by checkbox value(s)
-* **[is user]** - Multiple values possible, i.e., *user="1,3,7,guest"*
+* **[is user]** - Enable multiple values, i.e., *user="1,3,7,guest"*
 
 = 0.7.0 =
 
