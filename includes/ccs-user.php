@@ -1,11 +1,8 @@
 <?php
 
-
-
-
 /*====================================================================================================
  *
- * Relative URL shortcodes - [url site/theme/child/content/uploads]
+ * Relative URL shortcodes - [url site/theme/child/views/content/uploads]
  *
  *====================================================================================================*/
 
@@ -37,13 +34,14 @@ class urlShortcode
 			'go' => '',
 		), $attributes));
 
-        if( is_array( $attributes ) )
-        {
+        if ( is_array( $attributes ) ) {
             $attributes = array_flip( $attributes );
         }
-        
 
-		if($go!='') {
+		if ( ($go=='here') || (isset($attributes['logout']) && empty($go)) ) {
+			global $wp;
+			$go = home_url( $wp->request );
+		} elseif($go!='') {
 			if($go=='home')
 				$go = $blogurl_settings['home'];
 			elseif( (isset( $attributes['login'] )) || (isset( $attributes['logout'] )) )
@@ -288,7 +286,6 @@ function custom_user_shortcode( $atts, $content ) {
 	if (!empty($field)) {
 		return get_user_meta( $current_user->ID, $field, true );
 	}
-
 
 	if( is_array( $atts ) )
 		$atts = array_flip( $atts );
