@@ -254,28 +254,27 @@ function do_short( $content )
  *====================================================================================================*/
 
 
-
-
 /** Load CSS field into header **/
 
 add_action('wp_head', 'load_custom_css');
 function load_custom_css() {
 	global $wp_query;
+	if(isset($wp_query->post)) {
+		$custom_css = get_post_meta( $wp_query->post->ID, "css", $single=true );
 
-	$custom_css = get_post_meta( $wp_query->post->ID, "css", $single=true );
+	/*	if($custom_css == '') { */
+			$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
+			$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+			$default_css = $default_layout_dir . 'style.css';
 
-/*	if($custom_css == '') { */
-		$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
-		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
-		$default_css = $default_layout_dir . 'style.css';
+			if(file_exists($default_css))
+				$custom_css .= '[load css="style.css" dir="layout"]';
+	/*	} */
 
-		if(file_exists($default_css))
-			$custom_css .= '[load css="style.css" dir="layout"]';
-/*	} */
-
-	$custom_css = do_shortcode( $custom_css );
-	if( $custom_css != '' ) {
-		echo $custom_css;
+		$custom_css = do_shortcode( $custom_css );
+		if( $custom_css != '' ) {
+			echo $custom_css;
+		}
 	}
 }
 
@@ -284,24 +283,26 @@ function load_custom_css() {
 add_action('wp_footer', 'load_custom_js');
 function load_custom_js() {
 	global $wp_query;
+	if(isset($wp_query->post)) {
+		$custom_js = get_post_meta( $wp_query->post->ID, "js", $single=true );
 
-	$custom_js = get_post_meta( $wp_query->post->ID, "js", $single=true );
+	/*	if($custom_js == '') { */
 
-/*	if($custom_js == '') { */
+			$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+			$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+			$default_js = $default_layout_dir . 'scripts.js';
 
-		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
-		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
-		$default_js = $default_layout_dir . 'scripts.js';
+			if(file_exists($default_js))
+				$custom_js .= '[load js="scripts.js" dir="layout"]';
+	/*	} */
 
-		if(file_exists($default_js))
-			$custom_js .= '[load js="scripts.js" dir="layout"]';
-/*	} */
-
-	$custom_js = do_shortcode( $custom_js );
-	if( $custom_js != '' ) {
-		echo $custom_js;
+		$custom_js = do_shortcode( $custom_js );
+		if( $custom_js != '' ) {
+			echo $custom_js;
+		}
 	}
 }
+
 
 /** Load HTML field instead of content **/
 

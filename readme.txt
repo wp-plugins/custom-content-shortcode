@@ -5,8 +5,8 @@ Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
-Tested up to: 3.9
-Stable tag: 0.9.3
+Tested up to: 3.9.1
+Stable tag: 0.9.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -59,6 +59,11 @@ With other libraries:
 
 == Changelog ==
 
+= 0.9.4 =
+
+* **[for each]** - for each category/tag/taxonomy of current post: *current="true"*
+* Added a note in the documentation about using [loop] to create multiple Bootstrap carousels
+
 = 0.9.3 =
 
 * **[for each]** - for each child category, by parent slug; *each="category" parent="products"*
@@ -67,7 +72,6 @@ With other libraries:
 = 0.9.2 =
 
 * **[pass]** - correctly pass when field value is an array (for example, post IDs)
-* Updated documentation
 
 = 0.9.1 =
 
