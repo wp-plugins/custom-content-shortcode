@@ -35,27 +35,13 @@ add_shortcode('js', 'custom_js_wrap');
 
 
 function ccs_safe_eval($code) {
-	$strip_tags='<p><br />';
 	ob_start();
-	eval('?>' . $code);
-	$code = ob_get_contents();
-	ob_end_clean();
-	return $code;
+	$code = '?>' . $code;
+	eval($code);
+	return ob_get_clean();
 }
 
-
-/*
-function ccs_safe_eval_file( $code ) {
-	$strip_tags='<p><br />';
-	ob_start();
-	eval('?>' . $code);
-	$code = ob_get_contents();
-	ob_end_clean();
-	return $code;
-}
-*/
-
-	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. */
+	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. 
 
 if ( ! function_exists('undo_wptexturize')) {
 	function undo_wptexturize($content) {
@@ -82,37 +68,43 @@ if ( ! function_exists('undo_wptexturize')) {
 if ( ! shortcode_exists('php')) {
 
 	function custom_php_shortcode($atts, $content) {
-
 		ob_start();
-
 		eval( undo_wptexturize( $content ) );
-
 		return ob_get_clean();
-
 	}
-
 	add_shortcode( 'php', 'custom_php_shortcode' );
 }
-
+*/
 
 function custom_load_script_file( $atts ) {
 
 	extract( shortcode_atts( array(
 		'css' => null, 'js' => null, 'dir' => null,
 		'file' => null,'format' => null, 'shortcode' => null,
-		'gfonts' => null, 'cache' => 'false',
+		'gfonts' => null, 'cache' => 'true',
 		'php' => 'true', 'debug' => 'false',
 		), $atts ) );
 
-	$this_dir = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+	$root_path = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+	$path = $root_path . '/';
+	$site_url = get_site_url();
 
 	switch($dir) {
-		case 'web' : $dir = ""; break;
+		case 'web' : $dir = ""; $path = ""; break;
         case 'site' : $dir = home_url() . '/'; break; /* Site address */
-		case 'wordpress' : $dir = get_site_url() . '/'; break; /* WordPress directory */
-		case 'content' : $dir = get_site_url() . '/wp-content/'; break;
-		case 'layout' : $dir = get_site_url() . '/wp-content/layout/'; break;
-		case 'views' : $dir = get_site_url() . '/wp-content/views/'; break;
+		case 'wordpress' : $dir =  $site_url . '/'; break; /* WordPress directory */
+		case 'content' :
+			$dir = $site_url . '/wp-content/';
+			$path = $root_path . '/wp-content/';
+			break;
+		case 'layout' :
+			$dir = $site_url . '/wp-content/layout/';
+			$path = $root_path . '/wp-content/layout/';
+		break;
+		case 'views' :
+			$dir = $site_url . '/wp-content/views/';
+			$path = $root_path . '/wp-content/views/';
+			break;
 		case 'child' : $dir = get_stylesheet_directory_uri() . '/'; break;
 		default:
 
@@ -129,9 +121,11 @@ function custom_load_script_file( $atts ) {
 			}
 	}
 
+	$out = '';
+
 	if($css != '') {
-		echo '<link rel="stylesheet" type="text/css" href="';
-		echo $dir . $css;
+		$out .= '<link rel="stylesheet" type="text/css" href="';
+		$out .= $dir . $css;
 
 		if($cache=='false') {
 
@@ -139,29 +133,37 @@ function custom_load_script_file( $atts ) {
 				$tail .= rand(0,9) ; 
 			} 
 
-			echo '?' . $tail;
+			$out .= '?' . $tail;
 		}
-		echo '" />';
+		$out .= '" />';
 	}
 	if($gfonts != '') {
-		echo '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=';
-		echo $gfonts . '" />';
+		$out .= '<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=';
+		$out .= $gfonts . '" />';
 	}
 	if($js != '') {
-		echo '<script type="text/javascript" src="' . $dir . $js . '"></script>';
+		$out .= '<script type="text/javascript" src="' . $dir . $js . '"></script>';
 	}
 	if($file != '') {
 
-		$output = @file_get_contents($dir . $file);
+		$output = '';
+
+//		echo $path . $file;
+
+		if ($dir != 'web')
+			$output = @file_get_contents($path . $file);
 
 		if( empty($output) ) {
-			$url = $dir . $file;
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			$data = curl_exec($ch);
-			curl_close($ch);
-			$output = $data;
+			$output = @file_get_contents($dir . $file);
+			if( ($dir == 'web') && empty($output) ) {
+				$url = $dir . $file;
+				$ch = curl_init();
+				curl_setopt($ch, CURLOPT_URL, $url);
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				$data = curl_exec($ch);
+				curl_close($ch);
+				$output = $data;
+			}
 		}
 
 		if($output!='') {
@@ -171,11 +173,8 @@ function custom_load_script_file( $atts ) {
 
 			/* Put safe_eval here for executing PHP inside template files */
 
-
 			if($php=='true') {
-
 				$output = ccs_safe_eval( $output );
-
 			}
 
 			if(($shortcode != 'false')||($shortcode != 'off')) { // Shortcode?
@@ -184,7 +183,7 @@ function custom_load_script_file( $atts ) {
 			return $output;
 		}
 	}
-	return null;
+	return $out;
 }
 add_shortcode('load', 'custom_load_script_file');
 
@@ -226,7 +225,6 @@ function do_shortcode_file( $file, $dir = "" ) {
 	}
 */
 
-
 	$file = $dir . $file . '.html';
 
 	$output = @file_get_contents( $file );
@@ -256,28 +254,27 @@ function do_short( $content )
  *====================================================================================================*/
 
 
-
-
 /** Load CSS field into header **/
 
 add_action('wp_head', 'load_custom_css');
 function load_custom_css() {
 	global $wp_query;
+	if(isset($wp_query->post)) {
+		$custom_css = get_post_meta( $wp_query->post->ID, "css", $single=true );
 
-	$custom_css = get_post_meta( $wp_query->post->ID, "css", $single=true );
+	/*	if($custom_css == '') { */
+			$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
+			$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+			$default_css = $default_layout_dir . 'style.css';
 
-/*	if($custom_css == '') { */
-		$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
-		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
-		$default_css = $default_layout_dir . 'style.css';
+			if(file_exists($default_css))
+				$custom_css .= '[load css="style.css" dir="layout"]';
+	/*	} */
 
-		if(file_exists($default_css))
-			$custom_css .= '[load css="style.css" dir="layout"]';
-/*	} */
-
-	$custom_css = do_shortcode( $custom_css );
-	if( $custom_css != '' ) {
-		echo $custom_css;
+		$custom_css = do_shortcode( $custom_css );
+		if( $custom_css != '' ) {
+			echo $custom_css;
+		}
 	}
 }
 
@@ -286,37 +283,46 @@ function load_custom_css() {
 add_action('wp_footer', 'load_custom_js');
 function load_custom_js() {
 	global $wp_query;
+	if(isset($wp_query->post)) {
+		$custom_js = get_post_meta( $wp_query->post->ID, "js", $single=true );
 
-	$custom_js = get_post_meta( $wp_query->post->ID, "js", $single=true );
+	/*	if($custom_js == '') { */
 
-/*	if($custom_js == '') { */
+			$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
+			$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
+			$default_js = $default_layout_dir . 'scripts.js';
 
-		$root_dir_soft = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
-		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
-		$default_js = $default_layout_dir . 'scripts.js';
+			if(file_exists($default_js))
+				$custom_js .= '[load js="scripts.js" dir="layout"]';
+	/*	} */
 
-		if(file_exists($default_js))
-			$custom_js .= '[load js="scripts.js" dir="layout"]';
-/*	} */
-
-	$custom_js = do_shortcode( $custom_js );
-	if( $custom_js != '' ) {
-		echo $custom_js;
+		$custom_js = do_shortcode( $custom_js );
+		if( $custom_js != '' ) {
+			echo $custom_js;
+		}
 	}
 }
+
 
 /** Load HTML field instead of content **/
 
 add_action('the_content', 'load_custom_html');
 function load_custom_html($content) {
-	global $wp_query;
+
 	global $ccs_global_variable;
-	global $ccs_content_template_loader;
 
 	if(( $ccs_global_variable['is_loop'] == "false" ) &&
 		!is_admin() ) {
 
+		/*--- Template loader ---*/
+
+		global $ccs_content_template_loader;
+		global $wp_query;
+
+
 		$html_field = get_post_meta( $wp_query->post->ID, "html", $single=true );
+
+		$output = '';
 
 		/* Set default layout filename */
 
@@ -337,18 +343,18 @@ function load_custom_html($content) {
 
 		$default_footer = 'footer.html';
 
-		$output = '';
-
 		// Load default header
 
 		if ( ($ccs_content_template_loader == true) &&
 			( file_exists( $default_layout_dir . $default_header ) ) ) {
 			$output .= '[load file="'. $default_header . '" dir="layout"]';
 		}
-		// Load default page template
 
-		if ( ($ccs_content_template_loader == true) &&
-			( $html_field == '' ) ) {
+		if (!empty($html_field)) {
+			$output .= $html_field;
+		} elseif ( $ccs_content_template_loader == true ) {
+
+			// Load default page template
 
 /*
 			echo 'Searching templates<br>';
@@ -357,8 +363,8 @@ function load_custom_html($content) {
 			echo $default_layout_dir . $default_post_type_template . '<br>';
 			echo $default_layout_dir . $current_post_type . '/' . $current_post_slug . '.html' . '<br>';
 			echo $default_layout_dir . $current_post_type . '/' . $default_post_type_template . '<br>';
-
 */
+
 			/*----  post-example.html  ----*/ 
 
 			/*----  home.html  ----*/ 
@@ -417,9 +423,6 @@ function load_custom_html($content) {
 				$output .= '[load file="' . 'page/' . $default_page_template . '" dir="layout"]';
 			}
 
-
-		} else {
-			$output .= $html_field;
 		}
 
 		// Load default footer
