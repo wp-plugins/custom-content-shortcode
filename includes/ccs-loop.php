@@ -8,6 +8,9 @@
 
 class LoopShortcode {
 
+	private static $sort_posts;
+	private static $sort_key;
+
 	function __construct() {
 		add_action( 'init', array( $this, 'register' ) );
 	}
@@ -15,16 +18,19 @@ class LoopShortcode {
 	function register() {
 		add_shortcode( 'loop', array( $this, 'the_loop_shortcode' ) );
 		add_shortcode( 'pass', array( $this, 'pass_shortcode' ) );
-//		add_filter( 'the_content', 'wpautop', 20 );  // change priority: wpautop after shortcode
+
+		// move wpautop filter to AFTER shortcode is processed
+		remove_filter( 'the_content', 'wpautop' );
+		add_filter( 'the_content', 'wpautop' , 99);
+		add_filter( 'the_content', 'shortcode_unautop',100 );
 	}
 
 	function the_loop_shortcode( $atts, $template = null, $shortcode_name ) {
 
 		global $ccs_global_variable;
-		global $sort_posts;
-		global $sort_key;
 
 		$ccs_global_variable['is_loop'] = "true";
+		$ccs_global_variable['current_loop_count'] = 0;
 		$ccs_global_variable['current_gallery_name'] = '';
 		$ccs_global_variable['current_gallery_id'] = '';
 		$ccs_global_variable['is_gallery_loop'] = "false";
@@ -70,6 +76,13 @@ class LoopShortcode {
 
 		$all_args = shortcode_atts( $args , $atts, true );
 		extract( $all_args );
+
+
+/*========================================================================
+ *
+ * Set up query based on parameters
+ *
+ *=======================================================================*/
 
 
 		/*---------------
@@ -163,11 +176,6 @@ class LoopShortcode {
 		}
 
 
-		/*----------------
-		 * Alter query
-		 *---------------*/
-
-
 		/*---------------
 		 * In a foreach loop?
 		 *-------------*/
@@ -199,8 +207,8 @@ class LoopShortcode {
 				$query['posts_per_page'] = '-1';
 			} else {
 				$query['posts_per_page'] = $count;
+				$query['ignore_sticky_posts'] = true;
 			}
-
 
 		} else {
 
@@ -346,6 +354,9 @@ class LoopShortcode {
 
 		if($series!='') {
 
+			// Remove white space
+			$series = str_replace(' ', '', $series);
+
 //			Expand range: 1-3 -> 1,2,3
 
 			/* PHP 5.3+
@@ -359,15 +370,14 @@ class LoopShortcode {
 			$callback = create_function('$m', 'return implode(\',\', range($m[1], $m[2]));');
 			$series = preg_replace_callback('/(\d+)-(\d+)/', $callback, $series);
 
+			self::$sort_posts = explode(',', $series);
 
-			$sort_posts = explode(',', $series);
-
-			$sort_key = $keyname;
+			self::$sort_key = $keyname;
 
 				$query['meta_query'] = array(
 						array(
 							'key' => $keyname,
-							'value' => $sort_posts,
+							'value' => self::$sort_posts,
 							'compare' => 'IN'
 						)
 					);
@@ -427,11 +437,13 @@ class LoopShortcode {
 				}
 			}
 
-	/*====================================================================================
-	 *
-	 * Main loop
-	 * 
-	 *====================================================================================*/
+
+
+/*====================================================================================
+ *
+ * Main loop
+ * 
+ *====================================================================================*/
 
 		/*--------------
 		 * Put a hook here?
@@ -483,6 +495,7 @@ class LoopShortcode {
 				$ccs_global_variable['total_comments']+=get_comments_number();
 				$current_id = get_the_ID();
 				$ccs_global_variable['current_loop_id']=$current_id;
+				$ccs_global_variable['current_loop_count']=$current_count;
 
 				// Filter by checkbox..
 
@@ -678,6 +691,7 @@ class LoopShortcode {
 
 					$keywords = apply_filters( 'query_shortcode_keywords', array(
 						'QUERY' => serialize($query), // DEBUG purpose
+						'COUNT' => $current_count,
 						'URL' => get_permalink(),
 						'ID' => $current_id,
 						'TITLE' => get_the_title(),
@@ -719,6 +733,39 @@ class LoopShortcode {
 						}
 					} 
 
+
+// First post found?
+
+					if ($current_count == 1) {
+
+						// search content for [if last]
+
+						$start = '[if first]';
+						$end = '[/if]';
+
+						$middle = self::getBetween($start, $end, $out);
+						if($middle) {
+							$out = str_replace($start.$middle.$end, $middle, $out);
+						}
+
+					}
+
+// Last post found?
+
+					if ($current_count == $posts->post_count) {
+
+						// search content for [if last]
+
+						$start = '[if last]';
+						$end = '[/if]';
+
+						$middle = self::getBetween($start, $end, $out);
+						if($middle) {
+							$out = str_replace($start.$middle.$end, $middle, $out);
+						}
+
+					}
+
 					if ($clean == 'true') {
 						$output[] = do_shortcode(custom_clean_shortcodes( $out ));
 					} else {
@@ -737,8 +784,12 @@ class LoopShortcode {
 
 			} /* Not skip */
 
+// End loop for each post found
+
 			endwhile; $nothing_found = false;
-			} // End loop for each post found
+
+			} // End if post found
+
 			else {
 
 				$nothing_found = true;
@@ -748,15 +799,12 @@ class LoopShortcode {
 				$start = '[if empty]';
 				$end = '[/if]';
 
-				$middle = explode($start, $template);
-				if (isset($middle[1])){
-					$middle = explode($end, $middle[1]);
-					$middle = $middle[0];
-					echo do_shortcode($middle); // then do it
-				}
+				$middle = self::getBetween($start, $end, $template);
+				if($middle)
+					echo do_shortcode($middle); // then do it	
 			}
 
-			wp_reset_query();
+			// wp_reset_query(); not necessary
 			wp_reset_postdata();
 
 			if (!$nothing_found) {
@@ -789,7 +837,16 @@ class LoopShortcode {
 							echo $clear;
 
 					} else {
+
+
+/*========================================================================
+ *
+ * Final output (for not attachment or gallery)
+ *
+ *=======================================================================*/
+
 						echo implode( "", $output );
+
 					}
 
 				} else {
@@ -808,11 +865,12 @@ class LoopShortcode {
 
 		} else {
 
-			/*********************
-			 *
-			 * Attachment Loop
-			 *
-			 */
+
+/*========================================================================
+ *
+ * Attachment Loop
+ *
+ *=======================================================================*/
 
 			if( $type == 'attachment' ) {
 
@@ -915,7 +973,7 @@ class LoopShortcode {
 						} /** End for each attachment **/
 					}
 					$ccs_global_variable['is_attachment_loop'] = "false";
-					wp_reset_query();
+					// wp_reset_query(); not necessary
 					wp_reset_postdata();
 
 					echo implode( "", $output );
@@ -930,11 +988,13 @@ class LoopShortcode {
 
 			else {
 
-				/*********************
-				 *
-				 * Gallery Loop
-				 *
-				 */
+
+/*========================================================================
+ *
+ * Gallery Loop
+ *
+ *=======================================================================*/
+
 
 				if( function_exists('custom_gallery_get_image_ids') ) {
 
@@ -1026,7 +1086,7 @@ class LoopShortcode {
 						} /** End for each attachment **/
 
 						$ccs_global_variable['is_gallery_loop'] = "false";
-						wp_reset_query();
+						// wp_reset_query(); not necessary
 						wp_reset_postdata();
 
 						echo implode( "", $output );
@@ -1071,6 +1131,19 @@ class LoopShortcode {
 		return $string;
 	}
 
+	public static function getBetween($start, $end, $text) {
+
+				$middle = explode($start, $text);
+				if (isset($middle[1])){
+					$middle = explode($end, $middle[1]);
+					$middle = $middle[0];
+					return $middle;
+				} else {
+					return false;
+				}
+	}
+
+
 	/*============================================================================
 	 *
 	 * Sort series helper function
@@ -1078,10 +1151,9 @@ class LoopShortcode {
 	 *===========================================================================*/
 
 	public static function custom_series_orderby_key( $a, $b ) {
-		global $sort_posts; global $sort_key;
 
-		$apos = array_search( get_post_meta( $a->ID, $sort_key, $single=true ), $sort_posts );
-		$bpos = array_search( get_post_meta( $b->ID, $sort_key, $single=true ), $sort_posts );
+		$apos = array_search( get_post_meta( $a->ID, self::$sort_key, $single=true ), self::$sort_posts );
+		$bpos = array_search( get_post_meta( $b->ID, self::$sort_key, $single=true ), self::$sort_posts );
 
 		return ( $apos < $bpos ) ? -1 : 1;
 	}
@@ -1184,6 +1256,11 @@ $loop_shortcode = new LoopShortcode;
 	}
 	add_shortcode('clean', 'custom_cleaner_shortcode');
 
+
+	function custom_direct_shortcode( $atts, $content ) {
+		return $content;
+	}
+	add_shortcode('direct', 'custom_direct_shortcode');
 
 
 if (!function_exists('undo_wptexturize')) {

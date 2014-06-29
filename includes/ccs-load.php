@@ -34,48 +34,6 @@ add_shortcode('js', 'custom_js_wrap');
  *====================================================================================================*/
 
 
-function ccs_safe_eval($code) {
-	ob_start();
-	$code = '?>' . $code;
-	eval($code);
-	return ob_get_clean();
-}
-
-	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. 
-
-if ( ! function_exists('undo_wptexturize')) {
-	function undo_wptexturize($content) {
-		$content = strip_tags($content);
-		$content = preg_replace("/\[{1}([\/]*)([a-zA-z\/]{1}[a-zA-Z0-9]*[^\'\"])([a-zA-Z0-9 \!\"\£\$\%\^\&\*\*\(\)\_\-\+\=\|\\\,\.\/\?\:\;\@\'\#\~\{\}\¬\¦\`\<\>]*)([\/]*)([\]]{1})/ix","<$1$2$3>",$content,"-1");
-		$content = htmlspecialchars($content, ENT_NOQUOTES);
-		$content = str_replace("&amp;#8217;","'",$content);
-		$content = str_replace("&amp;#8216;","'",$content);
-		$content = str_replace("&amp;#8242;","'",$content);
-		$content = str_replace("&amp;#8220;","\"",$content);
-		$content = str_replace("&amp;#8221;","\"",$content);
-		$content = str_replace("&amp;#8243;","\"",$content);
-		$content = str_replace("&amp;#039;","'",$content);
-		$content = str_replace("&#039;","'",$content);
-		$content = str_replace("&amp;#038;","&",$content);
-		$content = str_replace("&amp;gt;",'>',$content);
-		$content = str_replace("&amp;lt;",'<',$content);
-		$content = htmlspecialchars_decode($content);
-
-		return $content;
-	}
-}
-
-if ( ! shortcode_exists('php')) {
-
-	function custom_php_shortcode($atts, $content) {
-		ob_start();
-		eval( undo_wptexturize( $content ) );
-		return ob_get_clean();
-	}
-	add_shortcode( 'php', 'custom_php_shortcode' );
-}
-*/
-
 function custom_load_script_file( $atts ) {
 
 	extract( shortcode_atts( array(
@@ -85,7 +43,9 @@ function custom_load_script_file( $atts ) {
 		'php' => 'true', 'debug' => 'false',
 		), $atts ) );
 
-	$root_path = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+	$root_path = ABSPATH;
+
+//	$root_path = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
 	$path = $root_path . '/';
 	$site_url = get_site_url();
 
@@ -199,7 +159,8 @@ add_shortcode('load', 'custom_load_script_file');
 
 function do_shortcode_file( $file, $dir = "" ) {
 
-	$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
+	$root_dir_soft = ABSPATH;
+//	$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__)))));
 
 	switch($dir) {
 		case 'root' : 
@@ -227,11 +188,16 @@ function do_shortcode_file( $file, $dir = "" ) {
 
 	$file = $dir . $file . '.html';
 
-	$output = @file_get_contents( $file );
 
-	if ( ( $output!='' ) && ($output != false) ) {
+/*	$output = @file_get_contents( $file ); */
 
-		$output = ccs_safe_eval( $output );
+	ob_start();
+	@include($file);
+	$output = ob_get_clean();
+
+	if ( !empty($output) ) {
+
+/*		$output = ccs_safe_eval( $output ); */
 		$output = do_shortcode( $output );
 
 		echo $output;
@@ -246,6 +212,7 @@ function do_short( $content )
 {
 	echo do_shortcode( $content );
 }
+
 
 /*====================================================================================================
  *
@@ -319,14 +286,14 @@ function load_custom_html($content) {
 		global $ccs_content_template_loader;
 		global $wp_query;
 
-
 		$html_field = get_post_meta( $wp_query->post->ID, "html", $single=true );
 
 		$output = '';
 
 		/* Set default layout filename */
 
-		$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
+		$root_dir_soft = ABSPATH . '/';
+//		$root_dir_soft = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
 
 		$default_layout_dir = $root_dir_soft . 'wp-content/layout/';
 
@@ -442,3 +409,46 @@ function load_custom_html($content) {
 	return $content;
 }
 
+
+
+function ccs_safe_eval($code) {
+	ob_start();
+	$code = '?>' . $code;
+	eval($code);
+	return ob_get_clean();
+}
+
+	/* Content passed to the shortcode is after wptexturize, so we have to reverse it.. 
+
+if ( ! function_exists('undo_wptexturize')) {
+	function undo_wptexturize($content) {
+		$content = strip_tags($content);
+		$content = preg_replace("/\[{1}([\/]*)([a-zA-z\/]{1}[a-zA-Z0-9]*[^\'\"])([a-zA-Z0-9 \!\"\£\$\%\^\&\*\*\(\)\_\-\+\=\|\\\,\.\/\?\:\;\@\'\#\~\{\}\¬\¦\`\<\>]*)([\/]*)([\]]{1})/ix","<$1$2$3>",$content,"-1");
+		$content = htmlspecialchars($content, ENT_NOQUOTES);
+		$content = str_replace("&amp;#8217;","'",$content);
+		$content = str_replace("&amp;#8216;","'",$content);
+		$content = str_replace("&amp;#8242;","'",$content);
+		$content = str_replace("&amp;#8220;","\"",$content);
+		$content = str_replace("&amp;#8221;","\"",$content);
+		$content = str_replace("&amp;#8243;","\"",$content);
+		$content = str_replace("&amp;#039;","'",$content);
+		$content = str_replace("&#039;","'",$content);
+		$content = str_replace("&amp;#038;","&",$content);
+		$content = str_replace("&amp;gt;",'>',$content);
+		$content = str_replace("&amp;lt;",'<',$content);
+		$content = htmlspecialchars_decode($content);
+
+		return $content;
+	}
+}
+
+if ( ! shortcode_exists('php')) {
+
+	function custom_php_shortcode($atts, $content) {
+		ob_start();
+		eval( undo_wptexturize( $content ) );
+		return ob_get_clean();
+	}
+	add_shortcode( 'php', 'custom_php_shortcode' );
+}
+*/
