@@ -19,11 +19,13 @@ class LoopShortcode {
 		add_shortcode( 'loop', array( $this, 'the_loop_shortcode' ) );
 		add_shortcode( 'pass', array( $this, 'pass_shortcode' ) );
 
+		add_shortcode( 'loop-count', array( $this, 'loop_count_shortcode' ) );
+
 		// move wpautop filter to AFTER shortcode is processed
-		remove_filter( 'the_content', 'wpautop' );
+/*		remove_filter( 'the_content', 'wpautop' );
 		add_filter( 'the_content', 'wpautop' , 99);
 		add_filter( 'the_content', 'shortcode_unautop',100 );
-	}
+*/	}
 
 	function the_loop_shortcode( $atts, $template = null, $shortcode_name ) {
 
@@ -1190,6 +1192,18 @@ class LoopShortcode {
 		return do_shortcode( $content );
 	}
 
+
+	function loop_count_shortcode() {
+
+		global $ccs_global_variable;
+
+		if ($ccs_global_variable['is_loop']=="true") {
+			return $ccs_global_variable['current_loop_count'];
+		} else {
+			return false;
+		}
+
+	}
 
 
 
