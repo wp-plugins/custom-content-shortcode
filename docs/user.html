@@ -23,9 +23,10 @@ You can also use the <strong>[isnt]</strong> shortcode, to see if the user is 
 <code>User name: [user name]
 User ID: [user id]
 User e-mail: [user email]
-User Full Name: [user fullname]
-User avatar: [user avatar]</code><br>
-<hr>
+User full name: [user fullname]
+User avatar: [user avatar]
+Custom user field: [user field="twitter"]</code><br>
+<hr><a id="login-out"></a>
 <h3>Login and logout</h3>
 
 The <strong>[url]</strong> shortcode is also used to display login and logout links.
@@ -73,7 +74,7 @@ Please note that the destination URL is not a parameter, it is wrapped inside. T
 
 The <b>[redirect]</b> shortcode can be placed anywhere, but the best place is in a custom field named <em>css</em>, so it can run at the beginning of the page.
 <br>
-<hr>
+<hr><a id="comments"></a>
 <h3>Comments</h3>
 
 For displaying comments of the current post, or in a query loop, use the <strong>[comment] </strong>shortcode.
@@ -81,6 +82,10 @@ For displaying comments of the current post, or in a query loop, use the <stron
 <code>Comment count: [comment count]
 Comment input form: [comment form]
 Comments list: [comment template] or [comments]</code>
+
+You can also display the total comment count after a loop:
+
+<code>Total number of comments: [comment total]</code>
 
 By default, the comments list is displayed by <em>comments.php</em> in the theme directory. If you want to specify a different template:
 
