@@ -21,11 +21,21 @@ class LoopShortcode {
 
 		add_shortcode( 'loop-count', array( $this, 'loop_count_shortcode' ) );
 
+		add_filter( 'no_texturize_shortcodes', array( $this, 'shortcodes_to_exempt_from_wptexturize') );
+/*
 		// move wpautop filter to AFTER shortcode is processed
-/*		remove_filter( 'the_content', 'wpautop' );
+		remove_filter( 'the_content', 'wpautop' );
 		add_filter( 'the_content', 'wpautop' , 99);
 		add_filter( 'the_content', 'shortcode_unautop',100 );
-*/	}
+*/
+	}
+
+	function shortcodes_to_exempt_from_wptexturize($shortcodes){
+		$shortcodes[] = 'loop';
+		return $shortcodes;
+	}
+
+
 
 	function the_loop_shortcode( $atts, $template = null, $shortcode_name ) {
 
@@ -155,12 +165,21 @@ class LoopShortcode {
 
 			while($x > 0) {
 				$count++;
+				$ccs_global_variable['current_loop_count'] = $count;
 				$keywords = array(
 					'COUNT' => $count
 					);
-				echo do_shortcode( $this->get_block_template( $template, $keywords ) );
+				$out = $this->get_block_template( $template, $keywords );
+
+				if ($clean == 'true') {
+					$output[] = do_shortcode(custom_clean_shortcodes( $out ));
+				} else {
+					$output[] = do_shortcode($out);
+				}
 				$x--;
 			}
+
+			echo implode("", $output);
 
 			$ccs_global_variable['is_loop'] = "false";
 			if (!empty($blog)) {
@@ -302,17 +321,21 @@ class LoopShortcode {
 			);
 		}
 
-// Taxonomy query
 
-		if($tax!='') $taxonomy=$tax;
-		if($taxonomy!='') {
+		/*========================================================================
+		 *
+		 * Query: taxonomy
+		 *
+		 *=======================================================================*/
+
+		if ( !empty($tax) ) $taxonomy = $tax;
+		if ( !empty($taxonomy) ) {
 
 			$terms = explode(",", $custom_value);
 
-			$compare = strtoupper($compare);
-
 			if (!empty($compare)) {
 
+				$compare = strtoupper($compare);
 				if ($compare=='NOT')
 					$compare = 'NOT IN';
 
@@ -345,7 +368,8 @@ class LoopShortcode {
 					$query['meta_key'] = $keyname;
 				}
 				if($order=='') {
-					if (($orderby=='meta_value_num') || ($orderby=='menu_order'))
+					if (($orderby=='meta_value_num') || ($orderby=='menu_order')
+						|| ($orderby=='title') || ($orderby=='name') )
 						$query['order'] = 'ASC';	
 					else
 						$query['order'] = 'DESC';
@@ -1214,11 +1238,13 @@ $loop_shortcode = new LoopShortcode;
 
 
 
-
-
-/*--------------------------------------*/
-/*    Clean up Shortcodes
-/*--------------------------------------*/
+/*========================================================================
+ *
+ * Clean up shortcodes
+ *
+ * To do: put these somewhere organized
+ *
+ *=======================================================================*/
 
 
 	function custom_clean_shortcodes($content){   

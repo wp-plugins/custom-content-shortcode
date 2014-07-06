@@ -49,6 +49,16 @@ function custom_load_script_file( $atts ) {
 	$path = $root_path . '/';
 	$site_url = get_site_url();
 
+	if (
+		(strpos($file, "http://") !== false) ||
+		(strpos($file, "https://") !== false) ||
+		(strpos($css, "http://") !== false) ||
+		(strpos($css, "https://") !== false) ||
+		(strpos($js, "http://") !== false) ||
+		(strpos($js, "https://") !== false) ) {
+			$dir = "web";
+	}
+
 	switch($dir) {
 		case 'web' : $path = ""; break;
         case 'site' : $dir = home_url() . '/'; break; /* Site address */
@@ -84,6 +94,14 @@ function custom_load_script_file( $atts ) {
 	$out = '';
 
 	if($css != '') {
+
+		if ($dir == 'web') {
+			$dir = "";
+			if ((strpos($css, "http://") === false) &&
+				(strpos($css, "https://") === false))
+				$dir = "http://";
+		}
+
 		$out .= '<link rel="stylesheet" type="text/css" href="';
 		$out .= $dir . $css;
 
@@ -102,6 +120,14 @@ function custom_load_script_file( $atts ) {
 		$out .= $gfonts . '" />';
 	}
 	if($js != '') {
+
+		if ($dir == 'web') {
+			$dir = "";
+			if ((strpos($js, "http://") === false) &&
+				(strpos($js, "https://") === false))
+				$dir = "http://";
+		}
+
 		$out .= '<script type="text/javascript" src="' . $dir . $js . '"></script>';
 	}
 	if($file != '') {
@@ -111,26 +137,38 @@ function custom_load_script_file( $atts ) {
 //		echo $path . $file;
 
 		if ($dir != 'web') {
-			$output = @file_get_contents($path . $file);
+
+			ob_start();
+			@include($path . $file);
+			$output = ob_get_clean();
+
 			if (empty($output)) {
-
 				// Try again
-				$output = @file_get_contents($dir . $file);
+				$output = @file_get_contents($path . $file);
+				if (empty($output)) {
+					// Try again
+					$output = @file_get_contents($dir . $file);
 
+				}
 			}
-
-
 		} else {
 
 			// get external file
+
+			if ((strpos($file, "http://") === false) &&
+				(strpos($file, "https://") === false))
+				$file = "http://".$file;
 
 			$url = $file;
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$data = curl_exec($ch);
+			$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 			curl_close($ch);
-			$output = $data;
+			if ($status == 200) {
+				$output = $data; // Success
+			}
 		}
 
 /*		if( empty($output) ) {
@@ -149,7 +187,7 @@ function custom_load_script_file( $atts ) {
 			/* Put safe_eval here for executing PHP inside template files */
 
 			if($php=='true') {
-				$output = ccs_safe_eval( $output );
+/*				$output = ccs_safe_eval( $output ); */
 			}
 
 			if(($shortcode != 'false')||($shortcode != 'off')) { // Shortcode?
@@ -202,7 +240,6 @@ function do_shortcode_file( $file, $dir = "" ) {
 */
 
 	$file = $dir . $file . '.html';
-
 
 /*	$output = @file_get_contents( $file ); */
 
