@@ -1,11 +1,8 @@
 <?php
 
-
-
-
 /*====================================================================================================
  *
- * Relative URL shortcodes - [url site/theme/child/content/uploads]
+ * Relative URL shortcodes - [url site/theme/child/views/content/uploads]
  *
  *====================================================================================================*/
 
@@ -37,18 +34,19 @@ class urlShortcode
 			'go' => '',
 		), $attributes));
 
-        if( is_array( $attributes ) )
-        {
+        if ( is_array( $attributes ) ) {
             $attributes = array_flip( $attributes );
         }
-        
 
-		if($go!='') {
+		if ( ($go=='here') || (isset($attributes['logout']) && empty($go)) ) {
+			global $wp;
+			$go = home_url( $wp->request );
+		} elseif($go!='') {
 			if($go=='home')
 				$go = $blogurl_settings['home'];
 			elseif( (isset( $attributes['login'] )) || (isset( $attributes['logout'] )) )
 				if( !strpos ($go,"." ) )
-					$go = custom_content_shortcode(array('name'=>$go, 'field'=>'url'));
+					$go = do_shortcode('[content name="'.$go.'" field="url"]');
 		}
 
 
@@ -66,7 +64,11 @@ class urlShortcode
         }
         elseif( isset( $attributes['layout'] ) )
         {
-            $return_blogurl = $blogurl_settings['content'] . '/layout/';
+            $return_blogurl = $blogurl_settings['content'] . '/layout';
+        }
+        elseif( isset( $attributes['views'] ) )
+        {
+            $return_blogurl = $blogurl_settings['content'] . '/views';
         }
         elseif( isset( $attributes['theme'] ) )
         {
@@ -153,19 +155,42 @@ function ccs_return_comment_form() {
 function ccs_return_comments_template($file) {
 	ob_start();
 	comments_template($file);
-	$form = ob_get_contents();
-    ob_end_clean();
+	$form = ob_get_clean(); 
     return $form;
 }
 
-function custom_comment_shortcode( $atts, $content, $tag ) {
+function ccs_comment_shortcode( $atts, $content, $tag ) {
+
+	global $ccs_global_variable;
+
+	extract(shortcode_atts(array(
+		'template' => ''
+	), $atts));
 
 	if( is_array( $atts ) ) {
 		$atts = array_flip( $atts );
 	}
 
-	if( ($tag=='comments') || isset( $atts['template'] ) ) {
-		$content = ccs_return_comments_template($atts['template']);
+	if( ($tag=='comments') || isset( $atts['template'] ) || (!empty($template))) {
+
+		$dir = "";
+/*		if (isset($atts['dir'])) {
+			$dir = do_shortcode("[url ".$atts['dir']."]/");
+		}
+*/
+		if (empty($template)) $template = "/comments.php";
+		if (isset($template[0]) && ($template[0]!="/"))
+			$template = "/".$template;
+
+		$file = $dir.$template;
+/*
+		echo "file: ".$file."<br>";
+// filter 'comments_template' gets this value
+		echo "style: ".STYLESHEETPATH . $file."<br>";
+		echo "template: ".TEMPLATEPATH . $file ."<br>";
+*/
+		$content = ccs_return_comments_template($dir.$template);
+
 		return $content;
 	}
 
@@ -176,23 +201,35 @@ function custom_comment_shortcode( $atts, $content, $tag ) {
 	if( isset( $atts['count'] ) ) {
 		return get_comments_number();
 	}
+	if( isset( $atts['total'] ) ) {
+		return $ccs_global_variable['total_comments'];
+	}
 }
-add_shortcode('comment', 'custom_comment_shortcode');
-add_shortcode('comments', 'custom_comment_shortcode');
+add_shortcode('comment', 'ccs_comment_shortcode');
+add_shortcode('comments', 'ccs_comment_shortcode');
+
+
+
+/*========================================================================
+ *
+ * [is] shortcode - combine with [if]...
+ *
+ *=======================================================================*/
 
 function custom_is_shortcode( $atts, $content, $tag ) {
+
 	global $current_user;
 
 	extract(shortcode_atts(array(
 		'user' => '',
-		'format' => '',
-		'shortcode' => '',
+		'format' => 'false',
+		'shortcode' => 'true',
 	), $atts));
 
-	if($format == 'true') { // Format?
+	if ($format == 'true') { // Format?
 		$content = wpautop( $content );
 	}
-	if($shortcode != 'false') { // Shortcode?
+	if ($shortcode != 'false') { // Shortcode?
 		$content = do_shortcode( $content );
 	}
 
@@ -242,11 +279,43 @@ function custom_is_shortcode( $atts, $content, $tag ) {
 add_shortcode('is', 'custom_is_shortcode');
 add_shortcode('isnt', 'custom_is_shortcode');
 
+function custom_blog_shortcode( $atts, $content ){
+
+	extract(shortcode_atts(array(
+		'id' => '',
+	), $atts));
+
+	$out = $content;
+
+	if ( empty($id) || !blog_exists($id))
+		return;
+
+	switch_to_blog($id);
+	$out = do_shortcode($out);
+	restore_current_blog();
+
+	return $out;
+}
+add_shortcode('blog', 'custom_blog_shortcode');
+
 function custom_user_shortcode( $atts, $content ) {
 
 	global $current_user;
-
 	get_currentuserinfo();
+
+	extract(shortcode_atts(array(
+		'field' => '',
+		'meta' => ''
+	), $atts));
+
+	if(!empty($meta))
+		$field=$meta;
+
+	$out = null;
+
+	if (!empty($field)) {
+		return get_user_meta( $current_user->ID, $field, true );
+	}
 
 	if( is_array( $atts ) )
 		$atts = array_flip( $atts );
@@ -269,17 +338,6 @@ function custom_user_shortcode( $atts, $content ) {
 }
 add_shortcode('user', 'custom_user_shortcode');
 
-
-function custom_br_shortcode( $atts, $content ) {
-	return '<br>';
-}
-add_shortcode('br', 'custom_br_shortcode');
-
-
-function custom_p_shortcode( $atts, $content ) {
-	return '<p>' . $content . '</p>';
-}
-add_shortcode('p', 'custom_p_shortcode');
 
 
 function custom_list_shortcodes( ) {
@@ -312,3 +370,48 @@ function custom_search_form_shortcode() {
 }
 add_shortcode('search_form', 'custom_search_form_shortcode');
 
+if ( ! function_exists( 'blog_exists' ) ) {
+
+    /**
+     * Checks if a blog exists and is not marked as deleted.
+     *
+     * @link   http://wordpress.stackexchange.com/q/138300/73
+     * @param  int $blog_id
+     * @param  int $site_id
+     * @return bool
+     */
+    function blog_exists( $blog_id, $site_id = 0 ) {
+
+        global $wpdb;
+        static $cache = array ();
+
+        $site_id = (int) $site_id;
+
+       	if (!function_exists('get_current_site'))
+       		return false;
+
+        if ( 0 === $site_id ) {
+        	$current_site = get_current_site();
+            $site_id = $current_site->id;
+        }
+
+        if ( empty ( $cache ) or empty ( $cache[ $site_id ] ) ) {
+
+            if ( wp_is_large_network() ) // we do not test large sites.
+                return TRUE;
+
+            $query = "SELECT `blog_id` FROM $wpdb->blogs
+                    WHERE site_id = $site_id AND deleted = 0";
+
+            $result = $wpdb->get_col( $query );
+
+            // Make sure the array is always filled with something.
+            if ( empty ( $result ) )
+                $cache[ $site_id ] = array ( 'do not check again' );
+            else
+                $cache[ $site_id ] = $result;
+        }
+
+        return in_array( $blog_id, $cache[ $site_id ] );
+    }
+}
