@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
 Tested up to: 3.9.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -75,6 +75,12 @@ With other libraries:
 
 
 == Changelog ==
+
+= 1.0.1 =
+
+* [field title-link] - Return correctly when limiting by word or length
+* [if not every="X"] - When the post is *not* every X in the loop
+* [content] - Make sure to minimize queries when inside loop
 
 = 1.0.0 =
 
