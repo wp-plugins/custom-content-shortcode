@@ -79,7 +79,7 @@ With other libraries:
 = 1.0.2 =
 
 * **[loop]** - Query by custom date field, for example: *field="event_date" compare=">" value="now"*
-* **load]**, **[url]** - Make sure to return correctly if wp-content folder is renamed
+* **[load]**, **[url]** - Make sure to return correctly if wp-content folder is renamed
 
 = 1.0.1 =
 
