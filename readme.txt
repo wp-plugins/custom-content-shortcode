@@ -78,21 +78,21 @@ With other libraries:
 
 = 1.0.2 =
 
-* [loop] - Query by custom date field, for example: *field="event_date" compare=">" value="now"*
-* [load], [url] - Make sure to return correctly if wp-content folder is renamed
+* **[loop]** - Query by custom date field, for example: *field="event_date" compare=">" value="now"*
+* **load]**, **[url]** - Make sure to return correctly if wp-content folder is renamed
 
 = 1.0.1 =
 
-* [field title-link] - Return the link correctly when limiting by word or length
-* [if not every="X"] - When the post is *not* every X in the loop
-* [content] - Make sure to minimize queries when inside loop
+* **[field title-link]** - Return the link correctly when limiting by word or length
+* **[if not every="X"]** - When the post is *not* every X in the loop
+* **[content]** - Make sure to minimize queries when inside loop
 
 = 1.0.0 =
 
-* [loop] - Test and improve sort by timestamp
-* [content field="title-link"] - Post title wrapped in a link to post
-* [field] - Shorter version of [content field=""] - for example, [field title]
-* [comment template] - Make sure to look in child theme first, if it exists
+* **[loop]** - Test and improve sort by timestamp
+* **[content field="title-link"]** - Post title wrapped in a link to post
+* **[field]** - Shorter version of [content field=""] - for example, [field title]
+* **[comment template]** - Make sure to look in child theme first, if it exists
 
 = 0.9.9 =
 
