@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
 Tested up to: 3.9.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,12 +29,12 @@ There is a reference page under *Settings -> Custom Content*, as well as an over
 <br />
 You'll find many useful features:
 
-* Simple **gallery field** for any post type
 * **Relative URLs** for links and images
-* Include **HTML/PHP/CSS/JavaScript** files
 * Display content for **admin, specific user, login status**
 * User name, ID, **login/logout links** with redirect
 * **Comments** list, input form or comment count
+* Include **HTML/PHP/CSS/JavaScript** files
+* Simple **gallery field** for any post type
 * Display content based on mobile detect
 
 With other libraries:
@@ -76,9 +76,14 @@ With other libraries:
 
 == Changelog ==
 
+= 1.0.2 =
+
+* [loop] - Query by custom date field, for example: *field="event_date" compare=">" value="now"*
+* [load], [url] - Make sure to return correctly if wp-content folder is renamed
+
 = 1.0.1 =
 
-* [field title-link] - Return correctly when limiting by word or length
+* [field title-link] - Return the link correctly when limiting by word or length
 * [if not every="X"] - When the post is *not* every X in the loop
 * [content] - Make sure to minimize queries when inside loop
 
