@@ -5,8 +5,8 @@ Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
-Tested up to: 3.8.1
-Stable tag: 0.7.1
+Tested up to: 3.9.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,38 +29,192 @@ There is a reference page under *Settings -> Custom Content*, as well as an over
 <br />
 You'll find many useful features:
 
-* Simple **gallery field** for any post type
-* Include **HTML/PHP/CSS/JavaScript** files
-* Selectively display content with **Mobile Detect**
+* **Relative URLs** for links and images
 * Display content for **admin, specific user, login status**
 * User name, ID, **login/logout links** with redirect
 * **Comments** list, input form or comment count
-* **Relative URLs** for links and images
+* Include **HTML/PHP/CSS/JavaScript** files
+* Simple **gallery field** for any post type
+* Display content based on mobile detect
 
 With other libraries:
 
-* Display [Bootstrap v3](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 * Display [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - **image**, **gallery**, **repeater**, **flexible content**
-* Include [Live Edit](http://wordpress.org/plugins/live-edit/) with a shortcode - **front-end editing** of content and fields
+* Display [Bootstrap](http://getbootstrap.com/) **carousel**, **navbar menu**, **pills**, **stacked**
 
 
 == Installation ==
 
-1. Upload `custom-content-shortcode.zip` through *Plugins->Add New*, or extract and upload the folder to the `/wp-content/plugins/` directory
+1. Install from *Plugins -> Add New*
+1. Or download the .zip and extract to *wp-content/plugins*
 1. Activate the plugin from the *Plugins* menu
-1. Place the shortcode in a post, page, etc.
+1. See: *Settings -> Custom Content*
 
 
 == Screenshots ==
 
-None.
+1. Documentation and examples
+2. Content overview page
+3. Gallery field
+
+== Frequently Asked Questions ==
+
+**Q:** Switching from text to visual editor breaks my HTML.
+
+**A:** The visual editor (TinyMCE) sometimes misinterprets HTML code placed in the text editor. There are several ways to address this issue.
+
+* Disable the visual editor for certain posts or post types, with the [Raw HTML](http://wordpress.org/plugins/raw-html/) plugin. However, if the post needs to be editable by the client, this won't be ideal.
+
+* Put the code in a custom field, then include it in the post. For example: *[content field="code_block"]*
+
+* Put the code in a file, then include it into the post. For example: *[load dir="views" file="recent-posts.html"]*
+
+* You can create a custom field called *html*. This special field is displayed **instead of** the post content. All your HTML and shortcodes can be put there, then place *[content]* where you need the content of the visual editor to appear.
+
+* Put your code in a text widget, and use a plugin like [Widgets on Pages](http://wordpress.org/plugins/widgets-on-pages/).
+
 
 == Changelog ==
+
+= 1.0.2 =
+
+* [loop] - Query by custom date field, for example: *field="event_date" compare=">" value="now"*
+* [load], [url] - Make sure to return correctly if wp-content folder is renamed
+
+= 1.0.1 =
+
+* [field title-link] - Return the link correctly when limiting by word or length
+* [if not every="X"] - When the post is *not* every X in the loop
+* [content] - Make sure to minimize queries when inside loop
+
+= 1.0.0 =
+
+* [loop] - Test and improve sort by timestamp
+* [content field="title-link"] - Post title wrapped in a link to post
+* [field] - Shorter version of [content field=""] - for example, [field title]
+* [comment template] - Make sure to look in child theme first, if it exists
+
+= 0.9.9 =
+
+* Mobile detect - Re-include module: back by demand
+
+= 0.9.8 =
+
+* **[if]** - Add parameters: *type, slug, category, taxonomy, term, field, value*
+* **[load]** - Improve loading CSS or JS from external site: either specify dir="web" or use `http://` in the file name
+* Organize and simplify: remove mobile detect library
+
+= 0.9.6 =
+
+* **[loop]** - Move wpautop filter back to before shortcode; will add an option if this solves formatting issue for some people
+
+= 0.9.5 =
+
+* **[if every]** - For every X number of posts: *every="3"*
+* **[if first]** - For the first post
+* **[if last]** - For the last post
+* **[loop]** - Include sticky posts for parameter *count*
+* **[loop]** - Reset query when [loop] is inside another loop
+* **[loop]** - Process shortcode *before* wpautop filter to prevent unwanted formatting
+
+= 0.9.4 =
+
+* **[for each]** - For each category/tag/taxonomy of current post: *current="true"*
+* Added a note in the documentation about using [loop] to create multiple Bootstrap carousels
+
+= 0.9.3 =
+
+* **[for each]** - For each child category, by parent slug; *each="category" parent="products"*
+* **[content field]** - Add *edit-url*; only shows when user is logged in and can edit posts
+
+= 0.9.2 =
+
+* **[pass]** - Correctly pass when field value is an array (for example, post IDs)
+
+= 0.9.1 =
+
+* **[if empty]** - Display something when there is no query result
+* **[url login], [url logout]** - Update *go* parameter; by default, return to the same page
+
+
+= 0.9.0 =
+
+* **[if flag]** - If a field has value, then display something
+* **[if no_flag]** - If a field is empty, then display something
+* **[for each]** - Now able to use inside loop; display for each category, tag or taxonomy
+* Content Overview - Display all taxonomy terms, even unused ones
+
+= 0.8.8 =
+
+* **[content]** - Display multiple vales from checkbox or selector field
+* **[repeater]** - ACF: repeater field (correct shortcode name)
+* **[loop]** - get a post by name or ID, for repeater field to target
+
+= 0.8.7 =
+
+* Fixed compatibility with a theme
+
+= 0.8.6 =
+
+* Fixed compatibility with older versions of PHP
+
+= 0.8.5 =
+
+* **[loop]** - Improved parameter *clean*
+* **[loop]** - Testing parameter *blog* for multisite: *blog="2"*
+* **[content]** - Added parameter *meta* for displaying author meta
+* **[content]** - Enabled parameter *date_format* for custom field
+* **[user]** - Added parameter *field* to display user meta
+* **[clean], [format]** - Added format shortcodes
+
+= 0.8.3 =
+
+* **[load]** - Improve performance
+
+= 0.8.2 =
+
+* **[loop]** - Improve formatting parameters: *clean*, *strip_tags*, *allow*
+
+= 0.8.0 =
+
+* **[loop]** - Field and taxonomy queries: make *compare* and *relation* parameters case-insensitive
+
+= 0.7.9 =
+
+* **[loop]** - Taxonomy query - multiple values possible: *value="apple, green"*
+* **[loop]** - Taxonomy query - add parameter *compare="AND"*, *compare="NOT"*
+* **[loop]** - Correctly display posts with tag(s): *tag="tag1,tag2"*
+* **[loop]** - Add parameter *pad* for column padding: *pad="0 10px"*
+
+= 0.7.7 =
+
+* **[for]** - Create loops for each category, tag, or taxonomy; see reference page
+* **[loop]** - Improve simple columns
+
+= 0.7.6 =
+
+* **[content]** - Improve *more* tag display: *[content more="true"]*
+
+= 0.7.3 =
+
+* **[loop]** - Add parameter *columns* for simple columns feature: *columns="3"*
+* **[content]** - Add parameter *embed* to autoembed URLs: *embed="true"*; it's enabled by default for post content, i.e., [content] inside a loop
+
+= 0.7.2 =
+
+* **[loop]** - Enable multiple values for post ID: *id="1,3,7"*
+* **[loop]** - Add parameter *exclude* by post ID: *exclude="7,15,21"*
+* **[content]** - Add parameter *more* to display content up to the more tag
+* **[content]** - Add field *attach-link* to display image attachment page link
+* **[content]** - Process content in correct order: do_shortcode, then wpautop
+* **[comment total]** - New parameter to display total comment count of last loop
+* **[load]** - Return output instead of echo
+* **Gallery Field** - Add all image sizes for parameter *size*
 
 = 0.7.1 =
 
 * **[loop]** - Improved parameter *checkbox* to query by checkbox value(s)
-* **[is user]** - Multiple values possible, i.e., *user="1,3,7,guest"*
+* **[is user]** - Enable multiple values, i.e., *user="1,3,7,guest"*
 
 = 0.7.0 =
 
@@ -203,7 +357,7 @@ None.
 
 = 0.3.6 =
 
-* Fixed one line to be compatible with older versions (<5.3) of PHP
+* Fixed one line to be compatible with older versions (less than 5.3) of PHP
 
 = 0.3.5 =
 
