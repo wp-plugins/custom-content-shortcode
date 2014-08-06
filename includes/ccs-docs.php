@@ -110,31 +110,7 @@ function ccs_is_current_plugin_screen() {
 function ccs_docs_admin_css() {
 
 	if ( ccs_is_current_plugin_screen() ) {
-
-		echo '<style type="text/css">
-					.doc-style {
-						max-width: 760px; /*margin: 0 auto;*/
-						padding-top:10px;
-						padding-left:10px;
-					}
-					.doc-style, .doc-style p {
-						font-size: 16px;
-						line-height: 1.4em; 
-					}
-					.doc-style code {
-						font-size: 16px;
-						padding: 10px 15px;
-					line-height: 24px;
-					display: block;
-					}
-					.doc-style h4 {
-						font-weight:normal;
-						font-style:italic;
-					}
-					.doc-style ul {
-						list-style:disc; padding-left:40px;
-					}
-		     </style>';
+		wp_enqueue_style( "ccs-docs", CCS_URL."/includes/ccs-docs.css");
 	}
 }
 add_action('admin_head', 'ccs_docs_admin_css');
@@ -180,7 +156,7 @@ function ccs_get_all_fields_from_post_type( $post_type ) {
 
 function ccs_content_settings_page() {
 
-	/* -- For later, in case of option form is needed
+	/* -- For later, in case an option form is needed
 	?>
 		<div class="wrap">
 		<h2>Form title</h2>
@@ -196,32 +172,39 @@ function ccs_content_settings_page() {
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
 
-	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'load', 'gallery',
-						'user', 'mobile', 'ACF', 'etc' );
+	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'if', 'each',
+						'comment',
+						// 'widget',
+						'user', 'load', 'gallery',
+						// 'ACF', 'mobile',
+						'etc' );
 
 	?>
 		<div class="wrap">
-		<h2>Custom Content Shortcode</h2>
+		<h2 class="plugin-title">Custom Content Shortcode</h2>
 		<br>
-		<h2 class="nav-tab-wrapper">  
-		
-		<?php
-
-			foreach ($all_tabs as $tab) {
-				?>
-				<a href="?page=ccs_content_shortcode_help&tab=<?php echo $tab; ?>"
-					class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>">
-						<?php echo ucwords($tab); ?></a>
-				<?php
-
-			}
-		?>
-
-		</h2>  
 
 		<div class="doc-style">
 
-			<?php
+		<h2 class="nav-tab-wrapper">  
+		<?php
+			$i = 0; $middle = intval(count($all_tabs)/2);
+			foreach ($all_tabs as $tab) {
+
+				$i++;
+				$tab_name = ucwords(str_replace('-', ' ', $tab));
+
+				?>
+				<a href="?page=ccs_content_shortcode_help&tab=<?php echo $tab; ?>"
+					class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>">
+						<?php echo $tab_name; ?></a>
+				<?php
+
+				// if ($i==$middle) echo '<br>&nbsp;&nbsp;&nbsp;'; // Put section break
+			}
+		?>
+		</h2>
+		<?php
 
 			/*--- Show the doc file for active tab ---*/
 
@@ -233,48 +216,34 @@ function ccs_content_settings_page() {
 
 			if ( $active_tab == 'overview' ) {
 
-			 	/* Footnote */
-
+			 	// Add footnote
 			 	?>
 				<br><hr><br>
-
 				<div align="center">
 					<img src="<?php echo plugins_url();?>/custom-content-shortcode/docs/logo/logo.png"><br><br>
-					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br>
-					For support and other inquiries, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
+					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br><br>
+					For general questions, please visit the <a href="http://wordpress.org/support/plugin/custom-content-shortcode" target="_blank">WordPress plugin support forum</a>.<br>
+					For commercial support and other inquiries, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
 				</div>
-
 				<?php
-
 			}
 
-			/*-- End of .doc-style --*/
-	?>
-
-
-	<?php
-
 			if ( $active_tab == 'your site' ) {
-
 				?>
-
 				</div>
 				<br><hr>
-
 				<?php include('ccs-docs-site-overview.php');
-
 			} else {
-
-
 				?>
-					</div>
+				</div>
 				<?php
-				/*-- End of .wrap --*/
 
-			 }
+			/*-- End of .doc-style --*/
+			}
 	?>
 	</div>
 	<?php
+	/*-- End of .wrap --*/
 }
 
 
@@ -298,13 +267,9 @@ function ccs_plugin_settings_link( $links, $file ) {
 function ccs_dashboard_content_overview() {
 
 	?>
-		<div class="wrap">
-	<?php
-
-		include('ccs-content-overview.php');
-
-	?>
-		</div>
+	<div class="wrap">
+	<?php include('ccs-content-overview.php'); ?>
+	</div>
 	<?php
 
 
