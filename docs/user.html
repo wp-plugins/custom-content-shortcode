@@ -1,6 +1,15 @@
+<h3>User info</h3>
+<h4>Display user info</h4>
+<code>User name: [user name]
+User ID: [user id]
+User e-mail: [user email]
+User full name: [user fullname]
+User avatar: [user avatar]
+Custom user field: [user field="twitter"]</code><br>
+<hr>
 <h3>User status</h3>
 
-The <strong>[is]</strong> shortcode is used to display content if the user is a specific user, an admin, non-admin, or logged in/out.
+The <strong>[is]</strong> shortcode is used to display content if the user is an admin, non-admin, a specific user, or logged in/out.
 <h4>Display user status</h4>
 <code>[is admin]You are an administrator.[/is]
 [is login]You are logged in.[/is]
@@ -18,14 +27,7 @@ Available parameters:
 You can also use the <strong>[isnt]</strong> shortcode, to see if the user is not admin, etc.
 <br>
 <hr>
-<h3>User info</h3>
-<h4>Display user info</h4>
-<code>User name: [user name]
-User ID: [user id]
-User e-mail: [user email]
-User Full Name: [user fullname]
-User avatar: [user avatar]</code><br>
-<hr>
+<a id="login-out"></a>
 <h3>Login and logout</h3>
 
 The <strong>[url]</strong> shortcode is also used to display login and logout links.
@@ -72,30 +74,3 @@ Please note that the destination URL is not a parameter, it is wrapped inside. T
 </code>
 
 The <b>[redirect]</b> shortcode can be placed anywhere, but the best place is in a custom field named <em>css</em>, so it can run at the beginning of the page.
-<br>
-<hr>
-<h3>Comments</h3>
-
-For displaying comments of the current post, or in a query loop, use the <strong>[comment] </strong>shortcode.
-<h4>Display comment count, input form, or comments list</h4>
-<code>Comment count: [comment count]
-Comment input form: [comment form]
-Comments list: [comment template] or [comments]</code>
-
-By default, the comments list is displayed by <em>comments.php</em> in the theme directory. If you want to specify a different template:
-
-<code>[comment template="/short-comments.php"]</code>
-
-Here is an example of a comments list that shows when clicked, using Bootstrap accordion.
-
-<code>&lt;a class="accordion-toggle" data-toggle="collapse"
-&nbsp;&nbsp;&nbsp;&nbsp;data-parent="accordion" href="#comments-area"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comments ([comment count])
-&lt;/a&gt;
-&lt;div id="comments-area" class="panel-collapse collapse"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;[comments]
-&lt;/div&gt;</code><br>
-<hr>
-<h3>Search form</h3>
-
-Display a search form using the <b>[search_form]</b> shortcode.
