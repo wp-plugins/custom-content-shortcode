@@ -6,7 +6,7 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Tags: custom post type, custom field, shortcode, query, loop
 Requires at least: 3.6
 Tested up to: 3.9.1
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,10 @@ With other libraries:
 
 == Frequently Asked Questions ==
 
+**Q:** How do I remove unwanted formatting inside shortcodes?
+
+**A:** WordPress auto-formats the post content using the wp_autop filter. This can cause unwanted `<p>` and `<br>` tags around line breaks. To prevent this, go to Settings -> Custom Content, and under the settings tab, enable: Move wp_autop to *after* shortcodes.
+
 **Q:** Switching from text to visual editor breaks my HTML.
 
 **A:** The visual editor (TinyMCE) sometimes misinterprets HTML code placed in the text editor. There are several ways to address this issue.
@@ -76,6 +80,10 @@ With other libraries:
 
 
 == Changelog ==
+
+= 1.0.5 =
+
+* New plugin settings: enable/disable non-essential modules; move wp_autop filter to *after* shortcode, to avoid unwanted formatting
 
 = 1.0.4 =
 
