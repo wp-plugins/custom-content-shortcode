@@ -19,42 +19,107 @@ function ccs_content_settings_create_menu() {
 }
 
 
+global $ccs_settings_saved;
+$ccs_settings_saved = false;
 
+/** Remove "Settings saved" message on admin page **/
 
-add_action( 'admin_init', 'ccs_content_settings_register_settings' );
-function ccs_content_settings_register_settings() {
-	register_setting( 'ccs_content_settings_field', 'ccs_content_settings', 'ccs_content_settings_field_validate' );
-	add_settings_section('ccs_content_settings_section', '', 'ccs_content_settings_section_page', 'ccs_content_settings_section_page_name');
-	add_settings_field('ccs_content_settings_field_string', 'Custom content settings field', 'ccs_content_settings_field_input', 'ccs_content_settings_section_page_name', 'ccs_content_settings_section');
+add_action( 'admin_notices', 'ccs_validation_notice');
+
+function ccs_validation_notice(){
+	global $pagenow;
+	global $ccs_settings_saved;
+	if ($pagenow == 'options-general.php' && $_GET['page'] ==
+		'ccs_content_shortcode_help') { 
+
+		if ( (isset($_GET['updated']) && $_GET['updated'] == 'true') ||
+			(isset($_GET['settings-updated']) && $_GET['settings-updated'] == 'true') ) {
+	      //this will clear the update message "Settings Saved" totally
+			unset($_GET['settings-updated']);
+			$ccs_settings_saved = true;
+		}
+	}
 }
+
+
 
 function ccs_content_settings_section_page() {
-/*	echo '<p>Main description</p>';  */
+	/* echo '<p>Main description</p>'; */
 }
 
+function ccs_content_settings_field() {
 
+	$settings = get_option( 'ccs_content_settings' );
 
-function ccs_content_settings_field_input() {
-/*
+	$move_wpautop = isset( $settings['move_wpautop'] ) ?
+		esc_attr( $settings['move_wpautop'] ) : 'off'; // If no setting, then default
 
-	$settings = get_option( 'ccs_content_settings');
+	$load_acf_module = isset( $settings['load_acf_module'] ) ?
+		esc_attr( $settings['load_acf_module'] ) : 'off'; // If no setting, then default
 
-		$registration_enabled = isset( $settings['registration'] ) ?
-			esc_attr( $settings['registration'] ) : 'on'; // If no setting, then default
+	$load_bootstrap_module = isset( $settings['load_bootstrap_module'] ) ?
+		esc_attr( $settings['load_bootstrap_module'] ) : 'off'; // If no setting, then default
+
+	$load_file_loader = isset( $settings['load_file_loader'] ) ?
+		esc_attr( $settings['load_file_loader'] ) : 'off'; // If no setting, then default
+
+	$load_gallery_field = isset( $settings['load_gallery_field'] ) ?
+		esc_attr( $settings['load_gallery_field'] ) : 'off'; // If no setting, then default
+
+	$load_mobile_detect = isset( $settings['load_mobile_detect'] ) ?
+		esc_attr( $settings['load_mobile_detect'] ) : 'off'; // If no setting, then default
+
 	?>
-
 	<tr>
-		<td width="200px">
-			<input type="checkbox" name="ccs_content_settings[registration]"
-				<?php checked( $settings['registration'], 'on' ); ?>
+		<td width="760px">
+			<input type="checkbox" value="on" name="ccs_content_settings[load_acf_module]"
+				<?php checked( $load_acf_module, 'on' ); ?>
 			/>
-
-			<?php echo '&nbsp;&nbsp;Nová registrace'; ?>
+			&nbsp;&nbsp;Load <b>ACF</b> shortcodes
 		</td>
 	</tr>
+	<tr>
+		<td width="760px">
+			<input type="checkbox" value="on" name="ccs_content_settings[load_bootstrap_module]"
+				<?php checked( $load_bootstrap_module, 'on' ); ?>
+			/>
+			&nbsp;&nbsp;Load <b>Bootstrap</b> shortcodes
+		</td>
+	</tr>
+	<tr>
+		<td width="760px">
+			<input type="checkbox" value="on" name="ccs_content_settings[load_file_loader]"
+				<?php checked( $load_file_loader, 'on' ); ?>
+			/>
+			&nbsp;&nbsp;Load <b>File Loader</b> module
+		</td>
+	</tr>
+	<tr>
+		<td width="760px">
+			<input type="checkbox" value="on" name="ccs_content_settings[load_gallery_field]"
+				<?php checked( $load_gallery_field, 'on' ); ?>
+			/>
+			&nbsp;&nbsp;Load <b>Gallery Field</b> module
+		</td>
+	</tr>	<tr>
+		<td width="760px">
+			<input type="checkbox" value="on" name="ccs_content_settings[load_mobile_detect]"
+				<?php checked( $load_mobile_detect, 'on' ); ?>
+			/>
+			&nbsp;&nbsp;Load <b>Mobile Detect</b> module
+		</td>
+	</tr>
+	<tr>
+		<td width="760px">
+			<input type="checkbox" value="on" name="ccs_content_settings[move_wpautop]"
+				<?php checked( $move_wpautop, 'on' ); ?>
+			/>
+			&nbsp;&nbsp;Move post content formatting (wp_autop) to <em>after</em> shortcodes
+		</td>
+	</tr>
+<?php
 
-<?php 
-
+/*
 	<tr>
 		<td width="200px">
 			<input type="checkbox" name="ccs_content_settings[option2]"
@@ -79,8 +144,6 @@ function ccs_content_settings_field_input() {
 			<input type="radio" value="menu_order" name="ampl_settings[orderby][<?php echo $key; ?>]" <?php checked( 'menu_order', $post_orderby ); ?>/>
 			<?php echo 'menu&nbsp;&nbsp;'; ?>
 		</td>
- ?>
-
 	<?php
 */
 }
@@ -110,31 +173,7 @@ function ccs_is_current_plugin_screen() {
 function ccs_docs_admin_css() {
 
 	if ( ccs_is_current_plugin_screen() ) {
-
-		echo '<style type="text/css">
-					.doc-style {
-						max-width: 760px; /*margin: 0 auto;*/
-						padding-top:10px;
-						padding-left:10px;
-					}
-					.doc-style, .doc-style p {
-						font-size: 16px;
-						line-height: 1.4em; 
-					}
-					.doc-style code {
-						font-size: 16px;
-						padding: 10px 15px;
-					line-height: 24px;
-					display: block;
-					}
-					.doc-style h4 {
-						font-weight:normal;
-						font-style:italic;
-					}
-					.doc-style ul {
-						list-style:disc; padding-left:40px;
-					}
-		     </style>';
+		wp_enqueue_style( "ccs-docs", CCS_URL."/includes/ccs-docs.css");
 	}
 }
 add_action('admin_head', 'ccs_docs_admin_css');
@@ -176,105 +215,113 @@ function ccs_get_all_fields_from_post_type( $post_type ) {
     return $customfields;
 }
 
+add_action( 'admin_init', 'ccs_content_settings_register_settings' );
+function ccs_content_settings_register_settings() {
+	register_setting( 'ccs_content_settings_group', 'ccs_content_settings', 'ccs_content_settings_field_validate' );
+	add_settings_section('ccs-settings-section', '<div class="remove-height"></div>', 'ccs_content_settings_section_page', 'ccs_content_settings_section_page_name');
+	add_settings_field('ccs-settings', '', 'ccs_content_settings_field', 'ccs_content_settings_section_page_name', 'ccs-settings-section');
+}
+
 
 
 function ccs_content_settings_page() {
 
-	/* -- For later, in case of option form is needed
-	?>
-		<div class="wrap">
-		<h2>Form title</h2>
-		<form method="post" action="options.php">
-		    <?php settings_fields( 'ccs_content_settings_field' ); ?>
-		    <?php do_settings_sections( 'ccs_content_settings_section_page_name' ); ?>
-		    <?php submit_button(); ?>
-		</form>
-		</div>
-	<?php
-	*/
-
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'overview';
 
 
-	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'load', 'gallery',
-						'user', 'mobile', 'ACF', 'etc' );
+	$all_tabs = array( 'overview', 'content', 'loop', 'views', 'if', 'each',
+						'comment',
+						// 'widget',
+						'user', 'load', 'gallery',
+						// 'ACF', 'mobile',
+						'etc', 'settings' );
 
 	?>
 		<div class="wrap">
-		<h2>Custom Content Shortcode</h2>
+		<h2 class="plugin-title">Custom Content Shortcode</h2>
 		<br>
-		<h2 class="nav-tab-wrapper">  
-		
-		<?php
-
-			foreach ($all_tabs as $tab) {
-				?>
-				<a href="?page=ccs_content_shortcode_help&tab=<?php echo $tab; ?>"
-					class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>">
-						<?php echo ucwords($tab); ?></a>
-				<?php
-
-			}
-		?>
-
-		</h2>  
 
 		<div class="doc-style">
 
-			<?php
+		<h2 class="nav-tab-wrapper">  
+		<?php
+			$i = 0; $middle = intval(count($all_tabs)/2);
+			foreach ($all_tabs as $tab) {
 
-			/*--- Show the doc file for active tab ---*/
-
-			echo wpautop(
-				@file_get_contents(
-						dirname(dirname(__FILE__)) .'/docs/' . strtolower($active_tab) . '.html'
-					)
-			);
-
-			if ( $active_tab == 'overview' ) {
-
-			 	/* Footnote */
-
-			 	?>
-				<br><hr><br>
-
-				<div align="center">
-					<img src="<?php echo plugins_url();?>/custom-content-shortcode/docs/logo/logo.png"><br><br>
-					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br>
-					For support and other inquiries, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
-				</div>
-
-				<?php
-
-			}
-
-			/*-- End of .doc-style --*/
-	?>
-
-
-	<?php
-
-			if ( $active_tab == 'your site' ) {
+				$i++;
+				$tab_name = ucwords(str_replace('-', ' ', $tab));
 
 				?>
+				<a href="?page=ccs_content_shortcode_help&tab=<?php echo $tab; ?>"
+					class="nav-tab <?php echo $active_tab == $tab ? 'nav-tab-active' : ''; ?>">
+						<?php echo $tab_name; ?></a>
+				<?php
 
-				</div>
-				<br><hr>
+				// if ($i==$middle) echo '<br>&nbsp;&nbsp;&nbsp;'; // Put section break
+			}
+		?>
+		</h2>
+		<?php
 
-				<?php include('ccs-docs-site-overview.php');
+			if ( $active_tab == 'settings' ) {
+
+				// Settings Page
+
+				?>
+				<h3>Settings</h3>
+				<form method="post" action="options.php">
+				    <?php settings_fields( 'ccs_content_settings_group' ); ?>
+				    <?php do_settings_sections( 'ccs_content_settings_section_page_name' ); ?>
+				    <?php submit_button(); ?>
+				</form>
+				<?php
+				global $ccs_settings_saved;
+				if ($ccs_settings_saved) {
+					echo '<div class="remove-height"></div><br><br>Settings saved.';
+				}
 
 			} else {
 
+				/*--- Show the doc file for active tab ---*/
 
-				?>
-					</div>
+				echo wpautop(
+					@file_get_contents(
+							dirname(dirname(__FILE__)) .'/docs/' . strtolower($active_tab) . '.html'
+						)
+				);
+			}
+
+			if ( $active_tab == 'overview' ) {
+
+			 	// Add footnote
+			 	?>
+				<br><hr><br>
+				<div align="center">
+					<img src="<?php echo plugins_url();?>/custom-content-shortcode/docs/logo/logo.png"><br><br>
+					<b>Custom Content Shortcode</b> is developed by Eliot Akira.<br><br>
+					Please visit the <a href="http://wordpress.org/support/plugin/custom-content-shortcode" target="_blank">WordPress plugin support forum</a> for general questions.<br>
+					For commercial support and development, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
+				</div>
 				<?php
-				/*-- End of .wrap --*/
+			}
 
-			 }
+			if ( $active_tab == 'your site' ) {
+				?>
+				</div>
+				<br><hr>
+				<?php include('ccs-docs-site-overview.php');
+			} else {
+				?>
+				</div>
+				<?php
+
+			/*-- End of .doc-style --*/
+
+			}
 	?>
 	</div>
 	<?php
+	/*-- End of .wrap --*/
 }
 
 
@@ -298,13 +345,9 @@ function ccs_plugin_settings_link( $links, $file ) {
 function ccs_dashboard_content_overview() {
 
 	?>
-		<div class="wrap">
-	<?php
-
-		include('ccs-content-overview.php');
-
-	?>
-		</div>
+	<div class="wrap">
+	<?php include('ccs-content-overview.php'); ?>
+	</div>
 	<?php
 
 
