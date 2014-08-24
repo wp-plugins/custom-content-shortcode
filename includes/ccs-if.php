@@ -34,6 +34,8 @@ class IfShortcode {
 			'term' => '',
 			'compare' => 'OR',
 
+			'parent' => '',
+
 			'field' => '',
 			'value' => '',
 
@@ -48,10 +50,19 @@ class IfShortcode {
 		if ((isset($atts['empty'])) || (isset($atts['last'])) ) return; // [if empty] [if last] is processed by [loop]
 */
 		if (!empty($no_flag)) $flag = $no_flag;
-		$compare = strtoupper($compare);
 
 		$out = '';
 		$condition = false;
+		$compare = strtoupper($compare);
+
+		// Get [else] if it exists
+		$content_array = explode("[else]", $content);
+		$content = $content_array[0];
+		if (count($content_array)>1) {
+			$else = $content_array[1];
+		} else {
+			$else = null;
+		}
 
 		/*========================================================================
 		 *
@@ -82,16 +93,6 @@ class IfShortcode {
 					$condition = ($every==0) ? false : (($count % $every)==0);
 				}
 
-				if (isset($atts['not'])) {
-					$condition = !$condition;
-				}
-
-				if ($condition) {
-					$out = do_shortcode( $content );
-				}
-
-				return $out;
-
 			}
 
 		} // End [loop] only conditions
@@ -104,7 +105,7 @@ class IfShortcode {
 
 		global $post;
 
-		if (empty($post)) return; // Make sure post exists
+//		if (empty($post)) return; // Make sure post exists
 
 		$current_post_type = isset($post->post_type) ? $post->post_type : null;
 		$current_post_name = isset($post->post_name) ? $post->post_name : null;
@@ -128,13 +129,11 @@ class IfShortcode {
 			else
 				$check = has_post_thumbnail( $current_id );
 
-			if ((!empty($check)) && (!empty($no_flag))) return;
-			if ((empty($check)) && (empty($no_flag))) return;
+			if ((!empty($check)) && (!empty($no_flag))) $condition = false;
+			if ((empty($check)) && (empty($no_flag))) $condition = false;
 			else {
+				$condition = true;
 				$ccs_global_variable['if_flag'] = $check;
-				$out = do_shortcode( $content );
-				$ccs_global_variable['if_flag'] = '';
-				return $out;
 			}
 		}
 
@@ -209,7 +208,7 @@ class IfShortcode {
 					if (!$condition) break; // Every term must be found
 				}
 			}
-		}		
+		}
 
 
 		/*========================================================================
@@ -228,6 +227,50 @@ class IfShortcode {
 			$condition = in_array($current_post_name, $names) ? true : false;
 		}
 
+
+		/*========================================================================
+		 *
+		 * Post parent
+		 *
+		 *=======================================================================*/
+		
+		if (!empty($parent)) {
+
+			$current_post_parent = isset($post->post_parent) ? $post->post_parent : 0;
+
+			if ($current_post_parent == 0) {
+				// Current post has no parent
+				$condition = false;
+			} else {
+
+				$current_post_parent_slug = self::slug_from_id($current_post_parent);
+				$parents = self::comma_list_to_array($parent);
+
+				foreach ($parents as $check_parent) {
+
+					if (is_numeric($check_parent)) {
+						// compare to parent id
+
+						if ($compare == "OR") {
+							$condition = ($check_parent==$current_post_parent) ? true : $condition;
+						} else { // AND
+							$condition = ($check_parent==$current_post_parent) ? true : false;
+							if (!$condition) break; // Every term must be found
+						}
+					} else {
+						// compare to parent slug
+
+						if ($compare == "OR") {
+							$condition = ($check_parent==$current_post_parent_slug) ? true : $condition;
+						} else { // AND
+							$condition = ($check_parent==$current_post_parent_slug) ? true : false;
+							if (!$condition) break; // Every term must be found
+						}
+					}
+				}
+			}
+		}
+		
 		/*========================================================================
 		 *
 		 * Template: home, archive, single..
@@ -235,10 +278,10 @@ class IfShortcode {
 		 *
 		 *=======================================================================*/
 		
-		$condition = isset($atts['home']) ? is_front_page() : false;
-		$condition = isset($atts['archive']) ? is_archive() : false;
-		$condition = isset($atts['single']) ? is_single() : false;
-		$condition = isset($atts['comment']) ? (get_comments_number($current_post_id)>0) : false;
+		$condition = isset($atts['home']) ? is_front_page() : $condition;
+		$condition = isset($atts['archive']) ? is_archive() : $condition;
+		$condition = isset($atts['single']) ? is_single() : $condition;
+		$condition = isset($atts['comment']) ? (get_comments_number($current_post_id)>0) : $condition;
 
 		if (isset($atts['attached'])) {
 
@@ -256,7 +299,11 @@ class IfShortcode {
 
 		$condition = isset($atts['not']) ? !$condition : $condition;
 
-		return $condition ? do_shortcode( $content ) : null;
+		$out = $condition ? do_shortcode( $content ) : do_shortcode( $else );
+
+		$ccs_global_variable['if_flag'] = '';
+
+		return $out;
 	}
 
 	function flag_shortcode() {
@@ -272,6 +319,12 @@ class IfShortcode {
 		return array_map("trim", explode(",", $string));
 	}
 
+	function slug_from_id( $id ) {
+		$post_data = get_post($id);
+		if (!empty($post_data)) {
+			return isset($post_data->post_name) ? $post_data->post_name : null;
+		} else return null;
+	}
 
 }
 new IfShortcode;
