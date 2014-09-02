@@ -297,6 +297,7 @@ class LoopShortcode {
 			$id_array = explode(",", $id); // Multiple IDs possible
 
 			$query['post__in'] = $id_array;
+			$query['orderby'] = 'post__in'; // Preserve ID order
 
 		} elseif ( $exclude != '' ) {
 
@@ -975,21 +976,25 @@ class LoopShortcode {
 						$clear = '<div style="clear:both;"><br></div>';
 
 						foreach ($output as $each) {
-							$col++;
-							echo '<div class="column-1_of_'.$columns.'" style="width:'.$percent.'%;float:left;">';
 
-							if (!empty($pad))
-								echo '<div class="column-inner" style="padding:'.$pad.'">';
+							$trimmed = trim($each);
 
-							echo $each;
+							if ( !empty( $trimmed ) ) {
+								$col++;
+								echo '<div class="column-1_of_'.$columns.'" style="width:'.$percent.'%;float:left;">';
 
-							if (!empty($pad))
+								if (!empty($pad))
+									echo '<div class="column-inner" style="padding:'.$pad.'">';
+
+								echo $each;
+
+								if (!empty($pad))
+									echo '</div>';
+
 								echo '</div>';
-
-							echo '</div>';
-							if (($col%$columns)==0)
-								echo $clear;
-
+								if (($col%$columns)==0)
+									echo $clear;
+							}
 						}
 						if (($col%$columns)!=0) // Last row not filled
 							echo $clear;

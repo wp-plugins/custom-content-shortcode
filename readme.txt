@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
 Tested up to: 4.0
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,14 +82,21 @@ With other libraries:
 
 == Changelog ==
 
+= 1.1.6 =
+
+* **[field image-link]** - Featured image with link to post
+* **[field thumbnail-link]** - Featured image thumbnail with link to post
+* **[loop id]** - Preserve post ID order if multiple values given
+* **[loop columns]** - Skip empty columns
+
 = 1.1.5 =
 
 * **[related]** - Loop through ACF relationship field
 * **[if image]** - If current post has a featured image
 * **Settings** - Enable shortcodes inside Text widget
 * Test compatibility with WordPress 4.0
-* Improve documentation
 * Add donate link on plugin page
+* Improve documentation
 
 = 1.1.3 =
 
