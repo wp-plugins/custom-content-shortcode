@@ -141,7 +141,6 @@ function custom_gallery_get_image_ids() {
 
 /*
  * Shortcode
- */
 
 function ccs_gallery_shortcode() {
 
@@ -153,6 +152,8 @@ function ccs_gallery_shortcode() {
 }
 
 add_shortcode( 'custom_gallery', 'ccs_gallery_shortcode' );
+ */
+
 
 
 /*
@@ -172,9 +173,9 @@ function custom_gallery_count_images() {
 /*
  * Output gallery
  *
- */
 function custom_gallery() { // No output without shortcode
 }
+ */
 
 
 /*
@@ -228,7 +229,7 @@ function custom_gallery_admin_css() { ?>
             height: auto;
         }
 
-        .add_gallery_images { margin-top: -15px; }
+        .add_gallery_images { margin-top: -15px; float:left; }
 
     </style>
 
@@ -492,6 +493,9 @@ function custom_gallery_admin_page() {
             <?php do_settings_sections( 'custom-gallery-settings' ); ?>
             <?php submit_button(); ?>
         </form>
+	<div style="padding-left:5px;">
+		<a href="options-general.php?page=ccs_content_shortcode_help&tab=gallery"><em>Reference: Custom Content Shortcode</em></a>
+	</div>
 
     </div>
 <?php
