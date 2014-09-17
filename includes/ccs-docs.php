@@ -18,7 +18,7 @@ class CCS_Docs {
 		add_action('admin_menu', array($this, 'content_settings_create_menu'));
 
 		// Add settings link on plugin page
-		add_filter( "plugin_action_links", array($this, 'plugin_settings_link'), 10, 4 );
+		add_filter( 'plugin_action_links', array($this, 'plugin_settings_link'), 10, 4 );
 
 		// Remove "Settings saved" message on admin page
 		add_action( 'admin_notices', array($this, 'validation_notice'));
@@ -33,10 +33,10 @@ class CCS_Docs {
 
 	function content_settings_create_menu() {
 
-		global $ccs_settings_page_hook;
+		global $ccs_settings_page_hook, $ccs_content_overview_page_hook;
 
 		$ccs_settings_page_hook = add_options_page('Custom Content Shortcode - Documentation', 'Custom Content', 'manage_options', 'ccs_content_shortcode_help', array($this, 'content_settings_page'));
-		add_dashboard_page( 'Content', 'Content', 'edit_dashboard', 'content_overview',  array($this, 'dashboard_content_overview') );
+		$ccs_content_overview_page_hook = add_dashboard_page( 'Content', 'Content', 'edit_dashboard', 'content_overview',  array($this, 'dashboard_content_overview') );
 	}
 
 	function validation_notice(){
@@ -105,6 +105,10 @@ class CCS_Docs {
 		$move_wpautop = isset( $settings['move_wpautop'] ) ?
 			esc_attr( $settings['move_wpautop'] ) : 'off';
 
+		$shortcode_unautop = isset( $settings['shortcode_unautop'] ) ?
+			esc_attr( $settings['shortcode_unautop'] ) : 'off';
+
+
 		?>
 		<tr>
 			<td width="760px">
@@ -155,6 +159,15 @@ class CCS_Docs {
 			</td>
 		</tr>
 		<tr>
+			<td>
+				<input type="checkbox" value="on" name="ccs_content_settings[shortcode_unautop]"
+					<?php checked( $shortcode_unautop, 'on' ); ?>
+				/>
+				&nbsp;&nbsp;Use <i>shortcode unautop</i> to remove &lt;p&gt; tags around shortcodes
+			</td>
+		</tr>
+
+		<tr>
 			<td width="760px">
 				<hr class="setting-section">
 				<input type="checkbox" value="on" name="ccs_content_settings[shortcodes_in_widget]"
@@ -202,10 +215,14 @@ class CCS_Docs {
 	}
 
 
-	function is_current_plugin_screen() {
+	function is_current_plugin_screen( $hook = null ) {
+
 		global $ccs_settings_page_hook;
+
 		$screen = get_current_screen();
-		if (is_object($screen) && $screen->id == $ccs_settings_page_hook) {  
+		$check_hook = empty($hook) ? $ccs_settings_page_hook : $hook;
+
+		if (is_object($screen) && $screen->id == $check_hook) {  
 	        return true;  
 	    } else {  
 	        return false;  
@@ -215,8 +232,12 @@ class CCS_Docs {
 
 	function docs_admin_css() {
 
+		global $ccs_content_overview_page_hook;
+
 		if ( $this->is_current_plugin_screen() ) {
 			wp_enqueue_style( "ccs-docs", CCS_URL."/includes/ccs-docs.css");
+		} elseif ( $this->is_current_plugin_screen($ccs_content_overview_page_hook) ) {
+			wp_enqueue_style( "ccs-docs", CCS_URL."/includes/ccs-content-overview.css");
 		}
 	}
 
@@ -282,7 +303,7 @@ class CCS_Docs {
 
 		?>
 			<div class="wrap">
-			<h2 class="plugin-title">Custom Content Shortcode</h2>
+			<h1 class="plugin-title">Custom Content Shortcode</h1>
 			<br>
 
 			<div class="doc-style">
@@ -312,7 +333,8 @@ class CCS_Docs {
 					// Settings Page
 
 					?>
-					<h3>Settings</h3>
+					<h3 align="center">Settings</h3>
+					<hr>
 					<form method="post" action="options.php">
 					    <?php settings_fields( 'ccs_content_settings_group' ); ?>
 					    <?php do_settings_sections( 'ccs_content_settings_section_page_name' ); ?>
@@ -344,7 +366,7 @@ class CCS_Docs {
 						<img src="<?php echo plugins_url();?>/custom-content-shortcode/docs/logo/logo.png">
 						<div class="overview-logo-pad"><b>Custom Content Shortcode</b> is developed by Eliot Akira.</div>
 						Please visit the <a href="http://wordpress.org/support/plugin/custom-content-shortcode" target="_blank">WordPress plugin support forum</a> for general questions.<br>
-						Here is a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y">donation link</a>, if you'd like to contribute to this plugin.<br>
+						If you'd like to contribute to this plugin, here is a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y">donation link</a>.<br>
 						For commercial development, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a><br>
 					</div>
 					<hr><br>
