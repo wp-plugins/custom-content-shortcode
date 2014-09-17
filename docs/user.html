@@ -1,32 +1,48 @@
-<h3>User status</h3>
+<h3 align="center">User info</h3>
+<hr>
 
-The <strong>[is]</strong> shortcode is used to display content if the user is a specific user, an admin, non-admin, or logged in/out.
+<h4>Display user info</h4>
+<code>User name: [user name]
+User ID: [user id]
+User e-mail: [user email]
+User full name: [user fullname]
+User avatar: [user avatar]
+User role(s): [user role]
+Custom user field: [user field="twitter"]</code><br>
+
+<a id="user-status" href="#"></a>
+<h3 align="center">User status</h3>
+<hr>
+
+The <strong>[is]</strong> shortcode is used to display content based on user status.
+
 <h4>Display user status</h4>
 <code>[is admin]You are an administrator.[/is]
 [is login]You are logged in.[/is]
 [is logout]You are logged out.[/is]
 [is user="john"]You are John.[/is]
+[is role="subscriber"]You are a subscriber.[/is]
 </code>
 
 Available parameters:
 <ul>
-	<li><em>admin</em> - administrator</li>
-	<li><em>login</em> - logged in</li>
-	<li><em>logout</em> - logged out</li>
-	<li><em>user</em> - user name or ID - multiple values are possible: "1,3,22"</li>
+	<li><em>admin</em> - user has admin capability (manage options)</li>
+	<li><em>login</em> - user is logged in</li>
+	<li><em>logout</em> - user is logged out</li>
+	<li><em>user</em> - user name or ID - multiple values are possible: "1, 3, 22"</li>
+</ul><ul>
+	<li><em>role</em> - user role - default roles are <i>administrator</i>, <i>editor</i>, <i>author</i>, <i>contributor</i>, or <i>subscriber</i>
+	<li><em>capable</em> - user capability, for example: <i>capable="manage_options"</i></li>
+
+	Multiple values are possible: <i>role="admin, subscriber"</i> will be true if the user is <i>admin</i> or <i>subscriber</i>.
+	See the list of available user roles and capabilities under <a href="index.php?page=content_overview#user-roles">Dashboard -> Content -> User Roles</a>.
 </ul>
-You can also use the <strong>[isnt]</strong> shortcode, to see if the user is not admin, etc.
+You can also use <strong>[is not]</strong> to display something when the condition is not true.
 <br>
+
+<a id="login-out" href="#"></a>
+<h3 align="center">Login and logout</h3>
 <hr>
-<h3>User info</h3>
-<h4>Display user info</h4>
-<code>User name: [user name]
-User ID: [user id]
-User e-mail: [user email]
-User Full Name: [user fullname]
-User avatar: [user avatar]</code><br>
-<hr>
-<h3>Login and logout</h3>
 
 The <strong>[url]</strong> shortcode is also used to display login and logout links.
 <h4>Display a login link</h4>
@@ -38,11 +54,10 @@ Available parameters:
 <ul>
 	<li><em>login</em> - login link</li>
 	<li><em>logout</em> - logout link</li>
-	<li><em>go</em> - redirect user after login/logout</li>
+	<li><em>go</em> - redirect user after login/logout; use a full URL, or the name of a post or page; <i>go="home"</i> will return the user to the home page.
+</li>
 </ul>
-For the redirect link, you can either use a full URL (<em>www.example.com</em>) or the name/slug of any post or page. The slug <em>home</em> will return the user to the home page of your site.
-
-Here is an example using both [is] and [url] to show a login/logout link based on user status.
+Here is an example using both <b>[is]</b> and <b>[url]</b> to show a login/logout link based on user status.
 
 <code>[is logout]
 &nbsp;&nbsp;&nbsp;&nbsp;&lt;a href="[url login go='home']"&gt;
@@ -56,46 +71,19 @@ Here is an example using both [is] and [url] to show a login/logout link based o
 [/is]</code><br>
 <hr>
 <h3>Redirect users</h3>
-To redirect users to a different URL according to user status, device type, etc., use the <b>[redirect]</b> shortcode. As soon as it is executed, the user will be taken to another page.
+To redirect users to a different URL, use the <b>[redirect]</b> shortcode. As soon as it is executed, the user will be taken to another page.
 
 <h4>Redirect if visitor is not logged in</h4>
-<code>[isnt login]
+<code>[is not login]
 &nbsp;&nbsp;&nbsp;&nbsp;[redirect]http://example.com/guest/[/redirect]
-[/isnt]
+[/is]
 </code>
 
-Please note that the destination URL is not a parameter, it is wrapped inside. This is to allow relative links such as:
+Note that the URL is not a parameter, it is wrapped inside. This is to allow relative links.
 
 <code>[is login]
 &nbsp;&nbsp;&nbsp;&nbsp;[redirect][url site]/user-area/[/redirect]
 [/is]
 </code>
 
-The <b>[redirect]</b> shortcode can be placed anywhere, but the best place is in a custom field named <em>css</em>, so it can run at the beginning of the page.
-<br>
-<hr>
-<h3>Comments</h3>
-
-For displaying comments of the current post, or in a query loop, use the <strong>[comment] </strong>shortcode.
-<h4>Display comment count, input form, or comments list</h4>
-<code>Comment count: [comment count]
-Comment input form: [comment form]
-Comments list: [comment template] or [comments]</code>
-
-By default, the comments list is displayed by <em>comments.php</em> in the theme directory. If you want to specify a different template:
-
-<code>[comment template="/short-comments.php"]</code>
-
-Here is an example of a comments list that shows when clicked, using Bootstrap accordion.
-
-<code>&lt;a class="accordion-toggle" data-toggle="collapse"
-&nbsp;&nbsp;&nbsp;&nbsp;data-parent="accordion" href="#comments-area"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comments ([comment count])
-&lt;/a&gt;
-&lt;div id="comments-area" class="panel-collapse collapse"&gt;
-&nbsp;&nbsp;&nbsp;&nbsp;[comments]
-&lt;/div&gt;</code><br>
-<hr>
-<h3>Search form</h3>
-
-Display a search form using the <b>[search_form]</b> shortcode.
+The <b>[redirect]</b> shortcode can be placed anywhere, but the best place is at the top of the page.

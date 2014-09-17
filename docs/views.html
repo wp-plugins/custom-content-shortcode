@@ -1,18 +1,17 @@
-<h3>Content views</h3>
+<h3 align="center">Content views</h3>
+<hr>
 
 Here is an example of how to create templates to display your content.
 
-Let's imagine a bicycle shop. We create a custom post type called <em>bicycle</em>, and add custom fields such as <em>model</em>, <em>price</em>, and <em>description</em>.
-
-Add all bicycles in the store as new entries, with featured image and other info in the fields.
+Let's imagine a bicycle shop. We create a custom post type called <em>bicycle</em>, and add custom fields such as <em>model</em>, <em>price</em>, and <em>description</em>. Add all bicycles in the store as new entries, with featured image and other info in the fields.
 
 Create a new page to display the bicycles. A basic template could be:
 
 <code>[loop type="bicycle"]
-&nbsp;&nbsp;&nbsp;&nbsp;[content field="image"]
-&nbsp;&nbsp;&nbsp;&nbsp;Model: [content field="model"]
-&nbsp;&nbsp;&nbsp;&nbsp;Price: [content field="price"]
-&nbsp;&nbsp;&nbsp;&nbsp;Description: [content field="description"]
+&nbsp;&nbsp;&nbsp;&nbsp;[field image]
+&nbsp;&nbsp;&nbsp;&nbsp;Model: [field model]
+&nbsp;&nbsp;&nbsp;&nbsp;Price: [field price]
+&nbsp;&nbsp;&nbsp;&nbsp;Description: [field description]
 [/loop]</code>
 
 Another page can display a list of bicycles in the<em> freestyle</em> category:
@@ -20,6 +19,31 @@ Another page can display a list of bicycles in the<em> freestyle</em> category:
 <code>Freestyle bikes available:
 &lt;ul&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;[loop type="bicycle" category="freestyle"]
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;[content field="model"] - [content field="price"]&lt;/li&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[field title-link]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[field model] - [field price]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/li&gt;
 &nbsp;&nbsp;&nbsp;&nbsp;[/loop]
 &lt;/ul&gt;</code><br>
+
+<h3 align="center">Editing</h3>
+<hr>
+
+You can create and edit these templates inside the post with the <b>Text editor</b>.
+
+There are a couple points to keep in mind:
+
+<ul>
+	<li>WordPress automatically formats post content, adding paragraph tags and break lines. If you find that there are unnecessary tags inserted inside the <b>[loop]</b>, try enabling <a href="options-general.php?page=ccs_content_shortcode_help&tab=settings"><i>Move post content formatting</i></a>. This may not work with some themes or plugins; in that case, try setting <i>clean="true"</i>.</li>
+	<li><b>Don't use the Visual editor</b> when editing HTML, as the code can sometimes be wrongly interpreted. To solve this, you can selectively disable the visual editor with the plugin <a target="_blank" href="http://wordpress.org/plugins/raw-html/">Raw HTML</a>, or move the code outside the post content with one of the methods below.</li>
+</ul>
+
+The template can also be loaded from a number of places.
+
+<ul>
+	<li>Custom post type: [content type="template" name="home-page"]</li>
+	<li>Custom field: [content field="code_block"]</li>
+	<li>File: [load dir="views" file="recent-posts.html"]</li>
+	<li>Sidebar: <a href="options-general.php?page=ccs_content_shortcode_help&tab=settings"><i>Enable shortcodes inside Text widget</i></a></li>
+</ul>
+
