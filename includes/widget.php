@@ -4,9 +4,12 @@
  *
  * Widget shortcode
  *
+ * ** Core needs patch to prevent PHP notice for get_widget()
+ *
  *=======================================================================*/
 
-class WidgetShortcode {
+new CCS_Widget;
+class CCS_Widget {
 
 	function __construct() {
 		add_shortcode( 'widget', array($this, 'do_widget_shortcode') );
@@ -118,5 +121,3 @@ class WidgetShortcode {
 	}
 
 }
-
-new WidgetShortcode;

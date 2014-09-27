@@ -23,27 +23,25 @@ The **[content]** shortcode displays any of the following: *posts, pages, custom
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query by parameters such as: *post type, category, custom taxonomy, date,* and *custom field values*.
 
-There is a reference page under Settings -> Custom Content.
+There is a reference section under Settings -> Custom Content.
 
 
 = Included =  
 <br />
-You'll find many useful features:
+Here are some of the included features:
 
-* **Overview** of your site's content structure
+* View your site's **content structure**
+* **Dynamic templates** with HTML and shortcodes
+* **Cache** the result of query loops - *New!*
 * Simple **gallery field** for any post type
-* Include **HTML/PHP/CSS/JavaScript** files
+* Display **comments** and **attachments**
+* **User info** and content based on user status
 * **Relative URLs** for links and images
-* Display content for **admin, specific user, login status**
-* User name, ID, **login/logout links** with redirect
-* **Comments** list, input form or comment count
-* Display content based on mobile detect
 
 Support for other plugins:
 
 * [Advanced Custom Fields](http://wordpress.org/plugins/advanced-custom-fields/) - Image, relationship, gallery, repeater, flexible content
 * [WCK Fields and Post Types](http://wordpress.org/plugins/wck-custom-fields-and-custom-post-types-creator/) - Text, select, checkbox, radio, upload, repeater
-* [Bootstrap](http://getbootstrap.com/) Carousel, navbar menu, pills, stacked
 
 
 == Installation ==
@@ -81,7 +79,30 @@ Support for other plugins:
 * Put your code in a text widget, and use a plugin like [Widgets on Pages](http://wordpress.org/plugins/widgets-on-pages/).
 
 
+== Upgrade Notice ==
+
+
+
 == Changelog ==
+
+= 1.3.0 =
+
+* Update all modules for better code organization and performance
+* Improve documentation
+* [loop cache] - Cache the result for an amount of time
+* [cache] - Cache multiple loops or page sections
+* [timer] - Tool to measure performance
+* Gallery field - Improve UI and function
+* [attached gallery] - Loop through images in the gallery field
+* [if gallery] - If the post has any image in gallery field
+* [loop exclude="this"] - Exclude current post from loop
+* Mobile detect - now disabled by default
+
+= 1.2.2 =
+
+* [each] - Assume *name* by default
+* [loop tag] - Clean up any extra spaces in tag list
+* [load view] - Load a template from *views* folder
 
 = 1.2.1 =
 
@@ -573,9 +594,6 @@ Support for other plugins:
 = 0.1 =
 
 * First release
-
-== Upgrade Notice ==
-
 
 
 

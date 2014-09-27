@@ -6,15 +6,21 @@
  *
  *====================================================================================================*/
 
-class CommentShortcodes {
+new CCS_Comments;
+
+class CCS_Comments {
+
+	public static $state;
+
 	function __construct() {
+
 		add_shortcode('comment', array($this, 'comment_shortcode') );
 		add_shortcode('comments', array($this, 'comment_shortcode') );
+
+		self::$state['is_comments_loop'] = false;
 	}
 
 	function comment_shortcode( $atts, $content, $tag ) {
-
-		global $ccs_global_variable;
 
 		extract(shortcode_atts(array(
 			'template' => '',
@@ -29,13 +35,16 @@ class CommentShortcodes {
 
 		// In a comments loop?
 
-		$in_loop = isset($ccs_global_variable['comments_loop']) ? $ccs_global_variable['comments_loop'] : false;
+		$in_loop = isset(self::$state['is_comments_loop']) ? self::$state['is_comments_loop'] : false;
+
 		if ( $in_loop ) {
 
 			// Display comment fields
 
-			$out = "";
-			$comment = $ccs_global_variable['current_comment'];
+			$out = null;
+			$comment = self::$state['current_comment'];
+
+			if (empty($comment)) return;
 
 			$fields = array(
 				'ID', 'post_ID', 'author', 'author_email', 'author_url', 'date',
@@ -47,15 +56,18 @@ class CommentShortcodes {
 				$atts = array_flip( $atts ); // check for parameters without value
 
 			$post_id = $comment->comment_post_ID;
+
 			foreach ($fields as $field) {
 
 				$arg_field = strtolower($field);
-				$arg_field = str_replace("_", "-", $field);
+				$arg_field = str_replace('_', '-', $field);
 
-				if ($arg_field=="user-id")
-					$field = "user_id";
+				if ($arg_field=='user-id')
+					$field = 'user_id';
 				else
-					$field = "comment_".$field; // name of property in comment object
+					$field = 'comment_'.$field; // name of property in comment object
+
+				// Check first parameter [comment ~]
 
 				if (isset($atts[$arg_field])) {
 
@@ -79,7 +91,7 @@ class CommentShortcodes {
 						case 'content':
 							if (isset($comment->{$field}))
 								$out = $comment->{$field};
-							if (empty($format)) $format="true"; // Format content by default
+							if (empty($format)) $format='true'; // Format content by default
 							break;
 						default:
 							if (isset($comment->{$field}))
@@ -109,7 +121,7 @@ class CommentShortcodes {
 
 			if ( !empty($out) && !empty($date_format) ) {
 				$out = date($date_format, strtotime($out));
-			} elseif ( $format=="true" ) {
+			} elseif ( $format=='true' ) {
 				$out = apply_filters('the_content', $out);
 			}
 
@@ -118,14 +130,14 @@ class CommentShortcodes {
 
 		// Start a comments loop?
 		if ( !empty($count) || !empty($id) ||
-			 ( ($tag=="comments") && !empty($content) ) ) {
+			 ( ($tag=='comments') && !empty($content) ) ) {
 
-			$out = "";
-			$ccs_global_variable['comments_loop'] = true;
-			if ((empty($count)) || ($count=="all")) $count = 999;
+			$out = '';
+			self::$state['is_comments_loop'] = true;
+			if ((empty($count)) || ($count=='all')) $count = 999;
 			$atts['number'] = $count;
-			if ($id=="this") {
-				$atts['post_id'] = get_the_id();
+			if ($id=='this') {
+				$atts['post_id'] = get_the_ID();
 			} elseif (!empty($id)) {
 				$atts['post_id'] = $id;
 			}
@@ -159,10 +171,10 @@ class CommentShortcodes {
 
 			// Loop through each comment
 			foreach ($comments as $comment) {
-				$ccs_global_variable['current_comment'] = $comment;
+				self::$state['current_comment'] = $comment;
 				$out .= do_shortcode( $content );
 			}
-			$ccs_global_variable['comments_loop'] = false;
+			self::$state['is_comments_loop'] = false;
 			return $out;
 		}
 
@@ -179,21 +191,21 @@ class CommentShortcodes {
 
 		{
 
-			$dir = "";
+			$dir = '';
 	/*		if (isset($atts['dir'])) {
-				$dir = do_shortcode("[url ".$atts['dir']."]/");
+				$dir = do_shortcode('[url '.$atts['dir'].']/');
 			}
 	*/
-			if (empty($template)) $template = "/comments.php";
-			if (isset($template[0]) && ($template[0]!="/"))
-				$template = "/".$template;
+			if (empty($template)) $template = '/comments.php';
+			if (isset($template[0]) && ($template[0]!='/'))
+				$template = '/'.$template;
 
 			$file = $dir.$template;
 	/*
-			echo "file: ".$file."<br>";
+			echo 'file: '.$file.'<br>';
 	// filter 'comments_template' gets this value
-			echo "style: ".STYLESHEETPATH . $file."<br>";
-			echo "template: ".TEMPLATEPATH . $file ."<br>";
+			echo 'style: '.STYLESHEETPATH . $file.'<br>';
+			echo 'template: '.TEMPLATEPATH . $file .'<br>';
 	*/
 			$content = self::return_comments_template($dir.$template);
 
@@ -208,12 +220,14 @@ class CommentShortcodes {
 			return get_comments_number();
 		}
 		if( isset( $atts['total'] ) ) {
-			return $ccs_global_variable['total_comments'];
+			return CCS_Loop::$state['comment_count'];
 		}
 	}
 
 	function return_comment_form() {
+
 		ob_start();
+
 		comment_form( $args = array(
 			'id_form'           => 'commentform',  // that's the wordpress default value! delete it or edit it ;)
 			'id_submit'         => 'commentsubmit',
@@ -231,11 +245,10 @@ class CommentShortcodes {
 	}
 
 	function return_comments_template($file) {
+
 		ob_start();
 		comments_template($file);
-		$form = ob_get_clean(); 
-	    return $form;
+		return ob_get_clean(); 
 	}
 
 }
-new CommentShortcodes;

@@ -29,8 +29,10 @@
 	.doc-style .nav-tab-wrapper {
 		padding-top: 0;
 		padding-left: 0;
+		padding-right: 0;
 		margin-bottom: 20px;
 		border-bottom: 1px solid #ddd;
+		text-align: center;
 	}
 	.doc-style .nav-tab-wrapper a {
 		color: #555;
@@ -71,8 +73,8 @@
 		color: #555;
 	}
 	.doc-style ul {
-		list-style:disc;
-		padding-left:40px;
+		list-style:none;
+		padding-left:20px;
 	}
 	.doc-style ul > ul {
 		padding-bottom: 10px;
@@ -83,6 +85,19 @@
 		margin: 15px auto;
 	}
 	.doc-style hr.setting-section {
-		margin-top: -10px;
+		margin-top: 0px;
 		padding-bottom: 10px;
+	}
+	.doc-style .form-table td {
+		width: 100%;
+		line-height: 1em;
+		padding: 10px;
+	}
+	.doc-style .form-table hr {
+	}
+	.doc-style .green {
+		color: #1abb1e;
+	}
+	.doc-style .grey {
+		color: #888;
 	}

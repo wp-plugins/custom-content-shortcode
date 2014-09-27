@@ -1,19 +1,31 @@
 <h3 align="center">Gallery field</h3>
 <hr>
 
-Enable a simple gallery field for any post type, under <a href="options-general.php?page=custom-gallery">Settings -&gt; Gallery Fields</a>.<br>
+Enable a gallery field for any post type, under <a href="options-general.php?page=ccs_gallery_field_settings">Admin Panel -> Settings -&gt; Gallery Fields</a>.<br>
 
-Images can be added, ordered, and removed.
+You can add, order, edit details and remove images from the field.
 
-<h4>Display image details from the gallery field</h4>
-<code>[loop field="gallery"]
+<h4>Display images from the gallery field</h4>
+<code>[attached gallery]
 &nbsp;&nbsp;&nbsp;&nbsp;Title: [field title]
 &nbsp;&nbsp;&nbsp;&nbsp;Full-size image: [field image]
 &nbsp;&nbsp;&nbsp;&nbsp;Caption: [field caption]
-[/loop]</code>
-For each image, these fields can be displayed: <em>id</em>, <em>title</em>, <em>image</em>, <em>image-url</em>, <em>caption</em>, <em>description</em>,<em> thumbnail</em>, and<em> thumbnail-url</em>.
+[/attached]</code>
+For each image, these fields can be displayed: <i>id</i>, <i>title</i>, <i>image</i>, <i>image-url</i>, <i>caption</i>, <i>description</i>,<i> thumbnail</i>, and<i> thumbnail-url</i>.
 <br>
 <hr>
+<h3>In a Loop</h3>
+
+<h4>Display gallery fields of each post in a loop</h4>
+<code>[loop type="post" category="colorful"]
+&nbsp;&nbsp;&nbsp;&nbsp;Post Title: [field title]
+&nbsp;&nbsp;&nbsp;&nbsp;Description: [content]
+&nbsp;&nbsp;&nbsp;&nbsp;[attached gallery columns="4"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[field thumbnail]
+&nbsp;&nbsp;&nbsp;&nbsp;[/attached]
+[/loop]</code><br>
+<hr>
+
 <h3>Native or Bootstrap gallery</h3>
 
 You can display all images in the gallery field using a native gallery or Bootstrap carousel.
@@ -22,7 +34,7 @@ You can display all images in the gallery field using a native gallery or Bootst
 <code>[content gallery="native"]
 [content gallery="carousel"]</code>
 
-You can pass the following parameters to the native gallery: <em>orderby</em>, <em>order</em>, <em>columns</em>, <em>size</em>, <em>link</em>, <em>include</em>, <em>exclude</em>. For details, please refer to <a href="http://codex.wordpress.org/Gallery_Shortcode" target="_blank">the Codex: Gallery Shortcode</a>.
+You can pass the following parameters to the native gallery: <i>orderby</i>, <i>order</i>, <i>columns</i>, <i>size</i>, <i>link</i>, <i>include</i>, <i>exclude</i>. For details, please refer to <a href="http://codex.wordpress.org/Gallery_Shortcode" target="_blank">the Codex: Gallery Shortcode</a>.
 <br>
 <hr>
 

@@ -1,24 +1,31 @@
 <?php
 
 
-class IfShortcode {
+/*========================================================================
+ *
+ * [if] - Display content based on conditions
+ *
+ *=======================================================================*/
+
+new CCS_If;
+
+class CCS_If {
+
+	public static $if_flag;
 
 	function __construct() {
 
-		global $ccs_global_variable;
-		$ccs_global_variable['if_flag'] = '';
+		self::$if_flag = '';
 
-		add_action( 'init', array( &$this, 'register' ) );
+		add_action( 'init', array( $this, 'register' ) );
 	}
 
 	function register() {
-		add_shortcode( 'if', array( &$this, 'if_shortcode' ) );
-		add_shortcode( 'flag', array( &$this, 'flag_shortcode' ) );
+		add_shortcode( 'if', array( $this, 'if_shortcode' ) );
+		add_shortcode( 'flag', array( $this, 'flag_shortcode' ) );
 	}
 
 	function if_shortcode( $atts, $content = null, $shortcode_name ) {
-
-		global $ccs_global_variable;
 
 		$args = array(
 			'every' => '',
@@ -56,7 +63,8 @@ class IfShortcode {
 		$compare = strtoupper($compare);
 
 		// Get [else] if it exists
-		$content_array = explode("[else]", $content);
+
+		$content_array = explode('[else]', $content);
 		$content = $content_array[0];
 		if (count($content_array)>1) {
 			$else = $content_array[1];
@@ -70,7 +78,7 @@ class IfShortcode {
 		 *
 		 *=======================================================================*/
 
-		if ($ccs_global_variable['is_loop']=="true") {
+		if (CCS_Loop::$state['is_loop']=="true") {
 
 			if (!empty($every)) {
 
@@ -80,7 +88,7 @@ class IfShortcode {
 				 *
 				 *=======================================================================*/
 
-				$count = $ccs_global_variable['current_loop_count'];
+				$count = CCS_Loop::$state['loop_count'];
 
 				if (substr($every,0,4)=='not ') {
 					$every = substr($every, 4); // Remove first 4 letters
@@ -119,8 +127,8 @@ class IfShortcode {
 			 *
 			 *=======================================================================*/
 
-			if ($ccs_global_variable['is_loop']=="true") {
-				$current_id = $ccs_global_variable['current_loop_id'];
+			if (CCS_Loop::$state['is_loop']=="true") {
+				$current_id = CCS_Loop::$state['current_post_id'];
 			} else {
 				$current_id = $current_post_id;
 			}
@@ -133,7 +141,7 @@ class IfShortcode {
 			if ((empty($check)) && (empty($no_flag))) $condition = false;
 			else {
 				$condition = true;
-				$ccs_global_variable['if_flag'] = $check;
+				self::$if_flag = $check;
 			}
 		}
 
@@ -279,16 +287,18 @@ class IfShortcode {
 		 *=======================================================================*/
 		
 		$condition = isset($atts['home']) ? is_front_page() : $condition;
-
 		$condition = isset($atts['comment']) ? (get_comments_number($current_post_id)>0) : $condition;
 		$condition = isset($atts['image']) ? has_post_thumbnail() : $condition;
 
+		if ( isset($atts['gallery']) && class_exists('CCS_Gallery_Field')) {
+
+			$condition =  CCS_Gallery_Field::has_gallery();
+		}
+
 /* test these */
-		$condition = isset($atts['loop']) ? ($ccs_global_variable['is_loop']=='true') : $condition;
+		$condition = isset($atts['loop']) ? (CCS_Loop::$state['is_loop']=='true') : $condition;
 		$condition = isset($atts['archive']) ? is_archive() : $condition;
 		$condition = isset($atts['single']) ? is_single() : $condition;
-
-
 
 
 		if (isset($atts['attached'])) {
@@ -307,16 +317,16 @@ class IfShortcode {
 
 		$condition = isset($atts['not']) ? !$condition : $condition;
 
-		$out = $condition ? do_shortcode( $content ) : do_shortcode( $else );
+		$out = $condition ? do_shortcode( $content ) : do_shortcode( $else ); // [if]..[else]..[/if]
 
-		$ccs_global_variable['if_flag'] = '';
+		self::$if_flag = '';
 
 		return $out;
 	}
 
 	function flag_shortcode() {
-		global $ccs_global_variable;
-		return $ccs_global_variable['if_flag'];
+
+		return self::$if_flag;
 	}
 
 
@@ -335,5 +345,4 @@ class IfShortcode {
 	}
 
 }
-new IfShortcode;
 
