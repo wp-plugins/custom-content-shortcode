@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
 Tested up to: 4.0
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,6 +84,14 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 1.3.1 =
+
+* [taxonomy] - Taxonomy fields: *term="name or ID" field="description"*
+* [field excerpt] - Read more: *more="true"*
+* [if name/field] - Check only the beginning of name or field value: *start="true"*
+* [field] - Image attributes for image field, attachment, and featured image; make sure *image_class* works for all types
+* [loop exclude="this"] - Make sure to get the original post ID in which the loop is contained
 
 = 1.3.0 =
 
