@@ -134,9 +134,9 @@ class CCS_Content {
 			}
 		}
 
-		// Default size for featured image and image link
+		// Default size for featured image thumbnail
 
-		$image_fields = array('image','image-link','thumbnail','thumbnail-link');
+		$image_fields = array('thumbnail','thumbnail-link');
 
 		if ( isset($parameters['field']) && in_array($parameters['field'],$image_fields)) {
 			$parameters['size'] = isset($parameters['size']) ? $parameters['size'] : 'thumbnail';
