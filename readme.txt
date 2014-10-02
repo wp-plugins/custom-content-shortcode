@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
 Tested up to: 4.0
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,12 +31,12 @@ There is a reference section under Settings -> Custom Content.
 Here are some of the included features:
 
 * View your site's **content structure**
-* **Dynamic templates** with HTML and shortcodes
-* **Cache** the result of query loops - *New!*
+* **Dynamic templates** with shortcodes
 * Simple **gallery field** for any post type
 * Display **comments** and **attachments**
 * **User info** and content based on user status
 * **Relative URLs** for links and images
+* **Cache** the result of query loops
 
 Support for other plugins:
 
@@ -60,13 +60,13 @@ Support for other plugins:
 
 == Frequently Asked Questions ==
 
-**Q:** How do I remove unwanted formatting inside shortcodes?
+**Q:** How do I protect shortcodes from post content formatting?
 
-**A:** WordPress automatically formats the post content, which can cause unwanted `<p>` and `<br>` tags around line breaks. To prevent this, wrap the content with the [raw] shortcode. You can enable it under Settings -> Custom Content.
+**A:** Post content is automatically formatted, which can cause unwanted `<p>` and `<br>` tags inside multi-line shortcodes. To prevent this, wrap the section with the [raw] shortcode. You can enable it under Settings -> Custom Content.
 
-**Q:** Switching from text to visual editor breaks my HTML.
+**Q:** How do I protect HTML code from the visual editor?
 
-**A:** The visual editor (TinyMCE) sometimes misinterprets HTML code placed in the text editor. There are several ways to address this issue.
+**A:** The visual editor (TinyMCE) sometimes misinterprets HTML tags placed in the text editor. There are several ways to address this issue.
 
 * Disable the visual editor for certain posts or post types, with the [Raw HTML](http://wordpress.org/plugins/raw-html/) plugin. However, if the post needs to be editable by the client, this won't be ideal.
 
@@ -85,6 +85,12 @@ Support for other plugins:
 
 == Changelog ==
 
+= 1.3.6 =
+
+* [loop list] - Build a list from loop items
+* [if] - Support nested conditions
+* [pass] - Pass sub fields if inside repeater or flexible content
+* Content Overview - Prevent division by zero
 
 = 1.3.5 =
 
