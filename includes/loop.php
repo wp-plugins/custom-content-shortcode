@@ -1609,8 +1609,13 @@ class CCS_Loop {
 			'field' => '',
 			'fields' => '',
 			'field_loop' => '', // Field is array or comma-separated list
-			'taxonomy_loop' => '', // Loop through each term in taxonomy
+
 			'acf_gallery' => '', // Pass image IDs from ACF gallery field
+
+			'taxonomy_loop' => '', // Loop through each term in taxonomy
+			'current' => '',
+			'orderby' => '',
+			'order' => '',
 			);
 
 		extract( shortcode_atts( $args , $atts, true ) );
@@ -1728,9 +1733,21 @@ class CCS_Loop {
 
 		} elseif (!empty($taxonomy_loop)) {
 
-			$terms = get_the_terms( $post_id, $taxonomy_loop );
+			if ($current=='true') {
 
-			$contents = null;
+				$terms = get_the_terms( $post_id, $taxonomy_loop );
+
+			} else {
+				// Get all terms, not only from current post
+
+				$terms = get_terms( $taxonomy_loop, array(
+					'orderby' => $orderby,
+					'order' => $order,
+				));
+
+			}
+
+			$contents = array();
 
 			// Loop through each term
 
