@@ -11,7 +11,7 @@ Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
+Display posts, pages, custom post types, fields, images, attachments, comments, files, menus, widget areas
 
 == Description ==
 
@@ -19,7 +19,7 @@ Display posts, pages, custom post types, custom fields, files, images, comments,
 <br />
 From a single field to entire pages, Custom Content Shortcode is a set of commands to display content where you need.
 
-The **[content]** shortcode displays any of the following: *posts, pages, custom post types, custom fields, files, images, attachments, menus,* or *widget areas*.
+The **[content]** shortcode displays any of the following: *posts, pages, custom post types, fields, images, menus,* or *widget areas*.
 
 The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query by parameters such as: *post type, category, custom taxonomy, date,* and *custom field values*.
 
