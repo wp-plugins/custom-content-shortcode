@@ -47,8 +47,7 @@ Support for other plugins:
 == Installation ==
 
 1. Install from *Plugins -> Add New*
-1. Or download the .zip and extract to *wp-content/plugins*
-1. Activate the plugin from the *Plugins* menu
+1. Activate it
 1. See: *Settings -> Custom Content*
 
 
