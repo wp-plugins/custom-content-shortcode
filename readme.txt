@@ -87,7 +87,7 @@ Support for other plugins:
 
 = 1.4.0 =
 
-* [loop] - Check beginning of field value: *field="title" start="The"*
+* [loop] - Query by beginning of field value: *field="title" start="The"*
 
 = 1.3.9 =
 
