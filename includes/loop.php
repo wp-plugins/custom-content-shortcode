@@ -568,13 +568,6 @@ class CCS_Loop {
 		}
 
 
-
-
-
-
-
-
-
 		/*========================================================================
 		 *
 		 * Category
@@ -618,6 +611,15 @@ class CCS_Loop {
 		 * Taxonomy
 		 *
 		 *=======================================================================*/
+
+		if ( CCS_ForEach::$state['is_for_loop'] ) {
+			// In a [for each] loop, filter by each taxonomy term
+			// unless it's specified otherwise
+
+			$parameters['taxonomy'] = empty($parameters['taxonomy']) ? CCS_ForEach::$state['each']['taxonomy'] : $parameters['taxonomy'];
+			$parameters['term'] = empty($parameters['term']) ? CCS_ForEach::$state['each']['slug'] : $parameters['term'];
+
+		}
 
 		if ( !empty($parameters['taxonomy']) ) {
 
@@ -1422,7 +1424,7 @@ class CCS_Loop {
 			$trim = $parameters['trim'];
 			if ($trim=='true') $trim = null;
 
-			if ( empty($parameters['columns']) && $parameters['list']=='true' ) {
+			if ( empty($parameters['columns']) && $parameters['list']!='true' ) {
 				$result = trim($result, " \t\n\r\0\x0B,".$trim);
 			} else {
 

@@ -21,7 +21,7 @@ From a single field to entire pages, Custom Content Shortcode is a set of comman
 
 The **[content]** shortcode displays any of the following: *posts, pages, custom post types, fields, images, menus,* or *widget areas*.
 
-The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query by parameters such as: *post type, category, custom taxonomy, date,* and *custom field values*.
+The **[loop]** shortcode performs query loops. It can display, for example, available products in a category, or excerpts from the 5 most recent posts. You can query by parameters such as: *post type, taxonomy, date,* and *field values*.
 
 There is a reference section under Settings -> Custom Content.
 
