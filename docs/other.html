@@ -1,0 +1,122 @@
+<h3 align="center">Relative URL</h3>
+<hr>
+
+Use the <b>[url]</b> shortcode to generate relative links and image URLs.
+<h4>Display an image from a relative location</h4>
+<code>&lt;img src='[url uploads]/assets/logo.png'&gt;</code>
+
+This could be useful when you're migrating sites, for example, from local server to public. When inserting an image, replace the specific web address with the <b>[url]</b> shortcode. Then the image doesn't depend on where the site is located.
+
+Available parameters:
+<ul>
+	<li><b>site</b> - site address</li>
+	<li><b>wordpress</b> - WordPress directory</li>
+	<li><b>content</b> -<i> /wp-content/</i></li>
+	<li><b>uploads</b> - <i>/wp-content/uploads/</i></li>
+	<li><b>theme</b> - <i>/wp-content/theme</i> - theme directory</li>
+	<li><b>child</b> - <i>/wp-content/child_theme</i> - child theme directory</li>
+</ul><br>
+
+<a href="#" id="raw" name="raw"></a>
+<h3 align="center">Raw output</h3>
+
+<hr>
+
+To protect a page section from default formatting, wrap it in the [raw] shortcode.
+
+<code>[raw]
+&nbsp;&nbsp;&nbsp;&nbsp;This area will not have &lt;p&gt; or &lt;br&gt; tags added.
+[/raw]</code>
+
+This feature can be enabled under <a href="options-general.php?page=ccs_reference&tab=settings">Settings</a>. If you have the <a target="_blank" href="http://wordpress.org/plugins/raw-html/">Raw HTML</a> plugin installed, it has the same shortcode so you can disable this setting.
+
+<br>
+<h3 align="center">Pass field values</h3>
+<a href="#" id="field-as-parameter" name="field-as-parameter"></a>
+<hr>
+<h3>Field as parameter</h3>
+
+Use the <b>[pass] </b>shortcode to pass a field value to another shortcode.
+
+<h4>Display a map according to the address entered in a custom field</h4>
+
+<code>[pass field="address"]
+&nbsp;&nbsp;&nbsp;&nbsp;[google_map address="{FIELD}"]
+[/pass]</code>
+
+<h4>Pass image IDs in the gallery field</h4>
+
+<code>[pass field="gallery"]
+&nbsp;&nbsp;&nbsp;&nbsp;[isotope_gallery ids="{FIELD}"]
+[/pass]</code><br>
+<hr>
+<h3>Field loop</h3>
+
+You can loop through a comma-separated list stored in a field, and pass each item.
+
+<h4>Display products from a list of serial numbers</h4>
+
+<code>[pass field_loop="serial_numbers"]
+&nbsp;&nbsp;&nbsp;&nbsp;[loop type="product" field="serial_number" value="{FIELD}"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product: [field title]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: [field price]
+&nbsp;&nbsp;&nbsp;&nbsp;[/loop]
+[/pass]</code><br>
+<hr>
+
+<h3>Multiple fields</h3>
+
+Pass values from multiple fields using the <i>fields</i> parameter.
+
+<code>[pass fields="post_type_field, category_field"]
+&nbsp;&nbsp;&nbsp;&nbsp;[loop type="{POST_TYPE_FIELD}" category="{CATEGORY_FIELD}"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[field title]
+&nbsp;&nbsp;&nbsp;&nbsp;[/loop]
+[/pass]</code>
+
+This works in the same way as <a href="options-general.php?page=ccs_reference&tab=loop#field-tags">field tags</a> for the <b>[loop]</b> shortcode.
+
+<hr>
+
+<h3>Taxonomy loop</h3>
+
+You can loop through all terms in a taxonomy, and pass each item.
+
+<h4>Display products from each category</h4>
+
+<code>[pass taxonomy_loop="category"]
+&nbsp;&nbsp;&nbsp;&nbsp;Category: {TERM_NAME}
+&nbsp;&nbsp;&nbsp;&nbsp;[loop type="product" category="{TERM}"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product: [field title]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Price: [field price]
+&nbsp;&nbsp;&nbsp;&nbsp;[/loop]
+[/pass]</code>
+
+The available tags are TERM, TERM_NAME and TERM_ID.
+
+To pass taxonomy terms assigned to the current post only, set <i>current="true"</i>.
+
+<br>
+
+<h3 align="center">Other notes</h3>
+<hr>
+<h3>Search form</h3>
+
+To display a search form, use the <b>[search_form]</b> shortcode.
+<br>
+<hr><a href="#" id="bootstrap-navbar" name="bootstrap-navbar"></a>
+<h3>Bootstrap tabs or navbar</h3>
+
+<h4>Display a menu in Bootstrap nav-tabs, nav-pills or nav-pills-stacked</h4>
+
+<code>[content menu="Side Menu" ul="nav-pills-stacked"]</code>
+
+<h4>Display a menu in a Bootstrap navbar with dropdown</h4>
+
+<code>[navbar menu="Main Menu"]
+&nbsp;&nbsp;&nbsp;&nbsp;Brand
+[/navbar]</code>
+
+The <i>menu</i> parameter is the title of the menu to be displayed. You can put text or image for the brand/logo area.
+
+In addition, you can define the <i>navclass</i> parameter: <i>top-nav</i>, <i>navbar-fixed-top</i>, <i>navbar-fixed-bottom</i>, <i>navbar-static-top</i>. The default is <i>top-nav</i>. Please refer to the <a href="http://getbootstrap.com/components/#navbar" target="_blank">Bootstrap documentation</a> for details.
