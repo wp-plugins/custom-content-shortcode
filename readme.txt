@@ -97,7 +97,6 @@ Support for other plugins:
 * [repeater] - Support nested repeater fields (ACF)
 
 * Thanks to *adwrt* and *kurakin_alexander* for the code contribution.
-
 * I'd also like to thank everyone who has donated to this plugin's development, and for all the user feedback.
 
 = 1.4.3 =
