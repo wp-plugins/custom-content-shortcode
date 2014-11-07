@@ -30,12 +30,12 @@ There is a reference section under Settings -> Custom Content.
 <br />
 Here are some of the included features:
 
-* View your site's **content structure**
 * **Dynamic templates** with shortcodes
-* Simple **gallery field** for any post type
+* View your site's **content structure**
 * Display **comments** and **attachments**
 * **User info** and content based on user status
 * **Relative URLs** for links and images
+* Simple **gallery field** for any post type
 * **Cache** the result of query loops
 
 Support for other plugins:
