@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
 Tested up to: 4.0
-Stable tag: 1.4.8
+Stable tag: 1.4.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,12 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 1.4.9 =
+
+* [if taxonomy] - If no term is specified, check if any term exists for the taxonomy
+* [each url] - URL of taxonomy term archive
+* [each name-link] - Taxonomy term name with link to archive
 
 = 1.4.8 =
 
