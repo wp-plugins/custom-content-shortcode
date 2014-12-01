@@ -3,6 +3,7 @@
 /*====================================================================================================
  *
  * Bootstrap Carousel Gallery
+ * Legacy - to be removed in a future update
  *
  *====================================================================================================*/
 
@@ -224,7 +225,7 @@ function custom_carousel_make_array( $string ) {
  */
 
 
-class custom_bootstrap_navwalker extends Walker_Nav_Menu {
+class ccs_bootstrap_navwalker extends Walker_Nav_Menu {
 	
 	/**
 	 * @see Walker::start_lvl()
@@ -390,8 +391,8 @@ function custom_bootstrap_navbar( $atts, $content = null ) {
 			'depth' => 2,
 			'container' => false,
 			'menu_class' => 'nav navbar-nav',
-			'fallback_cb' => 'custom_bootstrap_navwalker::fallback',
-			'walker' => new custom_bootstrap_navwalker(),
+			'fallback_cb' => 'ccs_bootstrap_navwalker::fallback',
+			'walker' => new ccs_bootstrap_navwalker(),
 		);
 
 		if( $navclass=='' ) {

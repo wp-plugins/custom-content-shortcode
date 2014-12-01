@@ -1,0 +1,183 @@
+<h3 align="center">If</h3>
+<hr>
+
+Use the <b>[if]</b> shortcode to display content based on certain conditions.
+
+<code>[loop type="films"]
+&nbsp;&nbsp;&nbsp;&nbsp;[field title]
+&nbsp;&nbsp;&nbsp;&nbsp;[if category="recommend"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(Recommended)
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code><br>
+<hr>
+
+<h3>Parameters</h3>
+
+<h4>Post type and name</h4>
+<ul>
+	<li><b>type</b> - post type</li>
+	<li><b>name</b> - post name/slug</li>
+</ul>
+<h4>Parent</h4>
+<ul>
+	<li><b>parent</b> - slug or ID of parent</li>
+</ul>
+<h4>Category, tag, taxonomy</h4>
+<ul>
+	<li><b>category</b> - if post is in category</li>
+	<li><b>tag</b> - if post has tag(s)
+</ul>
+<ul>
+	<li><b>taxonomy</b> - name of taxonomy to query
+	<li><b>term</b> - if post has term(s) in the specified taxonomy; if no term is set, it will check if any term exists
+</ul>
+<h4>Field value</h4>
+<ul>
+	<li><b>field</b> - name of field to query</li>
+	<li><b>value</b> - if post has value(s) in the specified field; if no value is set, it will check if any field value exists</li>
+	<li><b>start</b> - use instead of <b>value</b> to check only the beginning of field value</li>
+</ul>
+<h4>User field</h4>
+<ul>
+	<li><b>user_field</b> - name of user field to query</li>
+	<li><b>value, start, compare</b> - see above for field value</li>
+</ul>
+
+<h4>Multiple values</h4>
+For category, tag, taxonomy, field or user field, you can query for multiple values: for example, <i>category="sci-fi, comedy"</i>. This returns posts in <i>either</i> Sci-Fi or Comedy. If you want posts matching <i>both</i> categories, use the <i>compare</i> parameter.
+<ul>
+	<li><b>compare</b> - Set compare="and" to query for <i>all</i> values
+</ul>
+
+<h4>If it exists</h4>
+<ul>
+	<li><b>attached</b> - if the post has any attachments</li>
+	<li><b>comment</b> - if the post has any comments</li>
+	<li><b>image</b> - if the post has a featured image</li>
+	<li><b>gallery</b> - if the post has any image in the gallery field</li>
+	<li><b>flag</b> - if custom field value exists; for example: <i>flag="field_name"</i></li>
+</ul>
+<h4>Loop conditions</h4>
+<ul>
+	<li><b>empty</b> - if the loop is empty (no post found)</li>
+	<li><b>first, last</b> - if it's the first or last post found</li>
+	<li><b>every</b> - for every X post in the loop</li>
+</ul>
+<h4>Other</h4>
+<ul>
+	<li><b>not</b> - when the condition is not met, for example: [if not first]</li>
+</ul>
+<br>
+
+<h3 align="center">Else</h3>
+<hr>
+
+Use the <b>[else]</b> shortcode to display something else when the condition is false.
+
+<code>[loop type="product"]
+&nbsp;&nbsp;&nbsp;&nbsp;Product: [field title]
+&nbsp;&nbsp;&nbsp;&nbsp;Price: [field price]
+&nbsp;&nbsp;&nbsp;&nbsp;[if tag="discount"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On Sale!
+&nbsp;&nbsp;&nbsp;&nbsp;[else]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Regular Price
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code>
+
+<br>
+<h3 align="center">Other conditions</h3>
+<hr>
+<h3>If there is no loop result</h3>
+
+Use <b>[if empty]</b> to display something when there is no post matching the query.
+
+<h4>Display a message for no query result</h4>
+
+<code>[loop type="events" category="weekend"]
+&nbsp;&nbsp;&nbsp;&nbsp;[field title]
+&nbsp;&nbsp;&nbsp;&nbsp;[field description]
+&nbsp;&nbsp;&nbsp;&nbsp;[if empty]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There is no event for this category.
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code>
+
+If there's no post found, the loop displays only what's inside <b>[if empty]</b>.
+<br>
+<hr>
+<h3>For every X number of posts</h3>
+
+<h4>Add an extra break line for every 3 posts</h4>
+
+<code>[loop type="post" count="9"]
+&nbsp;&nbsp;&nbsp;&nbsp;[field title]
+&nbsp;&nbsp;&nbsp;&nbsp;[if every="3"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;br&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code>
+
+<h4>Display something for the first or last post</h4>
+<code>[loop type="post"]
+&nbsp;&nbsp;&nbsp;&nbsp;[field title]
+&nbsp;&nbsp;&nbsp;&nbsp;[if first]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(first post)
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+&nbsp;&nbsp;&nbsp;&nbsp;[if last]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(last post)
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code><br>
+<hr>
+<h3>If a field value exists</h3>
+
+To check if a field has any value, use the <i>field</i> parameter.
+
+<h4>Display only products that have serial numbers</h4>
+
+<code>[loop type="product"]
+&nbsp;&nbsp;&nbsp;&nbsp;[if field="serial_number"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Product: [field title]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Serial #: [field serial_number]
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code>
+
+If you specify the <i>value</i> parameter, it will check for that specific value only.
+
+<hr>
+<h3>If a taxonomy term exists</h3>
+
+To check if the post has any term in a given taxonomy, use the <i>taxonomy</i> parameter without specifying the term.
+
+<h4>Display tags if any exists</h4>
+
+<code>[loop type="book"]
+&nbsp;&nbsp;&nbsp;&nbsp;Book: [field title]
+&nbsp;&nbsp;&nbsp;&nbsp;Author: [field author_name]
+&nbsp;&nbsp;&nbsp;&nbsp;[if taxonomy="tag"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tags:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[for each="tag" trim="true"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[each name-link],
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[/for]
+&nbsp;&nbsp;&nbsp;&nbsp;[else]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There's no tag.
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code>
+
+<br>
+<h3 align="center">Nested</h3>
+<hr>
+
+For nested conditions, use [-if][-else][/-if].
+
+<code>[loop type="product"]
+&nbsp;&nbsp;&nbsp;&nbsp;[if category="books"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The book [field title-link] is
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-if field="status" value="in-stock"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in stock.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-else]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;not available.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[/-if]
+&nbsp;&nbsp;&nbsp;&nbsp;[else]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[field title-link] is not a book.
+&nbsp;&nbsp;&nbsp;&nbsp;[/if]
+[/loop]</code>
+
+
