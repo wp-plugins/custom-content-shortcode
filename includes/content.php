@@ -171,9 +171,6 @@ class CCS_Content {
 			'date_format' => '', 'timestamp' => '',
 			'new' => '', // Set true to open link in new tab - currently only for download-link
 
-			// Support for qTranslate Plus
-			'lang' => ''
-
 		);
 
 		
@@ -664,21 +661,12 @@ class CCS_Content {
 		 *=======================================================================*/
 
 			$result = self::$state['current_post']->post_content;
-/*
-			// Support for qTranslate Plus?
-
-			if ( !empty(self::$parameters['lang']) && function_exists('ppqtrans_use') ) {
-				if ( self::$parameters['lang'] == 'this' && function_exists('ppqtrans_getLanguage') ) {
-					self::$parameters['lang'] = ppqtrans_getLanguage();
-				}
-				$result = ppqtrans_use(self::$parameters['lang'], $result, false);
-			}
-*/
 
 			// Format post content by default
 			self::$parameters['format'] = empty(self::$parameters['format']) ? 'true' : self::$parameters['format'];
 
 		}
+
 		return $result;
 	}
 
@@ -691,6 +679,10 @@ class CCS_Content {
 			$result = implode(', ', $result);
 		}
 
+
+		// Support qTranslate Plus
+
+		$result = self::check_translation( $result );
 
 
 		/*========================================================================
@@ -1354,11 +1346,22 @@ class CCS_Content {
 	}
 
 
+	/*========================================================================
+	 *
+	 * Support qTranslate Plus
+	 *
+	 */
 
+	public static function check_translation( $text ) {
 
+		if ( function_exists('ppqtrans_use') ) {
+			// $text = ppqtrans_useCurrentLanguageIfNotFoundUseDefaultLanguage( $text );
+			global $q_config;
+			return ppqtrans_use($q_config['language'], $text, false);
+		}
 
-
-
+		return $text;
+	}
 
 
 
@@ -1435,7 +1438,8 @@ class CCS_Content {
 		$array = null;
 
 		extract( shortcode_atts( array(
-			'each' => 'false' // Loop through each array
+			'each'  => 'false', // Loop through each array
+			'debug' => 'false' // Print array for debug purpose
 		), $atts ) );
 
 		if ( isset($atts) && !empty($atts[0]) ) {
@@ -1456,6 +1460,18 @@ class CCS_Content {
 
 				// Normal field
 				$array = get_post_meta( get_the_ID(), $field, true );
+
+				// IF value is not array
+				if ( !empty($array) && !is_array($array)) {
+					// See if it's an ACF field
+					if (function_exists('get_field')) {
+						$array = get_field( $field );
+					}
+				}
+			}
+
+			if ( $debug!='false') {
+				$out = self::print_array($array,false);
 			}
 
 			if ( !empty($array) && is_array($array) ) {
@@ -1475,19 +1491,23 @@ class CCS_Content {
 				self::$state['is_array_field'] = false;
 
 			} else {
+
 				$out = $array; // Empty or not array
 			}
+
 		} 
 		return $out;
 	}
 
 	// For debug purpose: Print an array in a human-readable format
 
-	public static function print_array( $array ) {
+	public static function print_array( $array, $echo = true ) {
 
+		if ( !$echo ) ob_start();
 		echo '<pre>';
 			print_r( $array );
 		echo '</pre>';
+		if ( !$echo ) return ob_get_clean();
 	}
 
 } // End CCS_Content
