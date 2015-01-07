@@ -37,6 +37,8 @@ class CCS_Loop {
 
 		add_shortcode( 'loop', array($this, 'the_loop_shortcode') );
 		add_shortcode( 'pass', array($this, 'pass_shortcode') );
+		add_shortcode( '-pass', array($this, 'pass_shortcode') );
+		add_shortcode( '--pass', array($this, 'pass_shortcode') );
 
 		add_shortcode( 'loop-count', array($this, 'loop_count_shortcode') );
 		add_shortcode( 'found-posts', array($this, 'found_posts_shortcode') );
