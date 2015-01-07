@@ -6,8 +6,8 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
-Tested up to: 4.0
-Stable tag: 1.5.6
+Tested up to: 4.1
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,33 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 1.6.1 =
+
+* [if search] - If current page is search result
+* [is author] - If user is author of current post
+* [for each] - Enable tags just like [pass taxonomy_loop]
+* [pass list] - Pass an arbitrary list of items
+* [pass taxonomy_loop] - Default order by taxonomy term name
+# [-pass], [--pass] - Enable nested pass
+* [repeater] - Do shortcode inside ACF repeater sub field
+* [search_form type] - Search specific post type
+
+= 1.5.9 =
+
+* [loop] - If *parent="this"* and no current post, return empty
+* [loop] - Exclude child posts by default, unless *include="children"*
+* Try the new add-on under development: [Paginator](http://eliotakira.com/plugin/paginator)
+
+= 1.5.8 =
+
+* [comments id] - Return nothing if post/ID is empty
+* [content] - Make sure current post exists
+* [field thumbnail] - Enable *size* parameter to resize thumbnail; thanks @kurakin_alexander!
+* [repeater num] - Display specific repeater field
+* [repeater num sub] - Quick way to display a single sub-field
+* Starting to add hooks and filters for extensibility
+* Improve code organization
 
 = 1.5.6 =
 
