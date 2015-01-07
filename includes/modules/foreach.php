@@ -7,7 +7,7 @@
  * [for each="category"]
  * [each name,id,slug]
  * 
- *=======================================================================*/
+ */
 
 
 new CCS_ForEach;
@@ -33,13 +33,13 @@ class CCS_ForEach {
 
 		$args = array(
 			'each' => '',
-			'orderby' => '',
+			'orderby' => 'name',
 			'order' => '',
 			'count' => '',
 			'parent' => '',
 			'current' => '',
 			'trim' => '',
-			'empty' => 'false',
+			'empty' => 'true', // Show taxonomy terms with no post
 			'exclude' => ''
 		);
 
@@ -184,7 +184,18 @@ class CCS_ForEach {
 					self::$state['each']['name-link'] = '<a href="'.self::$state['each']['url'].'">'
 						. self::$state['each']['name'].'</a>';
 
-					$out .= do_shortcode($content);
+					// Replace {TAGS}
+
+					// @todo Create a more efficient general-purpose function for this
+
+					$replaced_content = str_replace('{TERM}',
+						self::$state['each']['slug'], $content);
+					$replaced_content = str_replace('{TERM_ID}',
+						self::$state['each']['id'], $replaced_content);
+					$replaced_content = str_replace('{TERM_NAME}',
+						self::$state['each']['name'], $replaced_content);
+
+					$out .= do_shortcode($replaced_content);
 				}
 			}
 		}
