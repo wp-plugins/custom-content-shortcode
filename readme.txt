@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
 Tested up to: 4.1
-Stable tag: 1.5.9
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,11 +83,21 @@ Support for other plugins:
 
 == Changelog ==
 
+= 1.6.0 =
+
+* [if search] - If current page is search result
+* [is author] - If user is author of current post
+* [for each] - Enable tags just like [pass taxonomy_loop]
+* [pass list] - Pass an arbitrary list of items
+* [pass taxonomy_loop] - Default order by taxonomy term name
+* [repeater] - Do shortcode inside ACF repeater sub field
+* [search_form type] - Search specific post type
+
 = 1.5.9 =
 
-* Try the new add-on under development: [Paginator](http://eliotakira.com/plugin/paginator)
 * [loop] - If *parent="this"* and no current post, return empty
 * [loop] - Exclude child posts by default, unless *include="children"*
+* Try the new add-on under development: [Paginator](http://eliotakira.com/plugin/paginator)
 
 = 1.5.8 =
 
