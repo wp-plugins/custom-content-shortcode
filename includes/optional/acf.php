@@ -1,12 +1,12 @@
 <?php
 
-/*====================================================================================================
+/*========================================================================
  *
  * Shortcodes for Advanced Custom Fields
- * 
- * Gallery, repeater, flexible content, relationship/post object
- * 
- *====================================================================================================*/
+ *
+ * Gallery, repeater, flexible content, relationship/post object..
+ *
+ */
 
 new CCS_To_ACF;
 
@@ -21,7 +21,7 @@ class CCS_To_ACF {
 
 		if (!function_exists('get_field')) return; // If ACF is not installed
 
-		add_shortcode('sub', array($this, 'sub_field'));
+		add_shortcode('acf_sub', array($this, 'acf_sub_field'));
 		add_shortcode('flex', array($this, 'loop_through_acf_field'));
 
 		// This will be called by [repeater] if not inside WCK metabox
@@ -30,7 +30,7 @@ class CCS_To_ACF {
 
 		add_shortcode('acf_gallery', array($this, 'loop_through_acf_gallery_field'));
 		add_shortcode('acf_image', array($this, 'get_image_details_from_acf_gallery'));
-		add_shortcode('sub_image', array($this, 'get_image_details_from_acf_gallery')); // Alias
+		// add_shortcode('sub_image', array($this, 'get_image_details_from_acf_gallery')); // Alias
 		add_shortcode('layout', array($this, 'if_get_row_layout'));
 
 		// This will be called by [related] when relationship field is specified
@@ -40,7 +40,7 @@ class CCS_To_ACF {
 		add_shortcode('live-edit', array($this, 'call_live_edit'));
 	}
 
-	public static function sub_field( $atts ) {
+	public static function acf_sub_field( $atts ) {
 
 		extract(shortcode_atts(array(
 			'field' => '',
@@ -72,12 +72,13 @@ class CCS_To_ACF {
 
 		} else {
 
-			$output = get_sub_field($field);
+			$output = do_shortcode(get_sub_field($field));
 
 			if ( ($format=='true') && ($output!='') ) {
 				$output = wpautop($output);
 			}
 		}
+		// if (is_array($output)) $output=implode(', ', $output);
 		return $output;
 	}
 
@@ -89,8 +90,33 @@ class CCS_To_ACF {
 			'field' => '',
 			'count' => '',
 			'start' => '',
+			'num' => '',
+			'sub' => '',
+			'sub_image' => '',
+			'size' => '',
+			'format' => '',
 			'columns' => '', 'pad' => '', 'between' => '', 
 		), $atts ));
+
+		if ( !empty($num) ) {
+			$start = $num;
+			$count = 1;
+		}
+
+		if ( empty($content) && (!empty($sub) || !empty($sub_image))) {
+
+			if (!empty($sub_image))
+				$content = '[acf_sub image="'.$sub_image.'"';
+			else
+				$content = '[acf_sub field="'.$sub.'"'; // Display sub field
+
+			if (!empty($size))
+				$content .= ' size= "'.$size.'"';
+			if (!empty($format))
+				$content .= ' format= "'.$format.'"';
+
+			$content .= ']';
+		}
 
 		if ( have_rows( $field )) {
 
