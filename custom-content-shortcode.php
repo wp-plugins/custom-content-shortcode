@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 1.5.6
+Version: 1.6.5
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -32,7 +32,7 @@ class CCS_Plugin {
 	 *
 	 * Load settings
 	 *
-	 *=======================================================================*/
+	 */
 
 	function load_settings() {
 
@@ -66,7 +66,7 @@ class CCS_Plugin {
 	 *
 	 * Load main and optional modules
 	 *
-	 *=======================================================================*/
+	 */
 
 	function load_module( $module ) {
 
@@ -76,24 +76,24 @@ class CCS_Plugin {
 
 	function load_main_modules() {
 
-		$main_modules = array(
-			'content',		// Content shortcode
-			'loop',			// Loop shortcode
-			'attached',		// Attachment loop
-			'comments',		// Comments shortcode
-			'related',		// Related posts loop
-			'user',			// User shortcodes
-			'url',			// URL shortcode
-			'foreach',		// For/each loop
-			'if',			// If shortcode
-			'docs',			// Documentation under Settings -> Custom Content
-			'cache',		// Cache shortcode
-			'format',		// Format shortcodes: br, p, x, clean, direct, format
-			'wck',			// WCK support
-		//	'widget'		// Widget shortcode (not ready)
+		$modules = array(
+			'core/content',			// Content shortcode
+			'core/loop',			// Loop shortcode
+			'docs/docs',			// Documentation under Settings -> Custom Content
+			'modules/attached',		// Attachment loop
+			'modules/cache',		// Cache shortcode
+			'modules/comments',		// Comments shortcode
+			'modules/foreach',		// For/each loop
+			'modules/format',		// Format shortcodes: br, p, x, clean, direct, format
+			'modules/if',			// If shortcode
+			'modules/related',		// Related posts loop
+			'modules/url',			// URL shortcode
+			'modules/user',			// User shortcodes
+			'optional/wck',			// WCK support
+		//	'widget'				// Widget shortcode (not ready)
 		);
 
-		foreach ($main_modules as $module) {
+		foreach ($modules as $module) {
 
 			$this->load_module( $module );
 		}
@@ -103,7 +103,7 @@ class CCS_Plugin {
 	 *
 	 * Optional modules
 	 *
-	 *=======================================================================*/
+	 */
 
 	function load_optional_modules() {
 
@@ -111,13 +111,13 @@ class CCS_Plugin {
 
 			// Option name => module name
 
-			'load_gallery_field'	=> 'gallery',		// Gallery field
-			'load_acf_module'		=> 'acf',			// Advanced Custom Fields support
-			'load_file_loader'		=> 'load',			// Load HTML, CSS, JS fields
-			'load_mobile_detect'	=> 'mobile',		// Mobile detect shortcodes
-			'load_bootstrap_module'	=> 'bootstrap',		// Bootstrap support
-			'shortcode_unautop'		=> 'unautop',		// Shortcode unautop
-			'raw_shortcode'			=> 'raw',			// [raw]
+			'load_acf_module'		=> 'optional/acf',			// Advanced Custom Fields support
+			'load_bootstrap_module'	=> 'optional/bootstrap',	// Bootstrap support
+			'load_gallery_field'	=> 'optional/gallery',		// Gallery field
+			'load_file_loader'		=> 'optional/load',			// Load HTML, CSS, JS fields
+			'load_mobile_detect'	=> 'optional/mobile',		// Mobile detect shortcodes
+			'raw_shortcode'			=> 'optional/raw',			// [raw]
+			'shortcode_unautop'		=> 'optional/unautop',		// Shortcode unautop
 		);
 
 		foreach ($optional_modules as $option => $module) {
@@ -134,7 +134,7 @@ class CCS_Plugin {
 	 *
 	 * Set up WP filters
 	 *
-	 *=======================================================================*/
+	 */
 	
 	function setup_wp_filters() {
 
@@ -144,7 +144,7 @@ class CCS_Plugin {
 		 *
 		 * Enable shortcodes in widget
 		 *
-		 *=======================================================================*/
+		 */
 
 		if ( isset( $settings['shortcodes_in_widget'] ) &&
 			($settings['shortcodes_in_widget'] == "on") ) {
@@ -158,13 +158,13 @@ class CCS_Plugin {
 
 		/*========================================================================
 		 *
-		 * Move wpautop filter to after shortcode processing (legacy)
+		 * Move wpautop filter to after shortcode processing (deprecated)
 		 * 
 		 * User feedback suggests some themes/plugins don't work well with the
 		 * filter moved, because they assume default priority. Instead, use [raw]
 		 * or edit code outside of post editor.
 		 *
-		 *=======================================================================*/
+		 */
 
 		if ( isset( $settings['move_wpautop'] ) &&
 			($settings['move_wpautop'] == "on") ) {
@@ -188,7 +188,7 @@ class CCS_Plugin {
  *
  * Global helper functions
  *
- *=======================================================================*/
+ */
 
 if (!function_exists('do_short')) {
 	function do_short($content) {
