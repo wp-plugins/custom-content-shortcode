@@ -2,6 +2,14 @@
 
 <hr>
 
+<h3>Page link</h3>
+
+Use the <b>[field]</b> shortcode to display a page link field. This will display the URL of a post or archive.
+
+<code>[field link="page_link"]</code><br>
+
+<hr>
+
 <h3>Relationship</h3>
 
 Use the <b>[related]</b> shortcode to loop through a relationship field.
@@ -28,7 +36,32 @@ Use the <b>[repeater]</b> shortcode to loop through a repeater field.
 &nbsp;&nbsp;&nbsp;&nbsp;[field description format="true"]
 [/repeater]</code>
 
-For an image field, use the <i>image</i> parameter to display the field. You can set the <i>size</i> parameter to:<i> thumbnail</i>,<i> medium</i>,<i> large</i> - default is full-size. If the image field returns as URL, set <i>in="url"</i>.
+For an image field inside, use the <i>image</i> parameter to display the field. You can set the <i>size</i> parameter to:<i> thumbnail</i>,<i> medium</i>,<i> large</i> - default is full-size. If the image field returns as URL, set <i>in="url"</i>.
+
+<hr>
+
+<h4>Display a specific repeater field</h4>
+
+<code>[repeater field="boxes" num="3"]</code>
+
+<h4>Display specific sub-fields without looping</h4>
+
+<code>[repeater field="boxes" num="1" sub="title"]
+[repeater field="boxes" num="2" sub="text"]
+[repeater field="boxes" num="3" sub_image="image"]
+</code>
+
+This is a quick way to display a sub-field from a specific repeater field. Use by itself, without closing tag.
+
+<hr>
+
+<h4>Nested repeater fields</h4>
+
+<code>[repeater field="boxes"]
+&nbsp;&nbsp;&nbsp;&nbsp;[-repeater field="inner_boxes"]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;[/-repeater]
+[/repeater]</code>
 
 To display a repeater inside a repeater, use <b>[-repeater]</b>.  Please note that the inner repeater field must have a different name than its parent.
 <br>
@@ -84,7 +117,7 @@ You can pass the image IDs to another shortcode.
 <hr>
 <h3>ACF fields in other posts</h3>
 
-Display gallery, relationship, repeater, or flexible content fields from other posts inside the loop.
+Display ACF fields from other posts, using the loop.
 
 <code>[loop name="hello-world"]
 &nbsp;&nbsp;&nbsp;&nbsp;[repeater field="boxes"]
