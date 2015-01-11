@@ -57,6 +57,10 @@ class CCS_Comments {
 				'title', 'url', 'title_link', 'author_link'
 			);
 
+			if (empty($atts)) {
+				$atts = ['content']; // Default field
+			}
+
 			if( is_array( $atts ) )
 				$atts = array_flip( $atts ); // check for parameters without value
 
@@ -141,6 +145,11 @@ class CCS_Comments {
 			self::$state['is_comments_loop'] = true;
 			if ((empty($count)) || ($count=='all')) $count = 999;
 			$atts['number'] = $count;
+
+			if ( CCS_Loop::$state['is_loop'] && empty($id) ) {
+				$id = 'this';
+			}
+
 
 			if ($id=='this') {
 
