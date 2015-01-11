@@ -1,10 +1,15 @@
 <?php
 
-/*====================================================================================================
+
+/*========================================================================
  *
- * Comment shortcodes - [comment form] form/template/count
+ * Comment shortcodes
+ * 
+ * [comments] - Loop through comments
+ * [comment] - Show comment field
+ * [comment form] form/template/count
  *
- *====================================================================================================*/
+ */
 
 new CCS_Comments;
 
@@ -42,7 +47,7 @@ class CCS_Comments {
 			// Display comment fields
 
 			$out = null;
-			$comment = self::$state['current_comment'];
+			$comment = isset(self::$state['current_comment']) ? self::$state['current_comment'] : null;
 
 			if (empty($comment)) return;
 
@@ -51,6 +56,10 @@ class CCS_Comments {
 				'content', 'user_id',
 				'title', 'url', 'title_link', 'author_link'
 			);
+
+			if (empty($atts)) {
+				$atts = ['content']; // Default field
+			}
 
 			if( is_array( $atts ) )
 				$atts = array_flip( $atts ); // check for parameters without value
@@ -136,8 +145,17 @@ class CCS_Comments {
 			self::$state['is_comments_loop'] = true;
 			if ((empty($count)) || ($count=='all')) $count = 999;
 			$atts['number'] = $count;
+
+			if ( CCS_Loop::$state['is_loop'] && empty($id) ) {
+				$id = 'this';
+			}
+
+
 			if ($id=='this') {
+
 				$atts['post_id'] = get_the_ID();
+				if (empty($atts['post_id'])) return; // No current post ID
+
 			} elseif (!empty($id)) {
 				$atts['post_id'] = $id;
 			}

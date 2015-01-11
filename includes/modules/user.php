@@ -4,7 +4,7 @@
  *
  * User shortcodes: user, is/isnt, list_shortcodes, search_form, blog
  *
- *=======================================================================*/
+ */
 
 new CCS_User;
 
@@ -31,7 +31,7 @@ class CCS_User {
 	 *
 	 * Users loop
 	 *
-	 *=======================================================================*/
+	 */
 	
 	function users_shortcode( $atts, $content ) {
 
@@ -43,7 +43,7 @@ class CCS_User {
 		 *
 		 * Prepare parameters
 		 *
-		 *=======================================================================*/
+		 */
 
 		$args = array();
 
@@ -78,9 +78,9 @@ class CCS_User {
 			$compare = isset($atts['compare']) ? strtoupper($atts['compare']) : '=';
 
 			switch ($compare) {
-				case 'EQUAL': $compare = "="; break;
+				case 'EQUAL': $compare = '='; break;
 				case 'NOT':
-				case 'NOT EQUAL': $compare = "!="; break;
+				case 'NOT EQUAL': $compare = '!='; break;
 				case 'MORE': $compare = '>'; break;
 				case 'LESS': $compare = '<'; break;
 			}
@@ -119,7 +119,7 @@ class CCS_User {
 		 *
 		 * Custom query to filter results
 		 *
-		 *=======================================================================*/
+		 */
 		
 		// Users Loop
 		foreach ( $users as $user ) {
@@ -137,7 +137,7 @@ class CCS_User {
 	 *
 	 * [user]
 	 *
-	 *=======================================================================*/
+	 */
 
 	public static function user_shortcode( $atts ) {
 
@@ -226,11 +226,11 @@ class CCS_User {
 	 *
 	 * [is]
 	 *
-	 *=======================================================================*/
+	 */
 
 	function is_shortcode( $atts, $content, $tag ) {
 
-		global $current_user;
+		global $post, $current_user;
 
 		extract(shortcode_atts(array(
 			'user' => '',
@@ -242,7 +242,13 @@ class CCS_User {
 		), $atts));
 
 		$condition = false;
-		get_currentuserinfo(); // load user info to $current_user
+
+
+		// Load user info to $current_user
+
+		if ( self::$state['is_users_loop'] && isset(self::$state['current_user_object']))
+			$current_user = self::$state['current_user_object'];
+		else get_currentuserinfo();
 
 
 		// Get [else] if it exists
@@ -255,37 +261,35 @@ class CCS_User {
 			$else = null;
 		}
 
-
-
 		if (!empty($user)) {
 
-			$user_array = explode(",", $user);
+			$user_array = explode(',', $user);
 
 			foreach ($user_array as $this_user) {
 				$this_user = trim($this_user);
 
 				if ( $this_user == ($current_user->user_login) )
 					$condition = true;
-				if ( ( $this_user == ($current_user->ID) ) &&
-					is_numeric($this_user) ) // $user is a number?
+				elseif ( is_numeric($this_user) &&
+					$this_user == ($current_user->ID) ) // User ID
 						$condition = true;
 			}
 		}
 
-		if (!empty($role)) {
+		if ( !empty($role) ) {
 
 			$current_roles = $current_user->roles; // an array of roles
 			$condition = false;
 
 			// check each role
-			$check_roles = explode(",", $role);
+			$check_roles = explode(',', $role);
 			foreach ($check_roles as $check_role) {
 				$check_role = trim($check_role);
 
 				if (in_array($check_role, $current_roles)) {
 					$condition = true;
 				}
-				elseif ($compare == "AND") {
+				elseif ($compare == 'AND') {
 					$condition = false;
 				}
 			}
@@ -294,7 +298,7 @@ class CCS_User {
 
 		if (!empty($capable)) {
 
-			$capables = explode(",", $capable);
+			$capables = explode(',', $capable);
 
 			foreach ($capables as $capability) {
 
@@ -303,7 +307,7 @@ class CCS_User {
 				if (current_user_can( $check_capable )) {
 					$condition = true;
 				}
-				elseif ($compare == "AND") {
+				elseif ($compare == 'AND') {
 					$condition = false;
 				}
 			}
@@ -314,12 +318,22 @@ class CCS_User {
 
 		if (( isset( $atts['admin'] ) && current_user_can( 'manage_options' ) ) ||
 			( isset( $atts['login'] ) && is_user_logged_in() ) ||
-			( isset( $atts['logout'] ) && !is_user_logged_in() )) {
+			( isset( $atts['logout'] ) && !is_user_logged_in() ) ) {
 
 			$condition = true;
 		}
 
-		if ( ($tag=="isnt") || (isset($atts['not'])) )
+		if ( isset( $atts['author'] ) ) {
+			// If user is the author of current post
+			if (!empty($post)) {
+
+				if ($post->post_author == $current_user->ID)
+					$condition = true;
+			}
+		}
+
+
+		if ( ($tag=='isnt') || (isset($atts['not'])) )
 			$condition = !$condition;
 
 		if ( !$condition ) {
@@ -339,7 +353,7 @@ class CCS_User {
 	 *
 	 * [blog]
 	 *
-	 *=======================================================================*/
+	 */
 
 	function blog_shortcode( $atts, $content ){
 
@@ -364,7 +378,7 @@ class CCS_User {
 	 *
 	 * [list_shortcodes]
 	 *
-	 *=======================================================================*/
+	 */
 
 	function list_shortcodes( ) {
 		global $shortcode_tags;
@@ -383,19 +397,31 @@ class CCS_User {
 	}
 
 
-	/*========================================================================
+	/**
 	 *
 	 * [search_form]
 	 *
-	 *=======================================================================*/
+	 * @param type Search only this post type
+	 *
+	 */
 
-	function search_form_shortcode() {
+	function search_form_shortcode( $atts, $content ) {
 
-		ob_start();
-		get_search_form(true);
-		$out = ob_get_contents();
-		ob_end_clean();
-		
+		extract( shortcode_atts( array(
+			'type' => '',
+		), $atts ) );
+
+		$out = get_search_form(false);
+
+		if ( !empty($type) ) {
+
+			$filter = '<input type="hidden" value="'.$type.'" name="post_type" id="post_type" />';
+			$end = '</form>';
+
+			// Insert it before the end of form
+			$out = str_replace($end, $filter.$end, $out);
+		}
+
 		return $out;
 	}
 

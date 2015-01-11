@@ -5,7 +5,7 @@
  *
  * [if] - Display content based on conditions
  *
- *=======================================================================*/
+ */
 
 new CCS_If;
 
@@ -28,6 +28,8 @@ class CCS_If {
 	}
 
 	function if_shortcode( $atts, $content = null, $shortcode_name ) {
+
+		$atts_original = $atts;
 
 		$args = array(
 			'every' => '',
@@ -55,7 +57,7 @@ class CCS_If {
 
 		extract( shortcode_atts( $args , $atts, true ) );
 
-		if (is_array($atts)) $atts = array_flip($atts); /* To allow check for parameters with no value set */
+		if (is_array($atts)) $atts = array_flip($atts); /* Check parameters with no value */
 /*
 //		if ( (empty($flag))&&(empty($no_flag)) || (isset($atts['empty']))) return;
 		if ((isset($atts['empty'])) || (isset($atts['last'])) ) return; // [if empty] [if last] is processed by [loop]
@@ -87,7 +89,7 @@ class CCS_If {
 		 *
 		 * If we're inside loop shortcode
 		 *
-		 *=======================================================================*/
+		 */
 
 		if (CCS_Loop::$state['is_loop']=="true") {
 
@@ -97,7 +99,7 @@ class CCS_If {
 				 *
 				 * Every X number of posts in [loop]
 				 *
-				 *=======================================================================*/
+				 */
 
 				$count = CCS_Loop::$state['loop_count'];
 
@@ -120,7 +122,7 @@ class CCS_If {
 		 *
 		 * Get global post info
 		 *
-		 *=======================================================================*/
+		 */
 
 		global $post;
 
@@ -136,7 +138,7 @@ class CCS_If {
 			 *
 			 * Check field as condition [if flag="field"]
 			 *
-			 *=======================================================================*/
+			 */
 
 			if (CCS_Loop::$state['is_loop']=="true") {
 				$current_id = CCS_Loop::$state['current_post_id'];
@@ -161,7 +163,7 @@ class CCS_If {
 		 *
 		 * Taxonomy: category, tags, ..
 		 *
-		 *=======================================================================*/
+		 */
 		
 		if (!empty($category)) {
 			$taxonomy = "category";
@@ -213,7 +215,7 @@ class CCS_If {
 		 *
 		 * Field: field="field_slug" value="this,that"
 		 *
-		 *=======================================================================*/
+		 */
 
 		if ( !empty($field) || !empty($user_field) ) {
 
@@ -277,7 +279,7 @@ class CCS_If {
 		 *
 		 * Post type, name
 		 *
-		 *=======================================================================*/
+		 */
 
 		if (!empty($type)) {
 			$types = self::comma_list_to_array($type); // Enable comma-separated list
@@ -303,7 +305,7 @@ class CCS_If {
 		 *
 		 * Post parent
 		 *
-		 *=======================================================================*/
+		 */
 		
 		if (!empty($parent)) {
 
@@ -354,7 +356,7 @@ class CCS_If {
 		 *
 		 * Attachments
 		 *
-		 *=======================================================================*/
+		 */
 
 		if (isset($atts['attached'])) {
 
@@ -371,13 +373,26 @@ class CCS_If {
 			else $condition = false;
 		}
 
+		/*---------------------------------------------
+		 *
+		 * If exists
+		 *
+		 */
+
+
+		if (isset($atts['exists'])) {
+
+			$result = CCS_Loop::the_loop_shortcode($atts_original, '[if empty][else]Yes[/if]');
+			$condition = !empty($result);
+		}
+		
 		
 		/*========================================================================
 		 *
 		 * Template: home, archive, single..
 		 * [if comment] - current post has comment
 		 *
-		 *=======================================================================*/
+		 */
 		
 		$condition = isset($atts['home']) ? is_front_page() : $condition;
 		$condition = isset($atts['comment']) ? (get_comments_number($current_post_id)>0) : $condition;
@@ -388,17 +403,17 @@ class CCS_If {
 			$condition =  CCS_Gallery_Field::has_gallery();
 		}
 
-/* test these */
 		$condition = isset($atts['loop']) ? (CCS_Loop::$state['is_loop']=='true') : $condition;
 		$condition = isset($atts['archive']) ? is_archive() : $condition;
 		$condition = isset($atts['single']) ? is_single() : $condition;
-
+		$condition = isset($atts['search']) ? is_search() : $condition;
+		$condition = isset($atts['none']) ? !have_posts() : $condition;
 
 		/*========================================================================
 		 *
 		 * Not
 		 *
-		 *=======================================================================*/
+		 */
 
 		// Not - also catches compare="not"
 		$condition = isset($atts['not']) ? !$condition : $condition;
