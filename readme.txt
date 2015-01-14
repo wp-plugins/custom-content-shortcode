@@ -6,8 +6,8 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
-Tested up to: 4.0
-Stable tag: 1.5.6
+Tested up to: 4.1
+Stable tag: 1.6.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,59 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 1.6.7 =
+
+* [comment avatar] - Author avatar image; optional *size* parameter
+* [loop]- Improve date field comparison for *future* and *past* when stored as string; by default, assume that time is not included
+
+= 1.6.6 =
+
+* [field link] - Support for ACF page link: post/archive URL
+* Set up test server to ensure PHP version compatibility
+
+= 1.6.5 =
+
+* [comments] - Compatibility with PHP <=5.4 - avoid array literal
+* [if children] - If the post has child posts
+
+= 1.6.4 =
+
+* [comment] - Display comment content by default (no parameter)
+* [comments] - If inside loop, display comments from current post
+* [if exists] - Check if a post exists; takes the same parameters as loop
+* [content escape] - Escape HTML and shortcodes
+
+= 1.6.3 =
+
+* [loop] - Improve support for paginator add-on
+
+= 1.6.2 =
+
+* [if search] - If current page is search result
+* [is author] - If user is author of current post
+* [for each] - Enable tags just like [pass taxonomy_loop]
+* [pass list] - Pass an arbitrary list of items
+* [pass taxonomy_loop] - Default order by taxonomy term name
+* [-pass], [--pass] - Enable nested pass: use {-TAG} and {--TAG}
+* [repeater] - Do shortcode inside ACF repeater sub field
+* [search_form type] - Search specific post type
+
+= 1.5.9 =
+
+* [loop] - If *parent="this"* and no current post, return empty
+* [loop] - Exclude child posts by default, unless *include="children"*
+* Try the new add-on under development: [Paginator](http://eliotakira.com/plugin/paginator)
+
+= 1.5.8 =
+
+* [comments id] - Return nothing if post/ID is empty
+* [content] - Make sure current post exists
+* [field thumbnail] - Enable *size* parameter to resize thumbnail; thanks @kurakin_alexander!
+* [repeater num] - Display specific repeater field
+* [repeater num sub] - Quick way to display a single sub-field
+* Starting to add hooks and filters for extensibility
+* Improve code organization
 
 = 1.5.6 =
 
