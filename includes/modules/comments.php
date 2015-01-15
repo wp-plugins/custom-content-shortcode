@@ -1,10 +1,15 @@
 <?php
 
-/*====================================================================================================
+
+/*========================================================================
  *
- * Comment shortcodes - [comment form] form/template/count
+ * Comment shortcodes
+ * 
+ * [comments] - Loop through comments
+ * [comment] - Show comment field
+ * [comment form] form/template/count
  *
- *====================================================================================================*/
+ */
 
 new CCS_Comments;
 
@@ -31,6 +36,7 @@ class CCS_Comments {
 			'words' => '',
 			'more' => '&hellip;',
 			'length' => '',
+			'size' => '96' // default avatar size
 		), $atts));
 
 		// In a comments loop?
@@ -42,15 +48,19 @@ class CCS_Comments {
 			// Display comment fields
 
 			$out = null;
-			$comment = self::$state['current_comment'];
+			$comment = isset(self::$state['current_comment']) ? self::$state['current_comment'] : null;
 
 			if (empty($comment)) return;
 
 			$fields = array(
 				'ID', 'post_ID', 'author', 'author_email', 'author_url', 'date',
-				'content', 'user_id',
+				'content', 'user_id', 'avatar',
 				'title', 'url', 'title_link', 'author_link'
 			);
+
+			if (empty($atts)) {
+				$atts = array('content'); // Default field
+			}
 
 			if( is_array( $atts ) )
 				$atts = array_flip( $atts ); // check for parameters without value
@@ -74,29 +84,39 @@ class CCS_Comments {
 					switch ($arg_field) {
 						case 'title':
 							$out = get_the_title($post_id);
-							break;
+						break;
+
 						case 'url':
 							$out = get_permalink($post_id);
-							break;
+						break;
+
 						case 'title-link':
 							$title = get_the_title($post_id);
 							$url = get_permalink($post_id);
 							// $out = '<a href="'.$url.'">'.$title.'</a>';
-							break;
+						break;
+
 						case 'author-link':
 							$title = isset($comment->comment_author) ? $comment->comment_author : null;
 							$url = isset($comment->comment_author_url) ? $comment->comment_author_url : null;
 							// $out = '<a href="'.$url.'">'.$title.'</a>';
-							break;
+						break;
+
+						case 'avatar':
+							$author_id = $comment->user_id;
+							$out = get_avatar( $author_id, $size );
+						break;
+
 						case 'content':
 							if (isset($comment->{$field}))
 								$out = $comment->{$field};
 							if (empty($format)) $format='true'; // Format content by default
-							break;
+						break;
+
 						default:
 							if (isset($comment->{$field}))
 								$out = $comment->{$field};
-							break;
+						break;
 					}
 				}
 
@@ -136,8 +156,17 @@ class CCS_Comments {
 			self::$state['is_comments_loop'] = true;
 			if ((empty($count)) || ($count=='all')) $count = 999;
 			$atts['number'] = $count;
+
+			if ( CCS_Loop::$state['is_loop'] && empty($id) ) {
+				$id = 'this';
+			}
+
+
 			if ($id=='this') {
+
 				$atts['post_id'] = get_the_ID();
+				if (empty($atts['post_id'])) return; // No current post ID
+
 			} elseif (!empty($id)) {
 				$atts['post_id'] = $id;
 			}
