@@ -1019,10 +1019,10 @@ class CCS_Loop {
 			switch ($compare) {
 				case '':
 				case '=':
-				case 'EQUAL': $compare = "LIKE"; break;
+				case 'EQUAL': $compare = '='; break;
 				case 'NOT':
 				case '!=':
-				case 'NOT EQUAL': $compare = 'NOT LIKE'; break;
+				case 'NOT EQUAL': $compare = '!='; break;
 				case 'MORE': $compare = '>'; break;
 				case 'LESS': $compare = '<'; break;
 				default: break;
@@ -1074,10 +1074,10 @@ class CCS_Loop {
 					switch ($compare_2) {
 						case '':
 						case '=':
-						case 'EQUAL': $compare_2 = 'LIKE'; break;
+						case 'EQUAL': $compare_2 = '='; break;
 						case 'NOT':
 						case '!=':
-						case 'NOT EQUAL': $compare_2 = 'NOT LIKE'; break;
+						case 'NOT EQUAL': $compare_2 = '!='; break;
 						case 'MORE': $compare_2 = '>'; break;
 						case 'LESS': $compare_2 = '<'; break;
 						default: break;
