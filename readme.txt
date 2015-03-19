@@ -6,12 +6,12 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
-Tested up to: 4.0
-Stable tag: 1.5.6
+Tested up to: 4.1.1
+Stable tag: 1.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Display posts, pages, custom post types, fields, images, attachments, comments, files, menus, widget areas
+Display posts, pages, custom post types, fields, attachments, comments, images, files, menus, sidebars
 
 == Description ==
 
@@ -25,7 +25,6 @@ The **[loop]** shortcode performs query loops. It can display, for example, avai
 
 There is a reference section under Settings -> Custom Content.
 
-
 = Included =  
 <br />
 Here are some of the included features:
@@ -37,6 +36,7 @@ Here are some of the included features:
 * **Relative URLs** for links and images
 * Simple **gallery field** for any post type
 * **Cache** the result of query loops
+* Option to enable **Mobile Detect**
 
 Support for other plugins:
 
@@ -79,9 +79,152 @@ Support for other plugins:
 
 == Upgrade Notice ==
 
-
+* [loop] - Hierarchical posts: include children by default; **please note** that this is different behavior than previous versions; to get top-level parents only, set *exclude="children"*
 
 == Changelog ==
+
+= 1.9.0 =
+
+* [field] - Add default fields for featured image: title, caption, alt and description
+* [loop] - Hierarchical posts: include children by default; **please note** that this is different behavior than previous versions; to get top-level parents only, set *exclude="children"*
+
+= 1.8.6 =
+
+* [field] - Add parameter *nopin="nopin"* to prevent Pinterest pinning of image
+
+= 1.8.5 =
+
+* [if field="image"] - Set default image size when checking for featured image
+
+= 1.8.4 =
+
+* [if before], [if after] - Support comparisons with post publish date
+* [loop before], [loop after] - Support comparisons with post publish date
+* [loop blog] - Switch to given blog ID on multi-site
+* Mobile Detect - Update to latest version 2.8.12
+
+= 1.8.3 =
+
+* [loop author="same"] - Get posts with the same author as current post
+
+= 1.8.2 =
+
+* [loop] - Improve handling of [if empty]
+* [loop parent="same"] - Get posts which share the same parent as current post
+
+= 1.8.1 =
+
+* [loop] - Use EQUAL instead of LIKE for field value query
+* Documentation - Make sure browser loads newest CSS when updated
+
+= 1.8.0 =
+
+* [pass user_field] - Pass a user field as {USER_FIELD}
+* [pass user_fields] - Pass multiple user fields
+
+= 1.7.9 =
+
+* [array global], [pass global] - Access global variable
+* [if pass] - Check field value from [pass] - if it's empty and/or matches specific value
+
+= 1.7.8 =
+
+* [if] - Add parameter *empty* for field check without value: *empty="false"*
+* [if], [url], [user] - Prevent possible mistaking parameter value as parameter with no value
+
+= 1.7.7 =
+
+* [if field] - Compare lowercased field value: *lowercase="true"*
+
+= 1.7.6 =
+
+* [field date_format] - Escape with double slashes instead of backslash; this was necessary because backslash doesn't get passed as shortcode parameter
+
+= 1.7.5 =
+
+* [attached] - Preserve image order of gallery fields
+* [users] - Support order by field value, string or number; also ASC/DESC order
+
+= 1.7.3 =
+
+* [for each] - Add *term* parameter; loop through one or more specified terms
+* [for-else] - If [for] loop finds no matching term
+* [if children] - When used inside [for] loop, check if current term has children
+
+= 1.7.2 =
+
+* [loop] - Support for paginated list
+
+= 1.7.1 =
+
+* [loop] - Correctly filter by taxonomy term when inside [for each], nested or not
+
+= 1.6.9 =
+
+* [for parents="true"] - Loop through parent taxonomies only
+* [for each="child"] - Loop through children of current taxonomy term; use inside a parents loop
+* [-for] - Support for nested loop
+* [-loop] - Support for nested loop
+* [taxonomy field] - Add *url* and *link* fields: display term archive URL, or term name linked to the archive
+
+= 1.6.8 =
+
+* [loop] - Correctly build field value query
+* [loop acf_date] - Query by ACF date field
+* [field acf_date] - Display an ACF date field with selected formatting
+
+= 1.6.7 =
+
+* [comment avatar] - Author avatar image; optional *size* parameter
+* [loop]- Improve date field comparison for *future* and *past* when stored as string; by default, assume that time is not included
+
+= 1.6.6 =
+
+* [field link] - Support for ACF page link: post/archive URL
+* Set up test server to ensure PHP version compatibility
+
+= 1.6.5 =
+
+* [comments] - Compatibility with PHP <=5.4 - avoid array literal
+* [if children] - If the post has child posts
+
+= 1.6.4 =
+
+* [comment] - Display comment content by default (no parameter)
+* [comments] - If inside loop, display comments from current post
+* [if exists] - Check if a post exists; takes the same parameters as loop
+* [content escape] - Escape HTML and shortcodes
+
+= 1.6.3 =
+
+* [loop] - Improve support for paginator add-on
+
+= 1.6.2 =
+
+* [if search] - If current page is search result
+* [is author] - If user is author of current post
+* [for each] - Enable tags just like [pass taxonomy_loop]
+* [pass list] - Pass an arbitrary list of items
+* [pass taxonomy_loop] - Default order by taxonomy term name
+* [-pass], [--pass] - Enable nested pass: use {-TAG} and {--TAG}
+* [repeater] - Do shortcode inside ACF repeater sub field
+* [search_form type] - Search specific post type
+
+= 1.5.9 =
+
+* [loop] - If *parent="this"* and no current post, return empty
+* [loop] - Exclude child posts by default, unless *include="children"*
+* Try the new add-on under development: [Paginator](http://eliotakira.com/plugin/paginator)
+
+= 1.5.8 =
+
+* [comments id] - Return nothing if post/ID is empty
+* [content] - Make sure current post exists
+* [field thumbnail] - Enable *size* parameter to resize thumbnail; thanks @kurakin_alexander!
+* [repeater num] - Display specific repeater field
+* [repeater num sub] - Quick way to display a single sub-field
+* Starting to add hooks and filters for extensibility
+* Improve code organization
 
 = 1.5.6 =
 
