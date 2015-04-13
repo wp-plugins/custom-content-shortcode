@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 1.9.3
+Version: 1.9.4
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -74,19 +74,20 @@ class CCS_Plugin {
 	function load_main_modules() {
 
 		$modules = array(
-			'core/content',			// Content shortcode
-			'core/loop',			// Loop shortcode
-			'docs/docs',			// Documentation under Settings -> Custom Content
-			'modules/attached',		// Attachment loop
-			'modules/cache',		// Cache shortcode
-			'modules/comments',		// Comments shortcode
-			'modules/foreach',		// For/each loop
-			'modules/format',		// Format shortcodes: br, p, x, clean, direct, format
-			'modules/if',			// If shortcode
-			'modules/related',		// Related posts loop
-			'modules/url',			// URL shortcode
-			'modules/user',			// User shortcodes
-			'optional/wck',			// WCK support
+      'core/content',			// Content shortcode
+      'core/loop',			// Loop shortcode
+      'docs/docs',			// Documentation under Settings -> Custom Content
+      'modules/attached',		// Attachment loop
+      'modules/cache',		// Cache shortcode
+      'modules/comments',		// Comments shortcode
+      'modules/foreach',		// For/each loop
+      'modules/format',		// Format shortcodes: br, p, x, clean, direct, format
+      'modules/if',			// If shortcode
+      'modules/pass',    // Pass shortcode
+      'modules/related',    // Related posts loop
+      'modules/url',			// URL shortcode
+      'modules/user',			// User shortcodes
+      'optional/wck',			// WCK support
 
 			// 'widget'				// Widget shortcode (not ready)
 			// 'optional/shortcake',	// Shortcake: shortcode UI @testing

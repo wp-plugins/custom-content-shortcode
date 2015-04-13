@@ -227,6 +227,35 @@ class CCS_Comments {
 			);
 
 			$args = array();
+
+      if ( isset($atts['type']) ) {
+        $atts['post_type'] = CCS_Loop::explode_list($atts['type']);
+        unset($atts['type']);
+      }
+
+      $taxonomy_filter = false;
+      if ( isset($atts['category']) ) {
+        $atts['taxonomy'] = 'category';
+        $atts['term'] = $atts['category'];
+        unset($atts['category']);
+      } elseif ( isset($atts['tag']) ) {
+        $atts['taxonomy'] = 'tag';
+        $atts['term'] = $atts['tag'];
+        unset($atts['tag']);
+      }
+
+      $max = 999;
+      if ( isset($atts['taxonomy']) && isset($atts['term']) ) {
+        $taxonomy_filter = true;
+        $max = $atts['number'];
+        $atts['number'] = $max; // Max posts
+        unset($atts['number']);
+        $taxonomy = $atts['taxonomy'];
+        $terms = CCS_Loop::explode_list($atts['term']);
+        unset($atts['taxonomy']);
+        unset($atts['term']);
+      }
+
 			foreach ($defaults as $key => $value) {
 				if (!empty($atts[$key])) {
 					if ($key=='status' && $atts[$key]=='all') {
@@ -241,10 +270,30 @@ class CCS_Comments {
 
 			$comments = get_comments( $args );
 
+      $index = 0;
 			// Loop through each comment
 			foreach ($comments as $comment) {
-				self::$state['current_comment'] = $comment;
-				$out .= do_shortcode( $content );
+
+        if ($index > $max) break;
+
+        $matches = true;
+        if ($taxonomy_filter) {
+          $matches = false;
+          $pid = $comment->comment_post_ID;
+          $post_tax = do_shortcode('[taxonomy '.$taxonomy.' id="'.$pid.'" out="slug"]');
+          $post_tax = explode(' ', $post_tax); // Convert to array
+          foreach ($terms as $term) {
+            if (in_array($term, $post_tax)) {
+              $matches = true;
+              $index++;
+            }
+          }
+        }
+
+        if ($matches) {
+          self::$state['current_comment'] = $comment;
+          $out .= do_shortcode( $content );
+        }
 			}
 			self::$state['is_comments_loop'] = false;
 			return $out;

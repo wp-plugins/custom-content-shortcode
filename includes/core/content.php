@@ -853,7 +853,15 @@ class CCS_Content {
 
     if ($parameters['filter']=='true') {
 
+      // Attempt to support SiteOrigin Page Builder
+      add_filter( 'siteorigin_panels_filter_content_enabled',
+        array($this, 'siteorigin_support') );
+
       $result = apply_filters( 'the_content', $result );
+
+      // And clean up
+      remove_filter( 'siteorigin_panels_filter_content_enabled',
+        array($this, 'siteorigin_support') );
 
     } elseif ($parameters['format'] == 'true') {
 
@@ -1663,14 +1671,18 @@ class CCS_Content {
 
   public static function get_all_atts( $atts ) {
     $new_atts = array();
-    foreach ($atts as $key => $value) {
-      if (is_numeric($key)) {
-        $new_atts[$value] = true;
-      } else {
-        $new_atts[$key] = $value;
+    if (is_array($atts) && count($atts)>0) {
+      foreach ($atts as $key => $value) {
+        if (is_numeric($key)) {
+          $new_atts[$value] = true;
+        } else {
+          $new_atts[$key] = $value;
+        }
       }
     }
     return $new_atts;
   }
+
+  public static function siteorigin_support() { return true; }
 
 } // End CCS_Content
