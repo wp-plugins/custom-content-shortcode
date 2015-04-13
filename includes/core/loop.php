@@ -1070,24 +1070,17 @@ class CCS_Loop {
 			$compare = $parameters['compare'];
 
 			// Support for date values
-
 			if ($value == 'future') {
-				$value = 'today';
-				$compare = '>';
+				$value = 'today'; $compare = '>=';
 			} elseif ($value == 'future-time') {
-				$value = 'now';
-				$compare = '>';
+				$value = 'now'; $compare = '>=';
 			} elseif ($value == 'past') {
-				$value = 'today';
-				$compare = '<';
+				$value = 'today'; $compare = '<';
 			} elseif ($value == 'past-time') {
-				$value = 'now';
-				$compare = '<';
+				$value = 'now'; $compare = '<';
 			}
 
-
 			if ( ($parameters['in'] == 'string') || (!empty($parameters['date_format'])) ) {
-
 				if (empty($parameters['date_format'])) {
 
 					// default date format
@@ -1096,20 +1089,15 @@ class CCS_Loop {
 					elseif ($value == 'now')
 						$parameters['date_format'] = 'Y-m-d H:i'; // 2014-01-24 13:05
 				}
-
 				if (($value == 'today') || ($value == 'now')){
 					$value = date($parameters['date_format'],time());
 				}
-
 			} else {
-
 				// It's a timestamp so today/now is the same
-
 				if (($value == 'today') || (($value == 'now'))){
 					$value = time();
 				}
 			}
-
 
 			$compare = strtoupper($compare);
 
@@ -1175,6 +1163,38 @@ class CCS_Loop {
 				}
 				else
 					$query['meta_query']['relation'] = 'AND';
+
+
+        // Support for date values
+        if ($value_2 == 'future') {
+          $value_2 = 'today'; $compare_2 = '>=';
+        } elseif ($value_2 == 'future-time') {
+          $value_2 = 'now'; $compare_2 = '>=';
+        } elseif ($value_2 == 'past') {
+          $value_2 = 'today'; $compare_2 = '<';
+        } elseif ($value_2 == 'past-time') {
+          $value_2 = 'now'; $compare_2 = '<';
+        }
+
+        if ( ($parameters['in'] == 'string') || (!empty($parameters['date_format'])) ) {
+          if (empty($parameters['date_format'])) {
+
+            // default date format
+            if ($value_2 == 'today')
+              $parameters['date_format'] = 'Y-m-d'; // 2014-01-24
+            elseif ($value_2 == 'now')
+              $parameters['date_format'] = 'Y-m-d H:i'; // 2014-01-24 13:05
+          }
+          if (($value_2 == 'today') || ($value_2 == 'now')){
+            $value_2 = date($parameters['date_format'],time());
+          }
+        } else {
+          // It's a timestamp so today/now is the same
+          if (($value_2 == 'today') || (($value_2 == 'now'))){
+            $value_2 = time();
+          }
+        }
+
 
 				if (!empty($compare_2)) {
 

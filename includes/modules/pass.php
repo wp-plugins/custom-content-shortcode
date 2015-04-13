@@ -315,10 +315,12 @@ class CCS_Pass {
         $fields = CCS_Loop::explode_list($fields);
 
         foreach ($fields as $this_field) {
+          $tag = '{'.$prefix.strtoupper($this_field).'}';
+          $value = '';
           if (isset($GLOBALS[$global][$this_field])) {
             $value = $GLOBALS[$global][$this_field];
-            $content = str_replace('{'.$prefix.strtoupper($this_field).'}', $value, $content);
           }
+          $content = str_replace($tag, $value, $content);
         }
 
       } else {

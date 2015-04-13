@@ -1,6 +1,6 @@
 <?php
 
-/*========================================================================
+/*---------------------------------------------
  *
  * Mobile detect shortcodes
  *
@@ -32,7 +32,7 @@ class CCS_Mobile_Detect {
 			}
 
 			self::$detect = new Mobile_Detect();
-			self::$device_type = (self::$detect->isMobile() ? (self::$detect->isTablet() ? 'tablet' : 'phone') : 'computer');
+			self::$device_type = self::$detect->isMobile() ? (self::$detect->isTablet() ? 'tablet' : 'phone') : 'computer';
 
 			add_shortcode( 'is_mobile', array($this, 'is_mobile') );
 			add_shortcode( 'is_phone', array($this, 'is_phone') );
