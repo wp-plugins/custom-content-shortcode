@@ -290,7 +290,7 @@ class CCS_Docs {
 		$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'welcome';
 
 
-		$all_tabs = array( 'welcome', 'content', 'loop', 'view', 'if', 'each',
+		$all_tabs = array( 'welcome', 'start', 'content', 'loop', 'if', 'each',
 							
 							// 'widget',
 							'attach', 'gallery', 'comment',
@@ -363,7 +363,7 @@ class CCS_Docs {
 				 	// Add footnote
 				 	?>
 					<br><hr>
-					<div align="center" class="overview-logo-pad">
+					<div align="center" class="overview-notice overview-logo-pad">
 						<img src="<?php echo CCS_URL;?>/includes/docs/logo.png">
 						<div class="overview-logo-pad"><b>Custom Content Shortcode</b> is developed by Eliot Akira.</div>
 						Please visit the <a href="http://wordpress.org/support/plugin/custom-content-shortcode" target="_blank">plugin support forum</a> for questions or feedback.<br>

@@ -19,25 +19,25 @@ Using these in combination, you can selectively load images, page sections, styl
 <h4>Show differently sized images</h4>
 
 <code>[is_mobile]
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;img src="[url uploads]/birds-150x150.jpg"&gt;
+&nbsp;&nbsp;&lt;img src="[url uploads]/birds-150x150.jpg"&gt;
 [/is_mobile]
 [is_computer]
-&nbsp;&nbsp;&nbsp;&nbsp;&lt;img src="[url uploads]/birds-600x600.jpg"&gt;
+&nbsp;&nbsp;&lt;img src="[url uploads]/birds-600x600.jpg"&gt;
 [/is_computer]
 </code>
 
 <h4>Load stylesheets according to device type</h4>
 
 <code>[is_computer]
-&nbsp;&nbsp;&nbsp;&nbsp;[load css="style.css"]
+&nbsp;&nbsp;[load css="style.css"]
 [/is_computer]
 [is_mobile]
-&nbsp;&nbsp;&nbsp;&nbsp;[load css="style-mobile.css"]
+&nbsp;&nbsp;[load css="style-mobile.css"]
 [/is_mobile]</code>
 
 <h4>Redirect mobile visitors to a different location</h4>
 <code>[is_mobile]
-&nbsp;&nbsp;&nbsp;&nbsp;[redirect][url site]/mobile/[/redirect]
+&nbsp;&nbsp;[redirect][url site]/mobile/[/redirect]
 [/is_mobile]</code>
 
 These last two would be placed in a custom field named <i>css</i>, to load in the header of the page.

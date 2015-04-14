@@ -83,9 +83,11 @@ Support for other plugins:
 
 == Changelog ==
 
-= 1.9.7 =
+= 1.9.8 =
 
 * [loop] - Support for second date field query: *field_2*, *value_2*
+* [loop] - Better control of date field query with *today*, *future* and *past*
+* Improve documentation
 
 = 1.9.6 =
 
