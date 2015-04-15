@@ -54,7 +54,7 @@ class CCS_Comments {
 
 			$fields = array(
 				'ID', 'post_ID', 'author', 'author_email', 'author_url', 'date',
-				'content', 'user_id', 'avatar', 'count', 'counted',
+				'content', 'content-link', 'user_id', 'avatar', 'count', 'counted',
 				'title', 'url', 'post-url', 'title_link', 'author_link', 'link'
 			);
 
@@ -136,6 +136,18 @@ class CCS_Comments {
 							if (empty($format)) $format='true'; // Format content by default
 						break;
 
+
+            case 'content-link':
+              $comment_id = $comment->comment_ID;
+              $url = get_permalink($post_id).'#comment-'.$comment_id; // Add anchor to comment
+
+              if (isset($comment->comment_content)) {
+                $out = $comment->comment_content;
+              } else {
+                $out = '';
+              }
+              if (empty($format)) $format='true'; // Format content by default
+            break;
 						default:
 							if (isset($comment->{$field}))
 								$out = $comment->{$field};
@@ -154,20 +166,6 @@ class CCS_Comments {
 				$out = mb_substr($the_excerpt, 0, $length, 'UTF-8');
 			}
 
-			// Wrap in link after trimming
-			if (
-            isset($atts['title-link']) ||
-            isset($atts['post-link']) ||
-            isset($atts['author-link']) ||
-            isset($atts['link']) )
-      {
-				if (!empty($title) && !empty($url))
-					$out = '<a href="'.$url.'">'.$title.'</a>';
-				elseif (!empty($title))
-					$out = $title; // no link found
-			}
-
-
       if (isset($atts['date'])) {
 
         if (!empty($date_format)) {
@@ -182,10 +180,31 @@ class CCS_Comments {
 				$out = apply_filters('the_content', $out);
 			}
 
+      // Wrap in link after trimming and format
+      if (
+            isset($atts['title-link']) ||
+            isset($atts['post-link']) ||
+            isset($atts['author-link']) ||
+            isset($atts['link']) )
+      {
+        if (!empty($title) && !empty($url))
+          $out = '<a href="'.$url.'">'.$title.'</a>';
+        elseif (!empty($title))
+          $out = $title; // no link found
+      } elseif (isset($atts['content-link']) && !empty($out) && !empty($url) ) {
+        $out = '<a href="'.$url.'">'.$out.'</a>';
+      }
+
 			return $out;
 		}
 
-		// Start a comments loop?
+
+    /*---------------------------------------------
+     *
+     * Comments loop
+     *
+     */
+
 		if ( !empty($count) || !empty($id) ||
 			 ( ($tag=='comments') && !empty($content) ) ) {
 
