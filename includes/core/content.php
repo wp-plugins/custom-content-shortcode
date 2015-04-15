@@ -4,6 +4,8 @@
  *
  * [content] - Display field or post content
  *
+ * @todo List filters
+ *
  */
 
 new CCS_Content;
@@ -204,12 +206,18 @@ class CCS_Content {
       $parameters['size'] = isset($parameters['size']) ? $parameters['size'] : 'thumbnail';
     }
 
-    if (!empty($parameters['acf_date']))
+    if (!empty($parameters['acf_date'])) {
       $parameters['field'] = $parameters['acf_date'];
+    }
+
+
 
     // Merge with defaults
 
     $parameters = shortcode_atts($defaults, $parameters);
+
+
+
 
     /*---------------------------------------------
      *
@@ -243,12 +251,14 @@ class CCS_Content {
     }
 
     // Image size alias
-    if ($parameters['size']=='middle')
+    if ($parameters['size']=='middle') {
       $parameters['size'] = 'medium';
+    }
 
     // Checkbox
-    if (!empty($parameters['checkbox']))
+    if (!empty($parameters['checkbox'])) {
       $parameters['field'] = $parameters['checkbox'];
+    }
 
 
     if (class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_relationship_loop']=='true') {
@@ -1166,6 +1176,12 @@ class CCS_Content {
         $result = apply_filters( 'the_title', $post->post_title ); break;
       case 'slug': $result = $post->post_name; break;
       case 'post-type': $result = $post->post_type; break;
+      case 'post-status':
+        $result = $post->post_status;
+        if ($parameters['out'] !== 'slug') {
+          $result = ucwords($result);
+        }
+        break;
 
       case 'title-link':
       case 'title-link-out':

@@ -222,15 +222,21 @@ class CCS_Comments {
 				'post_status' => '',
 				'post_type' => '',
 				'status' => 'approve',
+        'post__not_in' => '',
 				'type' => '',
 				'user_id' => '',
 			);
 
 			$args = array();
 
+      // Aliases
       if ( isset($atts['type']) ) {
         $atts['post_type'] = CCS_Loop::explode_list($atts['type']);
         unset($atts['type']);
+      }
+      if ( isset($atts['exclude']) ) {
+        $atts['post__not_in'] = CCS_Loop::explode_list($atts['exclude']);
+        unset($atts['exclude']);
       }
 
       $taxonomy_filter = false;

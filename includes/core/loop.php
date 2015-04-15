@@ -652,32 +652,22 @@ class CCS_Loop {
 		 */
 
 		if ( !empty($parameters['offset']) ) {
-
 			$query['offset'] = $parameters['offset'];
 		}
 
 		if ( !empty($parameters['count']) ) {
-
 			if ($parameters['orderby']=='rand') {
-
 				$query['posts_per_page'] = '-1'; // For random, get all posts and count later
-
 			} else {
-
 				$query['posts_per_page'] = $parameters['count'];
 			}
-
 		} else {
-
-			if (!empty($query['offset']))
-
+			if (!empty($query['offset'])) {
 				$query['posts_per_page'] = '99999'; // Show all posts (to make offset work)
-
-			else
+      } else {
 				$query['posts_per_page'] = '-1'; // Show all posts (normal method)
+      }
 		}
-
-
 
 
 		/*---------------------------------------------
@@ -1149,7 +1139,7 @@ class CCS_Loop {
 
 			// Additional query by field value
       // 
-      // @todo Refactor with above
+      // @todo Simpler way to do field_2, field_3, ...
 
 			if ( !empty($parameters['field_2']) && !empty($parameters['value_2']) ) {
 
@@ -1373,31 +1363,26 @@ class CCS_Loop {
 		$state =& self::$state; // Update global state
 
 		// If empty
-
-		$start = '[if empty]'; $end = '[/if]';
-		$middle = self::get_between($start, $end, $template);
+		$middle = self::get_between('[if empty]', '[/if]', $template);
+    if (empty($middle)) $middle = self::get_between('[-if empty]', '[/-if]', $template);
 		$template = str_replace($middle, '', $template);
-		$else = self::extract_else( $middle );
-
+		$else = self::extract_else( $middle ); // Remove and return what's after [else]
 		$state['if_empty'] = $middle;
 		$state['if_empty_else'] = $else;
 
 		// If first
-
-		$start = '[if first]'; $end = '[/if]';
-		$middle = self::get_between($start, $end, $template);
+		$middle = self::get_between('[if first]', '[/if]', $template);
+    if (empty($middle)) $middle = self::get_between('[-if first]', '[/-if]', $template);
+    $template = str_replace($middle, '', $template);
 		$else = self::extract_else( $middle );
-
 		$state['if_first'] = $middle;
 		$state['if_first_else'] = $else;
 
-
 		// If last
-
-		$start = '[if last]'; $end = '[/if]';
-		$middle = self::get_between($start, $end, $template);
-		$else = self::extract_else( $middle ); // Remove and return what's after [else]
-
+		$middle = self::get_between('[if last]', '[/if]', $template);
+    if (empty($middle)) $middle = self::get_between('[-if last]', '[/-if]', $template);
+    $template = str_replace($middle, '', $template);
+		$else = self::extract_else( $middle );
 		$state['if_last'] = $middle;
 		$state['if_last_else'] = $else;
 
@@ -1414,7 +1399,6 @@ class CCS_Loop {
 	public static function extract_else( &$template ) {
 		// Get [else] if it exists
 		$content_array = explode('[else]', $template);
-
 		if (count($content_array)>1) {
 			$after = $content_array[1]; // anything after [else]
 			$template = str_replace('[else]'.$after, '', $template);
@@ -2057,8 +2041,9 @@ class CCS_Loop {
 		 */
 
 		$keywords = array(
-			'URL', 'SLUG', 'ID', 'COUNT', 'TITLE', 'AUTHOR', 'DATE', 'THUMBNAIL', 'THUMBNAIL_URL',
-			'CONTENT', 'EXCERPT', 'COMMENT_COUNT', 'TAGS', 'IMAGE', 'IMAGE_ID', 'IMAGE_URL',
+			'URL', 'SLUG', 'ID', 'COUNT', 'TITLE', 'AUTHOR', 'DATE',
+			'CONTENT', 'EXCERPT', 'COMMENT_COUNT', 'TAGS', 'CATEGORY',
+      'THUMBNAIL', 'THUMBNAIL_URL', 'IMAGE', 'IMAGE_ID', 'IMAGE_URL'
 		);
 
 		foreach ($keywords as $key) {
@@ -2109,9 +2094,13 @@ class CCS_Loop {
 					case 'COMMENT_COUNT':
 						$replace = get_comments_number();
 						break;
-					case 'TAGS':
-						$replace = strip_tags( get_the_tag_list('',', ','') );
-						break;
+          case 'TAGS':
+            $replace = strip_tags( get_the_tag_list('',', ','') );
+            break;
+          case 'CATEGORY':
+            $replace = do_shortcode('[taxonomy category out="slug"]');
+            $replace = str_replace(' ', ',', $replace);
+            break;
 					case 'IMAGE':
 						$replace = get_the_post_thumbnail();
 						break;
