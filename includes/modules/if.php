@@ -1,9 +1,9 @@
 <?php
-
-
-/*========================================================================
+/*---------------------------------------------
  *
  * [if] - Display content based on conditions
+ *
+ * @todo Add filters
  *
  */
 
@@ -183,7 +183,7 @@ class CCS_If {
 
 		// Check if current post has taxonomy term
 
-		if ( !empty($taxonomy) && !empty($term) ) {
+		if ( !empty($taxonomy) ) {
 
 			if ($taxonomy == 'tag') $taxonomy = 'post_tag';
 
@@ -255,9 +255,6 @@ class CCS_If {
          */
         
         if ( $field == 'date' ) {
-
-          // Get published date in format 2015-03-11 so we can do comparisons
-          // $check = mysql2date('Y-m-d', $post->post_date);
 
           // Get timestamps for publish date and today
           $check = strtotime( $post->post_date );

@@ -251,6 +251,24 @@ class CCS_User {
 			case 'role':
 				return rtrim(implode(',',array_map('ucwords', $current_user->roles)),',');
 				break;
+      case 'agent':
+        return $_SERVER["HTTP_USER_AGENT"];
+        break;
+      case 'device':
+        if (class_exists('CCS_Mobile_Detect')) {
+          return CCS_Mobile_Detect::$device;
+        } else return null;
+        break;
+      case 'device-type':
+        if (class_exists('CCS_Mobile_Detect')) {
+          return CCS_Mobile_Detect::$device_type;
+        } else return null;
+        break;
+      case 'browser':
+        if (class_exists('CCS_Mobile_Detect')) {
+          return CCS_Mobile_Detect::$browser;
+        } else return null;
+        break;
 			default:
 				return get_user_meta( $current_user->ID, $field, true );
 				break;
@@ -291,6 +309,7 @@ class CCS_User {
 			'role' => '',
 			'capable' => '',
 			'compare' => 'OR',
+      'device' => ''
 		), $atts));
 
 		$condition = false;
@@ -384,6 +403,20 @@ class CCS_User {
 			}
 		}
 
+    if (class_exists('CCS_Mobile_Detect')) {
+      if ( !empty($device) ) {
+        $condition = (strtolower(CCS_Mobile_Detect::$device) == strtolower($device));
+      } elseif ( isset( $atts['mobile'] ) ) {
+        $condition = CCS_Mobile_Detect::$is_mobile;
+      } elseif ( isset( $atts['phone'] ) ) {
+        $condition = (CCS_Mobile_Detect::$device_type == 'phone');
+      } elseif ( isset( $atts['tablet'] ) ) {
+        $condition = (CCS_Mobile_Detect::$device_type == 'tablet');
+      } elseif ( isset( $atts['computer'] ) ) {
+        $condition = (CCS_Mobile_Detect::$device_type == 'computer');
+      }
+    }
+
 
 		if ( ($tag=='isnt') || (isset($atts['not'])) )
 			$condition = !$condition;
@@ -401,12 +434,12 @@ class CCS_User {
 	}
 
 
-	/*========================================================================
-	 *
-	 * [blog]
-	 *
-	 */
-
+  /*---------------------------------------------
+   *
+   * [blog]
+   *
+   */
+  
 	function blog_shortcode( $atts, $content ){
 
 		extract(shortcode_atts(array(
@@ -426,11 +459,11 @@ class CCS_User {
 	}
 
 
-	/*========================================================================
-	 *
-	 * [list_shortcodes]
-	 *
-	 */
+  /*---------------------------------------------
+   *
+   * [list_shortcodes]
+   *
+   */
 
 	function list_shortcodes( ) {
 		global $shortcode_tags;
@@ -449,13 +482,14 @@ class CCS_User {
 	}
 
 
-	/**
-	 *
-	 * [search_form]
-	 *
-	 * @param type Search only this post type
-	 *
-	 */
+  /*---------------------------------------------
+   *
+   * [search_form]
+   *
+   * @param type Search only this post type
+   *
+   */
+  
 
 	function search_form_shortcode( $atts, $content ) {
 
@@ -479,6 +513,12 @@ class CCS_User {
 
 }
 
+
+/*---------------------------------------------
+ *
+ * Utility
+ *
+ */
 
 if ( ! function_exists( 'blog_exists' ) ) {
 
