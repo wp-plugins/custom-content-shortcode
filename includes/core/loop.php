@@ -1369,7 +1369,7 @@ class CCS_Loop {
 		$else = self::extract_else( $middle ); // Remove and return what's after [else]
 		$state['if_empty'] = $middle;
 		$state['if_empty_else'] = $else;
-
+/*
 		// If first
 		$middle = self::get_between('[if first]', '[/if]', $template);
     if (empty($middle)) $middle = self::get_between('[-if first]', '[/-if]', $template);
@@ -1385,6 +1385,7 @@ class CCS_Loop {
 		$else = self::extract_else( $middle );
 		$state['if_last'] = $middle;
 		$state['if_last_else'] = $else;
+*/
 
 		return $template;
 	}
@@ -1648,21 +1649,20 @@ class CCS_Loop {
 		 *
 		 * Do [if first]
 		 *
-		 */
 		
 		if ( $state['loop_count'] == 1 ) {
 
-			if ($state['if_first']) {
+			if (!empty($state['if_first'])) {
 				$else = isset($state['if_first_else']) ? '[else]'.$state['if_first_else'] : null;
 				$template = str_replace('[if first]'.$state['if_first'].$else.'[/if]', $state['if_first'], $template);
 			}
 		}
+     */
 
 		/*---------------------------------------------
 		 *
 		 * Do [if last]
 		 *
-		 */
 		
 		if ( $state['loop_count'] == $state['post_count'] ) {
 
@@ -1671,6 +1671,7 @@ class CCS_Loop {
 				$template = str_replace('[if last]'.$state['if_last'].$else.'[/if]', $state['if_last'], $template);
 			}
 		}
+     */
 
 
 		/*---------------------------------------------

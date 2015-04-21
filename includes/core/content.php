@@ -168,7 +168,7 @@ class CCS_Content {
       'acf_date' => '',
 
       // Read more
-      'more' => '', 'link' => '', 'dots' => 'true',
+      'more' => '', 'link' => '', 'dots' => 'false',
       'between' => 'false',
 
 
@@ -700,7 +700,8 @@ class CCS_Content {
         $result = self::$state['current_post']->post_content;
 
       // Format post content by default
-      self::$parameters['format'] = empty(self::$parameters['format']) ? 'true' : self::$parameters['format'];
+      self::$parameters['format'] = empty(self::$parameters['format']) ?
+        'true' : self::$parameters['format'];
 
     }
 
@@ -769,17 +770,20 @@ class CCS_Content {
 
     if (!empty($parameters['words'])) {
 
-      if (!empty($parameters['dots'])) {
-        if ($parameters['dots']=='false')
-          $parameters['dots'] = false;
-        elseif ($parameters['dots']=='true')
-          $parameters['dots'] = '&hellip;'; // default
-
-        $result = wp_trim_words( $result, $parameters['words'], $parameters['dots'] );
+      // If format, do it before content gets trimmed
+      if ($parameters['format'] == 'true') {
+        $result = wpautop( $result );
       }
-      else
-        $result = wp_trim_words( $result, $parameters['words'] );
 
+      if ($parameters['dots']=='false') {
+        $parameters['dots'] = false;
+      } elseif ($parameters['dots']=='true') {
+        $parameters['dots'] = '&hellip;';
+      }
+
+      $result = self::wp_trim_words_retain_formatting(
+        $result, $parameters['words'], $parameters['dots']
+      );
     }
 
     if (!empty($parameters['length'])) {
@@ -876,8 +880,7 @@ class CCS_Content {
       remove_filter( 'siteorigin_panels_filter_content_enabled',
         array($this, 'siteorigin_support') );
 
-    } elseif ($parameters['format'] == 'true') {
-
+    } elseif ($parameters['format'] == 'true' && empty($parameters['words'])) {
       $result = wpautop( $result );
     }
 
@@ -1244,7 +1247,14 @@ class CCS_Content {
         break;
         
       case 'image-url':
-        $result = wp_get_attachment_url(get_post_thumbnail_id($post_id));
+        $parameters['size'] = (isset($parameters['size']) && !empty($parameters['size'])) ?
+          $parameters['size'] : 'full';
+        $src = wp_get_attachment_image_src(
+          get_post_thumbnail_id($post_id),
+          $parameters['size']
+        );
+        $result = $src['0'];
+        // $result = wp_get_attachment_url(get_post_thumbnail_id($post_id));
       break;
 
       case 'image-title':
@@ -1370,8 +1380,9 @@ class CCS_Content {
 
     $post = get_post($post_id);
 
-    if (empty($parameters['size']))
+    if (empty($parameters['size'])) {
       $parameters['size'] = 'full';
+    }
 
     $field = $parameters['field'];
     $result = '';
@@ -1415,7 +1426,9 @@ class CCS_Content {
         break;
       case 'url' :
       case 'download-url' :
-        $result = wp_get_attachment_url( $post_id );
+        $src = wp_get_attachment_image_src( $post_id, $parameters['size'] );
+        $result = $src[0];
+//        $result = wp_get_attachment_url( $post_id );
         break;
       case 'download-link' :
         $target = '';
@@ -1703,5 +1716,43 @@ class CCS_Content {
   }
 
   public static function siteorigin_support() { return true; }
+
+
+  public static function wp_trim_words_retain_formatting(
+    $text, $num_words = 55, $more = null ) {
+
+    if ( null === $more )
+        $more = __( '&hellip;' );
+    $original_text = $text;
+    /* translators: If your word count is based on single characters (East Asian characters),
+       enter 'characters'. Otherwise, enter 'words'. Do not translate into your own language. */
+    if ( 'characters' == _x( 'words', 'word count: words or characters?' ) && preg_match( '/^utf\-?8$/i', get_option( 'blog_charset' ) ) ) {
+        $text = trim( preg_replace( "/[\n\r\t ]+/", ' ', $text ), ' ' );
+        preg_match_all( '/./u', $text, $words_array );
+        $words_array = array_slice( $words_array[0], 0, $num_words + 1 );
+        $sep = '';
+    } else {
+        $words_array = preg_split( "/[\n\r\t ]+/", $text, $num_words + 1, PREG_SPLIT_NO_EMPTY );
+        $sep = ' ';
+    }
+    if ( count( $words_array ) > $num_words ) {
+        array_pop( $words_array );
+        $text = implode( $sep, $words_array );
+        $text = $text . $more;
+    } else {
+        $text = implode( $sep, $words_array );
+    }
+    /**
+     * Filter the text content after words have been trimmed.
+     *
+     * @since 3.3.0
+     *
+     * @param string $text          The trimmed text.
+     * @param int    $num_words     The number of words to trim the text to. Default 5.
+     * @param string $more          An optional string to append to the end of the trimmed text, e.g. &hellip;.
+     * @param string $original_text The text before it was trimmed.
+     */
+    return apply_filters( 'wp_trim_words', $text, $num_words, $more, $original_text );
+  }
 
 } // End CCS_Content

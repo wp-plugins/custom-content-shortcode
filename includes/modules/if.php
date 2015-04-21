@@ -538,14 +538,28 @@ class CCS_If {
 		$condition = isset($atts['single']) ? is_single() : $condition;
 		$condition = isset($atts['search']) ? is_search() : $condition;
 		$condition = isset($atts['404']) ? is_404() : $condition;
-
-		$condition = isset($atts['none']) ? !have_posts() : $condition;
+    $condition = isset($atts['none']) ? !have_posts() : $condition;
 
 		if (isset($atts['tax_archive'])) {
 			if ($tax_archive == 'true') $tax_archive = '';
 			$condition = is_tax( $tax_archive );
 		}
 
+    /*---------------------------------------------
+     *
+     * First and last post in loop
+     *
+     */
+    
+    if (CCS_Loop::$state['is_loop']) {
+
+      $condition = isset($atts['first']) ?
+        CCS_Loop::$state['loop_count'] == 1 : $condition;
+
+      $condition = isset($atts['last']) ?
+        CCS_Loop::$state['loop_count'] == CCS_Loop::$state['post_count'] : $condition;
+
+    }
 
     /*---------------------------------------------
      *
@@ -565,7 +579,7 @@ class CCS_If {
     }
 
 
-		/*========================================================================
+		/*---------------------------------------------
 		 *
 		 * Not
 		 *
