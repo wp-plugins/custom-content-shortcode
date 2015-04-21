@@ -1,0 +1,292 @@
+<h3 align="center">Content</h3>
+<hr>
+
+Use <b>[content]</b> to display post content or a field.
+
+<h4>Display post content by name</h4>
+<code>[content name="hello-world"]</code>
+<h4>Display the featured image of a page</h4>
+<code>[content type="page" name="about-me" field="image"]</code>
+<h4>Display a field from a custom post type</h4>
+<code>[content type="apartment" name="lux-suite-22" field="rent-per-day"]</code><br>
+
+<hr>
+<h3>Basic parameters</h3>
+
+<h4>Post</h4>
+
+<ul>
+	<li><b>type</b> - post type: <i>post</i>, <i>page</i>, or <i>custom post type</i> - default is <i>any</i></li>
+	<li><b>name</b>, <b>title</b>, or <b>id</b> -  get post by <i>name/slug</i>, <i>title</i>, or <i>ID</i> - default is <i>current post</i></li>
+</ul>
+<h4>Fields</h4>
+<ul>
+	<li><b>field</b> - name of field to display - if empty, the default is the <i>post content</i></li>
+
+You can display custom fields as well as predefined fields:
+
+	<ul>
+		<li><i>id</i> - post ID</li>
+		<li><i>slug</i> - post slug</li>
+    <li><i>post-type</i> - post type</li>
+    <li><i>post-status</i> - post status</li>
+	</ul><ul>
+		<li><i>url</i> - post URL</li>
+		<li><i>edit-url</i> - post edit URL</li>
+	</ul><ul>
+		<li><i>title</i> - post title</li>
+    <li><i>title-link</i> - post title with link to the post</li>
+    <li><i>title-link-out</i> - post title with link to the post, in new tab: <i>target="_blank"</i></li>
+		<li><i>excerpt</i> - post excerpt</li>
+	</ul><ul>
+		<li><i>date</i> - published date</li>
+		<li><i>modified</i> - last modified date</li>
+	</ul><ul>
+		<li><i>image</i> - featured image</li>
+		<li><i>image-url</i> - featured image URL</li>
+    <li><i>image-title</i> - featured image title</li>
+    <li><i>image-caption</i> - featured image caption</li>
+    <li><i>image-alt</i> - featured image alternate text</li>
+    <li><i>image-description</i> - featured image description</li>
+    <li><i>image-link</i> - featured image with link to the post</li>
+    <li><i>image-link-out</i> - featured image with link to the post, in new tab: <i>target="_blank"</i></li>
+
+	</ul><ul>
+		<li><i>thumbnail</i> - featured image thumbnail</li>
+		<li><i>thumbnail-link</i> - featured image thumbnail with link to the post</li>
+	</ul><ul>
+		<li><i>author</i> - post author</li>
+		<li><i>author-id</i> - post author ID</li>
+		<li><i>author-url</i> - post author URL</li>
+		<li><i>avatar</i> - post author avatar</li>
+	</ul>
+</ul>
+<hr>
+<h3>More parameters</h3>
+<h4>Formatting</h4>
+<ul>
+	<li><b>words</b> or <b>length</b> - limit output by number of words or characters</li>
+	<li><b>class</b> - add &lt;div&gt; class to the output</li>
+	<li><b>format</b> - add paragraph tags &lt;p&gt; and preserve line breaks &lt;br&gt; - set to <i>true</i>/<i>false</i> - by default, post content is formatted and for all other fields, it's set to <i>false</i></li>
+  <li><b>filter</b> - set <i>true</i> to apply <i>the_content</i> filter; this might be useful when using plugins that filter the post content, for example, <a href="https://wordpress.org/plugins/siteorigin-panels/" target="_blank">Page Builder</a></li>
+	<li><b>embed</b> - auto-embed URLs like YouTube, Vimeo, etc - set to <i>true</i>/<i>false</i> - by default, such URLs in post content are auto-embedded</li>
+
+  <li><b>currency</b> - format as currency, for example <i>currency="usd"</i>; for supported currencies and custom formatting, see <a href="#currency">this section</a> at the bottom of this page</li>
+
+  <li><b>date_format</b> - use a custom format when displaying <i>field="date"</i>, <i>"modified", or a custom field</i></li>
+	
+	For example, "d.m.Y" will display as <i>18.11.2013</i>. Please refer to the codex: <a href="http://codex.wordpress.org/Formatting_Date_and_Time" target="_blank">Formatting Date and Time</a>. Note: instead of backslash, use double slashes to escape characters - "Y/m/d //a//t g:i A" will show as <i>2013/11/17 at 11:06 PM</i>.
+
+	To format a unix timestamp value, use: <i>in="timestamp"</i>
+	</li>
+</ul>
+<i>Read more</i>
+<ul>
+	<li><b>more</b> - set <i>true</i> to display content up to the &lt;!--more--&gt; tag, or an excerpt if the tag doesn't exist. It will add "Read More" at the end, with a link to the post; to change the text, use: <i>more="..."</i></li>
+	<li><b>dots</b> - set <i>false</i> to disable dots at the end of excerpt</li>
+	<li><b>link</b> - set <i>false</i> to disable link to the post</li>
+</ul>
+<i>Image field</i>
+<ul>
+	<li><b>image</b> - display an image field, for example: <i>image="product_image"</i></li>
+	<li><b>size</b> - size of image: <i>thumbnail</i>, <i>medium</i>, <i>large</i>, <i>full</i> (default) or <a target="_blank" href="http://codex.wordpress.org/Function_Reference/add_image_size">custom defined size</a></li>
+	<li><b>width</b>, <b>height</b> - set both to resize image by pixels; set <i>size</i> parameter with same proportion</li>
+	<li><b>image_class</b> - add class to the &lt;img&gt; tag</li>
+  <li><b>alt</b>, <b>title</b> - additional &lt;img&gt; attributes</li>
+	<li><b>in</b> - type of image field: <i>id</i> (default), <i>url</i>, or <i>object</i></li>
+  <li><b>nopin</b> - set <i>nopin="nopin"</i> to prevent Pinterest pinning of image</li>
+</ul>
+
+<h4>Taxonomy</h4>
+<ul>
+	<li><b>taxonomy</b> - display <i>category</i>, <i>tag</i>, or a custom taxonomy of the post</li>
+
+	You can also use <b>[taxonomy <i>tax_name</i>]</b>.
+
+	<li><b>field</b> - taxonomy field to display: <i>name</i> (default), <i>id</i>, <i>slug</i>, <i>description</i>, or custom taxonomy field</li>
+	<li><b>term</b> - get taxonomy term by ID or slug, regardless of current post</li>
+	<li><b>term_name</b> - get taxonomy term by name/label</li>
+</ul>
+
+<h4>Other field types</h4>
+<ul>
+	<li><b>meta</b> - display author meta: <i>field="author" meta="user_email"</i> - see: <a href="http://codex.wordpress.org/Function_Reference/get_the_author_meta" target="_blank">Codex: Author Meta</a></li>
+	<li><b>out="label"</b> - when displaying checkboxes or select fields made in ACF, this parameter displays their labels instead of values
+</ul>
+<i>Other content types</i>
+<ul>
+	<li><b>area</b> or <b>sidebar</b> - display a widget area/sidebar by <i>title</i></li>
+	<li><b>menu</b> - display a menu list by <i>name/slug</i>, <i>title</i>, or <i>ID</i>.
+
+	Also see: <a href="options-general.php?page=ccs_reference&tab=other#bootstrap-navbar">Bootstrap tabs and navbar</a>.
+
+</ul><br>
+<h3 align="center">Field</h3>
+<hr>
+
+Use <b>[field]</b> as a shorter way to display a field from the current post.
+
+<h4>Display fields</h4>
+<code>The Article &lt;b&gt;[field title]&lt;/b&gt; by [field author] was written on [field date].</code>
+
+Instead of [content field="<i>field_name</i>"] you can write <b>[field <i>field_name</i>]</b>.
+
+<h4>Additional parameters</h4>
+
+<code>[field title words="10"]</code>
+
+<h4>Display an image field</h4>
+
+<code>[field image="image_field" size="thumbnail"]</code>
+
+<br><a href="#" id="array" name="array"></a>
+<h3 align="center">Array</h3>
+<hr>
+
+You can loop through an array of key-value pairs stored in a field, using the <b>[array]</b> shortcode.
+
+<code>[array field_name]
+&nbsp;&nbsp;[field key_1]
+&nbsp;&nbsp;[field key_2]
+[/array]
+</code>
+
+<h3>Parameters</h3>
+<ul>
+	<li><b>each</b> - set <i>true</i> to loop through multiple arrays of key-value pairs</li>
+	<li><b>debug</b> - set <i>true</i> to print the whole array and see how it's structured</li>
+  <li><b>global</b> - access global variable with given name</li>
+</ul>
+
+
+<br><a href="#" id="currency" name="currency"></a>
+<h3 align="center">Currency format</h3>
+<hr>
+
+To manually format a currency value, use these parameters.
+
+<ul>
+  <li><b>decimals</b> - number of decimal points; default is 2</li>
+  <li><b>point</b> - separator for the decimal point; default is "."</li>
+  <li><b>thousands</b> - separator for thousands; default is ","</li>
+</ul>
+
+For example:
+
+<code>[field field_name decimals="0" point="," thousands="."]</code>
+
+<hr>
+
+To use a predefined currency to format, use the parameter <i>currency</i>. Please note that the currency symbol is not included in the output.
+
+<code>[field field_name currency="USD"]</code>
+
+The following currencies are defined for your convenience.
+
+<ul>
+
+  <li><b>ARS</b> - Argentine Peso</li>
+  <li><b>AMD</b> - Armenian Dram</li>
+  <li><b>AWG</b> - Aruban Guilder</li>
+  <li><b>AUD</b> - Australian Dollar</li>
+  <li><b>BSD</b> - Bahamian Dollar</li>
+  <li><b>BHD</b> - Bahraini Dinar</li>
+  <li><b>BDT</b> - Bangladesh, Taka</li>
+  <li><b>BZD</b> - Belize Dollar</li>
+  <li><b>BMD</b> - Bermudian Dollar</li>
+  <li><b>BOB</b> - Bolivia, Boliviano</li>
+  <li><b>BAM</b> - Bosnia and Herzegovina, Convertible Marks</li>
+  <li><b>BWP</b> - Botswana, Pula</li>
+  <li><b>BRL</b> - Brazilian Real</li>
+  <li><b>BND</b> - Brunei Dollar</li>
+  <li><b>CAD</b> - Canadian Dollar</li>
+  <li><b>KYD</b> - Cayman Islands Dollar</li>
+  <li><b>CLP</b> - Chilean Peso</li>
+  <li><b>CNY</b> - China Yuan Renminbi</li>
+  <li><b>COP</b> - Colombian Peso</li>
+  <li><b>CRC</b> - Costa Rican Colon</li>
+  <li><b>HRK</b> - Croatian Kuna</li>
+  <li><b>CUC</b> - Cuban Convertible Peso</li>
+  <li><b>CUP</b> - Cuban Peso</li>
+  <li><b>CYP</b> - Cyprus Pound</li>
+  <li><b>CZK</b> - Czech Koruna</li>
+  <li><b>DKK</b> - Danish Krone</li>
+  <li><b>DOP</b> - Dominican Peso</li>
+  <li><b>XCD</b> - East Caribbean Dollar</li>
+  <li><b>EGP</b> - Egyptian Pound</li>
+  <li><b>SVC</b> - El Salvador Colon</li>
+  <li><b>ATS</b> - Euro</li>
+  <li><b>BEF</b> - Euro</li>
+  <li><b>DEM</b> - Euro</li>
+  <li><b>EEK</b> - Euro</li>
+  <li><b>ESP</b> - Euro</li>
+  <li><b>EUR</b> - Euro</li>
+  <li><b>FIM</b> - Euro</li>
+  <li><b>FRF</b> - Euro</li>
+  <li><b>GRD</b> - Euro</li>
+  <li><b>IEP</b> - Euro</li>
+  <li><b>ITL</b> - Euro</li>
+  <li><b>LUF</b> - Euro</li>
+  <li><b>NLG</b> - Euro</li>
+  <li><b>PTE</b> - Euro</li>
+  <li><b>GHC</b> - Ghana, Cedi</li>
+  <li><b>GIP</b> - Gibraltar Pound</li>
+  <li><b>GTQ</b> - Guatemala, Quetzal</li>
+  <li><b>HNL</b> - Honduras, Lempira</li>
+  <li><b>HKD</b> - Hong Kong Dollar</li>
+  <li><b>HUF</b> - Hungary, Forint</li>
+  <li><b>ISK</b> - Iceland Krona</li>
+  <li><b>INR</b> - Indian Rupee</li>
+  <li><b>IDR</b> - Indonesia, Rupiah</li>
+  <li><b>IRR</b> - Iranian Rial</li>
+  <li><b>JMD</b> - Jamaican Dollar</li>
+  <li><b>JPY</b> - Japan, Yen</li>
+  <li><b>JOD</b> - Jordanian Dinar</li>
+  <li><b>KES</b> - Kenyan Shilling</li>
+  <li><b>KWD</b> - Kuwaiti Dinar</li>
+  <li><b>LVL</b> - Latvian Lats</li>
+  <li><b>LBP</b> - Lebanese Pound</li>
+  <li><b>LTL</b> - Lithuanian Litas</li>
+  <li><b>MKD</b> - Macedonia, Denar</li>
+  <li><b>MYR</b> - Malaysian Ringgit</li>
+  <li><b>MTL</b> - Maltese Lira</li>
+  <li><b>MUR</b> - Mauritius Rupee</li>
+  <li><b>MXN</b> - Mexican Peso</li>
+  <li><b>MZM</b> - Mozambique Metical</li>
+  <li><b>NPR</b> - Nepalese Rupee</li>
+  <li><b>ANG</b> - Netherlands Antillian Guilder</li>
+  <li><b>ILS</b> - New Israeli Shekel</li>
+  <li><b>TRY</b> - New Turkish Lira</li>
+  <li><b>NZD</b> - New Zealand Dollar</li>
+  <li><b>NOK</b> - Norwegian Krone</li>
+  <li><b>PKR</b> - Pakistan Rupee</li>
+  <li><b>PEN</b> - Peru, Nuevo Sol</li>
+  <li><b>UYU</b> - Peso Uruguayo</li>
+  <li><b>PHP</b> - Philippine Peso</li>
+  <li><b>PLN</b> - Poland, Zloty</li>
+  <li><b>GBP</b> - Pound Sterling</li>
+  <li><b>OMR</b> - Rial Omani</li>
+  <li><b>RON</b> - Romania, New Leu</li>
+  <li><b>ROL</b> - Romania, Old Leu</li>
+  <li><b>RUB</b> - Russian Ruble</li>
+  <li><b>SAR</b> - Saudi Riyal</li>
+  <li><b>SGD</b> - Singapore Dollar</li>
+  <li><b>SKK</b> - Slovak Koruna</li>
+  <li><b>SIT</b> - Slovenia, Tolar</li>
+  <li><b>ZAR</b> - South Africa, Rand</li>
+  <li><b>KRW</b> - South Korea, Won</li>
+  <li><b>SZL</b> - Swaziland, Lilangeni</li>
+  <li><b>SEK</b> - Swedish Krona</li>
+  <li><b>CHF</b> - Swiss Franc</li>
+  <li><b>TZS</b> - Tanzanian Shilling</li>
+  <li><b>THB</b> - Thailand, Baht</li>
+  <li><b>TOP</b> - Tonga, Paanga</li>
+  <li><b>AED</b> - UAE Dirham</li>
+  <li><b>UAH</b> - Ukraine, Hryvnia</li>
+  <li><b>USD</b> - US Dollar</li>
+  <li><b>VUV</b> - Vanuatu, Vatu</li>
+  <li><b>VEF</b> - Venezuela Bolivares Fuertes</li>
+  <li><b>VEB</b> - Venezuela, Bolivar</li>
+  <li><b>VND</b> - Viet Nam, Dong</li>
+  <li><b>ZWD</b> - Zimbabwe Dollar</li>
+</ul>
