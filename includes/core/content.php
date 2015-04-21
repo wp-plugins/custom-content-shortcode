@@ -171,8 +171,10 @@ class CCS_Content {
       'more' => '', 'link' => '', 'dots' => 'false',
       'between' => 'false',
 
+      // Get property from field object
+      'property' => '',
 
-      // Fomatting
+      // Formatting
 
       'format' => '', 'shortcode' => '', 'escape' => '',
       'filter' => '',
@@ -183,6 +185,10 @@ class CCS_Content {
       'date_format' => '', 'timestamp' => '',
       'new' => '', // Set true to open link in new tab - currently only for download-link
 
+      'currency' => '',
+      'decimals' => '',
+      'point' => '',
+      'thousands' => ''
     );
 
     
@@ -1174,9 +1180,9 @@ class CCS_Content {
       case 'url': $result = post_permalink( $post_id ); break;
       case 'edit-url': $result = get_edit_post_link( $post_id ); break;
       case 'edit-link':
-        $result = apply_filters( 'the_title', $post->post_title ); break;
+        $result = $post->post_title; break;
       case 'edit-link-self':
-        $result = apply_filters( 'the_title', $post->post_title ); break;
+        $result = $post->post_title; break;
       case 'slug': $result = $post->post_name; break;
       case 'post-type': $result = $post->post_type; break;
       case 'post-status':
@@ -1188,7 +1194,7 @@ class CCS_Content {
 
       case 'title-link':
       case 'title-link-out':
-      case 'title': $result = apply_filters( 'the_title', $post->post_title ); break;
+      case 'title': $result = $post->post_title; break;
 
       case 'author':
 
@@ -1343,7 +1349,26 @@ class CCS_Content {
 
             $result = self::get_the_attachment_field($parameters);
           }
+
+        } elseif (!empty($parameters['property']) && is_object($result) ) {
+
+          $result = self::get_object_property($result, $parameters['property']);
+
+        } elseif (
+          !empty($parameters['currency']) ||
+          !empty($parameters['decimals']) ||
+          !empty($parameters['point']) ||
+          !empty($parameters['thousands'])) {
+
+          $currency = !empty($parameters['currency']) ? $parameters['currency'] : '';
+          $decimals = !empty($parameters['decimals']) ? $parameters['decimals'] : 2;
+          $point = !empty($parameters['point']) ? $parameters['point'] : '.';
+          $thousands = !empty($parameters['thousands']) ? $parameters['thousands'] : ',';
+
+          $result = CCS_Format::getCurrency($result,
+            $currency, $decimals, $point, $thousands);
         }
+
 
         break;
     }
@@ -1352,6 +1377,18 @@ class CCS_Content {
 
   } // End get_the_field
 
+
+  // Helper for getting property from field object
+  public static function get_object_property($object, $prop_string, $delimiter = '->') {
+    $prop_array = explode($delimiter, $prop_string);
+    foreach ($prop_array as $property) {
+      if (isset($object->{$property}))
+        $object = $object->{$property};
+      else
+        return;
+    }
+    return $object;
+  }
 
   // Helper for getting field including predefined
   public static function get_prepared_field( $field, $id = null ) {

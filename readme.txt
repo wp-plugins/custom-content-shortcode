@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
 Tested up to: 4.1.1
-Stable tag: 2.0.3
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,12 +83,16 @@ Support for other plugins:
 
 == Changelog ==
 
-= 2.0.3 =
+= 2.0.5 =
 
 * [attached] - Enable setting image size for attachment URL
 * [content words] - Apply formatting to post content by default, before it's trimmed
+* [field] - Add parameter *property* to get value from field when it's an object
+* [field currency] - Format currency value; see documentation under Content -> Currency
 * [field image-url] - Enable setting image size to return
-* [if] - Improve handling of first/last post in the loop
+* [if] - Improve checking for first/last post in loop
+* [users] - Add support for [if empty]..[else]..[/if]
+* [users search] - Improve users search by keyword
 
 = 2.0.2 =
 

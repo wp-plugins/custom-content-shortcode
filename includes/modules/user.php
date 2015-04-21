@@ -39,6 +39,24 @@ class CCS_User {
 	function users_shortcode( $atts, $content ) {
 
 		self::$state['is_users_loop'] = true;
+    self::$state['user_query'] = '';
+
+
+    /*---------------------------------------------
+     *
+     * [if empty]
+     *
+     */
+    
+
+    // If empty
+    $middle = CCS_Loop::get_between('[if empty]', '[/if]', $content);
+    $content = str_replace($middle, '', $content);
+    $else = CCS_Loop::extract_else( $middle );
+    self::$state['if_empty'] = $middle;
+    self::$state['if_empty_else'] = $else;
+
+
 
 		$outputs = array();
 
@@ -134,8 +152,17 @@ class CCS_User {
 			}
 		}
 
+    if (isset($args['search'])) {
+      self::$state['user_query'] = $args['search'];
+      add_action( 'pre_user_query', array(__CLASS__, 'extend_search') );
+    }
+
 		$users = get_users( $args );
 
+    if (isset($args['search'])) {
+      self::$state['user_query'] = '';
+      remove_action( 'pre_user_query', array(__CLASS__, 'extend_search') );
+    }
 		
 		/*---------------------------------------------
 		 *
@@ -176,6 +203,13 @@ class CCS_User {
 			$outputs[] = do_shortcode( $content );
 		}
 
+    // [if empty]..[else]..[/if]
+    if (count($users) == 0 && isset(self::$state['if_empty'])) {
+      $outputs[] = do_shortcode( self::$state['if_empty'] );
+    } elseif (isset(self::$state['if_empty_else']) && count($users) > 0) {
+      $outputs[] = do_shortcode( self::$state['if_empty_else'] );
+    } 
+
 		self::$state['is_users_loop'] = false;
 		return implode('', $outputs);
 	}
@@ -183,6 +217,23 @@ class CCS_User {
 	public static function sortByFieldNum($a, $b) {
 	    return intval( $a['key'] ) - intval( $b['key'] );
 	}
+
+
+  static function extend_search( $query ) {
+
+    global $wpdb;
+ 
+    if (!empty(self::$state['user_query'])) {
+
+      $display_name = self::$state['user_query'];
+
+      $query->query_where .= $wpdb->prepare(
+        " OR $wpdb->users.display_name LIKE %s", '%'
+        .$wpdb->esc_like($display_name).'%');
+    }
+    return $query;
+  }
+
 
 
 	/*========================================================================
