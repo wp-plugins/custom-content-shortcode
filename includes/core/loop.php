@@ -22,7 +22,8 @@ class CCS_Loop {
 
 	private static $original_parameters;	// Shortcode parameters
 	private static $parameters;				// After merge with default
-	private static $query;					// The query
+  private static $query;          // The query
+  public static $wp_query;          // WP_Query object for pagination
 	public static $state;					// Loop state array
 	public static $previous_state;			// For nested loop
 
@@ -48,11 +49,13 @@ class CCS_Loop {
 
 	public static function init() {
 
-		self::$state['is_loop'] = false;
+    self::$state['is_loop'] = false;
+    self::$state['loop_index'] = 0;
 		self::$state['is_nested_loop'] = false;
 		self::$state['is_attachment_loop'] = false;
 		self::$state['do_reset_postdata'] = false;
 		self::$previous_state = array();
+    self::$wp_query = null;
 	}
 
 
@@ -97,7 +100,7 @@ class CCS_Loop {
 
 				// Get posts from query
 				$posts = self::run_query( $query );
-			
+
 				// Pre-process posts
 				$posts = self::prepare_posts( $posts );
 
@@ -127,35 +130,35 @@ class CCS_Loop {
 	public static function init_loop() {
 
 		$state = self::$state;
+    $state['loop_index']++; // Starts with 1
 
 		if ( $state['is_loop'] ) {
+      self::$previous_state[]      = $state;
+      $state['is_nested_loop']     = true;
+    } else {
+      
+      $state['is_loop']            = true;
+      $state['is_nested_loop']     = false;
+    }
+      
+      $state['do_reset_postdata']  = false;
+      $state['do_cache']           = false;
+      $state['blog']               = 0;
+      
+      $state['loop_count']         = 0;
+      $state['post_count']         = 0;
+      $state['skip_ids']           = array();
+      $state['maxpage']            = 0;
 
-			self::$previous_state[] = $state;
-			$state['is_nested_loop']	= true;
-
-		} else {
-
-			$state['is_loop'] 			= true;
-			$state['is_nested_loop']	= false;
-		}
-
-		$state['do_reset_postdata'] 	= false;
-		$state['do_cache'] 				= false;
-		$state['blog'] 					= 0;
-
-		$state['loop_count']			= 0;
-		$state['post_count'] 			= 0;
-		$state['skip_ids'] 				= array();
-
-		$state['current_post_id']		= 0;
-		// Store ID of post that contains the loop
-		$state['original_post_id']		= get_the_ID();
-
-		$state['comment_count']			= 0;
-		$state['is_attachment_loop']	= false;
-
-		// Support qTranslate Plus
-		$state['current_lang'] 			= null;
+      $state['current_post_id']    = 0;
+      // Store ID of post that contains the loop
+      $state['original_post_id']   = get_the_ID();
+      
+      $state['comment_count']      = 0;
+      $state['is_attachment_loop'] = false;
+      
+      // Support qTranslate Plus
+      $state['current_lang']       = null;
 
 		self::$state = $state;
 	}
@@ -254,6 +257,7 @@ class CCS_Loop {
 			// Timer
 			'timer' => 'false',
 
+      'paged' => '', 'maxpage' => '',
 
 			// ? Clarify purpose
 			'if' => '', 'posts_separator' => '',
@@ -654,6 +658,31 @@ class CCS_Loop {
 		if ( !empty($parameters['offset']) ) {
 			$query['offset'] = $parameters['offset'];
 		}
+
+    if ( !empty($parameters['paged']) ) {
+
+      if (class_exists('CCS_Paged')) {
+
+        if (!empty($parameters['maxpage'])) {
+          self::$state['maxpage'] = $parameters['maxpage'];
+        }
+
+        if (is_numeric($parameters['paged'])) {
+          $parameters['count'] = $parameters['paged'];
+        } else {
+          $parameters['count'] = 5;
+        }
+
+        // Get from query var
+        $query_var = CCS_Paged::$prefix;
+        if (self::$state['loop_index']>1)
+          $query_var .= self::$state['loop_index'];
+        $query['paged'] = isset($_GET[$query_var]) ? $_GET[$query_var] : 1;
+      }
+    }
+    if ( !empty($parameters['page']) ) {
+      $query['paged'] = $parameters['page']; // Manually set
+    }
 
 		if ( !empty($parameters['count']) ) {
 			if ($parameters['orderby']=='rand') {
@@ -1261,9 +1290,11 @@ class CCS_Loop {
 
 		self::$query = $query; // Store query parameters
 
-		self::$state['do_reset_postdata'] = true; // Reset post data at the end of loop
+    if (!self::$state['is_nested_loop']) {
+      self::$state['do_reset_postdata'] = true; // Reset post data at the end of loop
+    }
 
-		return new WP_Query( $query );
+		return self::$wp_query = new WP_Query( $query );
 	}
 
 
@@ -1613,7 +1644,24 @@ class CCS_Loop {
 
 			} // End for each post
 
+/*
+      if (!empty($parameters['max'])) {
+        $i = 0;
+        $all_posts = $query_object->posts;
 
+        foreach ($all_posts as $post) {
+          $current_id = $post->ID;
+
+          if ( !in_array($current_id, $state['skip_ids']) ) {
+            $i++;
+
+            if ($i > $parameters['max']) {
+              $state['skip_ids'][] = $current_id;
+            }
+          }
+        }
+      }
+*/
 			// Subtract skipped posts from post count
 
 			$state['post_count'] = $state['post_count'] - count($state['skip_ids']);
@@ -2044,7 +2092,8 @@ class CCS_Loop {
 		$keywords = array(
 			'URL', 'SLUG', 'ID', 'COUNT', 'TITLE', 'AUTHOR', 'DATE',
 			'CONTENT', 'EXCERPT', 'COMMENT_COUNT', 'TAGS', 'CATEGORY',
-      'THUMBNAIL', 'THUMBNAIL_URL', 'IMAGE', 'IMAGE_ID', 'IMAGE_URL'
+      'THUMBNAIL', 'THUMBNAIL_URL', 'IMAGE', 'IMAGE_ID', 'IMAGE_URL',
+      'PAGED'
 		);
 
 		foreach ($keywords as $key) {
@@ -2173,11 +2222,11 @@ class CCS_Loop {
 	}
 
 
-	/*---------------------------------------------====
+	/*---------------------------------------------
 	 *
 	 * Sort series
 	 *
-	 *===========================================================================*/
+	 */
 
 	public static function sort_by_series( $a, $b ) {
 

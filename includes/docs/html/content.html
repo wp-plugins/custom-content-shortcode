@@ -65,13 +65,13 @@ You can display custom fields as well as predefined fields:
 <h3>More parameters</h3>
 <h4>Formatting</h4>
 <ul>
-	<li><b>words</b> or <b>length</b> - limit output by number of words or characters</li>
-	<li><b>class</b> - add &lt;div&gt; class to the output</li>
+	<li><b>words</b> or <b>length</b> - trim by number of words or letters; content is not formatted by default: set <i>format="true"</i> if you need</li>
 	<li><b>format</b> - add paragraph tags &lt;p&gt; and preserve line breaks &lt;br&gt; - set to <i>true</i>/<i>false</i> - by default, post content is formatted and for all other fields, it's set to <i>false</i></li>
   <li><b>filter</b> - set <i>true</i> to apply <i>the_content</i> filter; this might be useful when using plugins that filter the post content, for example, <a href="https://wordpress.org/plugins/siteorigin-panels/" target="_blank">Page Builder</a></li>
 	<li><b>embed</b> - auto-embed URLs like YouTube, Vimeo, etc - set to <i>true</i>/<i>false</i> - by default, such URLs in post content are auto-embedded</li>
+  <li><b>class</b> - add &lt;div&gt; class to the output</li>
 
-  <li><b>currency</b> - format as currency, for example <i>currency="usd"</i>; for supported currencies and custom formatting, see <a href="#currency">this section</a> at the bottom of this page</li>
+  <li><b>currency</b> - format as currency, for example <i>currency="usd"</i>; see <a href="#currency">this section</a> for details</li>
 
   <li><b>date_format</b> - use a custom format when displaying <i>field="date"</i>, <i>"modified", or a custom field</i></li>
 	
@@ -173,120 +173,17 @@ To manually format a currency value, use these parameters.
 
 For example:
 
-<code>[field field_name decimals="0" point="," thousands="."]</code>
+<code>[field field_name point="," thousands="."]</code>
+
+This will display a number like: 2.500,00
 
 <hr>
 
-To use a predefined currency to format, use the parameter <i>currency</i>. Please note that the currency symbol is not included in the output.
+To use a predefined currency format, use the parameter <i>currency</i>.
 
 <code>[field field_name currency="USD"]</code>
 
-The following currencies are defined for your convenience.
+Please note that the currency symbol is not included in the output.
 
-<ul>
+Most <a target="_blank" href="http://en.wikipedia.org/wiki/ISO_4217#Active_codes">currency codes</a> are defined for your convenience.
 
-  <li><b>ARS</b> - Argentine Peso</li>
-  <li><b>AMD</b> - Armenian Dram</li>
-  <li><b>AWG</b> - Aruban Guilder</li>
-  <li><b>AUD</b> - Australian Dollar</li>
-  <li><b>BSD</b> - Bahamian Dollar</li>
-  <li><b>BHD</b> - Bahraini Dinar</li>
-  <li><b>BDT</b> - Bangladesh, Taka</li>
-  <li><b>BZD</b> - Belize Dollar</li>
-  <li><b>BMD</b> - Bermudian Dollar</li>
-  <li><b>BOB</b> - Bolivia, Boliviano</li>
-  <li><b>BAM</b> - Bosnia and Herzegovina, Convertible Marks</li>
-  <li><b>BWP</b> - Botswana, Pula</li>
-  <li><b>BRL</b> - Brazilian Real</li>
-  <li><b>BND</b> - Brunei Dollar</li>
-  <li><b>CAD</b> - Canadian Dollar</li>
-  <li><b>KYD</b> - Cayman Islands Dollar</li>
-  <li><b>CLP</b> - Chilean Peso</li>
-  <li><b>CNY</b> - China Yuan Renminbi</li>
-  <li><b>COP</b> - Colombian Peso</li>
-  <li><b>CRC</b> - Costa Rican Colon</li>
-  <li><b>HRK</b> - Croatian Kuna</li>
-  <li><b>CUC</b> - Cuban Convertible Peso</li>
-  <li><b>CUP</b> - Cuban Peso</li>
-  <li><b>CYP</b> - Cyprus Pound</li>
-  <li><b>CZK</b> - Czech Koruna</li>
-  <li><b>DKK</b> - Danish Krone</li>
-  <li><b>DOP</b> - Dominican Peso</li>
-  <li><b>XCD</b> - East Caribbean Dollar</li>
-  <li><b>EGP</b> - Egyptian Pound</li>
-  <li><b>SVC</b> - El Salvador Colon</li>
-  <li><b>ATS</b> - Euro</li>
-  <li><b>BEF</b> - Euro</li>
-  <li><b>DEM</b> - Euro</li>
-  <li><b>EEK</b> - Euro</li>
-  <li><b>ESP</b> - Euro</li>
-  <li><b>EUR</b> - Euro</li>
-  <li><b>FIM</b> - Euro</li>
-  <li><b>FRF</b> - Euro</li>
-  <li><b>GRD</b> - Euro</li>
-  <li><b>IEP</b> - Euro</li>
-  <li><b>ITL</b> - Euro</li>
-  <li><b>LUF</b> - Euro</li>
-  <li><b>NLG</b> - Euro</li>
-  <li><b>PTE</b> - Euro</li>
-  <li><b>GHC</b> - Ghana, Cedi</li>
-  <li><b>GIP</b> - Gibraltar Pound</li>
-  <li><b>GTQ</b> - Guatemala, Quetzal</li>
-  <li><b>HNL</b> - Honduras, Lempira</li>
-  <li><b>HKD</b> - Hong Kong Dollar</li>
-  <li><b>HUF</b> - Hungary, Forint</li>
-  <li><b>ISK</b> - Iceland Krona</li>
-  <li><b>INR</b> - Indian Rupee</li>
-  <li><b>IDR</b> - Indonesia, Rupiah</li>
-  <li><b>IRR</b> - Iranian Rial</li>
-  <li><b>JMD</b> - Jamaican Dollar</li>
-  <li><b>JPY</b> - Japan, Yen</li>
-  <li><b>JOD</b> - Jordanian Dinar</li>
-  <li><b>KES</b> - Kenyan Shilling</li>
-  <li><b>KWD</b> - Kuwaiti Dinar</li>
-  <li><b>LVL</b> - Latvian Lats</li>
-  <li><b>LBP</b> - Lebanese Pound</li>
-  <li><b>LTL</b> - Lithuanian Litas</li>
-  <li><b>MKD</b> - Macedonia, Denar</li>
-  <li><b>MYR</b> - Malaysian Ringgit</li>
-  <li><b>MTL</b> - Maltese Lira</li>
-  <li><b>MUR</b> - Mauritius Rupee</li>
-  <li><b>MXN</b> - Mexican Peso</li>
-  <li><b>MZM</b> - Mozambique Metical</li>
-  <li><b>NPR</b> - Nepalese Rupee</li>
-  <li><b>ANG</b> - Netherlands Antillian Guilder</li>
-  <li><b>ILS</b> - New Israeli Shekel</li>
-  <li><b>TRY</b> - New Turkish Lira</li>
-  <li><b>NZD</b> - New Zealand Dollar</li>
-  <li><b>NOK</b> - Norwegian Krone</li>
-  <li><b>PKR</b> - Pakistan Rupee</li>
-  <li><b>PEN</b> - Peru, Nuevo Sol</li>
-  <li><b>UYU</b> - Peso Uruguayo</li>
-  <li><b>PHP</b> - Philippine Peso</li>
-  <li><b>PLN</b> - Poland, Zloty</li>
-  <li><b>GBP</b> - Pound Sterling</li>
-  <li><b>OMR</b> - Rial Omani</li>
-  <li><b>RON</b> - Romania, New Leu</li>
-  <li><b>ROL</b> - Romania, Old Leu</li>
-  <li><b>RUB</b> - Russian Ruble</li>
-  <li><b>SAR</b> - Saudi Riyal</li>
-  <li><b>SGD</b> - Singapore Dollar</li>
-  <li><b>SKK</b> - Slovak Koruna</li>
-  <li><b>SIT</b> - Slovenia, Tolar</li>
-  <li><b>ZAR</b> - South Africa, Rand</li>
-  <li><b>KRW</b> - South Korea, Won</li>
-  <li><b>SZL</b> - Swaziland, Lilangeni</li>
-  <li><b>SEK</b> - Swedish Krona</li>
-  <li><b>CHF</b> - Swiss Franc</li>
-  <li><b>TZS</b> - Tanzanian Shilling</li>
-  <li><b>THB</b> - Thailand, Baht</li>
-  <li><b>TOP</b> - Tonga, Paanga</li>
-  <li><b>AED</b> - UAE Dirham</li>
-  <li><b>UAH</b> - Ukraine, Hryvnia</li>
-  <li><b>USD</b> - US Dollar</li>
-  <li><b>VUV</b> - Vanuatu, Vatu</li>
-  <li><b>VEF</b> - Venezuela Bolivares Fuertes</li>
-  <li><b>VEB</b> - Venezuela, Bolivar</li>
-  <li><b>VND</b> - Viet Nam, Dong</li>
-  <li><b>ZWD</b> - Zimbabwe Dollar</li>
-</ul>

@@ -98,7 +98,8 @@ The <b>[content]</b> and <b>[field]</b> shortcodes target each post in the loop
     </ul>
   </li>
 	<li><b>compare</b> - <i>equal</i> (default), <i>not</i>, <i>more</i>, <i>less</i>, or operator like &lt; and &gt;.</li>
-  <li><b>date_format</b> - the date format of the field value; default is "Y-m-d".</li>
+  <li><b>before</b>/<b>after</b> - used in place of <i>value</i> and <i>compare</i>; query for field values before/after a relative or specific date: <i>2 weeks ago</i>, or <i>2015-02-01</i></li>
+  <li><b>date_format</b> - date format of the field value; default is "Y-m-d".</li>
   <li><b>in="string"</b> - if the date field is stored as string; by default, UNIX timestamp is assumed</li>
 </ul>
 
@@ -151,6 +152,16 @@ Multiple values are possible: <i>value="first, second"</i>. This will return all
 	<li><b>list_class</b>, <b>list_style</b> - add class or style to the list
 	<li><b>item</b> - tag to wrap each loop item; default is <i>li</i>, or specify tag like <i>span</i></li>
 	<li><b>item_class</b>, <b>item_style</b> - add class or style to each item
+</ul>
+
+
+<h4>Paged</h4>
+<ul>
+  <li><b>paged</b> - number of posts per page</li>
+  <li><b>maxpage</b> - maximum number of pages</li>
+
+  These are used with the <a href="options-general.php?page=ccs_reference&tab=paged">[loopage] shortcode</a> to create pagination.
+
 </ul>
 
 <h4>Cache</h4>

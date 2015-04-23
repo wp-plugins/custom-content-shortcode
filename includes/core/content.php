@@ -308,7 +308,11 @@ class CCS_Content {
         // Inside [related]
         $post_id = CCS_Related::$state['current_related_post_id'];
 
-      }  else {
+      }  elseif ( CCS_Loop::$state['is_loop'] ) {
+
+        $post_id = CCS_Loop::$state['current_post_id']; // Current post in loop
+
+      } else {
         $post_id = get_the_ID(); // Current post
       }
 
@@ -512,8 +516,8 @@ class CCS_Content {
 
       // Current post
 
-      self::$state['current_post'] = get_post();
-      self::$state['current_post_id'] = get_the_ID();
+      self::$state['current_post'] = get_post(self::$state['current_post_id']);
+
     }
 
     if ( !empty($parameters['exclude']) && ($parameters['exclude']=='this') ) {
@@ -705,10 +709,11 @@ class CCS_Content {
       if (!empty(self::$state['current_post']))
         $result = self::$state['current_post']->post_content;
 
-      // Format post content by default
-      self::$parameters['format'] = empty(self::$parameters['format']) ?
-        'true' : self::$parameters['format'];
-
+      // Format post content by default - except when trimmed
+      if ( empty($parameters['words']) && empty($parameters['length']) ) {
+        self::$parameters['format'] = empty(self::$parameters['format']) ?
+          'true' : self::$parameters['format'];
+      }
     }
 
     return $result;

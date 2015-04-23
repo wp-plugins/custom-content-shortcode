@@ -6,8 +6,8 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
-Tested up to: 4.1.1
-Stable tag: 2.0.5
+Tested up to: 4.2
+Stable tag: 2.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -30,13 +30,14 @@ There is a reference section under Settings -> Custom Content.
 Here are some of the included features:
 
 * **Dynamic templates** with shortcodes
+* **Pagination** for post loops
 * View your site's **content structure**
 * Display **comments** and **attachments**
 * **User info** and content based on user status
 * **Relative URLs** for links and images
-* Simple **gallery field** for any post type
 * **Cache** the result of query loops
-* Option to enable **Mobile Detect**
+* **Gallery field** (optional)
+* **Mobile Detect** (optional)
 
 Support for other plugins:
 
@@ -82,6 +83,13 @@ Support for other plugins:
 * [loop] - Hierarchical posts: include children by default; **please note** that this is different behavior than previous versions; to get top-level parents only, set *exclude="children"*
 
 == Changelog ==
+
+= 2.1.1 =
+
+* Finally, a pagination feature for the loop! Please refer to the documentation for details
+* [content words] - Revert to original behavior: don't format by default when trimming
+* Option to enable HTML Block module
+* Numerous internal improvements
 
 = 2.0.5 =
 
