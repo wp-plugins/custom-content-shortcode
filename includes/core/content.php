@@ -1191,6 +1191,12 @@ class CCS_Content {
         $result = $post->post_title; break;
       case 'slug': $result = $post->post_name; break;
       case 'post-type': $result = $post->post_type; break;
+      case 'post-type-name': $post_type = $post->post_type; 
+                             $obj = get_post_type_object( $post_type );
+                             $result = $obj->labels->singular_name; break;
+      case 'post-type-plural': $post_type = $post->post_type; 
+                         $obj = get_post_type_object( $post_type );
+                         $result = $obj->labels->name; break;
       case 'post-status':
         $result = $post->post_status;
         if ($parameters['out'] !== 'slug') {
