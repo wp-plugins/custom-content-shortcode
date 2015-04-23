@@ -781,20 +781,21 @@ class CCS_Content {
 
     if (!empty($parameters['words'])) {
 
-      // If format, do it before content gets trimmed
-      if ($parameters['format'] == 'true') {
-        $result = wpautop( $result );
-      }
-
       if ($parameters['dots']=='false') {
         $parameters['dots'] = false;
       } elseif ($parameters['dots']=='true') {
         $parameters['dots'] = '&hellip;';
       }
 
-      $result = self::wp_trim_words_retain_formatting(
-        $result, $parameters['words'], $parameters['dots']
-      );
+      // If format, do it before content gets trimmed
+      if ($parameters['format'] == 'true') {
+        $result = self::wp_trim_words_retain_formatting(
+          wpautop( $result ), $parameters['words'], $parameters['dots']
+        );
+      } else {
+        $result = wp_trim_words( $result, $parameters['words'], $parameters['dots'] );
+      }
+
     }
 
     if (!empty($parameters['length'])) {

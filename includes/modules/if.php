@@ -301,7 +301,8 @@ class CCS_If {
 			} else {
 
 				$field = $user_field;
-				$check = CCS_User::get_user_field( $field );
+				$check = strtolower(CCS_User::get_user_field( $field ));
+        $value = strtolower($value); // lowercase for user role
 			}
 
 			// start=".."

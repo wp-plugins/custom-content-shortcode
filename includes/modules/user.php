@@ -258,7 +258,8 @@ class CCS_User {
 		extract(shortcode_atts(array(
 			'field' => '',
 			'meta' => '', // Alias
-			'size' => ''
+			'size' => '',
+      'out' => ''
 		), $atts));
 
 		if(empty($current_user)) return; // no current user
@@ -300,7 +301,11 @@ class CCS_User {
 				return strval( count_user_posts( $current_user->ID ) );
 				break;
 			case 'role':
-				return rtrim(implode(',',array_map('ucwords', $current_user->roles)),',');
+        if ($out=='slug') {
+          return rtrim(implode(',', $current_user->roles),',');
+        } else {
+          return rtrim(implode(',',array_map('ucwords', $current_user->roles)),',');
+        }
 				break;
       case 'agent':
         return $_SERVER["HTTP_USER_AGENT"];

@@ -292,7 +292,7 @@ class CCS_Pass {
      */
     
     if (!empty($user_field)) {
-      $user_field_value = do_shortcode('[user '.$user_field.']');
+      $user_field_value = do_shortcode('[user '.$user_field.' out="slug"]');
       // Replace it
       $content = str_replace('{'.$prefix.'USER_FIELD}', $user_field_value, $content);
     }
@@ -301,7 +301,7 @@ class CCS_Pass {
       $user_fields_array = CCS_Loop::explode_list($user_fields);
 
       foreach ($user_fields_array as $this_field) {
-        $user_field_value = do_shortcode('[user '.$this_field.']');
+        $user_field_value = do_shortcode('[user '.$this_field.' out="slug"]');
         // Replace {FIELD_NAME}
         $content = str_replace('{'.$prefix.strtoupper($this_field).'}', $user_field_value, $content);
       }
