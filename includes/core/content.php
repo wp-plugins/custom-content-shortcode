@@ -550,18 +550,6 @@ class CCS_Content {
 
     /*---------------------------------------------
      *
-     * Image field
-     *
-     */
-
-    elseif (!empty($parameters['image'])) {
-
-      $result = self::get_image_field( $parameters );
-
-    }
-
-    /*---------------------------------------------
-     *
      * Taxonomy
      *
      */
@@ -601,6 +589,9 @@ class CCS_Content {
       if ( !empty( $terms ) ) {
 
         $slugs = array();
+        if (!empty($parameters['image'])) {
+          $parameters['field'] = $parameters['image'];
+        }
 
         foreach ($terms as $term) {
 
@@ -624,13 +615,14 @@ class CCS_Content {
               break;
               default:
 
-                // Support custom taxonomy meta fields
-                 
-                if (function_exists('get_tax_meta')) {
-                  $field_value = get_tax_meta($term->term_id,$parameters['field']);
-                  if (!empty($field_value)) {
-                    $results[] = $field_value;
-                  }
+                // Support custom taxonomy fields
+
+                $field_value = self::get_the_taxonomy_field(
+                  $taxonomy, $term->term_id, $parameters['field'], $parameters
+                );
+
+                if (!empty($field_value)) {
+                  $results[] = $field_value;
                 }
 
               break;
@@ -651,6 +643,21 @@ class CCS_Content {
       } else {
         return null; // No terms found
       }
+
+    }
+
+
+    /*---------------------------------------------
+     *
+     * Image field
+     *
+     * @note Must be after taxonomy, to allow custom taxonomy image field
+     *
+     */
+
+    elseif (!empty($parameters['image'])) {
+
+      $result = self::get_image_field( $parameters );
 
     }
 
@@ -691,6 +698,8 @@ class CCS_Content {
     /*---------------------------------------------
      *
      * Field
+     *
+     * @note Must be after taxonomy, to allow custom taxonomy field
      *
      */
     
@@ -1389,7 +1398,6 @@ class CCS_Content {
 
   } // End get_the_field
 
-
   // Helper for getting property from field object
   public static function get_object_property($object, $prop_string, $delimiter = '->') {
     $prop_array = explode($delimiter, $prop_string);
@@ -1514,6 +1522,65 @@ class CCS_Content {
     }
 
     return $result;
+  }
+
+
+  // Wrapper for custom taxonomy field
+
+  public static function get_the_taxonomy_field(
+    $taxonomy, $term_id, $field, $parameters = array() ) {
+
+    $value = '';
+
+    // ACF
+    if (function_exists('get_field')) {
+
+      $value = get_field( $field, $taxonomy.'_'.$term_id );
+
+      if (!isset($parameters['in'])) $parameters['in']='object';
+      if (is_array($value)) {
+        // Assume image..?
+        $parameters['image'] = $field;
+      }
+
+
+    // Which plugin defines get_tax_meta..?
+    } elseif (function_exists('get_tax_meta')) {
+
+      $value = get_tax_meta( $term_id, $field );
+
+      if (!isset($parameters['in'])) $parameters['in']='id';
+    } 
+
+    // Image field
+    if ( !empty($parameters['image']) ) {
+
+      if ( empty($parameters['size']) ) $parameters['size']='full';
+
+      switch($parameters['in']) {
+        case 'id' :
+          $parameters['id'] = $value;
+          $value = wp_get_attachment_image( $value, $parameters['size'] ); break;
+        case 'url' : $value = '<img src="' . $value . '">'; break;
+        case 'object' : /* image object */
+        default :
+          if (is_array($value)) {
+
+            $parameters['id'] = $value['id'];
+            $value = wp_get_attachment_image( $value['id'], $parameters['size'] );
+          } else {
+            $value = wp_get_attachment_image( $value, $parameters['size'] ); // Assume it's ID
+          }
+      }
+
+      if ( !empty($parameters['out']) && !empty($parameters['id'])) {
+
+        $parameters['field'] = $parameters['out'];
+        $value = self::get_the_attachment_field( $parameters );
+      }
+    }
+
+    return $value;
   }
 
 
@@ -1715,14 +1782,7 @@ class CCS_Content {
     if (empty($attachment_id)) return null;
 
     $attachment = get_post( $attachment_id );
-    $attachment_array = array(
-      'alt' => get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ),
-      'caption' => $attachment->post_excerpt,
-      'description' => $attachment->post_content,
-      'href' => get_permalink( $attachment->ID ),
-      'src' => $attachment->guid,
-      'title' => $attachment->post_title
-    );
+    $attachment_array = self::wp_get_attachment_array( $attachment_id );
 
     if (isset($attachment_array[$field_name])) {
       return $attachment_array[$field_name];
