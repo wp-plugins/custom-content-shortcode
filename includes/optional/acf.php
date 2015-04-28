@@ -107,6 +107,10 @@ class CCS_To_ACF {
 			$count = 1;
 		}
 
+    if (empty($field) && isset($atts[0])) {
+      $field = $atts[0];
+    }
+
 		if ( empty($content) && (!empty($sub) || !empty($sub_image))) {
 
 			if (!empty($sub_image))

@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,13 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 2.1.5 =
+
+* [attached] - Add parameter *title-link* for attachment field
+* [field] - Add parameters *embed* and *http*; for example, to embed video links
+* [loop] - Add parameter *compare="between"* for range of values: *value="0,100"*
+* [loop] - Improved support for multiple field and taxonomy queries
 
 = 2.1.4 =
 
