@@ -577,6 +577,10 @@ class CCS_Loop {
     
     if ( !empty($parameters['role']) ) {
 
+      if ($parameters['role']=='this') {
+        $parameters['role'] = do_shortcode('[user role out="slug"]');
+      }
+
       $roles = self::explode_list($parameters['role']);
       foreach ($roles as $role) {
 
