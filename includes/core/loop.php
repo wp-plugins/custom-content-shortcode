@@ -185,7 +185,7 @@ class CCS_Loop {
       'parent' => '',
       'count' => '', 'offset' => '',
       'year' => '', 'month' => '', 'day' => '',
-      'author' => '', 'author_exclude' => '',
+      'author' => '', 'author_exclude' => '', 'role' => '',
 
       // Field value
 
@@ -567,6 +567,28 @@ class CCS_Loop {
 
     $query['ignore_sticky_posts'] = true;
 
+
+
+    /*---------------------------------------------
+     *
+     * User role
+     *
+     */
+    
+    if ( !empty($parameters['role']) ) {
+
+      $roles = self::explode_list($parameters['role']);
+      foreach ($roles as $role) {
+
+        // Make a list of authors in this user role
+        $authors = do_shortcode('[users role="'.$role.'" trim="true"][user id], [/users]');
+
+        if (!empty($parameters['author'])) {
+          $parameters['author'] .= ',';
+        }
+        $parameters['author'] .= $authors;
+      }
+    }
 
     /*---------------------------------------------
      *
