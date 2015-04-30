@@ -1755,16 +1755,17 @@ class CCS_Loop {
     if ( !empty($parameters['trim']) ) {
 
       $trim = $parameters['trim'];
-      if ($trim=='true') $trim = null;
 
       if ( empty($parameters['columns']) && $parameters['list']!='true' ) {
-        $result = trim($result, " \t\n\r\0\x0B,".$trim);
+
+        $result = CCS_Format::trim($result, $trim);
+
       } else {
 
-        // Trim each item for columns/list
+        // Trim each item for columns or list
         $new_results = array();
         foreach ($results as $result) {
-          $new_results[] = trim($result, " \t\n\r\0\x0B,".$trim);
+          $new_results[] = CCS_Format::trim($result, $trim);
         }
         $results = $new_results;
       }
@@ -1802,14 +1803,16 @@ class CCS_Loop {
       foreach ($results as $result) {
         $item = '<'.$item_tag.$item_class.$item_style.'>'.$result.'</'.$item_tag.'>';
 
-        if ( !empty($parameters['paginate']) )
+        if ( !empty($parameters['paginate']) ) {
           $item = '<'.$list_tag.$list_class.$list_style.'>'.$item.'</'.$list_tag.'>';
+        }
 
         $new_results .= apply_filters( 'ccs_loop_each_item', $item, $parameters );
       }
 
-      if ( empty($parameters['paginate']) )
+      if ( empty($parameters['paginate']) ) {
         $result = '<'.$list_tag.$list_class.$list_style.'>'.$new_results.'</'.$list_tag.'>';
+      }
       else $result = $new_results;
     }
 
