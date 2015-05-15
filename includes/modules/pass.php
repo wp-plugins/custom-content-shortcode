@@ -66,6 +66,8 @@ class CCS_Pass {
      *
      */
 
+    if ( !empty($global) && empty($field) ) $field = 'this';
+
     if ( !empty($field) ) {
 
       if ($field=='gallery') $field = '_custom_gallery'; // Support CCS gallery field

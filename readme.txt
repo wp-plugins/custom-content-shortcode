@@ -4,9 +4,9 @@ Author: Eliot Akira
 Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y
-Tags: loop, query, content, shortcode, post type, field, taxonomy
+Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
-Tested up to: 4.2
+Tested up to: 4.2.2
 Stable tag: 2.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -82,6 +82,15 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 2.2.0 =
+
+* [if id] - If post ID matches value(s)
+* [if pass] - Support multiple values
+* [if pass] - Check if passed value is not empty: *empty="false"*
+* [loop author] - When querying author name, return nothing if no author is found
+* [redirect after] - Redirect after specified time
+* Reference pages - Better organization and menu; convert to Markdown format; code highlight with Prism
 
 = 2.1.9 =
 
