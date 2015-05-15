@@ -83,7 +83,7 @@ Support for other plugins:
 
 == Changelog ==
 
-= 2.2.0 =
+= 2.2.1 =
 
 * [if id] - If post ID matches value(s)
 * [if pass] - Support multiple values
