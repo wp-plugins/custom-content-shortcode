@@ -91,7 +91,9 @@ class CCS_Pass {
 
       } else {
         // Get normal field
-        $field_value = get_post_meta( $post_id, $field, true );
+
+        $field_value = CCS_Content::get_prepared_field( $field, $post_id );
+        // $field_value = get_post_meta( $post_id, $field, true );
       }
 
       if (is_array($field_value)) {

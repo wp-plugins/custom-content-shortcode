@@ -93,7 +93,7 @@ The `[redirect]` shortcode redirects the user to another URL.
 
 > **go** - redirect to URL, post slug, or *home*
 
-> **after** - redirect after X milliseconds
+> **after** - redirect after specified time; for example: *1000 ms*, *30 sec*
 
 ---
 
