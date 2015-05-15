@@ -418,7 +418,9 @@ class CCS_Docs {
     					Please visit the <a href="http://wordpress.org/support/plugin/custom-content-shortcode" target="_blank">plugin support forum</a> for questions or feedback. 
     					If you'd like to contribute to this plugin, here is a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y">donation link</a>. 
     					For commercial development, contact <a href="mailto:me@eliotakira.com">me@eliotakira.com</a>
-    				</div><?php
+    				</div>
+            <br><br>
+            <?php
 
     			// }
 

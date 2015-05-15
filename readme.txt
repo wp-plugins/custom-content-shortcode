@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 2.2.2
+Stable tag: 2.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,16 +83,13 @@ Support for other plugins:
 
 == Changelog ==
 
-= 2.2.2 =
-
-* [pass field] - Allow passing predefined fields
-
-= 2.2.1 =
+= 2.2.3 =
 
 * [if id] - If post ID matches value(s)
 * [if pass] - Support multiple values
 * [if pass] - Check if passed value is not empty: *empty="false"*
 * [loop author] - When querying author name, return nothing if no author is found
+* [pass field] - Allow passing predefined fields
 * [redirect after] - Redirect after specified time
 * Reference pages - Better organization and menu; convert to Markdown format; code highlight with Prism
 
