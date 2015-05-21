@@ -1078,8 +1078,6 @@ class CCS_Content {
      *
      * Prepare image attributes
      *
-     * @todo *** Refactor ***
-     *
      */
     
     $image_fields = array('image','image-full','image-link','image-link-self',

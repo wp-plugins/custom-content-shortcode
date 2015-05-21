@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 2.2.3
+Stable tag: 2.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,6 +82,13 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 2.2.4 =
+
+* [loop date_format] - Apply to multiple date fields
+* [loop fields] - Enable predefined fields as tags
+* Planned future change to [loop] - Only field tags that are specifically defined by the *fields* parameter will be replaced; if you are currently using field tags without the *fields* parameter, please update your code; feedback welcome in the support forum
+* Renamed pagination module to *paging.php*
 
 = 2.2.3 =
 

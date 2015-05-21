@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 2.2.3
+Version: 2.2.4
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -130,7 +130,7 @@ class CCS_Plugin {
       'modules/foreach',    // For/each loop
       'modules/format',     // Format shortcodes: br, p, x, clean, direct, format
       'modules/if',         // If shortcode
-      'modules/paged',      // Pagination shortcode
+      'modules/paging',     // Pagination shortcode
       'modules/pass',       // Pass shortcode
       'modules/related',    // Related posts loop
       'modules/url',        // URL shortcode

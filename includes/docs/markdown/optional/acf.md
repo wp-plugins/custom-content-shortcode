@@ -162,7 +162,6 @@ For gallery fields, use `[acf_gallery]`.
 ---
 
 You can pass the image IDs to another shortcode.
-*Pass the images to another shortcode*
 
 ~~~
 [pass acf_gallery="images"]
@@ -207,5 +206,5 @@ If the field value is stored as an array - for example, a file field - you can u
 ## Columns
 ---
 
-You can use the *columns* parameter for gallery, repeater, or flexible content. For details, please see its description in [`[loop]` under *Parameters: Other*](options-general.php?page=ccs_reference&tab=loop).
+You can use the *columns* parameter for gallery, repeater, or flexible content. For details, please see its description in [`[loop]` under *Parameters: Other*](options-general.php?page=ccs_reference&tab=loop#other).
 

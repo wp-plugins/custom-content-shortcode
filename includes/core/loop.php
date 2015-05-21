@@ -112,7 +112,11 @@ class CCS_Loop {
 
         // Combine results and process to final output
         $result = self::process_results( $results );
+
       } else {
+
+        // Query is empty
+
         $results = self::compile_templates( null, $template, false );
         $result = self::process_results( $results );
       }
@@ -279,7 +283,9 @@ class CCS_Loop {
     );
 
     $add_defaults = apply_filters( 'ccs_loop_add_defaults', array() );
+
     $defaults = array_merge( $defaults, $add_defaults );
+
     $parameters = apply_filters( 'ccs_loop_parameters', $parameters );
 
     $merged = shortcode_atts($defaults, $parameters, true);
@@ -319,7 +325,8 @@ class CCS_Loop {
         if ( ! in_array($key, $skip_parameters) )
           $cache_name .= $key.$value;
       }
-      $cache_name = substr($cache_name, 0, 40); // Max number of characters
+
+      $cache_name = substr($cache_name, 0, 40); // Limit max number of characters
 
       self::$state['cache_name'] = $cache_name;
 
@@ -331,15 +338,16 @@ class CCS_Loop {
     return $result;
   }
 
+
   /*---------------------------------------------
    *
    * Action before running query
-   * If returns not null, there is already result
+   * 
+   * If return is not null, there is already result
    *
    */
 
   public static function before_query( $parameters, $template = null ) {
-
 
 
     /*---------------------------------------------
@@ -398,7 +406,8 @@ class CCS_Loop {
     }
 
     return null;
-  }
+
+  } // End: before_query
 
 
   /*---------------------------------------------
@@ -961,8 +970,6 @@ class CCS_Loop {
     }
 
 
-
-
     /*---------------------------------------------
      *
      * Sort by series
@@ -1049,12 +1056,16 @@ class CCS_Loop {
 
         if ( !empty( $parameters['before'.$suffix]) ) {
           $parameters['value'.$suffix] = strtotime($parameters['before'.$suffix]);
-          $parameters['compare'.$suffix] = 'OLD';
+          $parameters['compare'.$suffix] =
+            !empty($parameters['compare'.$suffix]) ?
+              $parameters['compare'.$suffix] : 'OLD';
         }
 
         if ( !empty( $parameters['after'.$suffix]) ) {
           $parameters['value'.$suffix] = strtotime($parameters['after'.$suffix]);
-          $parameters['compare'.$suffix] = 'NEW';
+          $parameters['compare'.$suffix] =
+            !empty($parameters['compare'.$suffix]) ?
+              $parameters['compare'.$suffix] : 'NEW';
         }
       }
 
@@ -1105,6 +1116,11 @@ class CCS_Loop {
           }
           if ( !empty($parameters['date_format'.$suffix]) ) {
             $args['date_format'] = $parameters['date_format'.$suffix];
+          } else {
+            // If any date format set, apply it by default
+            if (!empty($parameters['date_format'])) {
+              $args['date_format'] = $parameters['date_format'];
+            }
           }
 
           $query['meta_query'][] = self::prepare_meta_query( $args );
@@ -1113,14 +1129,10 @@ class CCS_Loop {
 
     } // End field value query
 
-/*    if (isset($query['meta_query']))
-      debug_array($query['meta_query']);
-*/
-
 
     return apply_filters( 'ccs_loop_query_filter', $query );
 
-  } // End prepare query
+  } // End: prepare query
 
 
 
@@ -1425,7 +1437,9 @@ class CCS_Loop {
 
   /*---------------------------------------------
    *
-   * Prepare all posts: takes and returns a WP_Query object
+   * Prepare all posts
+   * 
+   * Takes and returns a WP_Query object
    *
    */
   
@@ -1670,7 +1684,7 @@ class CCS_Loop {
       return null;
     }
 
-    self::$state['comment_count']+=get_comments_number();
+    self::$state['comment_count'] += get_comments_number();
 
     return apply_filters('ccs_loop_each_post', $post);
   }
@@ -2020,8 +2034,11 @@ class CCS_Loop {
             if (function_exists('get_sub_field')) {
               $field_value = get_sub_field( $key );
             } else $field_value = null;
+
           } else {
-            $field_value = get_post_meta( $post_id, $key, true );
+
+            // Enable predefined fields
+            $field_value = CCS_Content::get_prepared_field( $key, $post_id );
 
           }
 
@@ -2034,12 +2051,14 @@ class CCS_Loop {
       }
     }
 
+    // @todo Deprecate this below
+
     // Render default tags later, to allow custom fields to take priority
+
     $template = self::render_default_field_tags( $template );
 
     return $template;
   }
-
 
 
 
@@ -2055,7 +2074,7 @@ class CCS_Loop {
       'URL', 'SLUG', 'ID', 'COUNT', 'TITLE', 'AUTHOR', 'DATE',
       'CONTENT', 'EXCERPT', 'COMMENT_COUNT', 'TAGS', 'CATEGORY',
       'THUMBNAIL', 'THUMBNAIL_URL', 'IMAGE', 'IMAGE_ID', 'IMAGE_URL',
-      'PAGED'
+      'PAGED' // ??
     );
 
     foreach ($keywords as $key) {

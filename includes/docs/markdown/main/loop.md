@@ -262,14 +262,14 @@ Use `[loop]` to get posts and loop through each one.
 This is a feature to expand a list of fields to their values.
 
 ~~~
-[loop type="post" fields="custom_field, another_field"]
-  Display {CUSTOM_FIELD} and {ANOTHER_FIELD}
+[loop type="post" fields="title, custom_field"]
+  Display {TITLE} and {CUSTOM_FIELD}
 [/loop]
 ~~~
 
 The `{FIELD}` tags are uppercased versions of the field names.
 
-There are also predefined tags: COUNT, URL, ID, TITLE, AUTHOR, AUTHOR_URL, DATE, THUMBNAIL, THUMBNAIL_URL, CONTENT, EXCERPT, COMMENT_COUNT, CATEGORY, TAGS, IMAGE, IMAGE_ID, IMAGE_URL.
+You can use [predefined fields](options-general.php?page=ccs_reference&tab=field#predefined-fields) or custom fields that you've created.
 
 If you want to pass field values to the loop shortcode itself, use [the `[pass]` shortcode](options-general.php?page=ccs_reference&tab=pass).
 

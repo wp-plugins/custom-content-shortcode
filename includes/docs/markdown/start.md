@@ -57,11 +57,26 @@ There are some points to keep in mind when using shortcodes.
 
 Shortcode templates can be loaded from a number of places.
 
-  - **Custom post type**: [content type="template" name="home-page"]
-  - **Custom field**: [field code_block shortcode="true"]
-  - **Sidebar**: <a href="options-general.php?page=ccs_reference&tab=settings">Enable shortcodes inside Text widget</a>
-  - **File**: [load dir="views" file="recent-posts.html"]
+**Custom post type**
 
+~~~
+[content type="template" name="home-page"]
+~~~
+
+**Custom field**
+
+~~~
+[field code_block shortcode="true"]
+~~~
+
+**File**
+
+~~~
+[load dir="views" file="recent-posts.html"]
+~~~
+
+**Sidebar**: <a href="options-general.php?page=ccs_reference&tab=settings">Enable shortcodes inside Text widget</a>
+  
 ---
 
 ### HTML attribute

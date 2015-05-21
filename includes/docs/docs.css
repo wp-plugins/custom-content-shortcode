@@ -155,10 +155,13 @@ h2 .nav-tab {
   margin-left: 2em;
 }
 .doc-style ul > li > ul {
-  padding-top: 5px;
-	/* padding-bottom: 10px; */
+/*  padding-top: 5px;
+	padding-bottom: 10px;
 	list-style: none;
 	padding-left: 20px;
+*/
+  padding-bottom: 5px;
+  list-style-type: circle;
 }
 
 .doc-style .indent {

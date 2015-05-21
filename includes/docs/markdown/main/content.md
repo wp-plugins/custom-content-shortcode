@@ -37,6 +37,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 
 ## Parameters
+
 ---
 
 ### Type, name, ID
