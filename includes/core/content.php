@@ -1010,7 +1010,6 @@ class CCS_Content {
    *
    */
   
-  
   public static function get_the_field( $parameters, $id = null ) {
 
     $field = $parameters['field'];
@@ -1078,8 +1077,6 @@ class CCS_Content {
     /*---------------------------------------------
      *
      * Prepare image attributes
-     *
-     * @todo *** Refactor ***
      *
      */
     
