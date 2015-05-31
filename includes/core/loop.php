@@ -112,7 +112,11 @@ class CCS_Loop {
 
         // Combine results and process to final output
         $result = self::process_results( $results );
+
       } else {
+
+        // Query is empty
+
         $results = self::compile_templates( null, $template, false );
         $result = self::process_results( $results );
       }
@@ -136,32 +140,37 @@ class CCS_Loop {
     $state['loop_index']++; // Starts with 1
 
     if ( $state['is_loop'] ) {
+
+      // If nested, save previous state so it can be restored in close_loop
+
       self::$previous_state[]      = $state;
       $state['is_nested_loop']     = true;
+
     } else {
       
       $state['is_loop']            = true;
       $state['is_nested_loop']     = false;
     }
       
-      $state['do_reset_postdata']  = false;
-      $state['do_cache']           = false;
-      $state['blog']               = 0;
-      
-      $state['loop_count']         = 0;
-      $state['post_count']         = 0;
-      $state['skip_ids']           = array();
-      $state['maxpage']            = 0;
+    $state['do_reset_postdata']  = false;
+    $state['do_cache']           = false;
+    $state['blog']               = 0;
+    
+    $state['loop_count']         = 0;
+    $state['post_count']         = 0;
+    $state['skip_ids']           = array();
+    $state['maxpage']            = 0;
+    $state['include_descendants'] = false;
 
-      $state['current_post_id']    = 0;
-      // Store ID of post that contains the loop
-      $state['original_post_id']   = get_the_ID();
-      
-      $state['comment_count']      = 0;
-      $state['is_attachment_loop'] = false;
-      
-      // Support qTranslate Plus
-      $state['current_lang']       = null;
+    $state['current_post_id']    = 0;
+    // Store ID of post that contains the loop
+    $state['original_post_id']   = get_the_ID();
+    
+    $state['comment_count']      = 0;
+    $state['is_attachment_loop'] = false;
+    
+    // Support qTranslate Plus
+    $state['current_lang']       = null;
 
     self::$state = $state;
   }
@@ -279,7 +288,9 @@ class CCS_Loop {
     );
 
     $add_defaults = apply_filters( 'ccs_loop_add_defaults', array() );
+
     $defaults = array_merge( $defaults, $add_defaults );
+
     $parameters = apply_filters( 'ccs_loop_parameters', $parameters );
 
     $merged = shortcode_atts($defaults, $parameters, true);
@@ -319,7 +330,8 @@ class CCS_Loop {
         if ( ! in_array($key, $skip_parameters) )
           $cache_name .= $key.$value;
       }
-      $cache_name = substr($cache_name, 0, 40); // Max number of characters
+
+      $cache_name = substr($cache_name, 0, 40); // Limit max number of characters
 
       self::$state['cache_name'] = $cache_name;
 
@@ -331,15 +343,16 @@ class CCS_Loop {
     return $result;
   }
 
+
   /*---------------------------------------------
    *
    * Action before running query
-   * If returns not null, there is already result
+   * 
+   * If return is not null, there is already result
    *
    */
 
   public static function before_query( $parameters, $template = null ) {
-
 
 
     /*---------------------------------------------
@@ -398,7 +411,8 @@ class CCS_Loop {
     }
 
     return null;
-  }
+
+  } // End: before_query
 
 
   /*---------------------------------------------
@@ -451,38 +465,66 @@ class CCS_Loop {
      * Post ID, exclude ID, name
      *
      */
+
+    if ( !empty($parameters['include']) ) {
+      if ( !empty($parameters['id']) ) {
+        $parameters['id'] .= ',';
+      }
+
+      $parameters['id'] .= $parameters['include'];
+    }
     
     if ( !empty($parameters['id']) ) {
 
       $id_array = self::explode_list($parameters['id']);
 
-      $query['post__in'] = $id_array;
-      $query['orderby'] = 'post__in'; // Preserve ID order
+      foreach ($id_array as $key => $value) {
 
-    } elseif ( $parameters['include'] == 'children' ) {
+        if ( $value == 'children' ) {
 
-      if ( $parameters['parent']=='0' ) {
-        $parameters['parent'] = '';
+/*          if ( $parameters['parent']=='0' ) {
+            $parameters['parent'] = '';
+          }
+          $parameters['parent'] = '0';
+*/
+          if (empty($parameters['parent'])) {
+            $query['post_parent'] = 0;
+          }
+
+          self::$state['include_descendants'] = true;
+
+          unset($id_array[$key]);
+        }
       }
 
-    } elseif ( !empty($parameters['exclude']) ) {
+      if (count($id_array)>0) {
+        $query['post__in'] = $id_array;
+        $query['orderby'] = 'post__in'; // Preserve ID order
+      }
+    }
+
+    if ( !empty($parameters['exclude']) ) {
 
       $id_array = self::explode_list($parameters['exclude']);
 
       foreach ($id_array as $key => $value) {
 
         // Exclude current post
-        if ($value=='this') {
-          $id_array[$key] = self::$state['original_post_id']; // ID of post that contains the loop
+        if ( $value=='this' ) {
+
+          // ID of post that contains the loop
+          $id_array[$key] = self::$state['original_post_id'];
 
         // Top-level posts only
-        } elseif ($value=='children') {
+        } elseif ( $value=='children' ) {
           unset($id_array[$key]);
-          $parameters['parent']='0';
+          $query['post_parent'] = 0;
         }
       }
 
-      $query['post__not_in'] = $id_array;
+      if (count($id_array)) {
+        $query['post__not_in'] = $id_array;
+      }
 
     } elseif ( !empty($parameters['name']) ) {
 
@@ -496,10 +538,10 @@ class CCS_Loop {
      *
      */
 
-    if ( !empty($parameters['parent']) || $parameters['parent']=='0' ) {
+    if ( !empty($parameters['parent']) ) {
 
       $parent = $parameters['parent'];
-
+/*
       if ( $parent=='this' ) {
 
         // Get children of current post
@@ -522,7 +564,7 @@ class CCS_Loop {
         $query['post_parent'] = intval( $parent ); // Single parent ID
 
       } else {
-
+*/
         // Multiple IDs
 
         $parents = self::explode_list( $parent ); // Convert to array
@@ -558,11 +600,13 @@ class CCS_Loop {
           }
         }
 
-        if (empty($parent_IDs)) return null; // No parent
+        if (count($parent_IDs)==0) return null; // No parent
 
         $query['post_parent__in'] = $parent_IDs;
-
+/*
       } // End single/multiple
+*/
+
 
     } // End if parent pameter
 
@@ -586,7 +630,7 @@ class CCS_Loop {
       foreach ($roles as $role) {
 
         // Make a list of authors in this user role
-        $authors = do_shortcode('[users role="'.$role.'" trim="true"][user id], [/users]');
+        $authors = do_shortcode('[users role="'.$role.'" trim="true"][user id],[/users]');
 
         if (!empty($parameters['author'])) {
           $parameters['author'] .= ',';
@@ -629,6 +673,9 @@ class CCS_Loop {
             $author_data = get_user_by('login', $author);
             if ($author_data) {
               $query['author__in'][] = $author_data->ID;
+            } else {
+              // No author by that name: use an arbitrary ID
+              $query['author__in'][] = 9999;
             }
           }
         }
@@ -953,8 +1000,6 @@ class CCS_Loop {
     }
 
 
-
-
     /*---------------------------------------------
      *
      * Sort by series
@@ -1041,12 +1086,16 @@ class CCS_Loop {
 
         if ( !empty( $parameters['before'.$suffix]) ) {
           $parameters['value'.$suffix] = strtotime($parameters['before'.$suffix]);
-          $parameters['compare'.$suffix] = 'OLD';
+          $parameters['compare'.$suffix] =
+            !empty($parameters['compare'.$suffix]) ?
+              $parameters['compare'.$suffix] : 'OLD';
         }
 
         if ( !empty( $parameters['after'.$suffix]) ) {
           $parameters['value'.$suffix] = strtotime($parameters['after'.$suffix]);
-          $parameters['compare'.$suffix] = 'NEW';
+          $parameters['compare'.$suffix] =
+            !empty($parameters['compare'.$suffix]) ?
+              $parameters['compare'.$suffix] : 'NEW';
         }
       }
 
@@ -1097,6 +1146,11 @@ class CCS_Loop {
           }
           if ( !empty($parameters['date_format'.$suffix]) ) {
             $args['date_format'] = $parameters['date_format'.$suffix];
+          } else {
+            // If any date format set, apply it by default
+            if (!empty($parameters['date_format'])) {
+              $args['date_format'] = $parameters['date_format'];
+            }
           }
 
           $query['meta_query'][] = self::prepare_meta_query( $args );
@@ -1105,14 +1159,10 @@ class CCS_Loop {
 
     } // End field value query
 
-/*    if (isset($query['meta_query']))
-      debug_array($query['meta_query']);
-*/
-
 
     return apply_filters( 'ccs_loop_query_filter', $query );
 
-  } // End prepare query
+  } // End: prepare query
 
 
 
@@ -1348,8 +1398,33 @@ class CCS_Loop {
 
           self::$state['loop_count']++;
 
-          $this_template = self::prepare_each_template($template);
-          $templates[] = self::render_template($this_template);
+          $this_template = self::render_template(
+            self::prepare_each_template($template)
+          );
+
+          // Append all descendants
+          if ( self::$state['include_descendants'] ) {
+            $args = self::$original_parameters;
+            $args['parent'] = self::$state['current_post_id'];
+            $args['include'] = 'children';
+            if (!empty($args['id'])) unset($args['id']);
+            if (!empty($args['name'])) unset($args['name']);
+
+            $params = '';
+            foreach ($args as $key => $value) {
+              $params .= ' '.$key.'="'.$value.'"';
+            }
+
+            $this_template .= do_shortcode(
+              '[if children]'
+                .'[loop'.$params.']'
+                  .$template
+                .'[/loop]'
+              .'[/if]'
+            );
+          }
+
+          $templates[] = $this_template;
 
         } // End: if this post not empty
 
@@ -1417,7 +1492,9 @@ class CCS_Loop {
 
   /*---------------------------------------------
    *
-   * Prepare all posts: takes and returns a WP_Query object
+   * Prepare all posts
+   * 
+   * Takes and returns a WP_Query object
    *
    */
   
@@ -1662,7 +1739,7 @@ class CCS_Loop {
       return null;
     }
 
-    self::$state['comment_count']+=get_comments_number();
+    self::$state['comment_count'] += get_comments_number();
 
     return apply_filters('ccs_loop_each_post', $post);
   }
@@ -1712,12 +1789,8 @@ class CCS_Loop {
      * Expand {FIELD} tags
      *
      */
-    
-    if (strpos($template, '{') !== false) {
 
-      $template = self::render_field_tags( $template, self::$parameters );
-
-    }
+    $template = self::render_field_tags( $template, self::$parameters );
 
     return apply_filters('ccs_loop_each_result', do_shortcode( $template ), self::$parameters );
   }
@@ -1995,7 +2068,7 @@ class CCS_Loop {
      *
      */
 
-    if (!empty($parameters['fields'])) {
+    if ( !empty($parameters['fields']) ) {
 
       $fields = self::explode_list($parameters['fields']);
 
@@ -2012,8 +2085,11 @@ class CCS_Loop {
             if (function_exists('get_sub_field')) {
               $field_value = get_sub_field( $key );
             } else $field_value = null;
+
           } else {
-            $field_value = get_post_meta( $post_id, $key, true );
+
+            // Enable predefined fields
+            $field_value = CCS_Content::get_prepared_field( $key, $post_id );
 
           }
 
@@ -2026,12 +2102,16 @@ class CCS_Loop {
       }
     }
 
+    // @todo Deprecate below for better performance
+
     // Render default tags later, to allow custom fields to take priority
-    $template = self::render_default_field_tags( $template );
+
+    if ( strpos($template, '{') !== false ) {
+      $template = self::render_default_field_tags( $template );
+    }
 
     return $template;
   }
-
 
 
 
@@ -2047,7 +2127,7 @@ class CCS_Loop {
       'URL', 'SLUG', 'ID', 'COUNT', 'TITLE', 'AUTHOR', 'DATE',
       'CONTENT', 'EXCERPT', 'COMMENT_COUNT', 'TAGS', 'CATEGORY',
       'THUMBNAIL', 'THUMBNAIL_URL', 'IMAGE', 'IMAGE_ID', 'IMAGE_URL',
-      'PAGED'
+      'PAGED' // ??
     );
 
     foreach ($keywords as $key) {
@@ -2120,7 +2200,6 @@ class CCS_Loop {
 
         $template = str_replace($search, $replace, $template);
       }
-
     }
 
     return $template;
