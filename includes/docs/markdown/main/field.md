@@ -103,15 +103,17 @@ You can display custom fields as well as the following predefined fields.
 
 ---
 
-To format a currency value, use these parameters.
+To format a currency value, you can use the following parameters.
 
-> **decimals** - number of decimal points; default is 2
+> **decimals** - number of decimal points; for example, 2
 
-> **point** - separator for the decimal point; default is "."
+> **point** - separator for the decimal point; for example, "."
 
-> **thousands** - separator for thousands; default is ","
+> **thousands** - separator for thousands; for example, ","
 
-For example:
+---
+
+*Format a field value as currency*
 
 ~~~
 [field field_name point="," thousands="."]

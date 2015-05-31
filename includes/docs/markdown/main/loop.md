@@ -30,17 +30,17 @@ Use `[loop]` to get posts and loop through each one.
 
 ### Type, name, ID
 
-> **type** - post type to include; default is *any*
+> **type** - post type to include; default is *any* - it's recommended to always specify post type
 
-> **name** - post slug; usually only one post will match
+> **name** - post slug; if specified, usually only one post will match
 
 > **id** - post ID to include; for example: *id="1,2,3"*
 
 > **exclude** - post ID to exclude
   - *this* - exclude current post
-  - *children* - exclude child posts
+  - *children* - exclude child posts; display top-level posts only
 
-> **count** - number of posts to show; default is all posts
+> **count** - number of posts to show; default is all posts found
 
 > **offset** - offset the loop by a number of posts; for example: *offset="3"* to skip the first three
 
@@ -86,7 +86,12 @@ Use `[loop]` to get posts and loop through each one.
 ### Taxonomies
 
 > **taxonomy, term** - display posts by taxonomy term
-  - Example: *taxonomy="product" term="book"*
+
+> ~~~
+> [loop type="product" taxonomy="product-type" term="book"]
+>   [field title]
+> [/loop]
+> ~~~
 
 > #### Multiple terms
 
@@ -152,17 +157,29 @@ Use `[loop]` to get posts and loop through each one.
 
 ---
 
-### Parent
+### Parent / children
 
 > **parent** - display all children of a parent specified by ID or slug
   - *this* - get current post's children
   - *same* - get current post's siblings (posts which share the same parent)
 
 > **exclude**
-  - *this* - don't include current post
-  - *children* - display top-level posts only
+  - *this* - exclude current post
+  - *children* - exclude child posts; display top-level posts only
      
-  
+> **include**
+  - *children* - include child posts and descendants of each post; all current query parameters apply, except *id* and *parent*
+
+>> A more flexible way to display child posts is by using a nested loop.
+
+>> ~~~
+>> [loop type="page" orderby="name"]
+>>   [field title]
+>>   [-loop parent="this"]
+>>     Child page: [field title]
+>>   [/-loop]
+>> [/loop]
+>> ~~~
 
 
 ---

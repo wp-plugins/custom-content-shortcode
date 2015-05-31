@@ -667,7 +667,7 @@ class CCS_Content {
 
     /*---------------------------------------------
      *
-     * ACF checkbox/select label
+     * ACF label for checkbox/select
      *
      */
     
@@ -675,27 +675,36 @@ class CCS_Content {
 
       if (function_exists('get_field_object')) {
 
+        $out = '';
+
         $all_selected = self::get_the_field( $parameters );
-        $out = array();
 
         if (!empty($all_selected)) {
 
-          $field = get_field_object($parameters['field']); 
+          $field = get_field_object( $parameters['field'], self::$state['current_post_id'] ); 
 
-          if (!is_array($all_selected)) {
-            // One selection
-            $out = isset($field['choices'][$all_selected]) ?  $field['choices'][$all_selected] : null;
-          } else {
-            foreach($all_selected as $selected){
-              $out[] = $field['choices'][ $selected ]; /* Multiple */
+          if ( isset($field['choices']) ) {
+
+            if ( is_array($all_selected) ) {
+              // Multiple selections
+              foreach( $all_selected as $selected ){
+                $out[] = $field['choices'][ $selected ];
+              }
+              $out = implode(', ', $out);
+            } else {
+              // Single selection
+              $out = isset($field['choices'][$all_selected]) ?
+                $field['choices'][$all_selected] : null;
             }
-            $out = implode(', ', $out);
-          }
-        }
+
+          } // End: if choices
+
+        } // End: field not empty
+
         $result = $out;
       }
-    }
 
+    }
 
 
     /*---------------------------------------------

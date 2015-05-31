@@ -83,11 +83,14 @@ Support for other plugins:
 
 == Changelog ==
 
+= 2.2.5 =
+
+* [loop include="children"] - Display child posts and descendants of each post
+
 = 2.2.4 =
 
 * [loop date_format] - Apply to multiple date fields
 * [loop fields] - Enable predefined fields as tags
-* Planned future change to [loop] - Only field tags that are specifically defined by the *fields* parameter will be replaced; if you are currently using field tags without the *fields* parameter, please update your code; feedback welcome in the support forum
 * Renamed pagination module to *paging.php*
 
 = 2.2.3 =
