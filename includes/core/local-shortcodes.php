@@ -2,7 +2,7 @@
 /**
  *
  * Local Shortcodes
- * @version  0.0.2
+ * @version  0.0.3
  * 
  * Adapted from WordPress core:
  * https://github.com/WordPress/WordPress/blob/master/wp-includes/shortcodes.php
@@ -270,7 +270,7 @@ function do_local_shortcode_with($global_tag, $content, $post) {
 	
 	// convert arrays to what preg_replace_callback uses
 	// because that is what do_local_shortcode_tag expects
-	$new_matches = [];
+	$new_matches = array();
 	foreach ( $match_all as $m_key => $matches ) {
 		foreach ( $matches as $match_key => $match ) {
 			// assemble match array
