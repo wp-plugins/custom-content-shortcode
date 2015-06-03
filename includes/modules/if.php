@@ -25,7 +25,7 @@ class CCS_If {
 		add_shortcode( '-if', array( $this, 'if_shortcode' ) );
     add_shortcode( '--if', array( $this, 'if_shortcode' ) );
     add_shortcode( '---if', array( $this, 'if_shortcode' ) );
-		add_shortcode( 'flag', array( $this, 'flag_shortcode' ) );
+		// add_shortcode( 'flag', array( $this, 'flag_shortcode' ) );
 	}
 
 	function if_shortcode( $atts, $content = null, $shortcode_name ) {
@@ -58,7 +58,8 @@ class CCS_If {
       'empty' => 'true',
 
 			'not' => '',
-			'start' => '',
+      'start' => '',
+      'end' => '',
 
       // field="date" comparison
       'before' => '',
@@ -276,11 +277,24 @@ class CCS_If {
         $value = strtolower($value); // lowercase for user role
 			}
 
-			// start=".."
-			if ( !empty($start) && ($start!='true') && empty($value) ) {
-				$value = $start;
-				$start = 'true';
-			}
+      // start=".." end=".."
+      if ( !empty($start) && !empty($end) ) {
+
+        $value = $start.'..'.$end; // Placeholder
+        $start_value = $start;
+        $end_value = $end;
+        $start = 'true';
+        $end = 'true';
+
+      // start=".."
+      } elseif ( !empty($start) && ($start!='true') && empty($value) ) {
+        $value = $start;
+        $start = 'true';
+      // end=".."
+      } elseif ( !empty($end) && ($end!='true') && empty($value) ) {
+        $value = $end;
+        $end = 'true';
+      }
 
 			if ( empty($check) || ( $check == false ) ) {
 
@@ -300,11 +314,24 @@ class CCS_If {
 
 						foreach ($check as $check_this) {
 
-							if ( $start == 'true' ) {
+              if ( $start == 'true' && $end == 'true' ) {
+                // Check beginning and end of field value
+                if ( substr($check_this, 0, strlen($start_value)) == $start_value &&
+                  substr($check_this, strlen($check_this) - strlen($end_value) ) == $end_value ) {
+                  $condition = true;
+                  continue;
+                } else {
+                  $condition = false;
+                  break;
+                }
 
-								// Only check beginning of field value
-								$check_this = substr($check_this, 0, strlen($this_value));
-							}
+              } elseif ( $start == 'true' ) {
+                // Only check beginning of field value
+                $check_this = substr($check_this, 0, strlen($this_value));
+              } elseif ( $end == 'true' ) {
+                // Only check end of field value
+                $check_this = substr($check_this, strlen($check_this) - strlen($this_value));
+              }
 
               if ($lowercase == 'true') $check_this = strtolower($check_this);
 

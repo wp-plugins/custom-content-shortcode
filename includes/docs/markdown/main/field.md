@@ -131,7 +131,7 @@ To use a predefined currency format, use the parameter *currency*.
 
 Please note that the currency symbol is not included in the output.
 
-Most <a target="_blank" href="http://en.wikipedia.org/wiki/ISO_4217#Active_codes">currency codes</a> are defined for your convenience.
+Most [currency codes](http://en.wikipedia.org/wiki/ISO_4217#Active_codes) are defined for your convenience.
 
 
 

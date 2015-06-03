@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 2.2.6
+Stable tag: 2.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,8 +80,20 @@ Support for other plugins:
 
 == Upgrade Notice ==
 
+**Planned future updates**
+
+* [loop] - Only field tags specified by the *fields* parameter will be rendered; this is consistent with the [pass] shortcode. This changes default behavior, so if you are currently using field tags, please make sure they're specified by the *fields* parameter.
+
+* [comment form] - Working on better support for comment forms and replies
 
 == Changelog ==
+
+= 2.2.7 =
+
+* [attached] - Better support for displaying fields when attachment is not an image
+* [if field] - Add parameter *end* to check ending of field value; for example, it can be used to check the file extension of an attachment
+* [if flag] - The *flag* parameter and its shortcode have been deprecated; use *field* instead
+* [taxonomy] - Add predefined taxonomy fields: *url* and *link*
 
 = 2.2.6 =
 

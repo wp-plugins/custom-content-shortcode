@@ -2,7 +2,21 @@
 ## Advanced Custom Fields
 ---
 
-In addition to text and image fields, the following are supported: [date](#date-field), [page link](#page-link), [relationship](#relationship), [gallery](#gallery), [repeater](#repeater), and [flexible content](#flexible-content).
+Supported field types: text, image, true/false, [date](#date-field), [page link](#page-link), [relationship](#relationship), [gallery](#gallery), [repeater](#repeater), and [flexible content](#flexible-content).
+
+## True/false
+
+---
+
+To check the value of a true/false field, use the following syntax.
+
+~~~
+[if field="true_false" value="1"]
+  It's true.
+[else]
+  It's false.
+[/if]
+~~~
 
 ## Date field
 
@@ -23,7 +37,9 @@ Use the *acf_date* parameter to display the date field with selected formatting.
 [field acf_date="date_field"]
 ~~~
 
-#### Date and time field
+---
+
+### Date and time
 
 For fields created with ACF Date & Time Picker, it works best if you save as timestamp and use the *field* parameter for loop.
 

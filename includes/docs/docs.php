@@ -401,16 +401,23 @@ class CCS_Docs {
               }
             }
 
-            echo Markdown_Module::render( @file_get_contents( $doc_file ) );
+            if ( $active_tab == 'overview' ) {
+              // Escape HTML
+              echo Markdown_Module::render( @file_get_contents( $doc_file ), false, true );
+            } else {
+              echo Markdown_Module::render( @file_get_contents( $doc_file ), false, false );
+            }
 
             // echo wpautop( @file_get_contents( $doc_file ) );
 
     			}
 
     			// if ( $active_tab == $default_tab ) {
-
+            ?>
+            
+            <?php
     			 	// Add footnote
-    			 	?><br><hr>
+            ?><br><hr>
 
     				<div align="center" class="footer-notice logo-pad">
     					<img src="<?php echo CCS_URL;?>/includes/docs/logo.png">
@@ -418,7 +425,6 @@ class CCS_Docs {
     					Please visit the <a href="http://wordpress.org/support/plugin/custom-content-shortcode" target="_blank">plugin support forum</a> for questions or feedback. 
     					If you'd like to contribute to this plugin, here is a <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y">donation link</a>.
     				</div>
-            <br><br>
             <?php
 
     			// }
@@ -520,6 +526,12 @@ class CCS_Docs {
     $(this).parent().toggleClass('menu-open');
     return false;
   });
+
+  // Open external links in new tab
+  
+  $(document.links).filter(function() {
+      return this.hostname != window.location.hostname;
+  }).attr('target', '_blank');
 
   // Automatic anchors
   $('.inner-wrap h3, .inner-wrap h2').each(function() {

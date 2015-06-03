@@ -1,7 +1,7 @@
 ## Pagination
 ---
 
-To display the results of a `[loop]` in pages, set the *paged* parameter.
+To display the results of `[loop]` in pages, set the *paged* parameter.
 
 ~~~
 [loop type="post" paged="5"]

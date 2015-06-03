@@ -594,49 +594,48 @@ class CCS_Content {
           $parameters['field'] = $parameters['image'];
         }
 
+        $tax_field = !empty($parameters['field']) ? $parameters['field'] : 'name';
+        // Backward compatibility
+        if ( !empty($parameters['out']) ) $tax_field = $parameters['out'];
+
         foreach ($terms as $term) {
 
           if (!is_object($term)) continue; // Invalid taxonomy
 
           $slugs[] = $term->slug;
 
-          if (!empty($parameters['field'])) {
+          // Get taxonomy field
 
-            // Get taxonomy field
+          switch ( $tax_field ) {
+            case 'id': $results[] = $term->term_id; break;
+            case 'slug': $results[] = $term->slug; break;
+            case 'name': $results[] = $term->name; break;
+            case 'description': $results[] = $term->description; break;
+            case 'url':
+              $results[] = get_term_link( $term );
+            break;
+            case 'link':
+              $url = get_term_link( $term );
+              $results[] = '<a href="'.$url.'">'.$term->name.'</a>';
+            break;
+            default:
 
-            switch ($parameters['field']) {
-              case 'id': $results[] = $term->term_id; break;
-              case 'slug': $results[] = $term->slug; break;
-              case 'name': $results[] = $term->name; break;
-              case 'description': $results[] = $term->description; break;
-              case 'url':
-                $results[] = get_term_link( $term );
-              break;
-              case 'link':
-                $url = get_term_link( $term );
-                $results[] = '<a href="'.$url.'">'.$term->name.'</a>';
-              break;
-              default:
+              // Support custom taxonomy fields
 
-                // Support custom taxonomy fields
+              $field_value = self::get_the_taxonomy_field(
+                $taxonomy, $term->term_id, $parameters['field'], $parameters
+              );
 
-                $field_value = self::get_the_taxonomy_field(
-                  $taxonomy, $term->term_id, $parameters['field'], $parameters
-                );
+              if (!empty($field_value)) {
+                $results[] = $field_value;
+              }
 
-                if (!empty($field_value)) {
-                  $results[] = $field_value;
-                }
-
-              break;
-            }
-          } else {
-            $results[] = $term->name; // Default: taxonomy name
+            break;
           }
 
         } // End for each term
 
-        if ( $parameters['out'] == 'slug') { // Backward compatibility
+        if ( $tax_field=='slug' ) {
           $result = implode(' ', $slugs);
           $result = trim($result);
         } else {
@@ -1399,8 +1398,11 @@ class CCS_Content {
       case 'url' :
       case 'download-url' :
         $src = wp_get_attachment_image_src( $post_id, $parameters['size'] );
-        $result = $src[0];
-//        $result = wp_get_attachment_url( $post_id );
+        if (isset($src[0]) && !empty($src[0])) {
+          $result = $src[0];
+        } else {
+          $result = wp_get_attachment_url( $post_id );
+        }
         break;
       case 'download-link' :
         $target = '';
@@ -1419,7 +1421,12 @@ class CCS_Content {
       case 'title-link' :
       case 'title-link-out' :
         $src = wp_get_attachment_image_src( $post_id, $parameters['size'] );
-        self::$state['current_link_url'] = $src[0];
+        if (isset($src[0]) && !empty($src[0])) {
+          $result = $src[0];
+        } else {
+          $result = wp_get_attachment_url( $post_id );
+        }
+        self::$state['current_link_url'] = $result;
         $result = $post->post_title;
       break;
       case 'image' :
@@ -1429,7 +1436,11 @@ class CCS_Content {
         break;
       case 'image-url' :
         $src = wp_get_attachment_image_src( $post_id, $parameters['size'] );
-        $result = $src[0];
+        if (isset($src[0]) && !empty($src[0])) {
+          $result = $src[0];
+        } else {
+          $result = wp_get_attachment_url( $post_id );
+        }
         break;
       case 'thumbnail' :
         $result = wp_get_attachment_image(
