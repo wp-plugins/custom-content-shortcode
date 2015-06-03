@@ -90,7 +90,7 @@ Support for other plugins:
 
 = 2.2.8 =
 
-* Fix compatibility with PHP <5.4 which doesn't support array literals
+* Fix compatibility with PHP older than 5.4, which doesn't support array literals
 
 = 2.2.7 =
 
