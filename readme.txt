@@ -4,10 +4,10 @@ Author: Eliot Akira
 Author URI: eliotakira.com
 Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y
-Tags: loop, query, content, shortcode, post type, field, taxonomy
+Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
-Tested up to: 4.2
-Stable tag: 2.1.9
+Tested up to: 4.2.2
+Stable tag: 2.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,8 +80,44 @@ Support for other plugins:
 
 == Upgrade Notice ==
 
+**Planned future updates**
+
+* [loop] - Only field tags specified by the *fields* parameter will be rendered; this is consistent with the [pass] shortcode. This changes default behavior, so if you are currently using field tags, please make sure they're specified by the *fields* parameter.
+
+* [comment form] - Working on better support for comment forms and replies
 
 == Changelog ==
+
+= 2.2.8 =
+
+* Fix compatibility with PHP <5.4 which doesn't support array literals
+
+= 2.2.7 =
+
+* [attached] - Better support for displaying fields when attachment is not an image
+* [if field] - Add parameter *end* to check ending of field value; for example, it can be used to check the file extension of an attachment
+* [if flag] - The *flag* parameter and its shortcode have been deprecated; use *field* instead
+* [taxonomy] - Add predefined taxonomy fields: *url* and *link*
+
+= 2.2.6 =
+
+* [loop include="children"] - Display child posts and descendants of each post
+
+= 2.2.4 =
+
+* [loop date_format] - Apply to multiple date fields
+* [loop fields] - Enable predefined fields as tags
+* Renamed pagination module to *paging.php*
+
+= 2.2.3 =
+
+* [if id] - If post ID matches value(s)
+* [if pass] - Support multiple values
+* [if pass] - Check if passed value is not empty: *empty="false"*
+* [loop author] - When querying author name, return nothing if no author is found
+* [pass field] - Allow passing predefined fields
+* [redirect after] - Redirect after specified time
+* Reference pages - Better organization and menu; convert to Markdown format; code highlight with Prism
 
 = 2.1.9 =
 
