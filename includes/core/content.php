@@ -44,7 +44,7 @@ class CCS_Content {
 
     $result = $this->before_query( $parameters );
 
-    if (empty($result)) {
+    if ( empty($result) ) {
 
       $result = $this->run_query( $parameters );
     }
@@ -150,8 +150,7 @@ class CCS_Content {
       'area' => '', 'sidebar' => '', 
 
       // Menu
-      'menu' => '', 'ul' => '',
-
+      'menu' => '', 'ul' => '', 'cb' => '', 'menu_slug' => '', 
 
       // Gallery
       'gallery' => 'false', 'group' => '',
@@ -332,20 +331,37 @@ class CCS_Content {
      *
      */
 
-    if (!empty($parameters['menu'])) {
+    if ( !empty($parameters['menu']) || !empty($parameters['menu_slug']) ) {
 
-      $menu_args = array (
-        'menu' => $parameters['menu'],
+      $args = array (
         'echo' => false,
         'menu_class' => $parameters['ul'],
+        'container' => false, // 'div' container will not be added
+        // 'fallback_cb' => $parameters['cb'], // name of default function
       );
 
-      $result = wp_nav_menu( $menu_args );
+      if ( !empty($parameters['menu']) ) {
+        $args['menu'] = $parameters['menu'];
+        $menu = $args['menu'];
+      } elseif ( !empty($parameters['menu_slug']) ) {
+        $args['theme_location'] = $parameters['menu_slug'];
+        $menu = $args['theme_location'];
+      }
 
-      if(empty($parameters['class'])) {
+      $result = wp_nav_menu( $args );
+
+      if (empty($result)) {
+        return '<ul class="nav"><li>'.$menu.'</li></ul>'; // Default menu
+      }
+      if( empty($parameters['class']) && empty($parameters['id']) ) {
         return $result;
       } else {
-        return '<div class="' . $parameters['class'] . '">' . $result . '</div>';
+        $out = '<div';
+        if (!empty($parameters['id'])) $out .= ' id="'.$parameters['id'].'"';
+        if (!empty($parameters['class'])) $out .= ' class="'.$parameters['class'].'"';
+        $out .= '>' . $result . '</div>';
+
+        return $out;
       }
 
     } elseif ( !empty($parameters['sidebar']) || !empty($parameters['area']) ) {

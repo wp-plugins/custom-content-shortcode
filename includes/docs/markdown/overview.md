@@ -31,3 +31,14 @@
 
 </div>
 </div>
+
+&nbsp;
+
+---
+
+<div class="green center">
+*** Planned future updates ***
+</div>
+
+* `[loop]` - From version 2.3.0, only field tags specified by the *fields* parameter will be rendered, same as the `[pass]` shortcode. This changes default behavior, so if you are currently using `{FIELD}` tags, please make sure they're specified by the *fields* parameter.
+

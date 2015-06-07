@@ -480,20 +480,38 @@ class CCS_Loop {
 
       foreach ($id_array as $key => $value) {
 
-        if ( $value == 'children' ) {
+        // Include current post
+        if ( $value=='this' ) {
 
-/*          if ( $parameters['parent']=='0' ) {
-            $parameters['parent'] = '';
-          }
-          $parameters['parent'] = '0';
-*/
+          // ID of post that contains the loop
+          $id_array[$key] = self::$state['original_post_id'];
+
+        // Include child posts and descendants
+        } elseif ( $value == 'children' ) {
+
+          // Query for top-level posts first
           if (empty($parameters['parent'])) {
             $query['post_parent'] = 0;
           }
 
+          // Then manually get descendants after each post
           self::$state['include_descendants'] = true;
 
           unset($id_array[$key]);
+
+        // Include by post slug
+        } elseif ( !is_numeric($value) ) {
+
+          $get_id = self::get_post_id(array(
+            'name' => $value,
+            'type' => $parameters['type'],
+          ));
+          unset($id_array[$key]);
+          if (!empty($get_id)) {
+            $id_array[$key] = $get_id;
+          } else {
+            $id_array[$key] = 99999; // Prevent empty
+          }
         }
       }
 
@@ -517,8 +535,20 @@ class CCS_Loop {
 
         // Top-level posts only
         } elseif ( $value=='children' ) {
+
           unset($id_array[$key]);
           $query['post_parent'] = 0;
+
+        // Exclude by post slug
+        } elseif ( !is_numeric($value) ) {
+
+          $get_id = self::get_post_id(array(
+            'name' => $value,
+            'type' => $parameters['type'],
+          ));
+
+          unset($id_array[$key]);
+          if (!empty($get_id)) $id_array[$key] = $get_id;
         }
       }
 
@@ -955,6 +985,7 @@ class CCS_Loop {
       // Alias
       if ($orderby=="field_num") $orderby = 'meta_value_num';
       elseif ($orderby=="field") $orderby = 'meta_value';
+      elseif ($orderby=="menu") $orderby = 'menu_order';
       elseif ( !in_array(strtolower($orderby), $default_orderby) ) {
 
         // If not default orderby value, assume field name
@@ -2313,6 +2344,26 @@ class CCS_Loop {
 
     $this_post = !empty($id) ? get_post($id) : $post;
     return !empty($this_post) ? $this_post->post_name : '';
+  }
+
+  public static function get_post_id( $parameters ) {
+
+    // Get post from name
+
+    $args=array(
+      'name' => @$parameters['name'],
+      'post_type' => @$parameters['type'],
+      'post_status' => @$parameters['status'], // Default is publish, or any for attachment
+      'posts_per_page' => '1',
+      );
+
+    $posts = get_posts($args);
+
+    if ( $posts ) {
+      return $posts[0]->ID; // ID of the post
+    } else {
+      return 0;
+    }    
   }
 
 

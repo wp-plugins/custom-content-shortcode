@@ -2,10 +2,18 @@
 ## Advanced Custom Fields
 ---
 
-Supported field types: text, image, true/false, [date](#date-field), [page link](#page-link), [relationship](#relationship), [gallery](#gallery), [repeater](#repeater), and [flexible content](#flexible-content).
+Supported field types are: text, image, [checkbox, select](#checkbox-select), [true/false](#true-false), [date](#date-field), [page link](#page-link), [relationship](#relationship), [gallery](#gallery), [repeater](#repeater), and [flexible content](#flexible-content).
+
+## Checkbox/Select
+---
+
+To display the selected field's label instead of slug, use the following syntax.
+
+~~~
+[field select out="label"]
+~~~
 
 ## True/false
-
 ---
 
 To check the value of a true/false field, use the following syntax.

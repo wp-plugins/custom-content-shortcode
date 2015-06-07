@@ -1,4 +1,12 @@
+
+/*---------------------------------------------
+ *
+ * Title
+ *
+ */
+
 /* Included only for Settings -> Custom Content */
+
 #wpbody-content {
   padding-bottom: 30px;
 }
@@ -95,9 +103,36 @@
   background-color: #fff !important;
 }
 
+
+/*---------------------------------------------
+ *
+ * Utils
+ *
+ */
+
+
+.doc-style .green {
+  color: #16DE01; /* #1abb1e */
+}
+.doc-style .grey {
+  color: #888;
+}
+.doc-style .blue {
+  color: #0074A2;
+}
+.doc-style .bold {
+  font-weight: 400;
+}
+.doc-style .center {
+  text-align: center;
+}
+
 .doc-style .remove-height {
   margin-bottom: -50px;
 }
+
+/*--- Links ---*/
+
 .doc-style a {
   text-decoration: none;
   color: #0074A2;
@@ -105,6 +140,14 @@
 .doc-style a:hover {
   color: #000;
 }
+
+
+/*---------------------------------------------
+ *
+ * Text styles
+ *
+ */
+
 .doc-style b, .doc-style strong {
   font-weight: 400;
 }
@@ -148,6 +191,12 @@ h2 .nav-tab {
   font-weight: 400;
 }
 
+/*---------------------------------------------
+ *
+ * List
+ *
+ */
+
 .doc-style ul {
 	/* list-style:none; 
   padding-left:20px; */
@@ -188,12 +237,10 @@ h2 .nav-tab {
 }
 .doc-style .form-table hr {
 }
-.doc-style .green {
-	color: #1abb1e;
-}
-.doc-style .grey {
-	color: #888;
-}
+
+
+
+
 .doc-style .dashicons {
   /* vertical-align: sub; */
   color: #777;
@@ -243,19 +290,30 @@ h2 .nav-tab {
   text-align: center;
 }
 
+/*---------------------------------------------
+ *
+ * Overview page
+ *
+ */
+
 .tab-overview {
-  max-width: 600px;
+  max-width: 630px;
   margin: 0 auto;
 }
 .doc-style .tab-overview h3 {
   background-color: transparent;
   margin-bottom: -5px;
-  margin-top: 0;
+  margin-top: 15px;
 }
 .tab-overview .index {
   margin-top: -10px;
 }
-.tab-overview .index p {
+.tab-overview p {
   margin: 0.5em;
   padding: 0;
+  font-size: 16px;
+}
+
+.doc-style .tab-overview h2 {
+  margin-top: 30px;
 }

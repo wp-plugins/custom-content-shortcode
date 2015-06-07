@@ -536,7 +536,7 @@ class CCS_Docs {
   // Automatic anchors
   $('.inner-wrap h3, .inner-wrap h2').each(function() {
     var $el = $(this),
-        title = $el.text().toLowerCase().replace(/:|\/|\,|\[|\]/g, '').replace(/\ /g, '-');
+        title = $el.text().toLowerCase().replace(/:|\,|\[|\]/g, '').replace(/\ |\//g, '-');
     $el.before('<a name="'+title+'" class="anchor-with-top-pad">');
   });
 
