@@ -44,7 +44,7 @@ class CCS_Content {
 
     $result = $this->before_query( $parameters );
 
-    if (empty($result)) {
+    if ( empty($result) ) {
 
       $result = $this->run_query( $parameters );
     }
@@ -150,8 +150,7 @@ class CCS_Content {
       'area' => '', 'sidebar' => '', 
 
       // Menu
-      'menu' => '', 'ul' => '',
-
+      'menu' => '', 'ul' => '', 'cb' => '', 'menu_slug' => '', 
 
       // Gallery
       'gallery' => 'false', 'group' => '',
@@ -332,20 +331,37 @@ class CCS_Content {
      *
      */
 
-    if (!empty($parameters['menu'])) {
+    if ( !empty($parameters['menu']) || !empty($parameters['menu_slug']) ) {
 
-      $menu_args = array (
-        'menu' => $parameters['menu'],
+      $args = array (
         'echo' => false,
         'menu_class' => $parameters['ul'],
+        'container' => false, // 'div' container will not be added
+        // 'fallback_cb' => $parameters['cb'], // name of default function
       );
 
-      $result = wp_nav_menu( $menu_args );
+      if ( !empty($parameters['menu']) ) {
+        $args['menu'] = $parameters['menu'];
+        $menu = $args['menu'];
+      } elseif ( !empty($parameters['menu_slug']) ) {
+        $args['theme_location'] = $parameters['menu_slug'];
+        $menu = $args['theme_location'];
+      }
 
-      if(empty($parameters['class'])) {
+      $result = wp_nav_menu( $args );
+
+      if (empty($result)) {
+        return '<ul class="nav"><li>'.$menu.'</li></ul>'; // Default menu
+      }
+      if( empty($parameters['class']) && empty($parameters['id']) ) {
         return $result;
       } else {
-        return '<div class="' . $parameters['class'] . '">' . $result . '</div>';
+        $out = '<div';
+        if (!empty($parameters['id'])) $out .= ' id="'.$parameters['id'].'"';
+        if (!empty($parameters['class'])) $out .= ' class="'.$parameters['class'].'"';
+        $out .= '>' . $result . '</div>';
+
+        return $out;
       }
 
     } elseif ( !empty($parameters['sidebar']) || !empty($parameters['area']) ) {
@@ -594,49 +610,48 @@ class CCS_Content {
           $parameters['field'] = $parameters['image'];
         }
 
+        $tax_field = !empty($parameters['field']) ? $parameters['field'] : 'name';
+        // Backward compatibility
+        if ( !empty($parameters['out']) ) $tax_field = $parameters['out'];
+
         foreach ($terms as $term) {
 
           if (!is_object($term)) continue; // Invalid taxonomy
 
           $slugs[] = $term->slug;
 
-          if (!empty($parameters['field'])) {
+          // Get taxonomy field
 
-            // Get taxonomy field
+          switch ( $tax_field ) {
+            case 'id': $results[] = $term->term_id; break;
+            case 'slug': $results[] = $term->slug; break;
+            case 'name': $results[] = $term->name; break;
+            case 'description': $results[] = $term->description; break;
+            case 'url':
+              $results[] = get_term_link( $term );
+            break;
+            case 'link':
+              $url = get_term_link( $term );
+              $results[] = '<a href="'.$url.'">'.$term->name.'</a>';
+            break;
+            default:
 
-            switch ($parameters['field']) {
-              case 'id': $results[] = $term->term_id; break;
-              case 'slug': $results[] = $term->slug; break;
-              case 'name': $results[] = $term->name; break;
-              case 'description': $results[] = $term->description; break;
-              case 'url':
-                $results[] = get_term_link( $term );
-              break;
-              case 'link':
-                $url = get_term_link( $term );
-                $results[] = '<a href="'.$url.'">'.$term->name.'</a>';
-              break;
-              default:
+              // Support custom taxonomy fields
 
-                // Support custom taxonomy fields
+              $field_value = self::get_the_taxonomy_field(
+                $taxonomy, $term->term_id, $parameters['field'], $parameters
+              );
 
-                $field_value = self::get_the_taxonomy_field(
-                  $taxonomy, $term->term_id, $parameters['field'], $parameters
-                );
+              if (!empty($field_value)) {
+                $results[] = $field_value;
+              }
 
-                if (!empty($field_value)) {
-                  $results[] = $field_value;
-                }
-
-              break;
-            }
-          } else {
-            $results[] = $term->name; // Default: taxonomy name
+            break;
           }
 
         } // End for each term
 
-        if ( $parameters['out'] == 'slug') { // Backward compatibility
+        if ( $tax_field=='slug' ) {
           $result = implode(' ', $slugs);
           $result = trim($result);
         } else {
@@ -667,7 +682,7 @@ class CCS_Content {
 
     /*---------------------------------------------
      *
-     * ACF checkbox/select label
+     * ACF label for checkbox/select
      *
      */
     
@@ -675,27 +690,36 @@ class CCS_Content {
 
       if (function_exists('get_field_object')) {
 
+        $out = '';
+
         $all_selected = self::get_the_field( $parameters );
-        $out = array();
 
         if (!empty($all_selected)) {
 
-          $field = get_field_object($parameters['field']); 
+          $field = get_field_object( $parameters['field'], self::$state['current_post_id'] ); 
 
-          if (!is_array($all_selected)) {
-            // One selection
-            $out = isset($field['choices'][$all_selected]) ?  $field['choices'][$all_selected] : null;
-          } else {
-            foreach($all_selected as $selected){
-              $out[] = $field['choices'][ $selected ]; /* Multiple */
+          if ( isset($field['choices']) ) {
+
+            if ( is_array($all_selected) ) {
+              // Multiple selections
+              foreach( $all_selected as $selected ){
+                $out[] = $field['choices'][ $selected ];
+              }
+              $out = implode(', ', $out);
+            } else {
+              // Single selection
+              $out = isset($field['choices'][$all_selected]) ?
+                $field['choices'][$all_selected] : null;
             }
-            $out = implode(', ', $out);
-          }
-        }
+
+          } // End: if choices
+
+        } // End: field not empty
+
         $result = $out;
       }
-    }
 
+    }
 
 
     /*---------------------------------------------
@@ -1010,7 +1034,6 @@ class CCS_Content {
    *
    */
   
-  
   public static function get_the_field( $parameters, $id = null ) {
 
     $field = $parameters['field'];
@@ -1078,8 +1101,6 @@ class CCS_Content {
     /*---------------------------------------------
      *
      * Prepare image attributes
-     *
-     * @todo *** Refactor ***
      *
      */
     
@@ -1393,8 +1414,11 @@ class CCS_Content {
       case 'url' :
       case 'download-url' :
         $src = wp_get_attachment_image_src( $post_id, $parameters['size'] );
-        $result = $src[0];
-//        $result = wp_get_attachment_url( $post_id );
+        if (isset($src[0]) && !empty($src[0])) {
+          $result = $src[0];
+        } else {
+          $result = wp_get_attachment_url( $post_id );
+        }
         break;
       case 'download-link' :
         $target = '';
@@ -1413,7 +1437,12 @@ class CCS_Content {
       case 'title-link' :
       case 'title-link-out' :
         $src = wp_get_attachment_image_src( $post_id, $parameters['size'] );
-        self::$state['current_link_url'] = $src[0];
+        if (isset($src[0]) && !empty($src[0])) {
+          $result = $src[0];
+        } else {
+          $result = wp_get_attachment_url( $post_id );
+        }
+        self::$state['current_link_url'] = $result;
         $result = $post->post_title;
       break;
       case 'image' :
@@ -1423,7 +1452,11 @@ class CCS_Content {
         break;
       case 'image-url' :
         $src = wp_get_attachment_image_src( $post_id, $parameters['size'] );
-        $result = $src[0];
+        if (isset($src[0]) && !empty($src[0])) {
+          $result = $src[0];
+        } else {
+          $result = wp_get_attachment_url( $post_id );
+        }
         break;
       case 'thumbnail' :
         $result = wp_get_attachment_image(
