@@ -2,7 +2,12 @@
 ## Advanced Custom Fields
 ---
 
-Supported field types are: text, image, [checkbox, select](#checkbox-select), [true/false](#true-false), [date](#date-field), [page link](#page-link), [relationship](#relationship), [gallery](#gallery), [repeater](#repeater), and [flexible content](#flexible-content).
+#### Supported field types
+
+- Text, image
+- [Checkbox, select](#checkbox-select), [true/false](#true-false), [date](#date-field)
+- [Page link](#page-link), [relationship/post object](#relationship)
+- [Gallery](#gallery), [repeater](#repeater), [flexible content](#flexible-content)
 
 ## Checkbox/Select
 ---
@@ -80,7 +85,7 @@ Use `[related]` to loop through a relationship field.
 *Display titles and thumbnails of related posts*
 
 ~~~
-[related field="relationship"]
+[related related_field]
   [field title]
   [field thumbnail]
 [/related]
@@ -97,7 +102,7 @@ Use `[repeater]` to loop through a repeater field.
 *Display repeater fields*
 
 ~~~
-[repeater field="boxes"]
+[repeater repeater_field]
   [field title]
   [field image="image"]
   [field description format="true"]
@@ -112,15 +117,15 @@ For an image field inside, use the *image* parameter to display the field. You c
 ### Display a specific repeater field
 
 ~~~
-[repeater field="boxes" num="3"]
+[repeater repeater_field num="3"]
 ~~~
 
 *Display specific sub-fields without looping*
 
 ~~~
-[repeater field="boxes" num="1" sub="title"]
-[repeater field="boxes" num="2" sub="text"]
-[repeater field="boxes" num="3" sub_image="image"]
+[repeater repeater_field num="1" sub="title"]
+[repeater repeater_field num="2" sub="text"]
+[repeater repeater_field num="3" sub_image="image"]
 ~~~
 
 This is a quick way to display a sub-field from a specific repeater field. It's used by itself, without a closing tag.
@@ -130,8 +135,8 @@ This is a quick way to display a sub-field from a specific repeater field. It's 
 ### Nested repeaters
 
 ~~~
-[repeater field="boxes"]
-  [-repeater field="inner_boxes"]
+[repeater repeater_field]
+  [-repeater inner_repeater_field]
     ...
   [/-repeater]
 [/repeater]
@@ -143,20 +148,20 @@ To display a repeater inside a repeater, use `[-repeater]`.  Please note that th
 ---
 
 ~~~
-[flex field="flexible_content"]
+[flex flexible_content]
 
-  [layout name="title_text"]
+  [layout title_text]
     [field title]
     [field text]
   [/layout]
 
-  [layout name="title_image_text"]
+  [layout title_image_text]
     [field title]
     [field image="image" size="thumbnail"]
     [field text]
   [/layout]
 
-  [layout name="gallery"]
+  [layout gallery]
     [acf_gallery field="gallery"]
       [acf_image size="thumbnail"]
     [/acf_gallery]
@@ -174,7 +179,7 @@ For gallery fields, use `[acf_gallery]`.
 *Display images with title*
 
 ~~~
-[acf_gallery field="images"]
+[acf_gallery gallery_field]
   [acf_image]
   [acf_image field="title"]
   [acf_image size="thumbnail"]
@@ -188,7 +193,7 @@ For gallery fields, use `[acf_gallery]`.
 You can pass the image IDs to another shortcode.
 
 ~~~
-[pass acf_gallery="images"]
+[pass acf_gallery="gallery_field"]
   [isotope_gallery ids="{FIELD}"]
 [/pass]
 ~~~
@@ -201,7 +206,7 @@ Display ACF fields from other posts, using the loop.
 
 ~~~
 [loop name="hello-world"]
-  [repeater field="boxes"]
+  [repeater repeater_field]
     [field title]
     [field image="image"]
     [field description format="true"]

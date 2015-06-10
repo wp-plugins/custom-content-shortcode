@@ -2,7 +2,7 @@
 
 ---
 
-<div class="row index"><div class="col-halff">
+<div class="row index"><div class="col-half">
 
 ### Main Features
 
@@ -19,26 +19,27 @@
 
 [Pagination](options-general.php?page=ccs_reference&tab=paged) &bullet; [Cache](options-general.php?page=ccs_reference&tab=cache) &bullet; [Raw](options-general.php?page=ccs_reference&tab=raw) &bullet; [Load](options-general.php?page=ccs_reference&tab=load) &bullet; [Pass](options-general.php?page=ccs_reference&tab=pass)
 
-</div><div class="col-halff">
+</div><div class="col-half">
 
 ### Optional
 
-[Gallery Field](options-general.php?page=ccs_reference&tab=gallery) &bullet; [Mobile Detect](options-general.php?page=ccs_reference&tab=mobile) &bullet; [HTML Blocks](options-general.php?page=ccs_reference&tab=block)
+[Gallery Field](options-general.php?page=ccs_reference&tab=gallery) &bullet; [Mobile Detect](options-general.php?page=ccs_reference&tab=mobile)
+
+[HTML Blocks](options-general.php?page=ccs_reference&tab=block)
 
 *Support for other plugins*
 
-[Advanced Custom Fields](options-general.php?page=ccs_reference&tab=acf) &bullet; [WCK Fields and Post Types](options-general.php?page=ccs_reference&tab=wck)
+[Advanced Custom Fields](options-general.php?page=ccs_reference&tab=acf)
+
+[WCK Fields and Post Types](options-general.php?page=ccs_reference&tab=wck)
 
 </div>
 </div>
-
-&nbsp;
 
 ---
 
 <div class="green center">
-*** Planned future updates ***
+*** Updates ***
 </div>
 
-* `[loop]` - From version 2.3.0, only field tags specified by the *fields* parameter will be rendered, same as the `[pass]` shortcode. This changes default behavior, so if you are currently using `{FIELD}` tags, please make sure they're specified by the *fields* parameter.
-
+`[loop]` - From version 2.3.0, only field tags specified by the *fields* parameter will be rendered, same as the `[pass]` shortcode. This changes default behavior, so if you are currently using `{FIELD}` tags, please make sure they're specified by the *fields* parameter.

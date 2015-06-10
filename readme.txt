@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 2.2.9
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ Display posts, pages, custom post types, fields, attachments, comments, images, 
 
 == Description ==
 
-= Overview =  
+= Overview =
 <br />
 From a single field to entire pages, Custom Content Shortcode is a set of commands to display content where you need.
 
@@ -25,7 +25,7 @@ The **[loop]** shortcode performs query loops. It can display, for example, avai
 
 There is a reference section under Settings -> Custom Content.
 
-= Included =  
+= Included =
 <br />
 Here are some of the included features:
 
@@ -83,6 +83,11 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 2.3.0 =
+
+* [comment template] - Load *comments.php* from theme
+* [loop fields] - only field tags specified by the *fields* parameter will be rendered, same as the [pass] shortcode
 
 = 2.2.9 =
 

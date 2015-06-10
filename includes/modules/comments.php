@@ -3,7 +3,7 @@
 /*---------------------------------------------
  *
  * Comment shortcodes
- * 
+ *
  * [comments] - Loop through comments
  * [comment] - Show comment field
  *
@@ -44,7 +44,7 @@ class CCS_Comments {
    * [comments] - Loop through comments
    *
    */
-  
+
   function comments_shortcode( $atts, $content ) {
 
     if ( empty($content) ) return;
@@ -86,7 +86,7 @@ class CCS_Comments {
 
     $args['number'] = $count=='all' ? 9999 : $count;
 
-    // By post ID 
+    // By post ID
 
     // If inside [loop] then target current post
     if ( empty($id) && CCS_Loop::$state['is_loop'] ) $id = 'this';
@@ -340,7 +340,7 @@ class CCS_Comments {
 
               $comment_id = $comment->comment_ID;
 
-              //get the setting configured in the admin panel under settings discussions "Enable threaded (nested) comments  levels deep"  
+              //get the setting configured in the admin panel under settings discussions "Enable threaded (nested) comments  levels deep"
               $max_depth = get_option('thread_comments_depth');
               //add max_depth to the array and give it the value from above and set the depth to 1
               $args = array(
@@ -434,26 +434,30 @@ class CCS_Comments {
     }
 
     if ( isset( $atts['form'] ) ) {
-      return self::comment_form_shortcode( $atts );
+      return self::comment_form_shortcode( $atts, $content );
     }
 
     // Comments template
 
-    if ( !empty($template) ) {
+    if ( !empty($template) || isset($atts['template']) ) {
 
       $dir = '';
 
-      if (empty($template)) $template = '/comments.php';
+      if ( empty($template) ) $template = '/comments.php';
       if ( isset($template[0]) && $template[0]!='/' ) {
         $template = '/'.$template;
       }
 
       $file = $dir.$template;
 
+// Maybe necessary
+//      global $withcomments;
+//      $withcomments = "1";
+
       // Return comments template
       ob_start();
-      comments_template( $dir.$template );
-      return ob_get_clean(); 
+      comments_template( $file );
+      return ob_get_clean();
     }
 
   } // comment_shortcode
@@ -609,7 +613,7 @@ class CCS_Comments {
               '<p><textarea placeholder="" id="comment" class="form-control" name="comment" cols="45" rows="8" aria-required="true"></textarea></p>';
 
           } elseif ( $each_input == 'reply' ) {
-            $options[ $each_input ] = '';  // Leave a Reply 
+            $options[ $each_input ] = '';  // Leave a Reply
           } elseif ( $each_input == 'reply_to' ) {
             $options[ $each_input ] = '';  // Leave a Reply to %s
           } elseif ( $each_input == 'cancel' ) {
@@ -631,10 +635,10 @@ class CCS_Comments {
       'id_form'           => 'commentform',
       'id_submit'         => 'commentsubmit',
       'title_reply'       => $options['reply'],
-      'title_reply_to'    => $options['reply_to'],  
+      'title_reply_to'    => $options['reply_to'],
       'cancel_reply_link' => $options['cancel'],
       'label_submit'      => $options['submit'],
-      'comment_field'     =>  $options['comment'], 
+      'comment_field'     =>  $options['comment'],
       'must_log_in'      => $options['login'],
       'logged_in_as'      => $options['logged-in'],
       'comment_notes_before' => $options['before'],
