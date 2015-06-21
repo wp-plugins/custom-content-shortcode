@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 2.1.9
+Version: 2.3.2
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -47,19 +47,19 @@ class CCS_Plugin {
       'load_acf_module' => array(
         'module' => 'acf',
         'default' => 'on',
-        'tab' => 'acf', 
+        'tab' => 'acf',
         'text' => '<b>ACF</b> shortcodes',
       ),
       'load_bootstrap_module' => array(
         'module' => 'bootstrap',
         'default' => 'off',
-        'tab' => 'other#bootstrap-navbar', 
+        'tab' => 'bootstrap',
         'text' => '<b>Bootstrap</b> shortcodes',
       ),
       'load_file_loader' => array(
         'module' => 'load',
         'default' => 'on',
-        'tab' => 'load',         
+        'tab' => 'load',
         'text' => '<b>File Loader</b> module',
       ),
       'load_gallery_field' => array(
@@ -77,7 +77,7 @@ class CCS_Plugin {
       'raw_shortcode' => array(
         'default' => 'off',
         'module' => 'raw',
-        'tab' => 'other#raw',
+        'tab' => 'raw',
         'text' => '<b>[raw]</b> shortcode',
       ),
       'block_shortcode' => array(
@@ -115,13 +115,14 @@ class CCS_Plugin {
 
   function load_module( $module ) {
 
-    require_once ( CCS_PATH.'/includes/'.$module.'.php' );
+    include_once ( CCS_PATH.'/includes/'.$module.'.php' );
   }
 
   function load_main_modules() {
 
     $modules = array(
       'core/content',       // Content shortcode
+      'core/local-shortcodes', // Local shortcodes
       'core/loop',          // Loop shortcode
       'docs/docs',          // Documentation under Settings -> Custom Content
       'modules/attached',   // Attachment loop
@@ -130,7 +131,7 @@ class CCS_Plugin {
       'modules/foreach',    // For/each loop
       'modules/format',     // Format shortcodes: br, p, x, clean, direct, format
       'modules/if',         // If shortcode
-      'modules/paged',      // Pagination shortcode
+      'modules/paging',     // Pagination shortcode
       'modules/pass',       // Pass shortcode
       'modules/related',    // Related posts loop
       'modules/url',        // URL shortcode
@@ -171,7 +172,7 @@ class CCS_Plugin {
    * Set up WP filters
    *
    */
-  
+
   function setup_wp_filters() {
 
     $settings = self::$settings;
@@ -184,7 +185,7 @@ class CCS_Plugin {
 
     if ( isset( $settings['shortcodes_in_widget'] ) &&
       ($settings['shortcodes_in_widget'] == "on") ) {
-        
+
       add_filter('widget_text', 'do_shortcode');
     }
 
@@ -198,7 +199,7 @@ class CCS_Plugin {
     $shortcodes[] = 'loop';
     return $shortcodes;
   }
-  
+
 } // End CCS_Plugin
 
 /*---------------------------------------------
@@ -224,4 +225,3 @@ if (!function_exists('end_short')) {
     do_short( ob_get_clean() );
   }
 }
-

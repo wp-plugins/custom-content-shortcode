@@ -54,6 +54,8 @@ class CCS_To_ACF {
 			'size' => '',
 		), $atts));
 
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
+
 		if ($image!='') {
 
 			$output = get_sub_field($image);
@@ -107,9 +109,7 @@ class CCS_To_ACF {
 			$count = 1;
 		}
 
-    if (empty($field) && isset($atts[0])) {
-      $field = $atts[0];
-    }
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		if ( empty($content) && (!empty($sub) || !empty($sub_image))) {
 
@@ -185,6 +185,8 @@ class CCS_To_ACF {
 		), $atts ));
 
 
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
+
 		// If in repeater or flexible content, get subfield by default
 		if ( self::$state['is_repeater_or_flex_loop']=='true' ) {
 			$sub = 'true';
@@ -245,6 +247,8 @@ class CCS_To_ACF {
 			'size' => '',
 		), $atts));
 
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
+
     if ( empty($size) || 
       (!empty($size) && !isset(self::$state['current_image']['sizes'][$size]))) {
 
@@ -275,6 +279,8 @@ class CCS_To_ACF {
 			'name' => '',
 		), $atts));
 
+    if (empty($name) && isset($atts[0])) $name = $atts[0];
+
 		if( get_row_layout() == $name ) {
 			return do_shortcode( $content );
 		} else {
@@ -291,6 +297,8 @@ class CCS_To_ACF {
 		), $atts ) );
 
 		$output = array();
+
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		// If in repeater or flexible content, get subfield by default
 		if ( self::$state['is_repeater_or_flex_loop']=='true' ) {

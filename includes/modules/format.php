@@ -15,11 +15,9 @@ class CCS_Format {
     add_shortcode( 'direct', array($this, 'direct_shortcode') );
     add_shortcode( 'format', array($this, 'format_shortcode') );
 		add_shortcode( 'x', array($this, 'x_shortcode') );
+		add_shortcode( 'clean', array($this, 'clean_shortcode') );
 
-    // @todo Deprecate these
-		add_shortcode( 'br', array($this, 'br_shortcode') );
-		add_shortcode( 'p', array($this, 'p_shortcode') );
-		add_shortcode('clean', array($this, 'clean_shortcode') );
+    add_shortcode( 'today', array($this, 'today_shortcode') );
 	}
 
 
@@ -28,8 +26,9 @@ class CCS_Format {
     return $content;
   }
 
+	// Do shortcode, then format
   function format_shortcode( $atts, $content ) {
-    return wpautop(do_shortcode($content)); // Do shortcode, then format
+    return wpautop(do_shortcode($content));
   }
 
   // Repeat x times: [x 10]..[/x]
@@ -39,19 +38,22 @@ class CCS_Format {
 
 		if (isset($atts[0])) {
 			$x = $atts[0];
-			for ($i=0; $i <$x ; $i++) { 
+			for ($i=0; $i <$x ; $i++) {
 				$out .= do_shortcode($content);
 			}
 		}
 		return $out;
 	}
 
-	function br_shortcode( $atts, $content ) {
-		return '<br>';
-	}
+	// Display current date
+	function today_shortcode( $atts, $content ) {
+		if ( isset($atts['format']) ) {
+			$format = str_replace("//", "\\", $atts['format']);
+		} else {
+			$format = get_option('date_format');
+		}
 
-	function p_shortcode( $atts, $content ) {
-		return '<p>' . do_shortcode($content) . '</p>';
+		return date($format);
 	}
 
 
@@ -64,12 +66,12 @@ class CCS_Format {
 	function strip_tag_list( $content, $tags ) {
 
 		$tags = implode("|", $tags);
-		$out = preg_replace('!<\s*('.$tags.').*?>((.*?)</\1>)?!is', '\3', $content); 
+		$out = preg_replace('!<\s*('.$tags.').*?>((.*?)</\1>)?!is', '\3', $content);
 
 		return $out;
 	}
 
-	function clean_content($content){   
+	function clean_content($content){
 
 	    $content = self::strip_tag_list( $content, array('p','br') );
 
@@ -95,6 +97,8 @@ class CCS_Format {
   /*---------------------------------------------
    *
    * Currency format
+   *
+   * TODO: Make this optional
    *
    * @param flatcurr  float integer to convert
    * @param curr  string of desired currency format
@@ -199,7 +203,7 @@ class CCS_Format {
       'KRW' => array(0,'',','),     //  South Korea, Won
       'SZL' => array(2,'.',', '),     //  Swaziland, Lilangeni
       'SEK' => array(2,',','.'),      //  Swedish Krona
-      'CHF' => array(2,'.','\''),     //  Swiss Franc 
+      'CHF' => array(2,'.','\''),     //  Swiss Franc
       'TZS' => array(2,'.',','),      //  Tanzanian Shilling
       'THB' => array(2,'.',','),      //  Thailand, Baht
       'TOP' => array(2,'.',','),      //  Tonga, Paanga
@@ -216,14 +220,14 @@ class CCS_Format {
 
     $curr = strtoupper($curr);
 
-    if ($curr == "INR"){  
+    if ($curr == "INR"){
       return self::formatinr($floatcurr);
     } else {
 
       if (!empty($curr)) {
 
         if (!isset($currencies[$curr])) return $floatcurr;
-        
+
         $decimals = $currencies[$curr][0];
         $point = $currencies[$curr][1];
         $thousands = $currencies[$curr][2];
@@ -233,13 +237,13 @@ class CCS_Format {
     }
   }
 
-  // Format Indian Rupees
+  // Format Indian Rupees!
   static function formatinr($input){
     //CUSTOM FUNCTION TO GENERATE ##,##,###.##
     $dec = "";
     $pos = strpos($input, ".");
     if ($pos === false){
-      //no decimals 
+      //no decimals
     } else {
       //decimals
       $dec = substr(round(substr($input,$pos),2),1);
