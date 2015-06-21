@@ -10,7 +10,11 @@ Use `[field]` to display a field from the current post.
 [field title] by [field author] was written on [field date].
 ~~~
 
-*Additional parameters*
+You can display custom fields as well as [predefined fields](#predefined-fields).
+
+---
+
+Additional parameters can be placed after the field name.
 
 ~~~
 [field title words="10"]
@@ -22,7 +26,7 @@ Use `[field]` to display a field from the current post.
 [field image="image_field" size="thumbnail"]
 ~~~
 
-You can display custom fields as well as the following predefined fields.
+For available parameters, refer to [`[content]`](options-general.php?page=ccs_reference&tab=content#field).
 
 ## Predefined fields
 
@@ -98,6 +102,14 @@ You can display custom fields as well as the following predefined fields.
 
 > *avatar* - post author avatar
 
+### Previous / Next
+
+> *prev-link* - previous post in the loop (title with link)
+
+> *next-link* - next post in the loop
+
+
+
 
 ## Currency
 
@@ -156,4 +168,3 @@ Use `[array]` to loop through an array of key-value pairs stored in a field.
 > **debug** - set *true* to print the whole array and see how it's structured
 
 > **global** - access global variable with given name
-

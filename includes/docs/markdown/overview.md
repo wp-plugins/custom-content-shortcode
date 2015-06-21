@@ -8,14 +8,15 @@
 
 [Loop](options-general.php?page=ccs_reference&tab=loop) &bullet; [Content](options-general.php?page=ccs_reference&tab=content) &bullet; [Field](options-general.php?page=ccs_reference&tab=field) &bullet; [Taxonomy](options-general.php?page=ccs_reference&tab=taxonomy)
 
-[Attachment](options-general.php?page=ccs_reference&tab=attach) &bullet; [Comment](options-general.php?page=ccs_reference&tab=comment) &bullet; [User](options-general.php?page=ccs_reference&tab=users) &bullet; [URL](options-general.php?page=ccs_reference&tab=url)
+[Attachment](options-general.php?page=ccs_reference&tab=attach) &bullet; [Comment](options-general.php?page=ccs_reference&tab=comment) &bullet; [User](options-general.php?page=ccs_reference&tab=users)
 
 [View your site's content structure](index.php?page=content_overview)
 
 
 ### Advanced
 
-[If post condition](options-general.php?page=ccs_reference&tab=if) &bullet; [Is user condition](options-general.php?page=ccs_reference&tab=is)
+[If post](options-general.php?page=ccs_reference&tab=if) &bullet;
+[Is user](options-general.php?page=ccs_reference&tab=is) &bullet; [Relative URL](options-general.php?page=ccs_reference&tab=url)
 
 [Pagination](options-general.php?page=ccs_reference&tab=paged) &bullet; [Cache](options-general.php?page=ccs_reference&tab=cache) &bullet; [Raw](options-general.php?page=ccs_reference&tab=raw) &bullet; [Load](options-general.php?page=ccs_reference&tab=load) &bullet; [Pass](options-general.php?page=ccs_reference&tab=pass)
 
@@ -23,7 +24,9 @@
 
 ### Optional
 
-[Gallery Field](options-general.php?page=ccs_reference&tab=gallery) &bullet; [Mobile Detect](options-general.php?page=ccs_reference&tab=mobile)
+[Gallery Field](options-general.php?page=ccs_reference&tab=gallery)
+
+[Mobile Detect](options-general.php?page=ccs_reference&tab=mobile)
 
 [HTML Blocks](options-general.php?page=ccs_reference&tab=block)
 
@@ -33,13 +36,24 @@
 
 [WCK Fields and Post Types](options-general.php?page=ccs_reference&tab=wck)
 
-</div>
-</div>
+</div></div>
+&nbsp;
+<hr><div class="row index"><div class="col-half">
+### New
 
----
+[Today's date](options-general.php?page=ccs_reference&tab=extras#today)
 
-<div class="green center">
-*** Updates ***
-</div>
+[Previous/next links](options-general.php?page=ccs_reference&tab=paged#previous---next)
 
-`[loop]` - From version 2.3.0, only field tags specified by the *fields* parameter will be rendered, same as the `[pass]` shortcode. This changes default behavior, so if you are currently using `{FIELD}` tags, please make sure they're specified by the *fields* parameter.
+[Shortcode as comment](options-general.php?page=ccs_reference&tab=extras#comment)
+
+</div><div class="col-half">
+### In Progress
+
+Sort by multiple fields
+
+Comment replies
+
+Nested menu loop
+
+</div></div>

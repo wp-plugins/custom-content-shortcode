@@ -155,7 +155,7 @@ Inside a loop, the **[for]** shortcode gets taxonomy terms from the current post
 
 ### Current post
 
-Outside the loop, the **[for]** shortcode gets all terms that have any posts associated. Use the *current* parameter to display terms of the current post only. 
+Outside the loop, the **[for]** shortcode gets all terms that have any posts associated. Use the *current* parameter to display terms of the current post only.
 
 *Display a link for each category assigned to the current post*
 
@@ -230,7 +230,7 @@ Use the *trim* parameter to create a list of terms. It removes extra space or co
 
 ~~~
 [for each="category" trim="true"]
-  [each], 
+  [each],
 [/for]
 ~~~
 
@@ -238,6 +238,6 @@ Use the *trim* parameter to create a list of terms. It removes extra space or co
 
 ~~~
 [for each="category" trim="/"]
-  [each] / 
+  [each] /
 [/for]
 ~~~

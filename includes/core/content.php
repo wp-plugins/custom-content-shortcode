@@ -57,22 +57,22 @@ class CCS_Content {
   /**
    *
    * Before anything, check for result
-   * 
+   *
    * @param   array   $parameters All shortcode parameters
-   * 
+   *
    * @return  false   Continue processing shortcode
    * @return  null    Exit shortcode with empty result
    * @return  string  Exit shortcode with result
-   * 
+   *
    */
 
   function before_anything( $parameters ) {
 
     $out = false;
 
-    // 
+    //
     // @todo Put a filter here and move below to optional/wck.php
-    // 
+    //
     if ( CCS_To_WCK::$state['is_wck_loaded'] == 'true' ) {
 
       if (
@@ -135,7 +135,7 @@ class CCS_Content {
       'in' => '', // ID, url or object
       'return' => '',
       'alt' => '', 'title' => '',
-      'height' => '', 'width' => '', 
+      'height' => '', 'width' => '',
       'image_class' => '',
       'nopin' => '',
       'url' => '', // Option for image-link
@@ -147,10 +147,10 @@ class CCS_Content {
       'checkbox' => '',
 
       // Sidebar/widget area
-      'area' => '', 'sidebar' => '', 
+      'area' => '', 'sidebar' => '',
 
       // Menu
-      'menu' => '', 'ul' => '', 'cb' => '', 'menu_slug' => '', 
+      'menu' => '', 'ul' => '', 'cb' => '', 'menu_slug' => '',
 
       // Gallery
       'gallery' => 'false', 'group' => '',
@@ -191,13 +191,13 @@ class CCS_Content {
       'thousands' => ''
     );
 
-    
+
     /*---------------------------------------------
      *
      * Pre-process parameters
      *
      */
-    
+
     if ( isset($parameters['type']) && ($parameters['type']=='attachment') ) {
       if (!isset($parameters['status'])) {
         $parameters['status'] = 'any'; // Default for attachment
@@ -230,14 +230,14 @@ class CCS_Content {
      * Post-process parameters
      *
      */
-    
+
     // Get page by name
     if (!empty($parameters['page'])) {
 
       $parameters['type'] = 'page';
       $parameters['name'] = $parameters['page'];
     }
-    
+
     // Post status
 
     if (!empty($parameters['status'])) {
@@ -464,7 +464,7 @@ class CCS_Content {
         $result .= 'name="' . $parameters['name'] . '" ';
       }
       if (!empty($parameters['height'])!='') {
-        $result .= 'height="' . $parameters['height'] . '" '; 
+        $result .= 'height="' . $parameters['height'] . '" ';
       }
       $result .= 'ids="';
 
@@ -479,7 +479,7 @@ class CCS_Content {
 
       if (!empty($parameters['class']))
         $result = '<div class="' . $class . '">' . $result . '</div>';
-      
+
       return do_shortcode( $result );
     }
 
@@ -494,7 +494,7 @@ class CCS_Content {
    */
 
   function prepare_post( $parameters = array() ) {
-    
+
     // Get post from ID
 
     if (!empty($parameters['id'])) {
@@ -574,7 +574,7 @@ class CCS_Content {
     elseif (!empty($parameters['taxonomy'])) {
 
       $results = array();
-      
+
       if ($parameters['taxonomy'] == 'tag') {
         $taxonomy='post_tag'; // Alias
       } else {
@@ -685,7 +685,7 @@ class CCS_Content {
      * ACF label for checkbox/select
      *
      */
-    
+
     elseif ( !empty($parameters['field']) && ($parameters['out']=='label') ) {
 
       if (function_exists('get_field_object')) {
@@ -696,7 +696,7 @@ class CCS_Content {
 
         if (!empty($all_selected)) {
 
-          $field = get_field_object( $parameters['field'], self::$state['current_post_id'] ); 
+          $field = get_field_object( $parameters['field'], self::$state['current_post_id'] );
 
           if ( isset($field['choices']) ) {
 
@@ -729,17 +729,17 @@ class CCS_Content {
      * @note Must be after taxonomy, to allow custom taxonomy field
      *
      */
-    
+
     elseif (!empty($parameters['field'])) {
 
       $result = self::get_the_field( $parameters );
-    
+
     } else {
 
     /*---------------------------------------------
      *
      * Show post content - [content]
-     * 
+     *
      */
 
       if (!empty(self::$state['current_post']))
@@ -775,7 +775,7 @@ class CCS_Content {
      * Time/date
      *
      */
-    
+
     // Format ACF date field
 
     if (!empty($parameters['acf_date'])) {
@@ -800,7 +800,7 @@ class CCS_Content {
         }
       }
 
-      if ($parameters['date_format']=='true') 
+      if ($parameters['date_format']=='true')
         $parameters['date_format'] = get_option('date_format');
 
 
@@ -848,7 +848,7 @@ class CCS_Content {
      * Escape HTML and shortcodes
      *
      */
-    
+
     if ( $parameters['escape'] == 'true' ) {
       $result = str_replace(array('[',']'), array('&#91;','&#93;'), esc_html($result));
     }
@@ -861,7 +861,7 @@ class CCS_Content {
      */
 
     $post_id = isset(self::$state['current_post_id']) ? self::$state['current_post_id'] : get_the_ID();
-    
+
     switch ($parameters['field']) {
 
       case "edit-link":
@@ -924,7 +924,7 @@ class CCS_Content {
 
     // Shortcode
 
-    if ($parameters['shortcode'] != 'false') {    // Shortcode
+    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] != 'false' ) {    // Shortcode
       $result = do_shortcode( $result );
     }
 
@@ -1023,7 +1023,7 @@ class CCS_Content {
         }
       }
     }
-    
+
     return $result;
   }
 
@@ -1033,7 +1033,7 @@ class CCS_Content {
    * Field
    *
    */
-  
+
   public static function get_the_field( $parameters, $id = null ) {
 
     $field = $parameters['field'];
@@ -1069,7 +1069,7 @@ class CCS_Content {
        * Repeater or flexible content loop
        *
        */
-    
+
       // If not inside relationship loop
       if ( CCS_To_ACF::$state['is_relationship_loop']!='true' ) {
 
@@ -1079,7 +1079,7 @@ class CCS_Content {
         } else return null;
       }
 
-    } 
+    }
 
     if ( !empty($id) ) {
 
@@ -1103,7 +1103,7 @@ class CCS_Content {
      * Prepare image attributes
      *
      */
-    
+
     $image_fields = array('image','image-full','image-link','image-link-self',
       'thumbnail','thumbnail-link','thumbnail-link-self','gallery');
 
@@ -1145,10 +1145,10 @@ class CCS_Content {
         $result = $post->post_title; break;
       case 'slug': $result = $post->post_name; break;
       case 'post-type': $result = $post->post_type; break;
-      case 'post-type-name': $post_type = $post->post_type; 
+      case 'post-type-name': $post_type = $post->post_type;
                              $obj = get_post_type_object( $post_type );
                              $result = $obj->labels->singular_name; break;
-      case 'post-type-plural': $post_type = $post->post_type; 
+      case 'post-type-plural': $post_type = $post->post_type;
                          $obj = get_post_type_object( $post_type );
                          $result = $obj->labels->name; break;
       case 'post-status':
@@ -1181,7 +1181,7 @@ class CCS_Content {
 
         $result = get_author_posts_url($post->post_author); break;
 
-      case 'avatar': 
+      case 'avatar':
         if( !empty($parameters['size']) )
           $result = get_avatar($post->post_author, $parameters['size']);
         else
@@ -1217,7 +1217,7 @@ class CCS_Content {
           $parameters['size'] : 'full';
         $result = get_the_post_thumbnail( $post_id, $parameters['size'], $attr );
         break;
-        
+
       case 'image-url':
         $parameters['size'] = (isset($parameters['size']) && !empty($parameters['size'])) ?
           $parameters['size'] : 'full';
@@ -1285,8 +1285,16 @@ class CCS_Content {
           if (empty($parameters['words']) && empty($parameters['length'])) {
             self::$parameters['words'] = 25;
           }
-
         }
+        break;
+
+      case 'debug' :
+        ob_start();
+        echo '<pre>'; print_r( get_post_custom($post_id) ); echo '</pre>';
+        if (function_exists('acf_get_fields_by_id')) {
+          echo '<pre>'; print_r( acf_get_fields_by_id($post_id) ); echo '</pre>';
+        }
+        $result = ob_get_clean();
         break;
 
       default :
@@ -1380,7 +1388,7 @@ class CCS_Content {
      * @todo *** Refactor ***
      *
      */
-    
+
     $image_fields = array('image','thumbnail');
 
     $attr = array();
@@ -1474,7 +1482,7 @@ class CCS_Content {
 
 
 
-  
+
   /*---------------------------------------------
    *
    * Image field
@@ -1613,7 +1621,7 @@ class CCS_Content {
       $value = get_tax_meta( $term_id, $field );
 
       if (!isset($parameters['in'])) $parameters['in']='id';
-    } 
+    }
 
     // Image field
     if ( !empty($parameters['image']) ) {
@@ -1801,7 +1809,7 @@ class CCS_Content {
         $out = $array; // Empty or not array
       }
 
-    } 
+    }
     return $out;
   }
 

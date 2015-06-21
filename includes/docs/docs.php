@@ -201,7 +201,8 @@ class CCS_Docs {
           'cache' => '',
           'raw' => '',
           'load' => '',
-          'pass' => ''
+          'pass' => '',
+          'extras' => '',
         )
       ),
 
@@ -248,7 +249,8 @@ class CCS_Docs {
         'cache',
         'raw',
         'load',
-        'pass'
+        'pass',
+        'extras'
       ),
 
       'optional' => array(

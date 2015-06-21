@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*---------------------------------------------
  *
@@ -26,7 +26,7 @@ class CCS_Blocks {
       'em',
       'footer',
       'form',
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
       'header',
       'hr',
       'i',
@@ -58,7 +58,7 @@ class CCS_Blocks {
     $nested = array('div','ol','li','ul');
 
     foreach ($nested as $tag) {
-      for ($i=1; $i < 6; $i++) { 
+      for ($i=1; $i < 6; $i++) {
         $prefix = str_repeat('-', $i);
         add_shortcode($prefix.$tag, array($this, 'block_shortcode'));
       }

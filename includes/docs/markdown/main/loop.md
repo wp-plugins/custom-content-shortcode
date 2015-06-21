@@ -77,7 +77,11 @@ Use `[loop]` to get posts and loop through each one.
 
 > **category** - display posts from one or more categories; for example: *category="sports, fashion"*
 
+> - *category="this"* - find posts in the same category as current post
+
 > **tag** - display posts with one or more tags; for example: tag="apples, green"
+
+> - *tag="this"* - find posts with the same tag as current post
 
 > **compare** - for multiple categories/tags, set *compare="and"* to get posts that have all terms
 
@@ -166,7 +170,7 @@ Use `[loop]` to get posts and loop through each one.
 > **exclude**
   - *this* - exclude current post
   - *children* - exclude child posts; display top-level posts only
-     
+
 > **include**
   - *children* - include child posts and descendants of each post; all current query parameters apply, except *id* and *parent*
 
@@ -284,9 +288,6 @@ This is a feature to expand a list of fields to their values.
 [/loop]
 ~~~
 
-The `{FIELD}` tags are uppercased versions of the field names.
-
-You can use [predefined fields](options-general.php?page=ccs_reference&tab=field#predefined-fields) or custom fields that you've created.
+The `{FIELD}` tags are uppercased versions of the field names. You can use [predefined fields](options-general.php?page=ccs_reference&tab=field#predefined-fields) or custom fields that you've created.
 
 If you want to pass field values to the loop shortcode itself, use [the `[pass]` shortcode](options-general.php?page=ccs_reference&tab=pass).
-

@@ -112,7 +112,7 @@
 
 
 .doc-style .green {
-  color: #16DE01; /* #1abb1e */
+  color: #00E80B; /* #16DE01; #1abb1e #33DE00 */
 }
 .doc-style .grey {
   color: #888;
@@ -125,6 +125,9 @@
 }
 .doc-style .center {
   text-align: center;
+}
+.doc-style .left {
+  text-align: left;
 }
 
 .doc-style .remove-height {
@@ -155,7 +158,9 @@
   font-size: 16px;
   line-height: 1.4em;
 }
-
+.doc-style .italic {
+  font-style: italic;
+}
 
 .doc-style .inner-wrap h2 {
   font-size: 19px;
@@ -268,7 +273,7 @@ h2 .nav-tab {
 }
 .doc-style code {
   font-family: Consolas,Monaco,monospace;
-  font-size: 16px;
+  font-size: 15px;
   background-color: transparent;
   margin: 0;
   padding: 0;
@@ -303,13 +308,13 @@ h2 .nav-tab {
 .doc-style .tab-overview h3 {
   background-color: transparent;
   margin-bottom: -5px;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 .tab-overview .index {
   margin-top: -10px;
 }
 .tab-overview p {
-  margin: 0.5em;
+  margin: 0.5em 0;
   padding: 0;
   font-size: 15px;
 }

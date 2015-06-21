@@ -4,7 +4,7 @@
  *
  * [loop] - Query posts and loop through each one
  *
- * @todo Separate code areas by functionality for better management
+ * TODO: Modularize function areas for better management
  *
  * Filters:
  *
@@ -38,9 +38,21 @@ class CCS_Loop {
     add_shortcode( '-loop', array($this, 'the_loop_shortcode') );
     add_shortcode( '--loop', array($this, 'the_loop_shortcode') );
 
+    add_local_shortcode( 'loop', 'prev', array($this, 'prev_shortcode') );
+    add_local_shortcode( 'loop', 'next', array($this, 'next_shortcode') );
+
+    // newer/older - default order DESC (new to old)
+    add_local_shortcode( 'loop', 'newer', array($this, 'prev_shortcode') );
+    add_local_shortcode( 'loop', 'older', array($this, 'next_shortcode') );
+
+    add_shortcode( 'prev-next', array($this, 'prev_next_shortcode') );
+
     add_shortcode( 'loop-count', array($this, 'loop_count_shortcode') );
     add_shortcode( 'found-posts', array($this, 'found_posts_shortcode') );
     add_shortcode( 'search-keyword', array($this, 'search_keyword_shortcode') );
+
+    add_shortcode( '*', array($this, 'shortcode_comment') );
+    add_shortcode( '!', array($this, 'shortcode_comment') );
   }
 
 
@@ -860,11 +872,20 @@ class CCS_Loop {
         $category = str_replace(',', '+', $category);
       }
 
-      if ( is_numeric($check_category) )
+      if ( is_numeric($check_category) ) {
         $query['cat'] = $category; // ID(s)
-      else
-        $query['category_name'] = $category; // Slug(s)
+      } elseif ( $category == 'this' ) {
+        $category = do_shortcode('[taxonomy category field="id"]');
 
+        if (empty($category)) return;
+
+        if (!empty($parameters['compare']) && strtoupper($parameters['compare'])=='AND') {
+          $category = str_replace(',', '+', $category);
+        }
+        $query['cat'] = $category;
+      } else {
+        $query['category_name'] = $category; // Slug(s)
+      }
     }
 
 
@@ -879,6 +900,14 @@ class CCS_Loop {
       // Remove extra space in a list
 
       $tags = self::clean_list( $parameters['tag'] );
+      if ($tags == 'this') {
+        $tags = do_shortcode('[taxonomy tag field="slug"]');
+
+        if (empty($tags)) return;
+
+        $tags = str_replace(' ', ',', $tags);
+      }
+
       if (!empty($parameters['compare']) && strtoupper($parameters['compare'])=='AND') {
         $tags = str_replace(',', '+', $tags);
       }
@@ -1189,6 +1218,23 @@ class CCS_Loop {
       }
 
     } // End field value query
+
+
+    /*---------------------------------------------
+     *
+     * Sort by multiple custom fields
+     *
+     */
+
+    if( !empty($parameters['sort_field']) ) {
+
+      if ( !isset($query['meta_query']) ) {
+        $query['meta_query'] = array();
+      }
+
+      $query['meta_query'][] = self::prepare_meta_query( $args );
+
+    }
 
 
     return apply_filters( 'ccs_loop_query_filter', $query );
@@ -1536,6 +1582,12 @@ class CCS_Loop {
     $state =& self::$state; // Update global state directly
 
     $state['post_count'] = $query_object->post_count;
+    $all_posts = $query_object->posts;
+
+    $state['all_ids'] = array();
+    foreach ($all_posts as $post) {
+      $state['all_ids'][] = $post->ID;
+    }
 
     if ( isset($query['meta_query'][0]) ) {
       $compare = $query['meta_query'][0]['compare'];
@@ -1553,11 +1605,13 @@ class CCS_Loop {
       !empty($parameters['checkbox']) ||
       !empty($parameters['start']) ) {
 
-      $all_posts = $query_object->posts;
+      $all_ids_filtered = $state['all_ids'];
 
-      foreach ($all_posts as $post) {
+      foreach ( $state['all_ids'] as $index => $current_id ) {
+//      foreach ($all_posts as $post) {
+//        $current_id = $post->ID;
 
-        $current_id = $post->ID;
+        $skip = false;
 
         /*---------------------------------------------
          *
@@ -1567,7 +1621,7 @@ class CCS_Loop {
 
         if (isset($query['meta_query'][0]) && isset($query['meta_query'][0]['key'])) {
 
-          $field_value = get_post_meta( $post->ID, $key, true );
+          $field_value = get_post_meta( $current_id, $key, true );
 
           if (!empty($field_value) && is_array($field_value)) {
             $field_value = implode('', $field_value);
@@ -1578,10 +1632,10 @@ class CCS_Loop {
           if ( ($field_value==false) || empty($field_value) ) {
 
             if ($compare=='EXISTS') {
-              $state['skip_ids'][] = $current_id; // value is empty, then skip
+              $skip = true; // value is empty, then skip
             }
           } elseif ($compare=='NOT EXISTS') {
-              $state['skip_ids'][] = $current_id; // value is not empty, then skip
+              $skip = true; // value is not empty, then skip
           }
         }
 
@@ -1594,7 +1648,7 @@ class CCS_Loop {
 
         if (!empty($parameters['start'])) {
 
-          $field_value = CCS_Content::get_prepared_field( $parameters['field'], $post->ID );
+          $field_value = CCS_Content::get_prepared_field( $parameters['field'], $current_id );
 
           $skip = true;
 
@@ -1634,10 +1688,6 @@ class CCS_Loop {
                 break;
             }
           } // End if there's field value
-
-          if ($skip) {
-            $state['skip_ids'][] = $current_id;
-          }
         }
 
 
@@ -1727,6 +1777,7 @@ class CCS_Loop {
 
         if ($skip) {
           $state['skip_ids'][] = $current_id;
+          unset($all_ids_filtered[$index]);
         }
 
       } // End for each post
@@ -1753,9 +1804,9 @@ class CCS_Loop {
       // Subtract skipped posts from post count
 
       $state['post_count'] = $state['post_count'] - count($state['skip_ids']);
+      $state['all_ids'] = $all_ids_filtered;
 
     } // End check for skipped posts
-
 
     return $query_object;
   }
@@ -1823,7 +1874,8 @@ class CCS_Loop {
 
     $template = self::render_field_tags( $template, self::$parameters );
 
-    return apply_filters('ccs_loop_each_result', do_shortcode( $template ), self::$parameters );
+    return apply_filters('ccs_loop_each_result',
+      do_local_shortcode( 'loop', $template, true ), self::$parameters );
   }
 
 
@@ -2392,5 +2444,69 @@ class CCS_Loop {
     }
   }
 
+
+  /*---------------------------------------------
+   *
+   * Prev/next post
+   *
+   */
+
+  public static function next_shortcode( $atts, $content, $tag ) {
+
+    // Flip when looking for older and order is ASC (old to new)
+    if ( $tag == 'older' && strtolower(self::$parameters['order'])=='asc' ) {
+        self::prev_shortcode( $atts, $content, $tag );
+    }
+
+    $current_id = self::$state['current_post_id'];
+    $all_ids = self::$state['all_ids'];
+    $result = '';
+
+    if ( ($find_key = array_search($current_id, $all_ids)) !== false) {
+      if (isset( $all_ids[$find_key + 1] )) { // Next in loop
+        $prev_id = $all_ids[$find_key + 1];
+        self::$state['current_post_id'] = $prev_id;
+        $result = do_shortcode($content);
+        self::$state['current_post_id'] = $current_id; // Restore
+      }
+    }
+    return $result;
+  }
+
+
+  public static function prev_shortcode( $atts, $content, $tag ) {
+
+    // Flip when looking for newer and order is ASC (old to new)
+    if ( $tag == 'newer' && strtolower(self::$parameters['order'])=='asc' ) {
+        self::next_shortcode( $atts, $content, $tag );
+    }
+
+    $current_id = self::$state['current_post_id'];
+    $all_ids = self::$state['all_ids'];
+    $result = '';
+
+    if ( ($find_key = array_search($current_id, $all_ids)) !== false) {
+      if (isset( $all_ids[$find_key - 1] )) { // Prev in loop
+        $prev_id = $all_ids[$find_key - 1];
+        self::$state['current_post_id'] = $prev_id;
+        $result = do_shortcode($content);
+        self::$state['current_post_id'] = $current_id; // Restore
+      }
+    }
+    return $result;
+  }
+
+  public static function prev_next_shortcode( $atts, $content ) {
+
+    $content = '[if id="this"]'.$content.'[/if]';
+    if (!isset($atts['type'])) $atts['type'] = get_post_type();
+
+    return self::the_loop_shortcode( $atts, $content );
+  }
+
+
+  function shortcode_comment( $atts, $content, $tag ) {
+    if ($tag == '!' && !empty($content)) return '<!--'.do_shortcode($content).'-->';
+  }
 
 } // End CCS_Loop
