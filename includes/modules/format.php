@@ -16,6 +16,8 @@ class CCS_Format {
     add_shortcode( 'format', array($this, 'format_shortcode') );
 		add_shortcode( 'x', array($this, 'x_shortcode') );
 		add_shortcode( 'clean', array($this, 'clean_shortcode') );
+		add_shortcode( 'br', array($this, 'br_shortcode') );
+		add_shortcode( 'p', array($this, 'p_shortcode') );
 
     add_shortcode( 'today', array($this, 'today_shortcode') );
 	}
@@ -25,6 +27,36 @@ class CCS_Format {
   function direct_shortcode( $atts, $content ) {
     return $content;
   }
+
+
+	function br_shortcode() { return '<br />'; }
+
+	function p_shortcode( $atts, $content ) {
+
+		$tag = 'p';
+
+    // Construct block
+    $out = '<'.$tag;
+
+		if (!empty($atts)) {
+	    foreach ($atts as $key => $value) {
+	      if (is_numeric($key)) {
+	        $out .= ' '.$value; // Attribute with no value
+	      } else {
+	        $out .= ' '.$key.'="'.$value.'"';
+	      }
+	    }
+		}
+
+    $out .= '>';
+
+    if (!empty($content)) {
+      $out .= do_shortcode($content);
+      $out .= '</'.$tag.'>';
+    }
+		return $out;
+	}
+
 
 	// Do shortcode, then format
   function format_shortcode( $atts, $content ) {
@@ -64,32 +96,24 @@ class CCS_Format {
 	 */
 
 	function strip_tag_list( $content, $tags ) {
-
 		$tags = implode("|", $tags);
 		$out = preg_replace('!<\s*('.$tags.').*?>((.*?)</\1>)?!is', '\3', $content);
-
 		return $out;
 	}
 
 	function clean_content($content){
-
 	    $content = self::strip_tag_list( $content, array('p','br') );
-
 	    return $content;
 	}
 
 	function clean_shortcode( $atts, $content ) {
-
 		$content = self::strip_tag_list( $content, array('p','br') );
-
 		return do_shortcode($content);
 	}
 
 
   static function trim( $content, $trim = '' ) {
-
     if ($trim=='true') $trim = '';
-
     return trim($content, " \t\n\r\0\x0B,".$trim);
   }
 

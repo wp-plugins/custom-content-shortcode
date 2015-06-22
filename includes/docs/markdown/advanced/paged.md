@@ -44,10 +44,9 @@ There is no styling applied to the pagination. It's up to your theme's CSS.
 
 > **list** - show pagination as a list; compatible with Bootstrap
 
-
-## Current and total
-
 ---
+
+### Current and total
 
 You can display the current page and total number of pages, *after* the loop.
 
@@ -62,9 +61,9 @@ The current page can also be displayed *before* the loop, using:
 [loopage-now before]
 ~~~
 
-## Complete example
-
 ---
+
+### Complete example
 
 ~~~
 [loop type="post" paged="5"]
@@ -74,8 +73,7 @@ Page [loopage-now] of [loopage-total]
 [loopage prev_next="false" show_all="true"]
 ~~~
 
-
-
+&nbsp;
 
 ## Previous / next
 

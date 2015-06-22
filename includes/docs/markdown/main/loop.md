@@ -177,9 +177,9 @@ Use `[loop]` to get posts and loop through each one.
 >> A more flexible way to display child posts is by using a nested loop.
 
 >> ~~~
->> [loop type="page" orderby="name"]
+>> [loop type="page" orderby="title"]
 >>   [field title]
->>   [-loop parent="this"]
+>>   [-loop parent="this" orderby="title"]
 >>     Child page: [field title]
 >>   [/-loop]
 >> [/loop]
