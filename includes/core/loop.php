@@ -151,6 +151,9 @@ class CCS_Loop {
     $state = self::$state;
     $state['loop_index']++; // Starts with 1
 
+    global $post;
+    $state['prev_post'] = $post;
+
     if ( $state['is_loop'] ) {
 
       // If nested, save previous state so it can be restored in close_loop
@@ -2047,6 +2050,8 @@ class CCS_Loop {
     if (self::$state['do_reset_postdata']) {
       wp_reset_postdata();
       self::$state['do_reset_postdata'] = false;
+      global $post;
+      $post = $state['prev_post'];
     }
 
     /*---------------------------------------------

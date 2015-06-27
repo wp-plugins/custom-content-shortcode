@@ -18,8 +18,11 @@ class CCS_Format {
 		add_shortcode( 'clean', array($this, 'clean_shortcode') );
 		add_shortcode( 'br', array($this, 'br_shortcode') );
 		add_shortcode( 'p', array($this, 'p_shortcode') );
-
+    add_shortcode( 'slugify', array($this, 'slugify_shortcode') );
     add_shortcode( 'today', array($this, 'today_shortcode') );
+    add_shortcode( 'http', array($this, 'http_shortcode') );
+    add_shortcode( 'embed', array($this, 'embed_shortcode') );
+    add_shortcode( 'escape', array($this, 'escape_shortcode') );
 	}
 
 
@@ -88,6 +91,19 @@ class CCS_Format {
 		return date($format);
 	}
 
+	// Convert title to slug
+
+	function slugify_shortcode( $atts, $content ) {
+
+  	// The Example Title -> the_example_title
+    return strtolower( str_replace(array(' ','-'), '_', self::alphanumeric(do_shortcode($content)) ) );
+	}
+
+	public static function alphanumeric( $str ) {
+
+		// Remove any character that is not alphanumeric, white-space, or a hyphen
+    	return preg_replace("/[^a-z0-9\s\-_]/i", "", $str );
+	}
 
 	/*---------------------------------------------
 	 *
@@ -111,12 +127,55 @@ class CCS_Format {
 		return do_shortcode($content);
 	}
 
-
   static function trim( $content, $trim = '' ) {
     if ($trim=='true') $trim = '';
     return trim($content, " \t\n\r\0\x0B,".$trim);
   }
 
+
+
+  /*---------------------------------------------
+   *
+   * Add http:// if necessary
+   *
+   * [http]..[/http]
+   *
+   */
+
+  function http_shortcode( $atts, $content ) {
+    $content = do_shortcode($content);
+    if ( substr($content, 0, 4) !== 'http' ) {
+      $content = 'http://'.$content;
+    }
+    return $content;
+  }
+
+
+  /*---------------------------------------------
+   *
+   * Embed audio/video link from field
+   *
+   */
+
+  function embed_shortcode( $atts, $content ) {
+
+    $content = do_shortcode($content);
+
+    if (isset($GLOBALS['wp_embed'])) {
+      $wp_embed = $GLOBALS['wp_embed'];
+      $content = $wp_embed->autoembed($content);
+      // Run [audio], [video] in embed
+      $content = do_shortcode($content);
+    }
+
+    return $content;
+  }
+
+  function escape_shortcode( $atts, $content ) {
+		if ($atts['shortcode']=='true')
+			$content = do_shortcode( $content );
+		return str_replace(array('[',']'), array('&#91;','&#93;'), esc_html($content));
+	}
 
   /*---------------------------------------------
    *

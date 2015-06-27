@@ -22,8 +22,10 @@ class CCS_Content {
     add_shortcode( 'content', array($this, 'content_shortcode') );
     add_shortcode( 'field', array($this, 'field_shortcode') );
     add_shortcode( 'taxonomy', array($this, 'taxonomy_shortcode') );
-
     add_shortcode( 'array', array($this, 'array_field_shortcode') );
+
+    self::$state = array();
+    self::$state['showing_current_post'] = false;
     self::$state['is_array_field'] = false;
   }
 
@@ -734,19 +736,35 @@ class CCS_Content {
 
       $result = self::get_the_field( $parameters );
 
-    } else {
+    } elseif ( !empty(self::$state['current_post']) ) {
 
-    /*---------------------------------------------
-     *
-     * Show post content - [content]
-     *
-     */
+      /*---------------------------------------------
+       *
+       * Show post content - [content]
+       *
+       */
 
-      if (!empty(self::$state['current_post']))
+      // Prevent infinite loop if already showing current post
+      if ( ! CCS_Loop::$state['is_loop'] && self::$state['showing_current_post'] ) {
+
+        $result =
+          '<span style="color:red;font-weight:bold">'
+            .'Infinite loop with [content] detected.'
+          .'</span>';
+        self::$parameters['shortcode'] = 'false';
+
+      } else {
         $result = self::$state['current_post']->post_content;
+        if ( ! CCS_Loop::$state['is_loop'] ) {
+          self::$state['showing_current_post'] = true;
+        } else {
+          self::$state['showing_current_post'] = false;
+        }
+      }
 
       // Format post content by default - except when trimmed
       if ( empty($parameters['words']) && empty($parameters['length']) ) {
+
         self::$parameters['format'] = empty(self::$parameters['format']) ?
           'true' : self::$parameters['format'];
       }

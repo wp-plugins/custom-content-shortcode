@@ -19,15 +19,14 @@ class CCS_To_ACF {
 		self::$state['is_relationship_loop'] = 'false';
 		self::$state['is_repeater_or_flex_loop'] = 'false';
 
-    add_action( 'init', array($this, 'init') ); // Wait until plugins and theme loaded
-	}
+//    add_action( 'init', array($this, 'init') ); // Wait until plugins and theme loaded
 
-  function init() {
-
-    if (!class_exists('acf')) return; // If ACF is not installed
+		// Available to themes
 
     add_shortcode('acf_sub', array($this, 'acf_sub_field'));
     add_shortcode('flex', array($this, 'loop_through_acf_field'));
+    add_shortcode('-flex', array($this, 'loop_through_acf_field'));
+    add_shortcode('--flex', array($this, 'loop_through_acf_field'));
 
     // This will be called by [repeater] if not inside WCK metabox
     // add_shortcode('repeater', array($this, 'loop_through_acf_field'));
@@ -37,11 +36,20 @@ class CCS_To_ACF {
     add_shortcode('acf_image', array($this, 'get_image_details_from_acf_gallery'));
     // add_shortcode('sub_image', array($this, 'get_image_details_from_acf_gallery')); // Alias
     add_shortcode('layout', array($this, 'if_get_row_layout'));
+    add_shortcode('-layout', array($this, 'if_get_row_layout'));
+    add_shortcode('--layout', array($this, 'if_get_row_layout'));
 
     // This will be called by [related] when relationship field is specified
     // add_shortcode('related', array($this, 'loop_relationship_field'));
 
     add_filter( 'ccs_loop_parameters', array($this, 'acf_date_parameters_for_loop') );
+
+	}
+
+  function init() {
+
+    if (!class_exists('acf')) return; // If ACF is not installed
+
   }
 
 	public static function acf_sub_field( $atts ) {
@@ -101,7 +109,7 @@ class CCS_To_ACF {
 			'sub_image' => '',
 			'size' => '',
 			'format' => '',
-			'columns' => '', 'pad' => '', 'between' => '', 
+			'columns' => '', 'pad' => '', 'between' => '',
 		), $atts ));
 
 		if ( !empty($num) ) {
@@ -181,7 +189,7 @@ class CCS_To_ACF {
 			'start' => '',
 			'subfield' => '',
 			'sub' => '',
-			'columns' => '', 'pad' => '', 'between' => '', 
+			'columns' => '', 'pad' => '', 'between' => '',
 		), $atts ));
 
 
@@ -249,7 +257,7 @@ class CCS_To_ACF {
 
     if (empty($field) && isset($atts[0])) $field = $atts[0];
 
-    if ( empty($size) || 
+    if ( empty($size) ||
       (!empty($size) && !isset(self::$state['current_image']['sizes'][$size]))) {
 
       $image_url = self::$state['current_image']['url'];
@@ -364,4 +372,3 @@ class CCS_To_ACF {
 	}
 
 }
-

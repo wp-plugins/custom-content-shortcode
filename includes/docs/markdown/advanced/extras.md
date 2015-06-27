@@ -45,4 +45,4 @@ Use `[*]` to place a comment inside the visual editor.
 [*] Here is a message for myself and others. [/*]
 ~~~
 
-This shortcode does not diplay anything, it's just a placeholder.
+This shortcode does not display anything, it's just a placeholder.
