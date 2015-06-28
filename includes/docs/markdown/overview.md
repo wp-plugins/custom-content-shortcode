@@ -1,6 +1,6 @@
 ## Overview
 
----
+<hr class="catchadream" style="height:2px;border:none;width:100%;margin-bottom:20px"></hr>
 
 <div class="row index"><div class="col-half">
 
@@ -38,7 +38,7 @@
 
 </div></div>
 &nbsp;
-<hr><div class="row index"><div class="col-half">
+<hr class="catchadream" style="height:2px;border:none;width:100%;margin-bottom:20px"></hr><div class="row index"><div class="col-half">
 ### New
 
 [Today's date](options-general.php?page=ccs_reference&tab=extras#today)

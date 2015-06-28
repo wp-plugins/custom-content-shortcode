@@ -105,6 +105,7 @@ class CCS_To_ACF {
 			'count' => '',
 			'start' => '',
 			'num' => '',
+			'row' => '',
 			'sub' => '',
 			'sub_image' => '',
 			'size' => '',
@@ -112,7 +113,8 @@ class CCS_To_ACF {
 			'columns' => '', 'pad' => '', 'between' => '',
 		), $atts ));
 
-		if ( !empty($num) ) {
+		if ( !empty($row) ) $num = $row; // Alias
+		if ( !empty($num) && $num != 'rand' ) {
 			$start = $num;
 			$count = 1;
 		}
@@ -143,7 +145,8 @@ class CCS_To_ACF {
 
 			while ( have_rows( $field ) ) {
 
-				self::$state['is_repeater_or_flex_loop'] = 'true'; // Keep true for each row in case nested
+				// Keep true for each row in case nested
+				self::$state['is_repeater_or_flex_loop'] = 'true';
 
 				the_row(); // Move index forward
 
@@ -154,9 +157,7 @@ class CCS_To_ACF {
 					if ( ( !empty($count) ) && ( $index_now >= ($start+$count) ) ) {
 							/* If over count, continue empty looping for has_sub_field */
 					} else {
-
 						$outputs[] = str_replace( '{COUNT}', $index_now, do_shortcode($content) );
-
 					}
 				}
 			}
@@ -165,6 +166,12 @@ class CCS_To_ACF {
 
 		} else {
 			return null;
+		}
+
+		if ( $num == 'rand' ) {
+			shuffle( $outputs );
+			$item = array_pop($outputs);
+			$outputs = array($item);
 		}
 
 		if( !empty($outputs) && is_array($outputs)) {

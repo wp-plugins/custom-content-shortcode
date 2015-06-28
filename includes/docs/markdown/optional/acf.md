@@ -2,7 +2,7 @@
 ## Advanced Custom Fields
 ---
 
-#### Supported field types
+### Supported field types
 
 - Text, image
 - [Checkbox, select](#checkbox-select), [true/false](#true-false), [date](#date-field)
@@ -96,7 +96,7 @@ You can use the same shortcode for a Post Object field.
 ## Repeater
 ---
 
-Use `[repeater]` to loop through a repeater field.
+Use `[repeater]` to loop through each row of a repeater field.
 
 
 *Display repeater fields*
@@ -109,26 +109,47 @@ Use `[repeater]` to loop through a repeater field.
 [/repeater]
 ~~~
 
-
-For an image field inside, use the *image* parameter to display the field. You can set the *size* parameter to:* thumbnail*,* medium*,* large* - default is full-size. If the image field returns as URL, set *in="url"*.
+For an image field inside, use the *image* parameter to display the field. You can set the *size* parameter to:* thumbnail*,* medium*,* large* - default is *full*. If the image field returns as URL, set *in="url"*.
 
 ---
 
-### Display a specific repeater field
+### Parameters
+
+> **count** - how many rows to loop
+
+> **start** - which row to start; default is 1
+
+> **row** - a specific row from the repeater field: *row="3"*
+
+> **row="rand"** - a randomly selected row
+
+---
+
+### Display a specific row
+
+*Display the third row*
 
 ~~~
-[repeater repeater_field num="3"]
+[repeater repeater_field row="3"]
+  [field title]
+[/repeater]
+~~~
+
+*Display a random row*
+
+~~~
+[repeater repeater_field row="rand"]
 ~~~
 
 *Display specific sub-fields without looping*
 
 ~~~
-[repeater repeater_field num="1" sub="title"]
-[repeater repeater_field num="2" sub="text"]
-[repeater repeater_field num="3" sub_image="image"]
+[repeater repeater_field row="1" sub="title"]
+[repeater repeater_field row="2" sub="text"]
+[repeater repeater_field row="3" sub_image="image"]
 ~~~
 
-This is a quick way to display a sub-field from a specific repeater field. It's used by itself, without a closing tag.
+This displays a sub-field from a specific row. It's used by itself without a closing tag.
 
 ---
 
@@ -236,4 +257,3 @@ If the field value is stored as an array - for example, a file field - you can u
 ---
 
 You can use the *columns* parameter for gallery, repeater, or flexible content. For details, please see its description in [`[loop]` under *Parameters: Other*](options-general.php?page=ccs_reference&tab=loop#other).
-
