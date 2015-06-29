@@ -66,21 +66,45 @@ class CCS_Pass {
      *
      */
 
-    if ( !empty($global) && empty($field) ) $field = 'this';
+    if ( !empty($global) && empty($field) && $field!='0' ) $field = 'this';
 
-    if ( !empty($field) ) {
+    if ( !empty($field) || $field=='0' ) {
 
       if ($field=='gallery') $field = '_custom_gallery'; // Support CCS gallery field
 
       if ( !empty($global) ) {
 
         $field_value = '';
-        if ( $field == 'this' ) {
-          $field_value = $GLOBALS[$global];
-        } elseif ( !empty($sub) && isset($GLOBALS[$global][$field][$sub]) ) {
-          $field_value = $GLOBALS[$global][$field][$sub];
-        } elseif (isset($GLOBALS[$global][$field])) {
-          $field_value = $GLOBALS[$global][$field];
+        if ($global=='route') {
+          // Parsed URL route
+          global $wp;
+          $request = $wp->request;
+          $requests = explode('/', $request);
+          if ($field=='this') {
+
+            $field_value = $request; // whole thing
+
+            for ($i=0; $i < 6; $i++) {
+              $part = '';
+              if (isset($requests[$i])) {
+                $part = $requests[$i];
+              }
+              $tag = '{'.$prefix.'FIELD_'.($i+1).'}';
+              $content = str_replace($tag, $part, $content);
+            }
+
+          } else {
+            if (isset($requests[ intval($field) ]))
+              $field_value = $requests[ intval($field) ];
+          }
+        } else {
+          if ( $field == 'this' ) {
+            $field_value = $GLOBALS[$global];
+          } elseif ( !empty($sub) && isset($GLOBALS[$global][$field][$sub]) ) {
+            $field_value = $GLOBALS[$global][$field][$sub];
+          } elseif (isset($GLOBALS[$global][$field])) {
+            $field_value = $GLOBALS[$global][$field];
+          }
         }
 
       } elseif (class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true') {
@@ -123,7 +147,7 @@ class CCS_Pass {
 
         // Support gallery field
 
-        $field_values = CCS_Gallery_Field::get_image_ids(); 
+        $field_values = CCS_Gallery_Field::get_image_ids();
 
       } else {
 
@@ -245,7 +269,7 @@ class CCS_Pass {
      * Pass an arbitrary list of items
      *
      */
-    
+
     } elseif (!empty($list)) {
 
       $items = CCS_Loop::explode_list($list); // Comma-separated list -> array
@@ -261,7 +285,7 @@ class CCS_Pass {
 
           $parts = explode(':', $item);
           $count = count($parts);
-          for ($i=0; $i < $count; $i++) { 
+          for ($i=0; $i < $count; $i++) {
 
             $this_item = trim($parts[$i]);
 
@@ -294,7 +318,7 @@ class CCS_Pass {
      * Pass user field(s)
      *
      */
-    
+
     if (!empty($user_field)) {
       $user_field_value = do_shortcode('[user '.$user_field.' out="slug"]');
       // Replace it
@@ -348,5 +372,5 @@ class CCS_Pass {
     return $content;
 
   } // End pass shortcode
-  
+
 } // End CCS_Pass

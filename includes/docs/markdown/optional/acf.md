@@ -102,7 +102,7 @@ Use `[repeater]` to loop through each row of a repeater field.
 *Display repeater fields*
 
 ~~~
-[repeater repeater_field]
+[repeater field_name]
   [field title]
   [field image="image"]
   [field description format="true"]
@@ -130,7 +130,7 @@ For an image field inside, use the *image* parameter to display the field. You c
 *Display the third row*
 
 ~~~
-[repeater repeater_field row="3"]
+[repeater field_name row="3"]
   [field title]
 [/repeater]
 ~~~
@@ -138,15 +138,15 @@ For an image field inside, use the *image* parameter to display the field. You c
 *Display a random row*
 
 ~~~
-[repeater repeater_field row="rand"]
+[repeater field_name row="rand"]
 ~~~
 
 *Display specific sub-fields without looping*
 
 ~~~
-[repeater repeater_field row="1" sub="title"]
-[repeater repeater_field row="2" sub="text"]
-[repeater repeater_field row="3" sub_image="image"]
+[repeater field_name row="1" sub="title"]
+[repeater field_name row="2" sub="text"]
+[repeater field_name row="3" sub_image="image"]
 ~~~
 
 This displays a sub-field from a specific row. It's used by itself without a closing tag.
@@ -156,8 +156,8 @@ This displays a sub-field from a specific row. It's used by itself without a clo
 ### Nested repeaters
 
 ~~~
-[repeater repeater_field]
-  [-repeater inner_repeater_field]
+[repeater field_name]
+  [-repeater inner_field_name]
     ...
   [/-repeater]
 [/repeater]
@@ -227,7 +227,7 @@ Display ACF fields from other posts, using the loop.
 
 ~~~
 [loop name="hello-world"]
-  [repeater repeater_field]
+  [repeater field_name]
     [field title]
     [field image="image"]
     [field description format="true"]

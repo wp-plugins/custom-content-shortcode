@@ -198,3 +198,20 @@ Use the field parameter to pass an element from an array.
   Here it is: {FIELD}
 [/pass]
 ~~~
+
+---
+
+### URL Route
+
+There's a special variable called *route*, which can be used to pass the current URL route or its parts.
+
+If the current URL is: `example.com/article/category/special`
+
+~~~
+[pass global="route"]
+  {FIELD} is: article/category/special
+  {FIELD_1} is: article
+  {FIELD_2} is: category
+  {FIELD_3} is: special
+[/pass]
+~~~

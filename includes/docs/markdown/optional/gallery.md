@@ -77,5 +77,8 @@ The `[content]` shortcode can display individual images of the gallery field.
 When using the `[loop]` to generate multiple Bootstrap carousels, the following will put images from each post in its own carousel.
 
 ~~~
-[content gallery="carousel" group="gallery-{ID}"]
+[loop type="post" fields="id"]
+  ...
+  [content gallery="carousel" group="gallery-{ID}"]
+[/loop]
 ~~~
