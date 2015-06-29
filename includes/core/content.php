@@ -53,6 +53,7 @@ class CCS_Content {
 
     $result = $this->process_result( $result, self::$parameters );
 
+    self::$state['showing_current_post'] = false;
     return $result;
   }
 
@@ -309,17 +310,28 @@ class CCS_Content {
 
         // Inside [related]
         $post_id = CCS_Related::$state['current_related_post_id'];
+        self::$state['showing_current_post'] = false;
 
       }  elseif ( CCS_Loop::$state['is_loop'] ) {
 
         $post_id = CCS_Loop::$state['current_post_id']; // Current post in loop
+        self::$state['showing_current_post'] = false;
 
       } else {
         $post_id = get_the_ID(); // Current post
+        if ( self::$state['showing_current_post'] ) {
+          if ( self::$state['showing_current_post'] == true )
+            self::$state['showing_current_post'] = 2;
+          else
+            self::$state['showing_current_post']++;
+        } else {
+          self::$state['showing_current_post'] = true;
+        }
       }
 
     } else {
       $post_id = $parameters['id'];
+      self::$state['showing_current_post'] = false;
     }
 
     self::$state['current_post_id'] = $post_id;
@@ -745,7 +757,7 @@ class CCS_Content {
        */
 
       // Prevent infinite loop if already showing current post
-      if ( ! CCS_Loop::$state['is_loop'] && self::$state['showing_current_post'] ) {
+      if ( ! CCS_Loop::$state['is_loop'] && self::$state['showing_current_post']>1 ) {
 
         $result =
           '<span style="color:red;font-weight:bold">'
@@ -755,11 +767,6 @@ class CCS_Content {
 
       } else {
         $result = self::$state['current_post']->post_content;
-        if ( ! CCS_Loop::$state['is_loop'] ) {
-          self::$state['showing_current_post'] = true;
-        } else {
-          self::$state['showing_current_post'] = false;
-        }
       }
 
       // Format post content by default - except when trimmed
