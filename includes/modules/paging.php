@@ -10,6 +10,7 @@ new CCS_Paged;
 
 class CCS_Paged {
 
+  // Query parameter name and value for CCS_Loop
   public static $prefix;
   public static $current;
 
@@ -175,6 +176,6 @@ class CCS_Paged {
 
       return ob_get_clean();
     }
-  }  
+  }
 
 }
