@@ -304,7 +304,8 @@ class CCS_Comments {
             break;
 
             case 'avatar':
-              $author_id = $comment->user_id;
+              //$author_id = $comment->user_id;
+              $author_id = get_comment_author_email($comment->comment_ID);
               $out = get_avatar( $author_id, $size );
             break;
 

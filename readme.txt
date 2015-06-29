@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 2.3.8
+Stable tag: 2.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,13 +84,17 @@ Support for other plugins:
 
 == Changelog ==
 
+= 2.3.9 =
+
+* [comment avatar] - Get comment author's avatar from e-mail; thanks @indrayn!
+
 = 2.3.8 =
 
 * [content] - Removed infinite loop detection
 
 = 2.3.6 =
 
-* [pass] - Pass current URL route and its parts: *global="route"
+* [pass] - Pass current URL route and its parts: *global="route"*
 
 = 2.3.5 =
 
