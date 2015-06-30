@@ -747,6 +747,8 @@ class CCS_Content {
        *
        * Show post content - [content]
        *
+       * TODO: How to detect and avoid infinite loop
+       *
        */
 
       $result = self::$state['current_post']->post_content;
@@ -830,13 +832,32 @@ class CCS_Content {
         $parameters['dots'] = '&hellip;';
       }
 
-      // If format, do it before content gets trimmed
-      if ($parameters['format'] == 'true') {
-        $result = self::wp_trim_words_retain_formatting(
-          wpautop( $result ), $parameters['words'], $parameters['dots']
-        );
+      if (intval($parameters['words']) < 0) {
+
+        // Remove X words from beginning and return the rest
+
+        // If format, do it before content gets trimmed
+        if ($parameters['format'] == 'true') {
+          $whole_result = self::wp_trim_words_retain_formatting( $result, 9999, '' );
+          $result = self::wp_trim_words_retain_formatting(
+            wpautop( $result ), 0 - $parameters['words'], ''
+          );
+        } else {
+          $whole_result = wp_trim_words( $result, 9999, '' );
+          $result = wp_trim_words( $result, 0 - $parameters['words'], '' );
+        }
+        // Offset and get the rest
+        $result = substr($whole_result, strlen($result));
+
       } else {
-        $result = wp_trim_words( $result, $parameters['words'], $parameters['dots'] );
+        // If format, do it before content gets trimmed
+        if ($parameters['format'] == 'true') {
+          $result = self::wp_trim_words_retain_formatting(
+            wpautop( $result ), $parameters['words'], $parameters['dots']
+          );
+        } else {
+          $result = wp_trim_words( $result, $parameters['words'], $parameters['dots'] );
+        }
       }
 
     }

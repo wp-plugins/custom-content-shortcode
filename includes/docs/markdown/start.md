@@ -15,7 +15,7 @@ Let's imagine a bicycle shop.
 1. Create a new page to display bicycles. A basic template could be:
 
 ~~~
-[loop type="bicycle"]
+[loop type=bicycle]
   [field image]
   Model: [field model]
   Price: [field price]
@@ -27,7 +27,7 @@ Another section can display a list of freestyle bicycles.
 
 ~~~
 <ul>
-  [loop type="bicycle" category="freestyle"]
+  [loop type=bicycle category=freestyle]
     <li>[field title-link] - [field model] - [field price]</li>
   [/loop]
 </ul>
@@ -60,35 +60,49 @@ Shortcode templates can be loaded from a number of places.
 **Custom post type**
 
 ~~~
-[content type="template" name="home-page"]
+[content type=template name=home-page]
 ~~~
 
 **Custom field**
 
 ~~~
-[field code_block shortcode="true"]
+[field code_block shortcode=true]
 ~~~
 
 **File**
 
 ~~~
-[load dir="views" file="recent-posts.html"]
+[load dir=views file=recent-posts.html]
 ~~~
 
 **Sidebar**: [Enable shortcodes inside Text widget](options-general.php?page=ccs_reference&tab=settings)
-  
+
 ---
 
-### HTML attribute
+### Parameters
 
-When using a shortcode in an HTML attribute, use single quotes for passing parameters.
 
-~~~
-<div class="[taxonomy category field='slug']">
-~~~
-
-If a field value may include characters like "quotes" and &lt;brackets&gt;, use the *escape* parameter.
+The shortest way to define a parameter is without quotes.
 
 ~~~
-<a href="[field url]" title="[field title escape='true']">
+[loop type=post count=3]
+~~~
+
+For multiple values, do not use a space after the comma.
+
+~~~
+[loop type=fruit category=apple,orange]
+~~~
+
+
+If you need to pass a value that contains a space, use single quotes.
+
+~~~
+[loop type=post field=something value='John Smith']
+~~~
+
+If you're using a field value in an HTML attribute and it may include characters like "quotes" and &lt;brackets&gt;, use the *escape* parameter.
+
+~~~
+<a href="[field url]" title="[field title escape=true]">
 ~~~

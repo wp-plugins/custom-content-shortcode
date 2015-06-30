@@ -11,8 +11,8 @@ Use `[is]` to display content based on user status.
 [is author]You are the author of current post.[/is]
 [is login]You are logged in.[/is]
 [is logout]You are logged out.[/is]
-[is user="john"]You are John.[/is]
-[is role="subscriber"]You are a subscriber.[/is]
+[is user=john]You are John.[/is]
+[is role=subscriber]You are a subscriber.[/is]
 ~~~
 
 ---
@@ -27,13 +27,13 @@ Use `[is]` to display content based on user status.
 
 > **logout** - user is logged out
 
-> **user** - user name or ID - multiple values are possible: "1, 3, 22"
+> **user** - user name or ID - multiple values are possible: 1,3,22
 
 > **role** - user role - default roles are *administrator*, *editor*, *author*, *contributor*, or *subscriber*
 
-> **capable** - user capability, for example: *capable="manage_options"*
+> **capable** - user capability, for example: *capable=manage_options*
 
->> Multiple values are possible: *role="admin, subscriber"* will be true if the user is *admin* or *subscriber*.
+>> Multiple values are possible: *role=admin,subscriber* will be true if the user is *admin* or *subscriber*.
 
 >> See the list of available user roles and capabilities under [Dashboard -> Content -> User Roles](index.php?page=content_overview#user-roles).
 

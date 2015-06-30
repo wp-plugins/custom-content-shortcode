@@ -22,7 +22,7 @@ By default, it creates a `<div>`.
 You can set the *tag* parameter to create other HTML tags.
 
 ~~~
-[block tag="article"]
+[block tag=article]
   ...
 [/block]
 ~~~
@@ -35,10 +35,10 @@ You can set the *tag* parameter to create other HTML tags.
 Any HTML attribute can be specified as parameter.
 
 ~~~
-[block id="left-block" class="col-md-6" style="margin-left:0"]
+[block id=left-block class=col-md-6 style='margin-left:0']
   ...
 [/block]
-[block id="right-block" class="col-md-6" style="margin-right:0"]
+[block id=right-block class=col-md-6 style='margin-right:0']
   ...
 [/block]
 ~~~

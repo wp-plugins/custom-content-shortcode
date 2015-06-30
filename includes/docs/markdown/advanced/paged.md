@@ -4,7 +4,7 @@
 To display the results of `[loop]` in pages, set the *paged* parameter.
 
 ~~~
-[loop type="post" paged="5"]
+[loop type=post paged=5]
   [field title]
   [content]
 [/loop]
@@ -66,11 +66,11 @@ The current page can also be displayed *before* the loop, using:
 ### Complete example
 
 ~~~
-[loop type="post" paged="5"]
+[loop type=post paged=5]
   [field title]
 [/loop]
 Page [loopage-now] of [loopage-total]
-[loopage prev_next="false" show_all="true"]
+[loopage prev_next=false show_all=true]
 ~~~
 
 &nbsp;
@@ -84,7 +84,7 @@ Use `[prev]` and `[next]` to get the previous/next post in the loop.
 This can be used to display navigation links.
 
 ~~~
-[loop type="article" orderby="title" count="1"]
+[loop type=article orderby=title count=1]
   Current article: [field title]
   [prev]
     Previous: [field title-link]
@@ -104,7 +104,7 @@ Note that in the above example, the posts are ordered by title in ascending orde
 However, by default, posts are ordered by date in descending order, from **new to old**. This means `[prev]` will get a *newer* post and `[next]` will get an *older* post, further down the loop. It's counter-intuitive, so to avoid this confusion, use `[older]` and `[newer]` when ordering by date.
 
 ```
-[loop type="article"]
+[loop type=article]
   Current article: [field title]
   [older]
     Previous: [field title-link]
@@ -138,5 +138,5 @@ Basically, `[prev-next]` creates a loop of the current post type, to make it pos
 You can also pass it the same parameters as `[loop]`. This can used, for example, to get previous/next post in the same category, ordered by title.
 
 ```
-[prev-next category="this" orderby="title"]
+[prev-next category=this orderby=title]
 ```

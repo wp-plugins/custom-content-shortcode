@@ -7,19 +7,19 @@ Use `[content]` to display content or a field from a specific post.
 *Display post content by name*
 
 ~~~
-[content name="hello-world"]
+[content name=hello-world]
 ~~~
 
 *Display the featured image of a page*
 
 ~~~
-[content type="page" name="about-me" field="image"]
+[content type=page name=about-me field=image]
 ~~~
 
 *Display a field from a custom post type*
 
 ~~~
-[content type="apartment" name="lux-suite-22" field="rent-per-day"]
+[content type=apartment name=lux-suite-22 field=rent-per-day]
 ~~~
 
 ---
@@ -29,7 +29,7 @@ Use `[content]` to display content or a field from a specific post.
 When inside a loop, it can be used without parameter to show each post's content.
 
 ~~~
-[loop type="post" count="3"]
+[loop type=post count=3]
   [field title]
   [content]
 [/loop]
@@ -56,13 +56,13 @@ When inside a loop, it can be used without parameter to show each post's content
 
 >> When displaying a field from the current post, you can use [`[field]`](options-general.php?page=ccs_reference&tab=field) as a shortcut.
 
-> **meta** - display author meta: *field="author" meta="user_email"* - see [the codex](http://codex.wordpress.org/Function_Reference/get_the_author_meta) for available author meta fields
+> **meta** - display author meta: *field=author meta=user_email* - see [the codex](http://codex.wordpress.org/Function_Reference/get_the_author_meta) for available author meta fields
 
 ---
 
 ### Image field
 
-> **image** - display an image field; for example: *image="product_image"*
+> **image** - display an image field; for example: *image=product_image*
 
 > **size** - size of image: *thumbnail*, *medium*, *large*, *full* (default) or [custom defined size](http://codex.wordpress.org/Function_Reference/add_image_size)
 
@@ -76,13 +76,13 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **out** - image detail to output: *id*, *url*, *title*, *caption*, *description*
 
-> **nopin** - set *nopin="nopin"* to prevent Pinterest pinning of image
+> **nopin** - set *nopin=nopin* to prevent Pinterest pinning of image
 
 ---
 
 ### Taxonomy
 
-> **taxonomy** - display *category*, *tag*, or custom taxonomy of the post: *taxonomy="product_type"*
+> **taxonomy** - display *category*, *tag*, or custom taxonomy of the post: *taxonomy=product_type*
 
 >> When displaying terms of the current post, you can use [`[taxonomy]`](options-general.php?page=ccs_reference&tab=taxonomy) as a shortcut.
 
@@ -106,7 +106,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **words** or **length** - trim by number of words or characters
 
->> Trimmed content is not formatted by default; set *format="true"* if you need.
+>> Trimmed content is not formatted by default; set *format=true* if you need.
 
 > **filter** - set *true* to apply *the_content* filter; this may be useful when using plugins that filter the post content, for example, [Page Builder](https://wordpress.org/plugins/siteorigin-panels).
 
@@ -117,20 +117,20 @@ When inside a loop, it can be used without parameter to show each post's content
 > **currency** - format as currency; see [the field section](options-general.php?page=ccs_reference&tab=field#currency) for details
 
 > **date_format** - use a custom date format
-  
+
 >> For example, "d.m.Y" will display as *18.11.2013*. Please refer to [the codex](http://codex.wordpress.org/Formatting_Date_and_Time) for the date format syntax.
 
 >> Note: instead of backslash, use double slashes to escape characters:
 
 >>> "Y/m/d //a//t g:i A" will show as *2013/11/17 at 11:06 PM*.
 
->> Use *in="timestamp"* to format a unix timestamp value.
+>> Use *in=timestamp* to format a unix timestamp value.
 
 ---
 
 ### Read more
 
-> **more** - set *true* to display content up to the &lt;!--more--&gt; tag, or an excerpt if the tag doesn't exist. This will add the text "Read More" at the end, with a link to the post. To change the text, use: *more="..."*
+> **more** - set *true* to display content up to the &lt;!--more--&gt; tag, or an excerpt if the tag doesn't exist. This will add the text "Read More" at the end, with a link to the post. To change the text, use: *more=...*
 
 > **dots** - set *false* to disable dots at the end of excerpt
 
@@ -143,4 +143,3 @@ When inside a loop, it can be used without parameter to show each post's content
 > **area** or **sidebar** - display a widget area/sidebar by *title*
 
 > **menu** - display a menu list by *slug*, *title*, or *ID*; see also [Bootstrap tabs and navbar](options-general.php?page=ccs_reference&tab=bootstrap).
-

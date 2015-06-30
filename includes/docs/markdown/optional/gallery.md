@@ -23,7 +23,7 @@ You can add, order, edit and remove images in the field.
 
 For each image, these fields can be displayed: *id*, *title*, *image*, *image-url*, *caption*, *description*,* thumbnail*, and* thumbnail-url*.
 
-To sort by image title instead of gallery order, set parameter *orderby="title"*.
+To sort by image title instead of gallery order, set parameter *orderby=title*.
 
 ## In a loop
 ---
@@ -31,10 +31,10 @@ To sort by image title instead of gallery order, set parameter *orderby="title"*
 *Display gallery fields of each post in a loop*
 
 ~~~
-[loop type="post" category="colorful"]
+[loop type=post category=colorful]
   Post Title: [field title]
   Description: [content]
-  [attached gallery columns="4"]
+  [attached gallery columns=4]
     [field thumbnail]
   [/attached]
 [/loop]
@@ -49,8 +49,8 @@ You can display all images in the gallery field using a native gallery or Bootst
 *Display a native gallery or Bootstrap carousel*
 
 ~~~
-[content gallery="native"]
-[content gallery="carousel"]
+[content gallery=native]
+[content gallery=carousel]
 ~~~
 
 
@@ -65,9 +65,9 @@ The `[content]` shortcode can display individual images of the gallery field.
 *Display the 3rd image in the gallery field*
 
 ~~~
-[content field="gallery" num="3"]
+[content field=gallery num=3]
 ..or..
-[field gallery num="3"]
+[field gallery num=3]
 ~~~
 
 
@@ -77,8 +77,8 @@ The `[content]` shortcode can display individual images of the gallery field.
 When using the `[loop]` to generate multiple Bootstrap carousels, the following will put images from each post in its own carousel.
 
 ~~~
-[loop type="post" fields="id"]
+[loop type=post fields=id]
   ...
-  [content gallery="carousel" group="gallery-{ID}"]
+  [content gallery=carousel group=gallery-{ID}]
 [/loop]
 ~~~

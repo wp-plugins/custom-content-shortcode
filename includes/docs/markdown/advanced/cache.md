@@ -5,7 +5,7 @@
 Use the **[cache]** shortcode to cache page sections.
 
 ~~~
-[cache name="name_of_cache" expire="1 day"]
+[cache name=name_of_cache expire='1 day']
   ...
 [/cache]
 ~~~
@@ -37,7 +37,7 @@ Please note that the cache only stores the HTML output. Plugin shortcodes with J
 ### Cache a loop
 
 ~~~
-[loop type="post" count="5" cache="true" expire="1 day"]
+[loop type=post count=5 cache=true expire='1 day']
   [field title-link]
   [field thumbnail]
 [/loop]
@@ -74,7 +74,7 @@ Here are the commands available:
 You can time a loop directly.
 
 ~~~
-[loop type="post" timer="true"]
+[loop type=post timer=true]
   ...
 [/loop]
 ~~~
@@ -86,4 +86,3 @@ This shows the info at the end of the loop.
 #### Note
 
 If you need more extensive measurements, [Query Monitor](https://wordpress.org/plugins/query-monitor) is recommended.
-

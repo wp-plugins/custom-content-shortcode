@@ -6,7 +6,7 @@
 Use the **[if]** shortcode to display content based on post conditions.
 
 ~~~
-[if category="recommend"]
+[if category=recommend]
   Must watch!
 [/if]
 ~~~
@@ -71,7 +71,7 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 ### Multiple values
 
-> For category, tag, taxonomy, field or user field, you can query for multiple values: for example, *category="sci-fi, comedy"*. This returns posts in *either* Sci-Fi or Comedy. If you want posts matching *both* categories, set *compare="and"*.
+> For category, tag, taxonomy, field or user field, you can query for multiple values: for example, *category=sci-fi,comedy*. This returns posts in *either* Sci-Fi or Comedy. If you want posts matching *both* categories, set *compare=and*.
 
 ---
 
@@ -109,8 +109,8 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 ### Passed value
 
-> **pass** - the value being passed: *pass="{FIELD}"*
-> **value** - the value to check: *value="this"
+> **pass** - the value being passed: *pass={FIELD}*
+> **value** - the value to check: *value=this
 
 ### Other
 
@@ -124,7 +124,7 @@ Use `[else]` to display something when the condition is false.
 
 
 ~~~
-[if tag="discount"]
+[if tag=discount]
   On Sale!
 [else]
   Regular Price
@@ -139,7 +139,7 @@ You can use the parameters *before* and *after* to compare dates.
 *If post was published in the last 2 weeks*
 
 ~~~
-[if field="date" after="2 weeks ago"]
+[if field=date after='2 weeks ago']
   New post
 [else]
   Old post
@@ -158,7 +158,7 @@ Use `[if empty]` to display something when there is no post matching the query.
 *Display a message for no query result*
 
 ~~~
-[loop type="events" category="weekend"]
+[loop type=events category=weekend]
   [field title]
   [field description]
   [if empty]
@@ -177,9 +177,9 @@ If there's no post found, the loop displays what's inside `[if empty]` only once
 
 
 ~~~
-[loop type="post" count="9"]
+[loop type=post count=9]
   [field title]
-  [if every="3"]
+  [if every=3]
     <br>
   [/if]
 [/loop]
@@ -188,7 +188,7 @@ If there's no post found, the loop displays what's inside `[if empty]` only once
 *Display something for the first and last post*
 
 ~~~
-[loop type="post"]
+[loop type=post]
   [field title]
   [if first]
     first post
@@ -209,8 +209,8 @@ To check if a field has any value, use the *field* parameter.
 
 
 ~~~
-[loop type="product"]
-  [if field="serial_number"]
+[loop type=product]
+  [if field=serial_number]
     Product: [field title]
     Serial #: [field serial_number]
   [/if]
@@ -229,12 +229,12 @@ To check if the post has any term in a given taxonomy, use the *taxonomy* parame
 
 
 ~~~
-[loop type="book"]
+[loop type=book]
   Book: [field title]
   Author: [field author_name]
-  [if taxonomy="tag"]
+  [if taxonomy=tag]
     Tags:
-    [for each="tag" trim="true"]
+    [for each=tag trim=true]
       [each name-link],
     [/for]
   [else]
@@ -249,10 +249,10 @@ To check if the post has any term in a given taxonomy, use the *taxonomy* parame
 For nested conditions, use the minus prefix.
 
 ~~~
-[loop type="product"]
-  [if category="books"]
+[loop type=product]
+  [if category=books]
     The book [field title-link] is
-    [-if field="status" value="in-stock"]
+    [-if field=status value=in-stock]
       in stock.
       [-else]
       not available.

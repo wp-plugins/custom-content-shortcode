@@ -7,16 +7,16 @@ Use `[pass]` to pass a field value to another shortcode's parameter.
 *Display a map based on an address in a field*
 
 ~~~
-[pass field="address"]
-  [google_map address="{FIELD}"]
+[pass field=address]
+  [google_map address='{FIELD}']
 [/pass]
 ~~~
 
 *Pass image IDs in the gallery field*
 
 ~~~
-[pass field="gallery"]
-  [isotope_gallery ids="{FIELD}"]
+[pass field=gallery]
+  [isotope_gallery ids='{FIELD}']
 [/pass]
 ~~~
 
@@ -27,8 +27,8 @@ Use `[pass]` to pass a field value to another shortcode's parameter.
 To check the passed value, combine with an `[if]` statement.
 
 ~~~
-[pass field="some_field"]
-  [if pass="{FIELD}" value="blue"]
+[pass field=some_field]
+  [if pass='{FIELD}' value=blue]
     It's blue.
   [/if]
 [/pass]
@@ -36,11 +36,11 @@ To check the passed value, combine with an `[if]` statement.
 
 ---
 
-If you're passing a value that could be empty, set *empty="false"*.
+If you're passing a value that could be empty, set *empty=false*.
 
 ~~~
-[pass field="author_ids"]
-  [if user_field="id" value="{FIELD}" empty="false"]
+[pass field=author_ids]
+  [if user_field=id value={FIELD} empty=false]
     The ID field is not empty, and you're the user we're looking for.
   [/if]
 [/pass]
@@ -54,8 +54,8 @@ This is necessary because when the *value* parameter is empty, the `[if]` statem
 Pass values from multiple fields using the *fields* parameter.
 
 ~~~
-[pass fields="post_type_field, category_field"]
-  [loop type="{POST_TYPE_FIELD}" category="{CATEGORY_FIELD}"]
+[pass fields=post_type_field,category_field]
+  [loop type={POST_TYPE_FIELD} category={CATEGORY_FIELD}]
     [field title]
   [/loop]
 [/pass]
@@ -71,8 +71,8 @@ You can loop through a comma-separated list stored in a field, and pass each ite
 *Display products from a list of serial numbers*
 
 ~~~
-[pass field_loop="serial_numbers"]
-  [loop type="product" field="serial_number" value="{FIELD}"]
+[pass field_loop=serial_numbers]
+  [loop type=product field=serial_number value={FIELD}]
     Product: [field title]
     Price: [field price]
   [/loop]
@@ -85,7 +85,7 @@ You can loop through a comma-separated list stored in a field, and pass each ite
 *Pass a single user field*
 
 ~~~
-[pass user_field="twitter"]
+[pass user_field=twitter]
   Your twitter address: {USER_FIELD}
 [/pass]
 ~~~
@@ -95,7 +95,7 @@ For a list of default user fields, see [the `[user]` shortcode](options-general.
 *Pass several user fields*
 
 ~~~
-[pass user_fields="name,email"]
+[pass user_fields=name,email]
   Hello {NAME}, you email is {EMAIL}.
 [/pass]
 ~~~
@@ -111,9 +111,9 @@ You can loop through all terms in a taxonomy, and pass each item.
 *Display products from each category*
 
 ~~~
-[pass taxonomy_loop="category"]
+[pass taxonomy_loop=category]
   Category: {TERM_NAME}
-  [loop type="product" category="{TERM}"]
+  [loop type=product category={TERM}]
     Product: [field title]
     Price: [field price]
   [/loop]
@@ -139,9 +139,9 @@ The available tags are: TERM, TERM_NAME and TERM_ID.
 This is a feature to loop through a list of items.
 
 ~~~
-[pass list="blue, red, green"]
+[pass list=blue,red,green]
   {Item} products
-  [loop type="product" taxonomy="color" term="{ITEM}"]
+  [loop type=product taxonomy=color term={ITEM}]
     Product: [field title]
   [/loop]
 [/pass]
@@ -152,9 +152,9 @@ This is a feature to loop through a list of items.
 For more flexibility, you can pass multiple items for each loop.
 
 ~~~
-[pass list="Beautiful blue:blue, Bright red:red, Lush green:green"]
+[pass list='Beautiful blue:blue,Bright red:red,Lush green:green']
   {ITEM_1} products
-  [loop type="product" taxonomy="color" term="{ITEM_2}"]
+  [loop type=product taxonomy=color term={ITEM_2}]
     Product: [field title]
   [/loop]
 [/pass]
@@ -168,7 +168,7 @@ To pass a global variable, use the *global* parameter.
 *Pass a global variable*
 
 ~~~
-[pass global="some_var"]
+[pass global=some_var]
   Variable value: {FIELD}
 [/pass]
 ~~~
@@ -178,7 +178,7 @@ Use the field parameter to pass an element from an array.
 *Pass a query variable*
 
 ~~~
-[pass global="_GET" field="q"]
+[pass global=_GET field=q]
   Current URL request: {FIELD}
 [/pass]
 ~~~
@@ -186,7 +186,7 @@ Use the field parameter to pass an element from an array.
 *Multiple fields*
 
 ~~~
-[pass global="_GET" fields="type, category, status"]
+[pass global=_GET fields='type, category, status']
   Queries: {TYPE}, {CATEGORY}, {STATUS}
 [/pass]
 ~~~
@@ -194,7 +194,7 @@ Use the field parameter to pass an element from an array.
 *If the global variable is a nested array*
 
 ~~~
-[pass global="first_array" field="second_array" sub="field_name"]
+[pass global=first_array field=second_array sub=field_name]
   Here it is: {FIELD}
 [/pass]
 ~~~
@@ -208,7 +208,7 @@ There's a special variable called *route*, which can be used to pass the current
 If the current URL is: `example.com/article/category/special`
 
 ~~~
-[pass global="route"]
+[pass global=route]
   {FIELD} is: article/category/special
   {FIELD_1} is: article
   {FIELD_2} is: category

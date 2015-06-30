@@ -18,7 +18,7 @@ This uses the default date format, set in the admin panel under Settings -> Gene
 To use other formatting:
 
 ~~~
-[today format="Y-m-d"]
+[today format=Y-m-d]
 ~~~
 
 This displays a date like: `2016-08-31`
@@ -26,7 +26,7 @@ This displays a date like: `2016-08-31`
 You can use it to display the time also:
 
 ~~~
-[today format="Y-m-d H:i"]
+[today format='Y-m-d H:i']
 ~~~
 
 For details, see [the Codex: Formatting Date and Time](https://codex.wordpress.org/Formatting_Date_and_Time).

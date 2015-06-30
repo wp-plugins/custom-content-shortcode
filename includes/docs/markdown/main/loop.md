@@ -7,7 +7,7 @@ Use `[loop]` to get posts and loop through each one.
 *Display five most recent posts*
 
 ~~~
-[loop type="post" count="5"]
+[loop type=post count=5]
   [field title]
   [field date]
   [field excerpt]
@@ -17,7 +17,7 @@ Use `[loop]` to get posts and loop through each one.
 *Display posts from a custom post type and category*
 
 ~~~
-[loop type="apartment" category="suite"]
+[loop type=apartment category=suite]
   Apartment: [field title]
   Rent per day: [field price]
   Description: [content]
@@ -34,7 +34,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **name** - post slug; if specified, usually only one post will match
 
-> **id** - post ID to include; for example: *id="1,2,3"*
+> **id** - post ID to include; for example: *id=1,2,3*
 
 > **exclude** - post ID to exclude
   - *this* - exclude current post
@@ -42,7 +42,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **count** - number of posts to show; default is all posts found
 
-> **offset** - offset the loop by a number of posts; for example: *offset="3"* to skip the first three
+> **offset** - offset the loop by a number of posts; for example: *offset=3* to skip the first three
 
 > **status** - display posts by status: *any, publish, pending, draft, future, private*
 
@@ -64,10 +64,10 @@ Use `[loop]` to get posts and loop through each one.
 ### Published date
 
 > **year, month, day** - display posts by specific year, month, day
-  - *today* - for example: *month="today"* will show posts from this month
+  - *today* - for example: *month=today* will show posts from this month
 
 > **before** - display posts before a relative or specific date
-  - Example: *before="today"*, *before="2015-02-01"*
+  - Example: *before=today*, *before=2015-02-01*
 
 > **after** - display posts after a date
 
@@ -75,15 +75,15 @@ Use `[loop]` to get posts and loop through each one.
 
 ### Category, tags
 
-> **category** - display posts from one or more categories; for example: *category="sports, fashion"*
+> **category** - display posts from one or more categories; for example: *category=sports,fashion*
 
-> - *category="this"* - find posts in the same category as current post
+> - *category=this* - find posts in the same category as current post
 
-> **tag** - display posts with one or more tags; for example: tag="apples, green"
+> **tag** - display posts with one or more tags; for example: tag=apples,green
 
-> - *tag="this"* - find posts with the same tag as current post
+> - *tag=this* - find posts with the same tag as current post
 
-> **compare** - for multiple categories/tags, set *compare="and"* to get posts that have all terms
+> **compare** - for multiple categories/tags, set *compare=and* to get posts that have all terms
 
 ---
 
@@ -92,18 +92,18 @@ Use `[loop]` to get posts and loop through each one.
 > **taxonomy, term** - display posts by taxonomy term
 
 > ~~~
-> [loop type="product" taxonomy="product-type" term="book"]
+> [loop type=product taxonomy=product-type term=book]
 >   [field title]
 > [/loop]
 > ~~~
 
 > #### Multiple terms
 
-> Multiple terms may be specified, such as *term="book, lamp"*.
+> Multiple terms may be specified, such as *term=book,lamp*.
 
 > By default, this gets posts whose taxonomy contains *any* of the given terms.
-  - Use *compare="and"* to get posts whose taxonomy contains all terms
-  - Use *compare="not"* to get posts whose taxonomy does not contain the term(s)
+  - Use *compare=and* to get posts whose taxonomy contains all terms
+  - Use *compare=not* to get posts whose taxonomy does not contain the term(s)
 
 > #### Multiple taxonomies
 
@@ -119,13 +119,13 @@ Use `[loop]` to get posts and loop through each one.
 
 > **field** - field name
 
-> **value** - value to search for
+> **value** - field value(s) - if multiple, will match any: *value=this,that*
 
 > **start** - use instead of *value* to check only the beginning of field value
 
 > **compare** - equal (default), not, more, less, or operator like &lt; and &gt;.
 
-> **compare="between"** - query for a range of values; for example, value="0,100"
+> **compare=between** - query for a range of values; for example, value=0,100
 
 > #### Multiple fields
 
@@ -177,9 +177,9 @@ Use `[loop]` to get posts and loop through each one.
 >> A more flexible way to display child posts is by using a nested loop.
 
 >> ~~~
->> [loop type="page" orderby="title"]
+>> [loop type=page orderby=title]
 >>   [field title]
->>   [-loop parent="this" orderby="title"]
+>>   [-loop parent=this orderby=title]
 >>     Child page: [field title]
 >>   [/-loop]
 >> [/loop]
@@ -207,9 +207,9 @@ Use `[loop]` to get posts and loop through each one.
 
 > **checkbox, value** - display posts whose checkbox contains the value
 
->> Multiple values are possible: *value="first, second"*. This will return all posts with checkboxes containing any of the values, i.e., first *or* second.
+>> Multiple values are possible: *value=first,second*. This will return all posts with checkboxes containing any of the values, i.e., first *or* second.
 
->> Optionally, you can set *compare="and"*, which will return all posts with checkboxes containing all of the values, i.e., first *and* second.  See example section below.
+>> Optionally, you can set *compare=and*, which will return all posts with checkboxes containing all of the values, i.e., first *and* second.  See example section below.
 
 > **relation** - additional query for checkbox value, where relation is *and* (default) or *or*
 
@@ -225,7 +225,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **strip_tags** - set *true* to remove all HTML tags inside the loop
 
-> **allow** - strip all HTML tags except allowed, for example: *allow="&lt;a&gt;&lt;li&gt;&lt;br&gt;"*
+> **allow** - strip all HTML tags except allowed, for example: *allow='&lt;a&gt;&lt;li&gt;&lt;br&gt;'*
 
 
 ---
@@ -271,7 +271,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **blog** - switch to given blog ID on multi-site
 
-> **columns** - display output in columns; for example, *columns="3"*; for padding: *pad="0px 10px"*
+> **columns** - display output in columns; for example, *columns=3*; for padding: *pad='0px 10px'*
 
 > **x** - repeat the loop x times - no query
 
@@ -283,7 +283,7 @@ Use `[loop]` to get posts and loop through each one.
 This is a feature to expand a list of fields to their values.
 
 ~~~
-[loop type="post" fields="title, custom_field"]
+[loop type=post fields=title,custom_field]
   Display {TITLE} and {CUSTOM_FIELD}
 [/loop]
 ~~~

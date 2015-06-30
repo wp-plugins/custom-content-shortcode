@@ -14,7 +14,7 @@ Use `[is]` to display content based on device type.
 [/is]
 ~~~
 
-The parameters available are: *mobile*, *phone*, *tablet*, and *computer*. 
+The parameters available are: *mobile*, *phone*, *tablet*, and *computer*.
 
 ---
 
@@ -24,9 +24,9 @@ The parameters available are: *mobile*, *phone*, *tablet*, and *computer*.
 
 ~~~
 [is mobile]
-  [field image size="medium"]
+  [field image size=medium]
 [else]
-  [field image size="large"]
+  [field image size=large]
 [/is]
 
 ~~~
@@ -35,9 +35,9 @@ The parameters available are: *mobile*, *phone*, *tablet*, and *computer*.
 
 ~~~
 [is computer]
-  [load css="style.css"]
+  [load css=style.css]
 [else]
-  [load css="style-mobile.css"]
+  [load css=style-mobile.css]
 [/is]
 ~~~
 

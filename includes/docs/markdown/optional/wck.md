@@ -9,14 +9,14 @@ For WCK fields, use the `[field]` shortcode and specify a metabox name.
 
 
 ~~~
-[field field_name metabox="metabox_name"]
+[field field_name metabox=metabox_name]
 ~~~
 
 ---
 
 ### Parameters
 
-> **image** - display an image field: *image="field_name"*
+> **image** - display an image field: *image=field_name*
 
 > **size** - size of image: *thumbnail*, *medium*, *large*, *full* (default) or custom defined size
 
@@ -33,7 +33,7 @@ For multiple fields from the same metabox, you can use the `[metabox]` shortcode
 
 
 ~~~
-[metabox name="metabox_name"]
+[metabox name=metabox_name]
   [field field_name]
   [field another_field]
 [/metabox]
@@ -49,7 +49,7 @@ Use `[repeater]` to display a repeating metabox.
 *Display repeater fields*
 
 ~~~
-[repeater metabox="metabox_name"]
+[repeater metabox=metabox_name]
   [field field_name]
   [field another_field]
 [/repeater]
@@ -70,9 +70,9 @@ Use `[repeater]` to display a repeating metabox.
 *Display repeater fields from five recent posts*
 
 ~~~
-[loop type="post_type" count="5"]
+[loop type=post_type count=5]
   Post Title: [field title]
-  [repeater metabox="metabox_name"]
+  [repeater metabox=metabox_name]
     [field field_name]
     [field another_field]
   [/repeater]

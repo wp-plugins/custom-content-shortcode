@@ -1200,7 +1200,6 @@ class CCS_Loop {
 
           $args = array(
             'field' => $parameters['field'.$suffix],
-            'value' => $parameters['value'.$suffix],
             'compare' => $parameters['compare'.$suffix],
           );
 
@@ -1216,7 +1215,21 @@ class CCS_Loop {
             }
           }
 
-          $query['meta_query'][] = self::prepare_meta_query( $args );
+          // Some trickery to support value="1,2,3"
+          $values = CCS_Loop::explode_list($parameters['value'.$suffix]);
+          $j = 0; $_args = array();
+          if (count($values)>1) {
+            $_args['relation'] = 'OR';
+          }
+          foreach ($values as $value) {
+            $args['value'] = $value;
+            $_args[] = self::prepare_meta_query( $args );
+            $j++;
+          }
+          if (count($values)>1)
+            $query['meta_query'][] = $_args;
+          else $query['meta_query'][] = $_args[0];
+          // print_r($query['meta_query']); echo '<hr>';
         }
       }
 
@@ -1592,7 +1605,7 @@ class CCS_Loop {
       $state['all_ids'][] = $post->ID;
     }
 
-    if ( isset($query['meta_query'][0]) ) {
+    if ( isset($query['meta_query'][0]) && isset($query['meta_query'][0]['compare'])) {
       $compare = $query['meta_query'][0]['compare'];
       $key = $query['meta_query'][0]['key'];
     } else {

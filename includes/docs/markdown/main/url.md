@@ -8,7 +8,7 @@ Use `[url]` to generate relative URLs.
 *Display an image from a relative location*
 
 ~~~
-<img src="[url uploads]/assets/logo.png">
+<img src=[url uploads]/assets/logo.png>
 ~~~
 
 This could be useful when you're migrating sites, for example, from local server to public.
@@ -48,7 +48,7 @@ Use the `[url]` shortcode to display login and logout links.
 *Display a logout link with redirect to home*
 
 ~~~
-<a href="[url logout go='home']">Logout</a>
+<a href="[url logout go=home]">Logout</a>
 ~~~
 
 ---
@@ -67,9 +67,9 @@ Here is an example using both `[is]` and `[url]` to show a login/logout link bas
 
 ~~~
 [is logout]
-  <a href="[url login go='user-profile']">Login</a>
+  <a href="[url login go=user-profile]">Login</a>
 [else]
-  <a href="[url logout go='home']">Logout Link</a>
+  <a href="[url logout go=home]">Logout Link</a>
 [/is]
 ~~~
 
@@ -83,7 +83,7 @@ The `[redirect]` shortcode redirects the user to another URL.
 
 ~~~
 [is not login]
-  [redirect go="http://example.com/guest/"]
+  [redirect go='http://example.com/guest/']
 [/is]
 ~~~
 

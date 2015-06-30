@@ -17,13 +17,13 @@ You can display custom fields as well as [predefined fields](#predefined-fields)
 Additional parameters can be placed after the field name.
 
 ~~~
-[field title words="10"]
+[field title words=10]
 ~~~
 
 *Display an image field*
 
 ~~~
-[field image="image_field" size="thumbnail"]
+[field image=image_field size=thumbnail]
 ~~~
 
 For available parameters, refer to [`[content]`](options-general.php?page=ccs_reference&tab=content#field).
@@ -56,7 +56,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *title-link* - post title with link to the post
 
-> *title-link-out* - post title with link to the post, in new tab: *target="_blank"*
+> *title-link-out* - post title with link to the post, in new tab: *target=_blank*
 
 ---
 
@@ -84,7 +84,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *image-link* - featured image with link to the post
 
-> *image-link-out* - featured image with link to the post, in new tab: *target="_blank"*
+> *image-link-out* - featured image with link to the post, in new tab: *target=_blank*
 
 > *thumbnail* - featured image thumbnail
 
@@ -128,7 +128,7 @@ To format a currency value, you can use the following parameters.
 *Format a field value as currency*
 
 ~~~
-[field field_name point="," thousands="."]
+[field field_name point=, thousands=.]
 ~~~
 
 This will display a number like: 2.500,00
@@ -138,7 +138,7 @@ This will display a number like: 2.500,00
 To use a predefined currency format, use the parameter *currency*.
 
 ~~~
-[field field_name currency="USD"]
+[field field_name currency=USD]
 ~~~
 
 Please note that the currency symbol is not included in the output.
