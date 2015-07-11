@@ -10,11 +10,12 @@ new CCS_Format;
 
 class CCS_Format {
 
+	public static $state;
+
 	function __construct() {
 
     add_shortcode( 'direct', array($this, 'direct_shortcode') );
     add_shortcode( 'format', array($this, 'format_shortcode') );
-		add_shortcode( 'x', array($this, 'x_shortcode') );
 		add_shortcode( 'clean', array($this, 'clean_shortcode') );
 		add_shortcode( 'br', array($this, 'br_shortcode') );
 		add_shortcode( 'p', array($this, 'p_shortcode') );
@@ -23,6 +24,8 @@ class CCS_Format {
     add_shortcode( 'http', array($this, 'http_shortcode') );
     add_shortcode( 'embed', array($this, 'embed_shortcode') );
     add_shortcode( 'escape', array($this, 'escape_shortcode') );
+		add_shortcode( 'x', array($this, 'x_shortcode') );
+		self::$state['x_loop'] = 0;
 	}
 
 
@@ -30,7 +33,6 @@ class CCS_Format {
   function direct_shortcode( $atts, $content ) {
     return $content;
   }
-
 
 	function br_shortcode() { return '<br />'; }
 
@@ -69,14 +71,19 @@ class CCS_Format {
   // Repeat x times: [x 10]..[/x]
 	function x_shortcode( $atts, $content ) {
 
+		if (!isset($atts[0])) return $content;
+
+		$x = $atts[0];
 		$out = '';
 
-		if (isset($atts[0])) {
-			$x = $atts[0];
-			for ($i=0; $i <$x ; $i++) {
-				$out .= do_shortcode($content);
-			}
+		// Start index from 1
+		for ($i=1; $i <= $x; $i++) {
+			self::$state['x_loop'] = $i;
+			$rendered = str_replace('{X}', $i, $content);
+			$out .= do_shortcode($rendered);
 		}
+
+		self::$state['x_loop'] = 0;
 		return $out;
 	}
 

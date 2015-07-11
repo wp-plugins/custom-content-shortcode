@@ -1,7 +1,9 @@
 
-## User
+# User
 
 ---
+
+
 
 Use `[user]` to display current user's info.
 
@@ -11,7 +13,7 @@ Full name: [user]
 E-mail: [user email]
 ~~~
 
----
+
 
 ### Fields
 
@@ -43,7 +45,7 @@ You can also specify a custom user field.
 
 ## Users loop
 
----
+
 
 Use `[users]` to loop through users.
 
@@ -56,7 +58,7 @@ Use `[users]` to loop through users.
 [/users]
 ~~~
 
----
+
 
 ### Parameters
 
@@ -86,7 +88,7 @@ Use `[users]` to loop through users.
 
 > **blog_id** - blog ID on a multisite
 
----
+
 
 ### Sort by user field
 
@@ -104,7 +106,7 @@ Use `[users]` to loop through users.
 
 ## User field value
 
----
+
 
 Use `[if user_field]` to check if a user field has specific value, or is not empty.
 
@@ -139,6 +141,6 @@ Use `[if user_field]` to check if a user field has specific value, or is not emp
 
 ## User condition
 
----
+
 
 To display something based on user condition such as ID or role, use the [`[is]` shortcode](options-general.php?page=ccs_reference&tab=is).

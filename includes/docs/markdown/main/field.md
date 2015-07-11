@@ -1,6 +1,8 @@
 
-## Field
+# Field
+
 ---
+
 
 Use `[field]` to display a field from the current post.
 
@@ -30,7 +32,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 ## Predefined fields
 
----
+
 
 ### Post
 
@@ -48,7 +50,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *post-status* - post status
 
----
+
 
 ### Title
 
@@ -58,7 +60,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *title-link-out* - post title with link to the post, in new tab: *target=_blank*
 
----
+
 
 ### Date
 
@@ -66,7 +68,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *modified* - last modified date
 
----
+
 
 ### Featured image
 
@@ -90,7 +92,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *thumbnail-link* - featured image thumbnail with link to the post
 
----
+
 
 ### Author
 
@@ -113,7 +115,7 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 ## Currency
 
----
+
 
 To format a currency value, you can use the following parameters.
 
@@ -148,7 +150,7 @@ Most [currency codes](http://en.wikipedia.org/wiki/ISO_4217#Active_codes) are de
 
 
 ## Array
----
+
 
 Use `[array]` to loop through an array of key-value pairs stored in a field.
 
@@ -159,9 +161,9 @@ Use `[array]` to loop through an array of key-value pairs stored in a field.
 [/array]
 ~~~
 
----
 
-###Parameters
+
+### Parameters
 
 > **each** - set *true* to loop through multiple arrays of key-value pairs
 

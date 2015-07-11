@@ -1,7 +1,9 @@
 
-## HTML Blocks
+# HTML Blocks
 
 ---
+
+
 
 The `[block]` shortcode is used as placeholders for HTML tags.
 
@@ -30,7 +32,7 @@ You can set the *tag* parameter to create other HTML tags.
 
 ## Attributes
 
----
+
 
 Any HTML attribute can be specified as parameter.
 
@@ -46,7 +48,7 @@ Any HTML attribute can be specified as parameter.
 
 ## Nested
 
----
+
 
 To make nested blocks, use the minus prefix.
 
@@ -63,7 +65,7 @@ To make nested blocks, use the minus prefix.
 
 ## HTML shortcodes
 
----
+
 
 Shortcodes are also provided for all major HTML tags.
 

@@ -1,6 +1,8 @@
 
-## Is
+# Is
+
 ---
+
 
 Use `[is]` to display content based on user status.
 
@@ -15,7 +17,7 @@ Use `[is]` to display content based on user status.
 [is role=subscriber]You are a subscriber.[/is]
 ~~~
 
----
+
 
 ### Parameters
 
@@ -37,7 +39,7 @@ Use `[is]` to display content based on user status.
 
 >> See the list of available user roles and capabilities under [Dashboard -> Content -> User Roles](index.php?page=content_overview#user-roles).
 
----
+
 
 ### Else or not
 

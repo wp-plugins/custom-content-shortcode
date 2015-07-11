@@ -1,6 +1,8 @@
 
-## Taxonomy
+# Taxonomy
+
 ---
+
 
 Use `[taxonomy]` to display taxonomy terms from the current post.
 
@@ -24,10 +26,12 @@ If there is more than one term, they will be displayed as a comma-separated list
 
 You can also use [`[for/each]`](#for--each) to loop through a list of terms.
 
----
+To get posts based on taxonomy terms, see [loop: taxonomies](options-general.php?page=ccs_reference&tab=loop#taxonomies).
+
+
 
 ## Related posts
----
+
 
 Use `[related]` to loop through posts related by taxonomy.
 
@@ -41,7 +45,7 @@ Use `[related]` to loop through posts related by taxonomy.
 
 The current post is not included in the result.
 
----
+
 
 ### Parameters
 
@@ -59,7 +63,7 @@ The current post is not included in the result.
 
 
 ## For / each
----
+
 
 This is a feature to create a loop for each category, tag, or taxonomy term.
 

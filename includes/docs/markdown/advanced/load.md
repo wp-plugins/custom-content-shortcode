@@ -1,6 +1,8 @@
 
-## Load
+# Load
+
 ---
+
 
 Use `[load]` to include a file into a page.
 
@@ -18,7 +20,7 @@ By default, it looks for the file in the current theme directory.
 [load dir=views file=product/new-products.html]
 ~~~
 
----
+
 
 ### Parameters
 
@@ -44,7 +46,7 @@ By default, it looks for the file in the current theme directory.
 
 ## Auto-load fields
 
----
+
 
 There are special fields that are automatically loaded into the page.
 

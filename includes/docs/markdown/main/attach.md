@@ -1,6 +1,8 @@
 
-## Attachment
+# Attachment
+
 ---
+
 
 Use `[attached]` to loop through attachments.
 
@@ -14,7 +16,7 @@ Use `[attached]` to loop through attachments.
 [/attached]
 ~~~
 
----
+
 
 ### Parameters
 

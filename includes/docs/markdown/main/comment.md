@@ -1,6 +1,8 @@
 
-## Comment
+# Comment
+
 ---
+
 
 Use `[comments]` and `[comment]` to display recent comments, or those of the current post.
 

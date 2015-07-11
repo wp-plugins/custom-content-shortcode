@@ -1,5 +1,7 @@
-## Pagination
+# Pagination
+
 ---
+
 
 To display the results of `[loop]` in pages, set the *paged* parameter.
 
@@ -24,7 +26,7 @@ Then, use `[loopage]` where you want to show the pagination.
 
 There is no styling applied to the pagination. It's up to your theme's CSS.
 
----
+
 
 ### Parameters
 
@@ -44,7 +46,7 @@ There is no styling applied to the pagination. It's up to your theme's CSS.
 
 > **list** - show pagination as a list; compatible with Bootstrap
 
----
+
 
 ### Current and total
 
@@ -61,7 +63,7 @@ The current page can also be displayed *before* the loop, using:
 [loopage-now before]
 ~~~
 
----
+
 
 ### Complete example
 
@@ -77,7 +79,7 @@ Page [loopage-now] of [loopage-total]
 
 ## Previous / next
 
----
+
 
 Use `[prev]` and `[next]` to get the previous/next post in the loop.
 

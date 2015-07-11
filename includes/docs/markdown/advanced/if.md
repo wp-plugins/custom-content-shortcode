@@ -1,7 +1,9 @@
 
-## If
+# If
 
 ---
+
+
 
 Use the **[if]** shortcode to display content based on post conditions.
 
@@ -13,7 +15,7 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 ## Parameters
 
----
+
 
 ### Post type and name
 
@@ -21,13 +23,13 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 > **name** - post name/slug
 
----
+
 
 ### Parent
 
 > **parent** - slug or ID of parent
 
----
+
 
 ### Category, tag, taxonomy
 
@@ -39,7 +41,7 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 > **term** - if post has specific taxonomy term(s); if no term is set, checks if any term exists
 
----
+
 
 ### Field value
 
@@ -53,13 +55,13 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 > **empty** - set to *false* if you're using dynamic values which could be empty, for example, when using `[pass]`
 
----
+
 
 ### Date field
 
 > **before**/**after** - used in place of *value* and *compare*; query for field values before/after a relative or specific date: *10 days*, *2 weeks ago*, or *2015-02-01*
 
----
+
 
 ### User field
 
@@ -67,13 +69,13 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 > **value, start, compare** - see above for field value
 
----
+
 
 ### Multiple values
 
 > For category, tag, taxonomy, field or user field, you can query for multiple values: for example, *category=sci-fi,comedy*. This returns posts in *either* Sci-Fi or Comedy. If you want posts matching *both* categories, set *compare=and*.
 
----
+
 
 ### If it exists
 
@@ -95,7 +97,7 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 > **taxonomy** - if the post has any term in this taxonomy
 
----
+
 
 ### Loop conditions
 
@@ -105,7 +107,7 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 > **every** - for every number of posts in the loop
 
----
+
 
 ### Passed value
 
@@ -118,7 +120,7 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 
 ## Else
----
+
 
 Use `[else]` to display something when the condition is false.
 
@@ -132,7 +134,7 @@ Use `[else]` to display something when the condition is false.
 ~~~
 
 ## Date field
----
+
 
 You can use the parameters *before* and *after* to compare dates.
 
@@ -149,7 +151,7 @@ You can use the parameters *before* and *after* to compare dates.
 The value can be a specific date like *2015-02-01*, or a relative date such as *1 month ago*.
 
 ## Other conditions
----
+
 
 ### If there is no loop result
 
@@ -169,7 +171,7 @@ Use `[if empty]` to display something when there is no post matching the query.
 
 If there's no post found, the loop displays what's inside `[if empty]` only once.
 
----
+
 
 ### For every X number of posts
 
@@ -199,7 +201,7 @@ If there's no post found, the loop displays what's inside `[if empty]` only once
 [/loop]
 ~~~
 
----
+
 
 ### If a field value exists
 
@@ -219,7 +221,7 @@ To check if a field has any value, use the *field* parameter.
 
 If you specify the *value* parameter, it will check for that specific value only.
 
----
+
 
 ### If a taxonomy term exists
 
@@ -244,7 +246,7 @@ To check if the post has any term in a given taxonomy, use the *taxonomy* parame
 ~~~
 
 ## Nested
----
+
 
 For nested conditions, use the minus prefix.
 

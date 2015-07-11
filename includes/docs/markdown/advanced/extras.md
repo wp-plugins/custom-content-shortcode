@@ -1,7 +1,9 @@
 
-## Extras
+# Extras
 
 ---
+
+
 
 ### Today
 
@@ -33,9 +35,6 @@ For details, see [the Codex: Formatting Date and Time](https://codex.wordpress.o
 
 Note: shortcode parameters cannot handle a backslash, so use double slashes `//` to escape.
 
-&nbsp;
-
----
 
 ### Comment
 

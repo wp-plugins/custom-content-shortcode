@@ -1,6 +1,8 @@
 
-## Mobile Detect
+# Mobile Detect
+
 ---
+
 
 Enable the Mobile Detect under [Settings](options-general.php?page=ccs_reference&tab=settings).
 
@@ -16,7 +18,7 @@ Use `[is]` to display content based on device type.
 
 The parameters available are: *mobile*, *phone*, *tablet*, and *computer*.
 
----
+
 
 ### Examples
 
@@ -53,13 +55,13 @@ These last two would be placed in a custom field named *css*, to load in the hea
 
 ## Body class
 
----
+
 
 There are CSS classes added to the &lt;body&gt; element, for styling purposes: *.is_phone, .isnt_phone, .is_tablet, .is_mobile,* *.is_computer* and *.isnt_computer*.
 
 ## Library
 
----
+
 
 Device detection is based on a lightweight PHP class, [Mobile Detect](http://mobiledetect.net) version 2.8.12.
 

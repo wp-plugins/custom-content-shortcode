@@ -48,7 +48,8 @@ class CCS_Pass {
 
     if ( $pre_render == 'true' ) $content = do_shortcode($content);
 
-    $post_id = get_the_ID();
+    if (CCS_Loop::$state['is_loop']) $post_id = do_shortcode('[field id]');
+    else $post_id = get_the_ID();
 
     // Support nested
 
@@ -75,7 +76,8 @@ class CCS_Pass {
       if ( !empty($global) ) {
 
         $field_value = '';
-        if ($global=='route') {
+
+        if ( $global=='route' ) {
           // Parsed URL route
           global $wp;
           $request = $wp->request;
@@ -97,8 +99,25 @@ class CCS_Pass {
             if (isset($requests[ intval($field) ]))
               $field_value = $requests[ intval($field) ];
           }
+
+        } elseif ( $global=='query' ) {
+          // Parsed query string
+
+      		// Direct method
+      		$request_url = untrailingslashit( 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+      		$url = parse_url( $request_url );
+      		$query_string = isset($url['query']) ? $url['query'] : '';
+      		parse_str( $query_string, $query_array ); // Create array from query string
+      		// $query_array = array_filter($query_array); // Remove any empty keys
+
+          $field_value = $query_string;
+          foreach ($query_array as $key => $value) {
+            $tag = '{'.$prefix.(strtoupper($key)).'}';
+            $content = str_replace($tag, $value, $content);
+          }
+
         } else {
-          if ( $field == 'this' ) {
+          if ( $field == 'this' && isset($GLOBALS[$global]) ) {
             $field_value = $GLOBALS[$global];
           } elseif ( !empty($sub) && isset($GLOBALS[$global][$field][$sub]) ) {
             $field_value = $GLOBALS[$global][$field][$sub];
@@ -115,7 +134,6 @@ class CCS_Pass {
 
       } else {
         // Get normal field
-
         $field_value = CCS_Content::get_prepared_field( $field, $post_id );
         // $field_value = get_post_meta( $post_id, $field, true );
       }

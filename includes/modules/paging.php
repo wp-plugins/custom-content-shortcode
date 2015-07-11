@@ -41,8 +41,8 @@ class CCS_Paged {
 
   function loopage_total_shortcode( $atts, $content ) {
 
-    if (!empty(CCS_Loop::$wp_query)) {
-      $max = CCS_Loop::$wp_query->max_num_pages;
+    if (!empty(CCS_Loop::$state['wp_query'])) {
+      $max = CCS_Loop::$state['wp_query']->max_num_pages;
 
       if (!empty(CCS_Loop::$state['maxpage']) &&
         CCS_Loop::$state['maxpage']<$max) {
@@ -75,10 +75,11 @@ class CCS_Paged {
 
     $pagination_return = '';
 
-    if (class_exists('CCS_Loop') && !empty(CCS_Loop::$wp_query)) {
+    if (class_exists('CCS_Loop') && !empty(CCS_Loop::$state['wp_query'])) {
+      $query = CCS_Loop::$state['wp_query'];
 
-      $query = CCS_Loop::$wp_query;
-      $id = CCS_Loop::$state['loop_index'];
+      $id = CCS_Loop::$state['paged_index'];
+
       if (empty($max) && !empty(CCS_Loop::$state['maxpage'])) {
         $max = CCS_Loop::$state['maxpage'];
       }

@@ -1,6 +1,8 @@
 
-## Cache
+# Cache
+
 ---
+
 
 Use the **[cache]** shortcode to cache page sections.
 
@@ -30,7 +32,7 @@ Please note that the cache only stores the HTML output. Plugin shortcodes with J
 
 >> Note: if update is always set *true*, it will update every time and never load content from cache. Set it once, display the page to update the cache, then remove the parameter.
 
----
+
 
 &nbsp;
 
@@ -47,7 +49,7 @@ Please note that the cache only stores the HTML output. Plugin shortcodes with J
 A unique cache name is automatically generated based on the query parameters.
 
 ## Timer
----
+
 
 This is a little tool to measure performance.
 

@@ -1,5 +1,6 @@
 
-## Getting Started
+# Getting Started
+
 ---
 
 Here is an example of how to display your content.
@@ -33,9 +34,9 @@ Another section can display a list of freestyle bicycles.
 </ul>
 ~~~
 
+&nbsp;
 
 ## Notes
----
 
 ### Editing
 
@@ -50,8 +51,6 @@ There are some points to keep in mind when using shortcodes.
   - Use [HTML Block shortcodes](options-general.php?page=ccs_reference&tab=block), so the tags are clearly visible
   - Disable the Visual mode per page or post type, with the plugin [Raw HTML](http://wordpress.org/plugins/raw-html)
   - Load the code from outside the post editor using one of the methods below
-
----
 
 ### Loading
 
@@ -77,10 +76,9 @@ Shortcode templates can be loaded from a number of places.
 
 **Sidebar**: [Enable shortcodes inside Text widget](options-general.php?page=ccs_reference&tab=settings)
 
----
 
-### Parameters
 
+### Shortcode parameters
 
 The shortest way to define a parameter is without quotes.
 
@@ -101,7 +99,7 @@ If you need to pass a value that contains a space, use single quotes.
 [loop type=post field=something value='John Smith']
 ~~~
 
-If you're using a field value in an HTML attribute and it may include characters like "quotes" and &lt;brackets&gt;, use the *escape* parameter.
+When using a shortcode in an HTML attribute and it may include characters like "quotes" and &lt;brackets&gt;, use the *escape* parameter.
 
 ~~~
 <a href="[field url]" title="[field title escape=true]">

@@ -1,21 +1,22 @@
 
-## URL
+# URL
 
 ---
+
 
 Use `[url]` to generate relative URLs.
 
 *Display an image from a relative location*
 
 ~~~
-<img src=[url uploads]/assets/logo.png>
+<img src="[url uploads]/assets/logo.png">
 ~~~
 
 This could be useful when you're migrating sites, for example, from local server to public.
 
 Replace absolute URLs with the `[url]` shortcode, then the link doesn't depend on where the site is located.
 
----
+
 
 ### Parameters
 
@@ -35,7 +36,7 @@ Replace absolute URLs with the `[url]` shortcode, then the link doesn't depend o
 
 
 ## Login / logout links
----
+
 
 Use the `[url]` shortcode to display login and logout links.
 
@@ -51,7 +52,7 @@ Use the `[url]` shortcode to display login and logout links.
 <a href="[url logout go=home]">Logout</a>
 ~~~
 
----
+
 
 ### Parameters
 
@@ -61,7 +62,7 @@ Use the `[url]` shortcode to display login and logout links.
 
 > **go** - redirect after login/logout; specify URL, post slug, or *home*
 
----
+
 
 Here is an example using both `[is]` and `[url]` to show a login/logout link based on user status.
 
@@ -75,7 +76,7 @@ Here is an example using both `[is]` and `[url]` to show a login/logout link bas
 
 
 ## Redirect
----
+
 
 The `[redirect]` shortcode redirects the user to another URL.
 
@@ -87,7 +88,7 @@ The `[redirect]` shortcode redirects the user to another URL.
 [/is]
 ~~~
 
----
+
 
 ### Parameters
 
@@ -95,7 +96,7 @@ The `[redirect]` shortcode redirects the user to another URL.
 
 > **after** - redirect after specified time; for example: *1000 ms*, *30 sec*
 
----
+
 
 You can also specify a relative URL by wrapping it inside.
 

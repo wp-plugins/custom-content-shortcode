@@ -11,12 +11,7 @@ new CCS_If;
 
 class CCS_If {
 
-	public static $if_flag;
-
 	function __construct() {
-
-		self::$if_flag = '';
-
 		add_action( 'init', array( $this, 'register' ) );
 	}
 
@@ -25,7 +20,6 @@ class CCS_If {
 		add_shortcode( '-if', array( $this, 'if_shortcode' ) );
     add_shortcode( '--if', array( $this, 'if_shortcode' ) );
     add_shortcode( '---if', array( $this, 'if_shortcode' ) );
-		// add_shortcode( 'flag', array( $this, 'flag_shortcode' ) );
 	}
 
 	function if_shortcode( $atts, $content = null, $shortcode_name ) {
@@ -65,6 +59,9 @@ class CCS_If {
       'before' => '',
       'after' => '',
 
+			// CCS_Format::x_shortcode
+			'x' => '',
+
       'pass' => '',
       'pass_empty' => 'true', // deprecated
 		);
@@ -100,8 +97,6 @@ class CCS_If {
 		 */
 
 		global $post;
-
-//		if (empty($post)) return; // Make sure post exists
 
 		$current_post_id = isset($post->ID) ? $post->ID : null;
 
@@ -254,8 +249,10 @@ class CCS_If {
           // echo 'Check field: '.$field.' '.$check.' = '.$value.'<br>';
 
         } else {
+
           // Normal field
           $check = CCS_Content::get_prepared_field( $field );
+
         }
 
       // User field
@@ -531,6 +528,10 @@ class CCS_If {
 		}
 
 
+		if (!empty($x)) {
+			$condition = ( $x == CCS_Format::$state['x_loop'] );
+		}
+
     /*---------------------------------------------
      *
      * Has CCS gallery field
@@ -643,30 +644,6 @@ class CCS_If {
     }
 
 
-    /*---------------------------------------------
-     *
-     * Check field as condition [if flag="field"]
-     *
-     * @todo To be deprecated
-     *
-     */
-
-    if ( !empty($flag) ) {
-
-      if ( $flag != 'image' )
-        $check = get_post_meta( $current_id, $flag, true );
-      else
-        $check = has_post_thumbnail( $current_id );
-
-      if ((!empty($check)) && (!empty($no_flag))) $condition = false;
-      if ((empty($check)) && (empty($no_flag))) $condition = false;
-      else {
-        $condition = true;
-        self::$if_flag = $check;
-      }
-    }
-
-
 		/*---------------------------------------------
 		 *
 		 * Not / else
@@ -678,16 +655,7 @@ class CCS_If {
 
 		$out = $condition ? do_shortcode( $content ) : do_shortcode( $else ); // [if]..[else]..[/if]
 
-
-		self::$if_flag = '';
-
 		return $out;
-	}
-
-
-	function flag_shortcode() {
-
-		return self::$if_flag;
 	}
 
 

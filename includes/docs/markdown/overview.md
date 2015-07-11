@@ -1,6 +1,6 @@
-## Overview
+# Overview
 
-<hr class="catchadream" style="height:1px;border:none;width:100%;margin-bottom:20px"></hr>
+---
 
 <div class="row index"><div class="col-half">
 
@@ -37,23 +37,18 @@
 [WCK Fields and Post Types](options-general.php?page=ccs_reference&tab=wck)
 
 </div></div>
+
 &nbsp;
-<hr class="catchadream" style="height:1px;border:none;width:100%;margin-bottom:20px"></hr><div class="row index"><div class="col-half">
-### New
 
-[Today's date](options-general.php?page=ccs_reference&tab=extras#today)
+---
 
-[Previous/next links](options-general.php?page=ccs_reference&tab=paged#previous---next)
+<center>
 
-[Shortcode as comment](options-general.php?page=ccs_reference&tab=extras#comment)
+### Recent additions
 
-</div><div class="col-half">
-### In Progress
+[Show posts related by ACF taxonomy field](options-general.php?page=ccs_reference&tab=acf#related-by-taxonomy-field)
 
-Sort by multiple fields
+[Today's date](options-general.php?page=ccs_reference&tab=extras#today) &bullet;
+[Link to previous/next post](options-general.php?page=ccs_reference&tab=paged#previous---next)
 
-Comment replies
-
-Nested menu loop
-
-</div></div>
+</center>

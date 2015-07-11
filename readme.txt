@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 2.4.0
+Stable tag: 2.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,10 +84,15 @@ Support for other plugins:
 
 == Changelog ==
 
+= 2.4.1 =
+
+* [loop] - Fix parameter *start* to get posts whose field value starts with string
+* [related] - Get posts related by a taxonomy field: *taxonomy_field=field_name*
+
 = 2.4.0 =
 
-* [content words] - Support display of content after X words: *words=-15*
-* [loop] - Support multiple values for single field query: *value=1,2,3*
+* [content words] - Display content after X words: *words=-15*
+* [loop] - Multiple values for single field query: *value=1,2,3*
 
 = 2.3.9 =
 
@@ -121,3 +126,5 @@ Support for other plugins:
 
 * [comment template] - Load *comments.php* from theme
 * [loop fields] - Only field tags specified by the *fields* parameter will be rendered, same as the [pass] shortcode
+
+...

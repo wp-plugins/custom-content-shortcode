@@ -1,6 +1,8 @@
 
-## Content
+# Content
+
 ---
+
 
 Use `[content]` to display content or a field from a specific post.
 
@@ -22,7 +24,7 @@ Use `[content]` to display content or a field from a specific post.
 [content type=apartment name=lux-suite-22 field=rent-per-day]
 ~~~
 
----
+
 
 #### With loop
 
@@ -38,7 +40,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 ## Parameters
 
----
+
 
 ### Type, name, ID
 
@@ -46,7 +48,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **name**, **title**, or **id** -  get post by *slug*, *title*, or *ID*; default is *current post*
 
----
+
 
 ### Field
 
@@ -56,9 +58,11 @@ When inside a loop, it can be used without parameter to show each post's content
 
 >> When displaying a field from the current post, you can use [`[field]`](options-general.php?page=ccs_reference&tab=field) as a shortcut.
 
-> **meta** - display author meta: *field=author meta=user_email* - see [the codex](http://codex.wordpress.org/Function_Reference/get_the_author_meta) for available author meta fields
+> **meta** - display author meta: *field=author meta=user_email*
 
----
+>> Author meta fields include: *user_login, user_email, display_name, first_name, last_name, description*. See [the codex](http://codex.wordpress.org/Function_Reference/get_the_author_meta) for more.
+
+
 
 ### Image field
 
@@ -78,7 +82,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **nopin** - set *nopin=nopin* to prevent Pinterest pinning of image
 
----
+
 
 ### Taxonomy
 
@@ -96,7 +100,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **term_name** - get taxonomy term by name/label
 
----
+
 
 ### Format
 
@@ -126,7 +130,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 >> Use *in=timestamp* to format a unix timestamp value.
 
----
+
 
 ### Read more
 
@@ -136,7 +140,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **link** - set *false* to disable link to the post
 
----
+
 
 ### Other content types
 

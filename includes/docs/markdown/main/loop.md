@@ -1,6 +1,8 @@
 
-## Loop
+# Loop
+
 ---
+
 
 Use `[loop]` to get posts and loop through each one.
 
@@ -24,9 +26,9 @@ Use `[loop]` to get posts and loop through each one.
 [/loop]
 ~~~
 
-## Parameters
+&nbsp;
 
----
+## Parameters
 
 ### Type, name, ID
 
@@ -46,7 +48,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **status** - display posts by status: *any, publish, pending, draft, future, private*
 
----
+
 
 ### Author
 
@@ -59,7 +61,7 @@ Use `[loop]` to get posts and loop through each one.
 > **role** - show posts by user role, such as *administrator*, *editor*, *subscriber*
   - *this* - current user's role
 
----
+
 
 ### Published date
 
@@ -71,7 +73,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **after** - display posts after a date
 
----
+
 
 ### Category, tags
 
@@ -85,7 +87,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **compare** - for multiple categories/tags, set *compare=and* to get posts that have all terms
 
----
+
 
 ### Taxonomies
 
@@ -112,7 +114,7 @@ Use `[loop]` to get posts and loop through each one.
 > **taxonomy_2, term_2, compare_2, taxonomy_3, term_3, compare_3, ...**
 
 
----
+
 
 ### Field value
 
@@ -134,7 +136,7 @@ Use `[loop]` to get posts and loop through each one.
 > **field_2, value_2, compare_2, field_3, value_3, compare_3...**
 
 
----
+
 
 ### Date field
 
@@ -147,7 +149,7 @@ Use `[loop]` to get posts and loop through each one.
   - *now* - if your field contains date and time
   - *future* - today and after
   - *past* - before today
-  - *past* and today - past including today
+  - *past and today* - past including today
 
 > **compare** - *equal* (default), *not*, *more*, *less*, or operator like &lt; and &gt;.
 
@@ -159,7 +161,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **field_2, value_2, compare_2, date_format_2, after_2, before_2...**
 
----
+
 
 ### Parent / children
 
@@ -186,7 +188,7 @@ Use `[loop]` to get posts and loop through each one.
 >> ~~~
 
 
----
+
 
 ### Sorting and series
 
@@ -200,7 +202,7 @@ Use `[loop]` to get posts and loop through each one.
 > **series, key** - order posts by a series of field values, where *key* is the name of the field; the series can include ranges, for example: *1-15, 30-40, 42, 44*.
 
 
----
+
 
 ### Checkboxes
 
@@ -215,7 +217,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **checkbox_2, value_2, compare_2, ...**
 
----
+
 
 ### Format
 
@@ -228,7 +230,7 @@ Use `[loop]` to get posts and loop through each one.
 > **allow** - strip all HTML tags except allowed, for example: *allow='&lt;a&gt;&lt;li&gt;&lt;br&gt;'*
 
 
----
+
 
 ### List
 
@@ -241,7 +243,7 @@ Use `[loop]` to get posts and loop through each one.
 > **item_class, item_style** - add class or style to each item
 
 
----
+
 
 ### Pagination
 
@@ -252,7 +254,7 @@ Use `[loop]` to get posts and loop through each one.
 > These are used with the [[loopage] shortcode](options-general.php?page=ccs_reference&tab=paged) to create pagination.
 
 
----
+
 
 ### Cache
 
@@ -265,7 +267,7 @@ Use `[loop]` to get posts and loop through each one.
 > **timer** - set *true* to display resource info at the end of loop; see [here](options-general.php?page=ccs_reference&tab=cache#timer) for details
 
 
----
+
 
 ### Other
 
@@ -278,7 +280,7 @@ Use `[loop]` to get posts and loop through each one.
 
 ## Field tags
 
----
+
 
 This is a feature to expand a list of fields to their values.
 

@@ -1,16 +1,17 @@
 
-## Advanced Custom Fields
+# Advanced Custom Fields
+
 ---
+
 
 ### Supported field types
 
-- Text, image
 - [Checkbox, select](#checkbox-select), [true/false](#true-false), [date](#date-field)
-- [Page link](#page-link), [relationship/post object](#relationship)
+- [Page link](#page-link), [relationship/post object](#relationship), [taxonomy](#related-by-taxonomy-field)
 - [Gallery](#gallery), [repeater](#repeater), [flexible content](#flexible-content)
 
 ## Checkbox/Select
----
+
 
 To display the selected field's label instead of slug, use the following syntax.
 
@@ -19,7 +20,7 @@ To display the selected field's label instead of slug, use the following syntax.
 ~~~
 
 ## True/false
----
+
 
 To check the value of a true/false field, use the following syntax.
 
@@ -33,7 +34,7 @@ To check the value of a true/false field, use the following syntax.
 
 ## Date field
 
----
+
 
 Use the *acf_date* parameter to query the date field.
 
@@ -50,7 +51,7 @@ Use the *acf_date* parameter to display the date field with selected formatting.
 [field acf_date=date_field]
 ~~~
 
----
+
 
 ### Date and time
 
@@ -68,7 +69,7 @@ To display the field formatted, you can still use the *acf_date* parameter.
 
 
 ## Page link
----
+
 
 Use the *link* parameter to display a page link field. This will display the URL of a post or archive.
 
@@ -78,14 +79,12 @@ Use the *link* parameter to display a page link field. This will display the URL
 
 
 ## Relationship
----
 
-Use `[related]` to loop through a relationship field.
 
-*Display titles and thumbnails of related posts*
+Use `[related]` to loop through posts in a relationship field.
 
 ~~~
-[related related_field]
+[related field_name]
   [field title]
   [field thumbnail]
 [/related]
@@ -93,8 +92,33 @@ Use `[related]` to loop through a relationship field.
 
 You can use the same shortcode for a Post Object field.
 
+## Related by taxonomy field
+
+
+Use `[related taxonomy_field]` to loop through posts related by a taxonomy field.
+
+~~~
+[related taxonomy_field=field_name]
+  [field title]
+  [field thumbnail]
+[/related]
+~~~
+
+This excludes the current post by default.
+
+If the taxonomy field contains multiple terms, the loop will include related posts with *any* of the terms. Set *operator=and* to display related posts that have *all* terms.
+
+### Parameters
+
+> **count** - maximum number of results
+
+> **orderby** - order by* id*,* author*,* title*,* name*,* date* (default),* rand* (randomized)
+
+> **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date)
+
+
 ## Repeater
----
+
 
 Use `[repeater]` to loop through each row of a repeater field.
 
@@ -111,7 +135,7 @@ Use `[repeater]` to loop through each row of a repeater field.
 
 For an image field inside, use the *image* parameter to display the field. You can set the *size* parameter to:* thumbnail*,* medium*,* large* - default is *full*. If the image field returns as URL, set *in=url*.
 
----
+
 
 ### Parameters
 
@@ -123,7 +147,7 @@ For an image field inside, use the *image* parameter to display the field. You c
 
 > **row=rand** - a randomly selected row
 
----
+
 
 ### Display a specific row
 
@@ -151,7 +175,7 @@ For an image field inside, use the *image* parameter to display the field. You c
 
 This displays a sub-field from a specific row. It's used by itself without a closing tag.
 
----
+
 
 ### Nested repeaters
 
@@ -166,7 +190,7 @@ This displays a sub-field from a specific row. It's used by itself without a clo
 To display a repeater inside a repeater, use `[-repeater]`.  Please note that the inner repeater field must have a different name than its parent.
 
 ## Flexible content
----
+
 
 ~~~
 [flex flexible_content]
@@ -193,7 +217,7 @@ To display a repeater inside a repeater, use `[-repeater]`.  Please note that th
 
 
 ## Gallery
----
+
 
 For gallery fields, use `[acf_gallery]`.
 
@@ -209,7 +233,7 @@ For gallery fields, use `[acf_gallery]`.
 
 `[acf_image]` displays each image in the gallery field. It can also display these fields: *id*,* title*,* caption*,* alt*,* url*, and* description*. You can set the *size* parameter to:* thumbnail*,* medium*,* large*. The default is full-size.
 
----
+
 
 You can pass the image IDs to another shortcode.
 
@@ -221,7 +245,7 @@ You can pass the image IDs to another shortcode.
 
 
 ## In a loop
----
+
 
 Display ACF fields from other posts, using the loop.
 
@@ -238,7 +262,7 @@ Display ACF fields from other posts, using the loop.
 
 
 ## Field stored as array
----
+
 
 If the field value is stored as an array - for example, a file field - you can use the [`[array]` shortcode](options-general.php?page=ccs_reference&tab=field#array) to access its contents.
 
@@ -254,6 +278,6 @@ If the field value is stored as an array - for example, a file field - you can u
 
 
 ## Columns
----
+
 
 You can use the *columns* parameter for gallery, repeater, or flexible content. For details, please see its description in [`[loop]` under *Parameters: Other*](options-general.php?page=ccs_reference&tab=loop#other).

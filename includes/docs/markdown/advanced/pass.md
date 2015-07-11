@@ -1,6 +1,8 @@
 
-## Pass
+# Pass
+
 ---
+
 
 Use `[pass]` to pass a field value to another shortcode's parameter.
 
@@ -22,7 +24,7 @@ Use `[pass]` to pass a field value to another shortcode's parameter.
 
 
 ## Pass and if
----
+
 
 To check the passed value, combine with an `[if]` statement.
 
@@ -49,7 +51,7 @@ If you're passing a value that could be empty, set *empty=false*.
 This is necessary because when the *value* parameter is empty, the `[if]` statement by default only checks to see if the field exists.
 
 ## Multiple fields
----
+
 
 Pass values from multiple fields using the *fields* parameter.
 
@@ -64,7 +66,7 @@ Pass values from multiple fields using the *fields* parameter.
 This works in the same way as [field tags](options-general.php?page=ccs_reference&tab=loop#field-tags) for the `[loop]` shortcode.
 
 ## Field loop
----
+
 
 You can loop through a comma-separated list stored in a field, and pass each item.
 
@@ -80,7 +82,7 @@ You can loop through a comma-separated list stored in a field, and pass each ite
 ~~~
 
 ## User field
----
+
 
 *Pass a single user field*
 
@@ -104,7 +106,7 @@ This works in the same way as multiple fields, described above. The replaced tag
 
 
 ## Taxonomy loop
----
+
 
 You can loop through all terms in a taxonomy, and pass each item.
 
@@ -122,7 +124,7 @@ You can loop through all terms in a taxonomy, and pass each item.
 
 The available tags are: TERM, TERM_NAME and TERM_ID.
 
----
+
 
 ### Parameters
 
@@ -134,7 +136,7 @@ The available tags are: TERM, TERM_NAME and TERM_ID.
 
 ## List loop
 
----
+
 
 This is a feature to loop through a list of items.
 
@@ -161,7 +163,7 @@ For more flexibility, you can pass multiple items for each loop.
 ~~~
 
 ## Global variable
----
+
 
 To pass a global variable, use the *global* parameter.
 
@@ -199,7 +201,7 @@ Use the field parameter to pass an element from an array.
 [/pass]
 ~~~
 
----
+
 
 ### URL Route
 

@@ -136,7 +136,7 @@ class CCS_To_ACF {
 			$content .= ']';
 		}
 
-		if ( have_rows( $field )) {
+		if ( have_rows( $field ) ) {
 
 			$index_now = 0;
 			$outputs = array();
@@ -296,7 +296,10 @@ class CCS_To_ACF {
 
     if (empty($name) && isset($atts[0])) $name = $atts[0];
 
-		if( get_row_layout() == $name ) {
+		$names = CCS_Loop::explode_list($name);
+		$layout = get_row_layout();
+
+		if ( in_array($layout, $names) ) {
 			return do_shortcode( $content );
 		} else {
 			return null;

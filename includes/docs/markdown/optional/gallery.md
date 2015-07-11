@@ -1,13 +1,14 @@
 
-## Gallery Field
+# Gallery Field
 
 ---
+
 
 Enable the gallery field under [*Admin Panel -> Settings -&gt; Gallery Fields*](options-general.php?page=ccs_gallery_field_settings).
 
 You can add, order, edit and remove images in the field.
 
----
+
 
 ### Example
 
@@ -26,7 +27,7 @@ For each image, these fields can be displayed: *id*, *title*, *image*, *imag
 To sort by image title instead of gallery order, set parameter *orderby=title*.
 
 ## In a loop
----
+
 
 *Display gallery fields of each post in a loop*
 
@@ -42,7 +43,7 @@ To sort by image title instead of gallery order, set parameter *orderby=title*.
 
 
 ## Native or Bootstrap gallery
----
+
 
 You can display all images in the gallery field using a native gallery or Bootstrap carousel.
 
@@ -58,7 +59,7 @@ You can pass the following parameters to the native gallery: *orderby*, *order*,
 
 
 ## Individual image
----
+
 
 The `[content]` shortcode can display individual images of the gallery field.
 
@@ -72,7 +73,7 @@ The `[content]` shortcode can display individual images of the gallery field.
 
 
 ## Group
----
+
 
 When using the `[loop]` to generate multiple Bootstrap carousels, the following will put images from each post in its own carousel.
 

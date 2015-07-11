@@ -1,7 +1,8 @@
 
-## WCK Fields and Post Types
+# WCK Fields and Post Types
 
 ---
+
 
 ### Single field
 
@@ -12,7 +13,7 @@ For WCK fields, use the `[field]` shortcode and specify a metabox name.
 [field field_name metabox=metabox_name]
 ~~~
 
----
+
 
 ### Parameters
 
@@ -25,7 +26,7 @@ For WCK fields, use the `[field]` shortcode and specify a metabox name.
 >> Usually WCK formats a text area to create break lines, but it doesn't work well with shortcodes. When shortcodes are enabled, you'll need to insert &lt;br&gt; tags manually.
 
 
----
+
 
 ### Multiple fields
 
@@ -42,7 +43,7 @@ For multiple fields from the same metabox, you can use the `[metabox]` shortcode
 
 ## Repeater
 
----
+
 
 Use `[repeater]` to display a repeating metabox.
 
@@ -55,7 +56,7 @@ Use `[repeater]` to display a repeating metabox.
 [/repeater]
 ~~~
 
----
+
 
 ### Parameters
 
@@ -65,7 +66,7 @@ Use `[repeater]` to display a repeating metabox.
 
 ## Inside loop
 
----
+
 
 *Display repeater fields from five recent posts*
 

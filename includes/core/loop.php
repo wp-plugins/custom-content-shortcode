@@ -69,8 +69,8 @@ class CCS_Loop {
     self::$state['is_nested_loop'] = false;
     self::$state['is_attachment_loop'] = false;
     self::$state['do_reset_postdata'] = false;
+    self::$state['wp_query'] = null;
     self::$previous_state = array();
-    self::$wp_query = null;
   }
 
 
@@ -149,6 +149,10 @@ class CCS_Loop {
   public static function init_loop() {
 
     $state = self::$state;
+
+    if (!isset($state['loop_index']))  $state['loop_index'] = 0;
+    if (!isset($state['is_loop']))  $state['is_loop'] = false;
+
     $state['loop_index']++; // Starts with 1
 
     global $post;
@@ -802,8 +806,13 @@ class CCS_Loop {
 
         // Get from query var
         $query_var = CCS_Paged::$prefix;
-        if (self::$state['loop_index']>1)
-          $query_var .= self::$state['loop_index'];
+        if (!isset(self::$state['paged_index']))
+          self::$state['paged_index'] = 1;
+        else
+          self::$state['paged_index']++;
+
+        if (self::$state['paged_index']>1)
+          $query_var .= self::$state['paged_index'];
         $query['paged'] = isset($_GET[$query_var]) ? $_GET[$query_var] : 1;
       }
     }
@@ -1426,7 +1435,7 @@ class CCS_Loop {
       self::$state['do_reset_postdata'] = true; // Reset post data at the end of loop
     }
 
-    return self::$wp_query = new WP_Query( $query );
+    return self::$state['wp_query'] = new WP_Query( $query );
   }
 
 
@@ -1665,7 +1674,6 @@ class CCS_Loop {
         if (!empty($parameters['start'])) {
 
           $field_value = CCS_Content::get_prepared_field( $parameters['field'], $current_id );
-
           $skip = true;
 
           if (!empty($field_value)) {
@@ -1704,7 +1712,8 @@ class CCS_Loop {
                 break;
             }
           } // End if there's field value
-        }
+
+        } // field value start
 
 
         /*---------------------------------------------
@@ -1742,53 +1751,54 @@ class CCS_Loop {
             }
 
           }
-        }
 
-        $skip_2 = false;
-        if ( !empty($parameters['checkbox_2']) && !empty($parameters['value_2']) ) {
-          $values = self::explode_list($parameters['value_2']);
-          $check_field = get_post_meta( $current_id, $parameters['checkbox_2'], $single=true );
+          $skip_2 = false;
+          if ( !empty($parameters['checkbox_2']) && !empty($parameters['value_2']) ) {
+            $values = self::explode_list($parameters['value_2']);
+            $check_field = get_post_meta( $current_id, $parameters['checkbox_2'], $single=true );
 
-          if (!empty($parameters['compare_2'])) $compare_2 = strtolower($parameters['compare_2']);
-          else $compare_2 = 'or';
+            if (!empty($parameters['compare_2'])) $compare_2 = strtolower($parameters['compare_2']);
+            else $compare_2 = 'or';
 
-          if ($compare_2 == 'or') $skip_2 = true;
+            if ($compare_2 == 'or') $skip_2 = true;
 
-          foreach ($values as $value) {
+            foreach ($values as $value) {
 
-            $in_array = in_array($value, (array)$check_field);
+              $in_array = in_array($value, (array)$check_field);
 
-            if (($compare_2 == 'or') && ( $in_array )) {
-              $skip_2 = false;
-              break;
-            }
+              if (($compare_2 == 'or') && ( $in_array )) {
+                $skip_2 = false;
+                break;
+              }
 
-            if (($compare_2 == 'and') && ( ! $in_array )) {
-              $skip_2 = true;
+              if (($compare_2 == 'and') && ( ! $in_array )) {
+                $skip_2 = true;
+              }
             }
           }
-        }
 
-        if (!empty($parameters['checkbox_2'])) {
+          if (!empty($parameters['checkbox_2'])) {
 
-          if (!empty($parameters['relation']))
-            $relation = strtoupper($parameters['relation']);
-          else
-            $relation = 'AND'; // default
-
-          if ($relation=='OR') {
-            if ( ( ! $skip_1 ) || ( ! $skip_2 ) )
-              $skip = false;
+            if (!empty($parameters['relation']))
+              $relation = strtoupper($parameters['relation']);
             else
-              $skip = true;
+              $relation = 'AND'; // default
+
+            if ($relation=='OR') {
+              if ( ( ! $skip_1 ) || ( ! $skip_2 ) )
+                $skip = false;
+              else
+                $skip = true;
+            } else {
+              if ( ( ! $skip_1 ) && ( ! $skip_2 ) )
+                $skip = false;
+              else
+                $skip = true;
+            }
           } else {
-            if ( ( ! $skip_1 ) && ( ! $skip_2 ) )
-              $skip = false;
-            else
-              $skip = true;
+            $skip = $skip_1;
           }
-        } else {
-          $skip = $skip_1;
+
         }
 
         if ($skip) {
@@ -1832,7 +1842,6 @@ class CCS_Loop {
     $post_id = $post->ID;
 
     // Skip
-
     if ( in_array($post_id, self::$state['skip_ids']) ) {
       return null;
     }
