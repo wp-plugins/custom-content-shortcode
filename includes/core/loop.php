@@ -248,6 +248,7 @@ class CCS_Loop {
       'taxonomy_3' => '', 'term_3' => '',
       'taxonomy_4' => '', 'term_4' => '',
       'taxonomy_5' => '', 'term_5' => '',
+      'taxonomy_field' => '', // term_id, name, slug
 
       // Checkbox
 
@@ -979,6 +980,8 @@ class CCS_Loop {
 
           $args = array(
             'taxonomy' => $taxonomy,
+            'field' => !empty($parameters['taxonomy_field']) ?
+              $parameters['taxonomy_field'] : 'term_id', // name or slug
             'term' => $term,
             'compare' => !empty($parameters['compare'.$suffix]) ?
               $parameters['compare'.$suffix] : 'IN'

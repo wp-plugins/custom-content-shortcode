@@ -185,8 +185,11 @@ class CCS_To_ACF {
 				$output = implode( '', $outputs );
 			}
 		}
+
+
+
 		return $output;
-	}
+	} //
 
 	public static function loop_through_acf_gallery_field( $atts, $content ) {
 
@@ -213,10 +216,20 @@ class CCS_To_ACF {
 			$sub = 'true';
 		}
 
+		global $post;
+		$prev_post = $post;
+		if (CCS_Loop::$state['is_loop']) {
+			$post = get_post(CCS_Loop::$state['current_post_id']);
+		}
+
 		if (empty($sub)) {
 			$images = get_field( $field );
 		} else {
 			$images = get_sub_field( $field );
+		}
+
+		if (CCS_Loop::$state['is_loop']) {
+			$post = $prev_post;
 		}
 
 		$outputs = array();
@@ -252,6 +265,8 @@ class CCS_To_ACF {
 		}
 
 		self::$state['current_image'] = '';
+
+
 		return $output;
 	}
 
@@ -260,6 +275,7 @@ class CCS_To_ACF {
 		extract(shortcode_atts(array(
 			'field' => '',
 			'size' => '',
+			'class' => ''
 		), $atts));
 
     if (empty($field) && isset($atts[0])) $field = $atts[0];
@@ -282,7 +298,9 @@ class CCS_To_ACF {
 
 		} else {
 
-			$output = '<img src="' . $image_url . '">';
+			$output = '<img ';
+			if (!empty($class)) $output .= ' class="'.$class.'"';
+			$output .= 'src="' . $image_url . '">';
 
 		}
 		return $output;

@@ -182,7 +182,7 @@ class CCS_Content {
       'embed' => '', 'http' => '',
       'nl' => '', // Remove \r and \n
       'align' => '', 'class' => '', 'height' => '',
-      'words' => '', 'len' => '', 'length' => '',
+      'words' => '', 'len' => '', 'length' => '', 'sentences' => '',
       'date_format' => '', 'timestamp' => '',
       'new' => '', // Set true to open link in new tab - currently only for download-link
 
@@ -850,13 +850,28 @@ class CCS_Content {
         $result = substr($whole_result, strlen($result));
 
       } else {
+
         // If format, do it before content gets trimmed
+
         if ($parameters['format'] == 'true') {
           $result = self::wp_trim_words_retain_formatting(
             wpautop( $result ), $parameters['words'], $parameters['dots']
           );
         } else {
+
           $result = wp_trim_words( $result, $parameters['words'], $parameters['dots'] );
+
+          if ($parameters['sentences']=='true') {
+            // Remove string tail after last period
+            $len = strlen($result);
+            for ($i=$len-1; $i >= 0; $i--) {
+              if ($result[$i]=='.') {
+                break;
+              } else {
+                $result = substr($result, 0, -1);
+              }
+            }
+          }
         }
       }
 
