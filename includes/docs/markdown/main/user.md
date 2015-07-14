@@ -43,9 +43,9 @@ You can also specify a custom user field.
 [user field_name]
 ~~~
 
+&nbsp;
+
 ## Users loop
-
-
 
 Use `[users]` to loop through users.
 
@@ -57,7 +57,6 @@ Use `[users]` to loop through users.
   Contact: [user email]
 [/users]
 ~~~
-
 
 
 ### Parameters

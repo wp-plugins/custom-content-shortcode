@@ -3,8 +3,6 @@
 
 ---
 
-
-
 ### Today
 
 To display today's date:
@@ -35,6 +33,7 @@ For details, see [the Codex: Formatting Date and Time](https://codex.wordpress.o
 
 Note: shortcode parameters cannot handle a backslash, so use double slashes `//` to escape.
 
+&nbsp;
 
 ### Comment
 
@@ -45,3 +44,23 @@ Use `[*]` to place a comment inside the visual editor.
 ~~~
 
 This shortcode does not display anything, it's just a placeholder.
+
+&nbsp;
+
+### Random number
+
+Use `[random]` to display a random number in a chosen range.
+
+*Show a random number between 1 and 8*
+
+~~~
+[random 1-8]
+~~~
+
+Use `[pass]` if you need to pass a random number to a shortcode parameter.
+
+~~~
+[pass random=1-8]
+  [shortcode parameter='example-{RANDOM}.jpg']
+[/pass]
+~~~

@@ -1032,8 +1032,7 @@ class CCS_Loop {
       elseif ($orderby=="menu") $orderby = 'menu_order';
       elseif ( !in_array(strtolower($orderby), $default_orderby) ) {
 
-        // If not default orderby value, assume field name
-
+        // If not recognized, assume it's a field name
         $orderby = 'meta_value';
         if (empty($parameters['field'])) {
           $parameters['field'] = $orderby;

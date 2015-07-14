@@ -30,9 +30,9 @@ You can set the *tag* parameter to create other HTML tags.
 ~~~
 
 
-## Attributes
+&nbsp;
 
-
+### Attributes
 
 Any HTML attribute can be specified as parameter.
 
@@ -46,9 +46,7 @@ Any HTML attribute can be specified as parameter.
 ~~~
 
 
-## Nested
-
-
+### Nested
 
 To make nested blocks, use the minus prefix.
 
@@ -63,9 +61,7 @@ To make nested blocks, use the minus prefix.
 ~~~
 
 
-## HTML shortcodes
-
-
+### HTML shortcodes
 
 Shortcodes are also provided for all major HTML tags.
 

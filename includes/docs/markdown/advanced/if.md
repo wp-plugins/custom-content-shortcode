@@ -3,8 +3,6 @@
 
 ---
 
-
-
 Use the **[if]** shortcode to display content based on post conditions.
 
 ~~~
@@ -13,9 +11,9 @@ Use the **[if]** shortcode to display content based on post conditions.
 [/if]
 ~~~
 
+&nbsp;
+
 ## Parameters
-
-
 
 ### Post type and name
 
@@ -111,8 +109,9 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 ### Passed value
 
-> **pass** - the value being passed: *pass={FIELD}*
-> **value** - the value to check: *value=this
+> **pass** - the value being passed: *pass='{FIELD}'*
+
+> **value** - the value to check: *value=this*
 
 ### Other
 

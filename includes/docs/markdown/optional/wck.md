@@ -41,9 +41,10 @@ For multiple fields from the same metabox, you can use the `[metabox]` shortcode
 
 ~~~
 
+
+&nbsp;
+
 ## Repeater
-
-
 
 Use `[repeater]` to display a repeating metabox.
 
@@ -64,9 +65,7 @@ Use `[repeater]` to display a repeating metabox.
 
 > **id** - post id (default is current post)
 
-## Inside loop
-
-
+### Inside loop
 
 *Display repeater fields from five recent posts*
 

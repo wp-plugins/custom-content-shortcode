@@ -26,8 +26,9 @@ For each image, these fields can be displayed: *id*, *title*, *image*, *imag
 
 To sort by image title instead of gallery order, set parameter *orderby=title*.
 
-## In a loop
+&nbsp;
 
+### In a loop
 
 *Display gallery fields of each post in a loop*
 
@@ -41,8 +42,9 @@ To sort by image title instead of gallery order, set parameter *orderby=title*.
 [/loop]
 ~~~
 
+&nbsp;
 
-## Native or Bootstrap gallery
+### Native or Bootstrap gallery
 
 
 You can display all images in the gallery field using a native gallery or Bootstrap carousel.
@@ -57,8 +59,9 @@ You can display all images in the gallery field using a native gallery or Bootst
 
 You can pass the following parameters to the native gallery: *orderby*, *order*, *columns*, *size*, *link*, *include*, *exclude*. For details about the native `[gallery]` shortcode, please refer to [the codex](http://codex.wordpress.org/Gallery_Shortcode).
 
+&nbsp;
 
-## Individual image
+### Individual image
 
 
 The `[content]` shortcode can display individual images of the gallery field.
@@ -71,9 +74,9 @@ The `[content]` shortcode can display individual images of the gallery field.
 [field gallery num=3]
 ~~~
 
+&nbsp;
 
-## Group
-
+### Group
 
 When using the `[loop]` to generate multiple Bootstrap carousels, the following will put images from each post in its own carousel.
 

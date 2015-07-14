@@ -44,13 +44,12 @@ By default, it looks for the file in the current theme directory.
 
 > **shortcode** - set *false* to disable shortcodes
 
-## Auto-load fields
-
-
-
-There are special fields that are automatically loaded into the page.
 
 &nbsp;
+
+## Auto-load fields
+
+There are special fields that are automatically loaded into the page.
 
 ### Head - CSS
 

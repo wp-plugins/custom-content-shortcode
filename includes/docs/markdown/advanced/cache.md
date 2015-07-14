@@ -48,8 +48,9 @@ Please note that the cache only stores the HTML output. Plugin shortcodes with J
 
 A unique cache name is automatically generated based on the query parameters.
 
-## Timer
+&nbsp;
 
+## Timer
 
 This is a little tool to measure performance.
 

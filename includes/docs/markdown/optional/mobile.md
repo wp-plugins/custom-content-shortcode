@@ -53,15 +53,15 @@ The parameters available are: *mobile*, *phone*, *tablet*, and *computer*.
 
 These last two would be placed in a custom field named *css*, to load in the head of the page.
 
-## Body class
+&nbsp;
 
-
+### Body class
 
 There are CSS classes added to the &lt;body&gt; element, for styling purposes: *.is_phone, .isnt_phone, .is_tablet, .is_mobile,* *.is_computer* and *.isnt_computer*.
 
-## Library
+&nbsp;
 
-
+### Library
 
 Device detection is based on a lightweight PHP class, [Mobile Detect](http://mobiledetect.net) version 2.8.12.
 

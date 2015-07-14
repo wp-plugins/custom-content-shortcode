@@ -30,9 +30,10 @@ Additional parameters can be placed after the field name.
 
 For available parameters, refer to [`[content]`](options-general.php?page=ccs_reference&tab=content#field).
 
+
+&nbsp;
+
 ## Predefined fields
-
-
 
 ### Post
 

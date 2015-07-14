@@ -24,6 +24,7 @@ class CCS_Format {
     add_shortcode( 'http', array($this, 'http_shortcode') );
     add_shortcode( 'embed', array($this, 'embed_shortcode') );
     add_shortcode( 'escape', array($this, 'escape_shortcode') );
+    add_shortcode( 'random', array($this, 'random_shortcode') );
 		add_shortcode( 'x', array($this, 'x_shortcode') );
 		self::$state['x_loop'] = 0;
 	}
@@ -183,6 +184,20 @@ class CCS_Format {
 			$content = do_shortcode( $content );
 		return str_replace(array('[',']'), array('&#91;','&#93;'), esc_html($content));
 	}
+
+	function random_shortcode( $atts, $content ) {
+		if (!isset($atts[0])) $atts[0] = '0-99'; // default
+	  $range = explode('-', $atts[0]);
+		$min = $range[0];
+		$max = @$range[1];
+
+		return rand($min, $max);
+	}
+
+
+
+
+
 
   /*---------------------------------------------
    *

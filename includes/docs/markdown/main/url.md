@@ -34,6 +34,7 @@ Replace absolute URLs with the `[url]` shortcode, then the link doesn't depend o
 
 > **child** - *wp-content/child_theme* - child theme directory
 
+&nbsp;
 
 ## Login / logout links
 

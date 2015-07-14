@@ -28,7 +28,7 @@ You can also use [`[for/each]`](#for--each) to loop through a list of terms.
 
 To get posts based on taxonomy terms, see [loop: taxonomies](options-general.php?page=ccs_reference&tab=loop#taxonomies).
 
-
+&nbsp;
 
 ## Related posts
 

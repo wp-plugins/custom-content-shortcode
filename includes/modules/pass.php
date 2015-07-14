@@ -41,7 +41,8 @@ class CCS_Pass {
       'user_fields' => '', // Multiple
 
       'global' => '',
-      'sub' => ''
+      'sub' => '',
+      'random' => '',
     );
 
     extract( shortcode_atts( $args , $atts, true ) );
@@ -114,6 +115,15 @@ class CCS_Pass {
           foreach ($query_array as $key => $value) {
             $tag = '{'.$prefix.(strtoupper($key)).'}';
             $content = str_replace($tag, $value, $content);
+          }
+          if (!empty($fields)) {
+            // Remove what was not rendered
+            $fields = CCS_Loop::explode_list($fields);
+            foreach ($fields as $key) {
+              $tag = '{'.$prefix.(strtoupper($key)).'}';
+              $content = str_replace($tag, '', $content);
+            }
+            $fields = '';
           }
 
         } else {
@@ -351,6 +361,10 @@ class CCS_Pass {
         // Replace {FIELD_NAME}
         $content = str_replace('{'.$prefix.strtoupper($this_field).'}', $user_field_value, $content);
       }
+    }
+
+    if ( !empty($random) ) {
+      $content = str_replace('{'.$prefix.'RANDOM}', do_shortcode('[random '.$random.']'), $content);
     }
 
 
