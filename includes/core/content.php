@@ -182,7 +182,7 @@ class CCS_Content {
       'embed' => '', 'http' => '',
       'nl' => '', // Remove \r and \n
       'align' => '', 'class' => '', 'height' => '',
-      'words' => '', 'len' => '', 'length' => '', 'sentences' => '',
+      'words' => '', 'len' => '', 'length' => '', 'sentence' => '',
       'date_format' => '', 'timestamp' => '',
       'new' => '', // Set true to open link in new tab - currently only for download-link
 
@@ -861,30 +861,35 @@ class CCS_Content {
 
           $result = wp_trim_words( $result, $parameters['words'], $parameters['dots'] );
 
-          if ($parameters['sentences']=='true') {
-            // Remove string tail after last period
-            $len = strlen($result);
-            for ($i=$len-1; $i >= 0; $i--) {
-              if ($result[$i]=='.') {
-                break;
-              } else {
-                $result = substr($result, 0, -1);
-              }
-            }
-          }
         }
       }
 
     }
 
+    // Trim by length
     if (!empty($parameters['length'])) {
 
-      $result = strip_tags(strip_shortcodes($result)); //Strips tags and images
+      $result = strip_tags(strip_shortcodes($result)); // Strip tags and images
 
       // Support multi-byte character code
       $result = mb_substr($result, 0, $parameters['length'], 'UTF-8');
     }
 
+    // Trim to last sentence
+    if ( $parameters['sentence']=='true' ) {
+
+      $len = strlen($result);
+      $ends = array( '.', '?', '!' );
+
+      for ($i=$len-1; $i >= 0; $i--) {
+        if ( in_array($result[$i], $ends) ) {
+          break; // Found the end
+        } else {
+          // Trim each character
+          $result = substr($result, 0, -1);
+        }
+      }
+    }
 
     /*---------------------------------------------
      *

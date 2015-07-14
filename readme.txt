@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.2
-Stable tag: 2.4.3
+Stable tag: 2.4.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,15 +84,12 @@ Support for other plugins:
 
 == Changelog ==
 
-= 2.4.3 =
+= 2.4.4 =
 
+* [content], [field] - Trim to last sentence: *sentence=true*
 * [random] - Display a random integer, for example: `[random 0-99]`
 * [pass random] - Pass a random integer to a shortcode parameter, for example: `[pass random=0-99]`
 * [pass global=query] - Pass query variables from the URL
-
-= 2.4.2 =
-
-* [content], [field] - Trim by number of words and then to last sentence: *words=25 sentence=true*
 
 = 2.4.1 =
 

@@ -111,7 +111,7 @@ When inside a loop, it can be used without parameter to show each post's content
 
 >> Trimmed content is not formatted by default; set *format=true* if you need.
 
->> To trim by number of words and then trim to the last sentence, set *sentence=true*.
+> **sentence=true** - trim to the last sentence
 
 > **filter** - set *true* to apply *the_content* filter; this may be useful when using plugins that filter the post content, for example, [Page Builder](https://wordpress.org/plugins/siteorigin-panels).
 
