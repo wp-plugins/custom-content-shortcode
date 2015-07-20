@@ -45,12 +45,11 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *edit-url* - post edit URL
 
-> *excerpt* - post excerpt
-
 > *post-type* - post type
 
 > *post-status* - post status
 
+> *excerpt* - post excerpt; if excerpt doesn't exist, it will display post content with *words=25*
 
 
 ### Title

@@ -1829,34 +1829,42 @@ class CCS_Content {
 
         // ACF checkbox/select/radio choices
 
-
-
         // Needs field key
-        $cmd = '[loop';
-        if (!empty($name)) {
-          $cmd .= ' name="'.$name.'"';
-        }
-        else {
-          if (empty($type)) {
-            $type = get_post_type();
-            if (!$type) $type = 'post';
-          }
-          $cmd .= ' type='.$type;
-        }
 
-        $key = do_shortcode( $cmd.' count=1][field _'.$choices.'][/loop]');
+        if ( substr($choices, 0, 6) == 'field_' ) {
+          $key = $choices;
+        } else {
+          $cmd = '[loop';
+          if (!empty($name)) {
+            $cmd .= ' name="'.$name.'"';
+          }
+          else {
+            if (empty($type)) {
+              $type = get_post_type();
+              if (!$type) $type = 'post';
+            }
+            $cmd .= ' type='.$type;
+          }
+
+          $key = do_shortcode( $cmd.' count=1][field _'.$choices.'][/loop]');
+        }
 
         $field = get_field_object( $key );
 
-        $array = array();
-        if ($field) {
-          foreach ($field['choices'] as $key => $value) {
-            $array[] = array(
-              'value' => $key,
-              'label' => $value
-            );
+        if ($debug=='true') {
+          $array = $field;
+        } else {
+
+          $array = array();
+          if ( $field ) {
+            foreach ($field['choices'] as $key => $value) {
+              $array[] = array(
+                'value' => $key,
+                'label' => $value
+              );
+            }
+            $each = 'true';
           }
-          $each = 'true';
         }
 
       } else {
@@ -1894,8 +1902,8 @@ class CCS_Content {
         $this_content = $content;
 
         if ( !empty($choices) ) {
-          $this_content = str_replace('{VALUE}', $each_array['value'], $content);
-          $this_content = str_replace('{LABEL}', $each_array['label'], $this_content);
+          $this_content = str_replace('{VALUE}', @$each_array['value'], $content);
+          $this_content = str_replace('{LABEL}', @$each_array['label'], $this_content);
         }
 
         $out .= do_shortcode( $this_content );

@@ -3,7 +3,7 @@
 
 ---
 
-Use the **[if]** shortcode to display content based on post conditions.
+Use `[if]` to display content based on post conditions.
 
 ~~~
 [if category=recommend]
@@ -93,8 +93,9 @@ Use the **[if]** shortcode to display content based on post conditions.
 
 > **field** - if the post has any value in this field
 
-> **taxonomy** - if the post has any term in this taxonomy
+> **field=excerpt** - if the post has excerpt
 
+> **taxonomy** - if the post has any term in this taxonomy
 
 
 ### Loop conditions
