@@ -11,8 +11,11 @@ new CCS_If;
 
 class CCS_If {
 
+	public static $state;
+
 	function __construct() {
 		add_action( 'init', array( $this, 'register' ) );
+		self::$state['is_if_block'] = false;
 	}
 
 	function register() {
@@ -248,11 +251,16 @@ class CCS_If {
 
           // echo 'Check field: '.$field.' '.$check.' = '.$value.'<br>';
 
-        } else {
+        } elseif ( $field == 'excerpt' ) {
+
+					$check = get_the_excerpt();
+					$empty = 'true';
+					$value = '';
+
+				} else {
 
           // Normal field
           $check = CCS_Content::get_prepared_field( $field );
-
         }
 
       // User field
@@ -288,7 +296,7 @@ class CCS_If {
 
 				$condition = false;
 
-      }	else {
+      } else {
 
 				if ( !is_array($check) ) $check = array($check);
 
@@ -653,7 +661,9 @@ class CCS_If {
 		// Not - also catches compare="not"
 		$condition = isset($atts['not']) ? !$condition : $condition;
 
+		self::$state['is_if_block'] = true;
 		$out = $condition ? do_shortcode( $content ) : do_shortcode( $else ); // [if]..[else]..[/if]
+		self::$state['is_if_block'] = false;
 
 		return $out;
 	}
