@@ -48,6 +48,7 @@ Use `[loop]` to get posts and loop through each one.
 
 > **status** - display posts by status: *any, publish, pending, draft, future, private*
 
+> **sticky** - set *true* to include sticky posts
 
 
 ### Author
@@ -66,7 +67,7 @@ Use `[loop]` to get posts and loop through each one.
 ### Published date
 
 > **year, month, day** - display posts by specific year, month, day
-  - *today* - for example: *month=today* will show posts from this month
+  - *this* - for example: *month=this* will show posts from this month
 
 > **before** - display posts before a relative or specific date
   - Example: *before=today*, *before=2015-02-01*
@@ -79,11 +80,11 @@ Use `[loop]` to get posts and loop through each one.
 
 > **category** - display posts from one or more categories; for example: *category=sports,fashion*
 
-> - *category=this* - find posts in the same category as current post
+> - *this* - find posts in the same category as current post
 
 > **tag** - display posts with one or more tags; for example: tag=apples,green
 
-> - *tag=this* - find posts with the same tag as current post
+> - *this* - find posts with the same tag as current post
 
 > **compare** - for multiple categories/tags, set *compare=and* to get posts that have all terms
 
@@ -258,7 +259,7 @@ Use `[loop]` to get posts and loop through each one.
 
 ### Cache
 
-> **cache** - set *true* to cache the result of the loop; see [the reference page](options-general.php?page=ccs_reference&tab=cache) for details
+> **cache** - set *true* to cache the result of the loop; see [Advanced: Cache](options-general.php?page=ccs_reference&tab=cache) for details
 
 > **expire** - how often the cache is updated: minutes, hours, days, years - default is *10 minutes*
 

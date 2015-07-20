@@ -208,12 +208,14 @@ class CCS_Loop {
       'type' => '',
       'name' => '',
       'id' => '', 'exclude' => '',
+      'sticky' => '',
       'status' => '',
       'include' => '',
       'parent' => '',
       'count' => '', 'offset' => '',
       'year' => '', 'month' => '', 'day' => '',
-      'author' => '', 'author_exclude' => '', 'role' => '',
+      'author' => '', 'author_exclude' => '',
+      'role' => '',
 
       // Field value
 
@@ -660,8 +662,19 @@ class CCS_Loop {
 
     } // End if parent pameter
 
-    $query['ignore_sticky_posts'] = true;
 
+    /*---------------------------------------------
+     *
+     * Sticky posts
+     *
+     */
+
+
+    if ( empty($parameters['sticky']) ) {
+
+      // Ignore by default
+      $query['ignore_sticky_posts'] = true;
+    }
 
 
     /*---------------------------------------------
@@ -852,9 +865,9 @@ class CCS_Loop {
 
       $today = getdate();
 
-      if ($year=='today') $year=$today["year"];
-      if ($month=='today') $month=$today["mon"];
-      if ($day=='today') $day=$today["mday"];
+      if ( $year=='today' || $year=='this' ) $year=$today['year'];
+      if ( $month=='today' || $month=='this' ) $month=$today['mon'];
+      if ( $day=='today' || $day=='this' ) $day=$today['mday'];
 
       $query['date_query'] = array(
         array(

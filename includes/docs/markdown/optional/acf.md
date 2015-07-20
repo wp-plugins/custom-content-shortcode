@@ -6,21 +6,46 @@
 
 ### Supported field types
 
-- [Checkbox, select](#checkbox-select), [true/false](#true-false), [date](#date-field)
+- [Checkbox, select, radio](#checkbox-select-radio), [true/false](#true-false), [date](#date-field)
 - [Page link](#page-link), [relationship/post object](#relationship), [taxonomy](#related-by-taxonomy-field)
 - [Gallery](#gallery), [repeater](#repeater), [flexible content](#flexible-content)
 
-## Checkbox/Select
+&nbsp;
 
+## Checkbox/Select/Radio
 
-To display the selected field's label instead of slug, use the following syntax.
+### Label
+
+To display the selection's label instead of slug, use the following syntax.
 
 ~~~
 [field select out=label]
 ~~~
 
-## True/false
+### Multiple selections
 
+Use `[array]` and `[field value]` to loop through multiple selections.
+
+~~~
+[array checkboxes]
+  [field value]
+[array]
+~~~
+
+### Choices
+
+Use `[array choices]` to loop through available choices.
+
+~~~
+[array choices=checkbox_field]
+  Option label: [field label] or {LABEL}
+  Option value: [field value] or {VALUE}
+[/array]
+~~~
+
+If the field is in another post type than the current post, set parameter *type* or *name*.
+
+## True/false
 
 To check the value of a true/false field, use the following syntax.
 

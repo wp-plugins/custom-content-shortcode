@@ -46,8 +46,6 @@
 
 ### Recent additions
 
-[Show posts related by ACF taxonomy field](options-general.php?page=ccs_reference&tab=acf#related-by-taxonomy-field)
-
 [Today's date](options-general.php?page=ccs_reference&tab=extras#today) &bullet;
 [Link to previous/next post](options-general.php?page=ccs_reference&tab=paged#previous---next)
 

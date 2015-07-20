@@ -4,8 +4,8 @@
  *
  * [content] - Display field or post content
  *
- * @todo Add and list available filters
- * @todo Separate code areas by functionality for better management
+ * TODO: Add and list available filters
+ * TODO: Modularize function areas for better management
  *
  */
 
@@ -1107,6 +1107,9 @@ class CCS_Content {
 
       if (isset( $array[$field] ) ) {
         return $array[$field];
+      } elseif ($field=='value') {
+        if (is_array($array)) $array = implode('', $array);
+        return $array;
       }
 
     } elseif ( class_exists('CCS_To_ACF') &&
@@ -1787,77 +1790,125 @@ class CCS_Content {
     $array = null;
 
     extract( shortcode_atts( array(
+      'field' => '',
       'each'  => 'false', // Loop through each array
       'debug' => 'false', // Print array for debug purpose
-      'global' => ''
+      'global' => '',
+      'choices' => '', // Get choices of ACF field
+      'type' => '', 'name' => '' // Needed for choices
     ), $atts ) );
 
-    if (!empty($global)) $atts[0] = 'GLOBAL';
-
-    if ( isset($atts) && !empty($atts[0]) ) {
-
+    if (!empty($global)) {
+      $field = 'GLOBAL';
+    } elseif (!empty($choices)) {
+      $field = $choices;
+    } elseif ( isset($atts) && !empty($atts[0]) ) {
       $field = $atts[0];
-
-      if ( class_exists('CCS_To_ACF') &&
-        CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true' &&
-        $field != 'GLOBAL'
-        ) {
-//        && CCS_To_ACF::$state['is_relationship_loop']!='true' ) {
-
-        // Inside ACF repeater/flex
-
-        // Get sub field
-        if (function_exists('get_sub_field'))
-          $array = get_sub_field( $field );
-
-      } else {
-
-        if ( $field == 'GLOBAL' ) {
-          $array = $GLOBALS[$global];
-          if (!is_array($array)) {
-            $array = array('value'=>$array);
-          }
-
-        } else {
-          // Normal field
-          $array = get_post_meta( get_the_ID(), $field, true );
-        }
-
-        // IF value is not array
-        if ( !empty($array) && !is_array($array)) {
-          // See if it's an ACF field
-          if (function_exists('get_field')) {
-            $array = get_field( $field );
-          }
-        }
-      }
-
-      if ( $debug!='false') {
-        $out = self::print_array($array,false);
-      }
-
-      if ( !empty($array) && is_array($array) ) {
-
-        self::$state['is_array_field'] = true;
-
-        if ( $each != 'true' ) {
-          $array = array($array); // Create a single array
-        }
-
-        foreach ( $array as $each_array ) {
-
-          self::$state['current_field_value'] = $each_array;
-          $out .= do_shortcode( $content );
-        }
-
-        self::$state['is_array_field'] = false;
-
-      } else {
-
-        $out = $array; // Empty or not array
-      }
-
     }
+
+    // Inside ACF repeater/flex
+    if ( class_exists('CCS_To_ACF') &&
+      CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true' &&
+//      CCS_To_ACF::$state['is_relationship_loop']!='true' ) &&
+      $field != 'GLOBAL' ) {
+
+      // Get sub field
+      if (function_exists('get_sub_field'))
+        $array = get_sub_field( $field );
+
+    } else {
+
+      if ( $field == 'GLOBAL' ) {
+
+        $array = $GLOBALS[$global];
+        if (!is_array($array)) {
+          $array = array('value'=>$array);
+        }
+
+      } elseif ( !empty($choices) ) {
+
+        // ACF checkbox/select/radio choices
+
+
+
+        // Needs field key
+        $cmd = '[loop';
+        if (!empty($name)) {
+          $cmd .= ' name="'.$name.'"';
+        }
+        else {
+          if (empty($type)) {
+            $type = get_post_type();
+            if (!$type) $type = 'post';
+          }
+          $cmd .= ' type='.$type;
+        }
+
+        $key = do_shortcode( $cmd.' count=1][field _'.$choices.'][/loop]');
+
+        $field = get_field_object( $key );
+
+        $array = array();
+        if ($field) {
+          foreach ($field['choices'] as $key => $value) {
+            $array[] = array(
+              'value' => $key,
+              'label' => $value
+            );
+          }
+          $each = 'true';
+        }
+
+      } else {
+        // Normal field
+        $array = get_post_meta( get_the_ID(), $field, true );
+      }
+
+      // Not array
+      if ( !empty($array) && !is_array($array)) {
+        // See if it's an ACF field
+        if (function_exists('get_field')) {
+          $array = get_field( $field );
+        }
+      }
+    }
+
+
+    if ( $debug!='false') {
+      $out = self::print_array($array,false);
+    }
+
+
+    if ( !empty($array) && is_array($array) ) {
+
+      self::$state['is_array_field'] = true;
+
+      if ( $each != 'true' && !is_array($array) ) {
+        $array = array($array); // Create a single array
+      }
+
+      foreach ( $array as $each_array ) {
+
+        self::$state['current_field_value'] = $each_array;
+
+        $this_content = $content;
+
+        if ( !empty($choices) ) {
+          $this_content = str_replace('{VALUE}', $each_array['value'], $content);
+          $this_content = str_replace('{LABEL}', $each_array['label'], $this_content);
+        }
+
+        $out .= do_shortcode( $this_content );
+
+      }
+
+      self::$state['is_array_field'] = false;
+
+    } else {
+
+      $out = $array; // Empty or not array
+    }
+
     return $out;
   }
 
