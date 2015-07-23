@@ -53,6 +53,7 @@ class CCS_If {
       'lowercase' => '',
 
       'empty' => 'true',
+      'sticky' => '',
 
 			'not' => '',
       'start' => '',
@@ -535,9 +536,27 @@ class CCS_If {
 			$condition = !empty($result);
 		}
 
+		/*---------------------------------------------
+		 *
+		 * [x] loop index
+		 *
+		 */
 
 		if (!empty($x)) {
 			$condition = ( $x == CCS_Format::$state['x_loop'] );
+		}
+
+
+		/*---------------------------------------------
+		 *
+		 * Sticky post
+		 *
+		 */
+
+		if (isset($atts['sticky'])) $sticky = 'true';
+		if ( !empty($sticky) ){
+			$is_sticky = is_sticky();
+			$condition = ( $is_sticky && $sticky=='true' ) || ( !$is_sticky && $sticky=='false' );
 		}
 
     /*---------------------------------------------

@@ -22,11 +22,9 @@ Use `[if]` to display content based on post conditions.
 > **name** - post name/slug
 
 
-
 ### Parent
 
 > **parent** - slug or ID of parent
-
 
 
 ### Category, tag, taxonomy
@@ -40,7 +38,6 @@ Use `[if]` to display content based on post conditions.
 > **term** - if post has specific taxonomy term(s); if no term is set, checks if any term exists
 
 
-
 ### Field value
 
 > **field** - name of field to query
@@ -52,7 +49,6 @@ Use `[if]` to display content based on post conditions.
 > **lowercase** - set to *true* to compare lowercased version of field value
 
 > **empty** - set to *false* if you're using dynamic values which could be empty, for example, when using `[pass]`
-
 
 
 ### Date field
@@ -88,6 +84,8 @@ Use `[if]` to display content based on post conditions.
 > **comment** - if the post has any comments
 
 > **image** - if the post has a featured image
+
+> **sticky** - if post is sticky
 
 > **gallery** - if the post has any image in the gallery field
 
