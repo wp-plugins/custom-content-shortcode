@@ -3,10 +3,10 @@
 /*---------------------------------------------
  *
  * For each taxonomy
- * 
+ *
  * [for each="category"]
  * [each name,id,slug]
- * 
+ *
  */
 
 
@@ -132,7 +132,7 @@ class CCS_ForEach {
 		}
 
 
-		if ( CCS_Loop::$state['is_loop'] || ($current=="true")) {
+		if ( ( CCS_Loop::$state['is_loop'] && $current!="false") || ($current=="true") ) {
 
 			if ($current=="true") $post_id = get_the_ID();
 			else $post_id = CCS_Loop::$state['current_post_id']; // Inside [loop]
@@ -142,7 +142,7 @@ class CCS_ForEach {
 			// Current and parent parameters together
 
 			if ( !empty($parent) ) {
-				
+
 				if ( is_numeric($parent) ) {
 
 					/* Get parent term ID */
@@ -325,4 +325,3 @@ class CCS_ForEach {
 	}
 
 }
-
