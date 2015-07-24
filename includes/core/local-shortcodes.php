@@ -3,10 +3,10 @@
  *
  * Local Shortcodes
  * @version  0.0.3
- * 
+ *
  * Adapted from WordPress core:
  * https://github.com/WordPress/WordPress/blob/master/wp-includes/shortcodes.php
- * 
+ *
  * ---
  * WordPress API for creating bbcode like tags or what WordPress calls
  * "shortcodes." The tag and attribute parsing or regular expression code is
@@ -52,7 +52,7 @@ if ( ! function_exists('add_local_shortcode') ) {
  * @var array
  * @global array $local_shortcode_tags
  * @example $local_shortcode_tags['context']['tag']
- *  
+ *
  */
 
 $local_shortcode_tags = array();
@@ -263,11 +263,11 @@ function do_local_shortcode_with($global_tag, $content, $post) {
 
 
 	$pattern = get_local_shortcode_regex($global_tag);
-	
+
 	// Expanded preg_match callbacks
 	if ( ! preg_match_all( "/$pattern/s", $content, $match_all ) )
 		return $content;
-	
+
 	// convert arrays to what preg_replace_callback uses
 	// because that is what do_local_shortcode_tag expects
 	$new_matches = array();
@@ -277,7 +277,7 @@ function do_local_shortcode_with($global_tag, $content, $post) {
 			$new_matches[$match_key][$m_key] = $match;
 		}
 	}
-	
+
 	// process shortcodes and concatenate results
 	$output_string = '';
 	foreach ( $new_matches as $m ) {

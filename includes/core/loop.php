@@ -665,14 +665,11 @@ class CCS_Loop {
 
     /*---------------------------------------------
      *
-     * Sticky posts
+     * Sticky posts: ignore by default
      *
      */
 
-
     if ( empty($parameters['sticky']) ) {
-
-      // Ignore by default
       $query['ignore_sticky_posts'] = true;
     }
 

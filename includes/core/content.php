@@ -1749,7 +1749,7 @@ class CCS_Content {
 
     // Pass it to [content]
     $out = do_shortcode('[content '.$field_param.$rest.']');
-
+//echo '[content '.$field_param.$rest.'] -> '.do_shortcode('[content '.$field_param.$rest.']').'<br>';
     return $out;
   }
 

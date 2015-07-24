@@ -405,6 +405,15 @@ class CCS_Docs {
             }
 
             if ( $active_tab == 'overview' ) {
+
+
+
+
+              self::check_patch();
+
+
+
+
               // Escape HTML
               echo Markdown_Module::render( @file_get_contents( $doc_file ), false, true );
             } else {
@@ -550,5 +559,85 @@ class CCS_Docs {
     }
 
   } // End docs_admin_js
+
+
+
+  // Try to fix shortcode compatibility for 4.2.3  :(
+
+  static function check_patch() {
+
+    if (get_bloginfo('version') !== '4.2.3') return;
+
+    parse_str($_SERVER['QUERY_STRING'], $params);
+    $opt = 'ccs_fix_423';
+
+    $done = get_option( $opt );
+    // delete_option($opt); $done = false;
+
+    if ( isset($params['remove_patch']) && $done !== false ) {
+      if ( self::remove_patch() ) {
+        $done = 'remove';
+        delete_option( $opt );
+      } else {
+        $done = 'remove_fail';
+      }
+    } elseif ( isset($params['apply_patch']) && ($done === false || $done === 'fail') ) {
+      $done = 'do';
+    }
+
+//    $done = false;
+
+    if ( $done === 'do' ) {
+      if (self::apply_patch()) {
+        update_option( $opt,'done');
+        $done = 'done';
+      } else {
+        update_option( $opt,'fail');
+        $done = 'fail';
+      }
+    }
+
+    echo '<div style="font-size:13px;text-align:center">';
+    if ( $done===false ) {
+      echo 'A temporary patch for WordPress 4.2.3 is available. <a href="options-general.php?page=ccs_reference&apply_patch=true">Apply patch</a><hr>';
+    } elseif ($done=='done') {
+      echo 'A temporary patch has been applied for WordPress 4.2.3. <a href="options-general.php?page=ccs_reference&remove_patch=true">Remove patch</a><hr>';
+    } elseif ($done=='remove') {
+      echo 'The temporary patch for WordPress 4.2.3 was removed. <a href="options-general.php?page=ccs_reference&apply_patch=true">Apply patch</a><hr>';
+    } elseif ($done=='remove_fail') {
+      echo 'Removing the temporary patch for WordPress 4.2.3 was not successful. <a href="options-general.php?page=ccs_reference&remove_patch=true">Try again</a><hr>';
+    } else {
+      echo 'The temporary patch for WordPress 4.2.3 was not successful. <a href="options-general.php?page=ccs_reference&apply_patch=true">Try again</a><hr>';
+    }
+    echo '</div>';
+  }
+
+  static function apply_patch() {
+
+    $file = get_home_path().'wp-includes/shortcodes.php';
+    $content = @file_get_contents( $file );
+    $content = str_replace(
+      '$content = do_shortcodes_in_html_tags( $content, $ignore_html );',
+      '// $content = do_shortcodes_in_html_tags( $content, $ignore_html );',
+      $content
+    );
+
+    return ( strlen($content)>0 && @file_put_contents( $file, $content ) );
+  }
+
+  static function remove_patch() {
+
+    $file = get_home_path().'wp-includes/shortcodes.php';
+    $content = @file_get_contents( $file );
+    $content = str_replace(
+      '// $content = do_shortcodes_in_html_tags( $content, $ignore_html );',
+      '$content = do_shortcodes_in_html_tags( $content, $ignore_html );',
+      $content
+    );
+
+    return ( strlen($content)>0 && @file_put_contents( $file, $content ) );
+  }
+
+
 
 } // CCS_Docs
