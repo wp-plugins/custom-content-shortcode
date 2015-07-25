@@ -17,10 +17,10 @@ class CCS_Comments {
 
   function __construct() {
 
-    add_shortcode('comments', array($this, 'comments_shortcode') );
-    add_shortcode('comment', array($this, 'comment_shortcode') );
+    add_local_shortcode( 'ccs', 'comments', array($this, 'comments_shortcode'), true );
+    add_local_shortcode( 'ccs', 'comment', array($this, 'comment_shortcode'), true );
 
-    add_shortcode('comment-form', array($this, 'comment_form_shortcode') );
+    add_local_shortcode( 'ccs', 'comment-form', array($this, 'comment_form_shortcode'), true );
 
     add_local_shortcode( 'comment-form',
       'input', array($this, 'comment_form_input_shortcode') );
@@ -186,7 +186,7 @@ class CCS_Comments {
       if ( $matches ) {
         $index++;
         self::$state['current_comment'] = $comment;
-        $out .= do_shortcode( $content );
+        $out .= do_local_shortcode( 'ccs', $content, true  );
       }
     }
 

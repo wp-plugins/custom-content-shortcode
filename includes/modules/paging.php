@@ -17,9 +17,9 @@ class CCS_Paged {
   function __construct() {
 
     self::$prefix = 'lpage';
-    add_shortcode( 'loopage', array($this, 'loopage_shortcode') );
-    add_shortcode( 'loopage-now', array($this, 'loopage_now_shortcode') );
-    add_shortcode( 'loopage-total', array($this, 'loopage_total_shortcode') );
+    add_local_shortcode( 'ccs', 'loopage', array($this, 'loopage_shortcode'), true );
+    add_local_shortcode( 'ccs', 'loopage-now', array($this, 'loopage_now_shortcode'), true );
+    add_local_shortcode( 'ccs', 'loopage-total', array($this, 'loopage_total_shortcode'), true );
   }
 
   function loopage_now_shortcode( $atts, $content ) {

@@ -14,9 +14,9 @@ class CCS_Attached {
 
 	function __construct() {
 
-    add_shortcode( 'attached', array( $this, 'attached_shortcode' ) );
-    add_shortcode( '-attached', array( $this, 'attached_shortcode' ) );
-    add_shortcode( 'attached-field', array( $this, 'attached_field_shortcode' ) );
+    add_local_shortcode( 'ccs',  'attached', array( $this, 'attached_shortcode' ), true  );
+    add_local_shortcode( 'ccs',  '-attached', array( $this, 'attached_shortcode' ), true  );
+    add_local_shortcode( 'ccs',  'attached-field', array( $this, 'attached_field_shortcode' ), true  );
 
 		self::$state['is_attachment_loop'] = false;
 	}
