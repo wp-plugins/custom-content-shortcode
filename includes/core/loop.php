@@ -1910,9 +1910,9 @@ class CCS_Loop {
      */
 
     $template = self::render_field_tags( $template, self::$parameters );
-    $template = do_local_shortcode( 'ccs', $template, false );
+    $template = do_local_shortcode( 'loop', $template, false );
     return apply_filters('ccs_loop_each_result',
-      do_local_shortcode( 'loop', $template, true ), self::$parameters );
+      do_local_shortcode( 'ccs', $template, true ), self::$parameters );
   }
 
 

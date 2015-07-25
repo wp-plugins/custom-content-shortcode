@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.3
-Stable tag: 2.5.2
+Stable tag: 2.5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,10 +84,14 @@ Support for other plugins:
 
 == Changelog ==
 
+= 2.5.3 =
+
+* Further improve shortcodes for compatibility
+
 = 2.5.2 =
 
 * [field] - Add predefined field *link* and parameter *link_text*, to avoid using shortcodes in HTML attributes
-* [url] - Improve compatibility with WP 4.2.3
+* [url] - Improve compatibility
 
 = 2.5.1 =
 

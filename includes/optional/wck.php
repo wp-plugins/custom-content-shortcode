@@ -38,15 +38,15 @@ class CCS_To_WCK {
 
 			self::$state['is_wck_loaded'] = 'true';
 
-			add_shortcode( 'metabox', array($this, 'wck_metabox_shortcode') );
-			add_shortcode( 'wck-field', array($this, 'wck_field_shortcode') );
-			add_shortcode( 'post-field', array($this, 'wck_field_shortcode') );
-			add_shortcode( 'wck-repeat', array($this, 'wck_repeater_shortcode') );
-			add_shortcode( 'repeater', array($this, 'general_repeater_shortcode') );
+			add_local_shortcode( 'ccs', 'metabox', array($this, 'wck_metabox_shortcode') );
+			add_local_shortcode( 'ccs', 'wck-field', array($this, 'wck_field_shortcode') );
+			add_local_shortcode( 'ccs', 'post-field', array($this, 'wck_field_shortcode') );
+			add_local_shortcode( 'ccs', 'wck-repeat', array($this, 'wck_repeater_shortcode') );
+			add_local_shortcode( 'ccs', 'repeater', array($this, 'general_repeater_shortcode') );
 		} else {
 
 			if (class_exists('CCS_To_ACF')) {
-				add_shortcode( 'repeater', array('CCS_To_ACF', 'loop_through_acf_field') );
+				add_local_shortcode( 'ccs', 'repeater', array('CCS_To_ACF', 'loop_through_acf_field') );
 			}
 		}
 

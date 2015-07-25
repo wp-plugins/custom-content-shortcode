@@ -11,9 +11,9 @@ new CCS_Pass;
 class CCS_Pass {
 
   function __construct() {
-    add_shortcode( 'pass', array($this, 'pass_shortcode') );
-    add_shortcode( '-pass', array($this, 'pass_shortcode') );
-    add_shortcode( '--pass', array($this, 'pass_shortcode') );
+    add_local_shortcode( 'ccs',  'pass', array($this, 'pass_shortcode'), true );
+    add_local_shortcode( 'ccs',  '-pass', array($this, 'pass_shortcode'), true );
+    add_local_shortcode( 'ccs',  '--pass', array($this, 'pass_shortcode'), true );
   }
 
   public static function pass_shortcode( $atts, $content, $shortcode_name ) {
@@ -47,7 +47,7 @@ class CCS_Pass {
 
     extract( shortcode_atts( $args , $atts, true ) );
 
-    if ( $pre_render == 'true' ) $content = do_shortcode($content);
+    if ( $pre_render == 'true' ) $content = do_local_shortcode( 'ccs', $content, true );
 
     if (CCS_Loop::$state['is_loop']) $post_id = do_shortcode('[field id]');
     else $post_id = get_the_ID();
@@ -392,7 +392,7 @@ class CCS_Pass {
       $content = CCS_Loop::render_default_field_tags( $content );
     }
 
-    if ( $post_render == 'true' ) $content = do_shortcode($content);
+    if ( $post_render == 'true' ) $content = do_local_shortcode( 'ccs', $content, true );
 
     // Trim trailing white space and comma
     if ( $trim != 'false' ) {

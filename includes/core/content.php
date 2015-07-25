@@ -916,8 +916,15 @@ class CCS_Content {
     $link_text_fields = array(
       'link', 'edit-link', 'edit-link-self', 'title-link', 'title-link-out'
     );
-    if ( in_array( $parameters['field'], $link_text_fields ) && !empty($parameters['link_text']) ) {
-      $result = $parameters['link_text'];
+    if ( in_array( $parameters['field'], $link_text_fields ) ) {
+
+      if ( !empty($parameters['link_text']) ) {
+        $result = $parameters['link_text'];
+      }
+
+      if ( empty($parameters['escape']) || $parameters['escape']=='false' ) {
+        $result = esc_html($result);
+      }
     }
 
     switch ($parameters['field']) {
@@ -987,9 +994,9 @@ class CCS_Content {
       $result = do_local_shortcode( 'ccs',  $result, true );
     }
 
-    if ($parameters['http'] == 'true') {         // Add "http://" for links
+    if ( $parameters['http'] == 'true' ) {         // Add "http://" for links
 
-      if ( substr($result, 0, 4) !== 'http' )
+      if ( !empty($result) && substr($result, 0, 4) !== 'http' )
         $result = 'http://'.$result;
     }
 
@@ -1223,7 +1230,9 @@ class CCS_Content {
       case 'link':
       case 'title-link':
       case 'title-link-out':
-      case 'title': $result = $post->post_title; break;
+      case 'title':
+        $result = $post->post_title;
+      break;
 
       case 'author':
 
@@ -1903,7 +1912,7 @@ class CCS_Content {
 
       self::$state['is_array_field'] = true;
 
-      if ( $each != 'true' && !is_array($array) ) {
+      if ( $each != 'true' ) {
         $array = array($array); // Create a single array
       }
 

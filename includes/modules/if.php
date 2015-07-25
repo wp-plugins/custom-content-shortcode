@@ -601,7 +601,6 @@ class CCS_If {
 
     if ( CCS_Loop::$state['is_loop'] ) {
 
-
       /*---------------------------------------------
        *
        * Every X number of posts
@@ -639,6 +638,17 @@ class CCS_If {
 
 
     } // End: if inside [loop]
+
+
+	  /*---------------------------------------------
+	   *
+	   * Every X number of repeater
+	   *
+	   */
+
+    if ( CCS_To_ACF::$state['is_repeater_or_flex_loop'] && !empty($every) ) {
+			$condition = ( CCS_To_ACF::$state['repeater_index'] % $every == 0 );
+		}
 
 
     /*---------------------------------------------
