@@ -2,7 +2,7 @@
 /**
  *
  * Local Shortcodes
- * @version  0.0.3
+ * @version  0.0.4
  *
  * Adapted from WordPress core:
  * https://github.com/WordPress/WordPress/blob/master/wp-includes/shortcodes.php
@@ -30,7 +30,7 @@
  * To apply shortcode tags to content:
  *
  * <code>
- * $out = do_local_shortcode($content);
+ * $out = do_local_shortcode( $context, $content );
  * </code>
  *
  * @link http://codex.wordpress.org/Shortcode_API
@@ -109,11 +109,13 @@ $current_local_shortcode_context = '';
  * @param string $tag Shortcode tag to be searched in post content.
  * @param callable $func Hook to run when shortcode is found.
  */
-function add_local_shortcode($global_tag, $tag, $func) {
+function add_local_shortcode($global_tag, $tag, $func, $add_global=false) {
 	global $local_shortcode_tags;
 
-	if ( is_callable($func) )
+	if ( is_callable($func) ) {
 		$local_shortcode_tags[$global_tag][$tag] = $func;
+		if ($add_global) add_shortcode($tag, $func);
+	}
 }
 
 /**

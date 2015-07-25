@@ -127,7 +127,7 @@ class CCS_ForEach {
 				if ( self::$index > 0 ) self::$index--;
 				// Or finished
 				else self::$state['is_for_loop'] = false;
-				return do_shortcode($else);
+				return do_local_shortcode( 'ccs', $else, true );
 			}
 		}
 
@@ -270,11 +270,11 @@ class CCS_ForEach {
 					// Make term data available to [each]
 					self::$current_term[ self::$index ] = $each_term;
 
-					$out .= do_shortcode($replaced_content);
+					$out .= do_local_shortcode( 'ccs', $replaced_content, true );
 				}
 			}
 		} else {
-			$out .= do_shortcode($else);
+			$out .= do_local_shortcode( 'ccs', $else, true );
 		}
 
 		// Trim final output

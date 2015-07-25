@@ -19,10 +19,10 @@ class CCS_Content {
 
   function __construct() {
 
-    add_shortcode( 'content', array($this, 'content_shortcode') );
-    add_shortcode( 'field', array($this, 'field_shortcode') );
-    add_shortcode( 'taxonomy', array($this, 'taxonomy_shortcode') );
-    add_shortcode( 'array', array($this, 'array_field_shortcode') );
+    add_local_shortcode( 'ccs', 'content', array($this, 'content_shortcode'), true );
+    add_local_shortcode( 'ccs', 'field', array($this, 'field_shortcode'), true );
+    add_local_shortcode( 'ccs', 'taxonomy', array($this, 'taxonomy_shortcode'), true );
+    add_local_shortcode( 'ccs', 'array', array($this, 'array_field_shortcode'), true );
 
     self::$state = array();
     self::$state['is_array_field'] = false;
@@ -973,7 +973,7 @@ class CCS_Content {
     // Shortcode
 
     if ( $parameters['field'] != 'debug' && $parameters['shortcode'] != 'false' ) {    // Shortcode
-      $result = do_shortcode( $result );
+      $result = do_local_shortcode( 'ccs',  $result );
     }
 
     if ($parameters['http'] == 'true') {         // Add "http://" for links

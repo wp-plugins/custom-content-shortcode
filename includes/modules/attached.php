@@ -33,7 +33,7 @@ class CCS_Attached {
 			'columns' => '', 'pad' => '', 'between' => ''
 		);
 
-		extract( shortcode_atts( $args , $atts, true ) );		
+		extract( shortcode_atts( $args , $atts, true ) );
 
 		/*---------------------------------------------
 		 *
@@ -85,7 +85,7 @@ class CCS_Attached {
 		}
 
 		// If no images in gallery field
-		if (count($attachment_ids)==0) return null; 
+		if (count($attachment_ids)==0) return null;
 
 
 		/*---------------------------------------------

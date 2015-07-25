@@ -19,10 +19,10 @@ class CCS_If {
 	}
 
 	function register() {
-		add_shortcode( 'if', array( $this, 'if_shortcode' ) );
-		add_shortcode( '-if', array( $this, 'if_shortcode' ) );
-    add_shortcode( '--if', array( $this, 'if_shortcode' ) );
-    add_shortcode( '---if', array( $this, 'if_shortcode' ) );
+		add_local_shortcode( 'ccs',  'if', array( $this, 'if_shortcode' ), true );
+		add_local_shortcode( 'ccs',  '-if', array( $this, 'if_shortcode' ), true );
+    add_local_shortcode( 'ccs',  '--if', array( $this, 'if_shortcode' ), true );
+    add_local_shortcode( 'ccs',  '---if', array( $this, 'if_shortcode' ), true );
 	}
 
 	function if_shortcode( $atts, $content = null, $shortcode_name ) {
@@ -681,7 +681,9 @@ class CCS_If {
 		$condition = isset($atts['not']) ? !$condition : $condition;
 
 		self::$state['is_if_block'] = true;
-		$out = $condition ? do_shortcode( $content ) : do_shortcode( $else ); // [if]..[else]..[/if]
+		$out = $condition ?
+			do_local_shortcode( 'ccs',  $content, true ) :
+			do_local_shortcode( 'ccs',  $else, true ); // [if]..[else]..[/if]
 		self::$state['is_if_block'] = false;
 
 		return $out;

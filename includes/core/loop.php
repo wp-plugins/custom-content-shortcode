@@ -34,9 +34,9 @@ class CCS_Loop {
 
     self::init();
 
-    add_shortcode( 'loop', array($this, 'the_loop_shortcode') );
-    add_shortcode( '-loop', array($this, 'the_loop_shortcode') );
-    add_shortcode( '--loop', array($this, 'the_loop_shortcode') );
+    add_local_shortcode( 'ccs', 'loop', array($this, 'the_loop_shortcode'), true );
+    add_local_shortcode( 'ccs',  '-loop', array($this, 'the_loop_shortcode'), true );
+    add_local_shortcode( 'ccs',  '--loop', array($this, 'the_loop_shortcode'), true );
 
     add_local_shortcode( 'loop', 'prev', array($this, 'prev_shortcode') );
     add_local_shortcode( 'loop', 'next', array($this, 'next_shortcode') );
@@ -45,11 +45,11 @@ class CCS_Loop {
     add_local_shortcode( 'loop', 'newer', array($this, 'prev_shortcode') );
     add_local_shortcode( 'loop', 'older', array($this, 'next_shortcode') );
 
-    add_shortcode( 'prev-next', array($this, 'prev_next_shortcode') );
+    add_local_shortcode( 'ccs', 'prev-next', array($this, 'prev_next_shortcode'), true );
 
-    add_shortcode( 'loop-count', array($this, 'loop_count_shortcode') );
-    add_shortcode( 'found-posts', array($this, 'found_posts_shortcode') );
-    add_shortcode( 'search-keyword', array($this, 'search_keyword_shortcode') );
+    add_local_shortcode( 'ccs', 'loop-count', array($this, 'loop_count_shortcode'), true );
+    add_local_shortcode( 'ccs', 'found-posts', array($this, 'found_posts_shortcode'), true );
+    add_local_shortcode( 'ccs', 'search-keyword', array($this, 'search_keyword_shortcode'), true );
 
     add_shortcode( '*', array($this, 'shortcode_comment') );
     add_shortcode( '!', array($this, 'shortcode_comment') );
@@ -405,7 +405,7 @@ class CCS_Loop {
         self::$state['loop_count']++;
 
         $outs[] = apply_filters( 'ccs_loop_each_result',
-          do_shortcode( self::render_field_tags( $template, $parameters ) ),
+          do_local_shortcode( 'ccs',  self::render_field_tags( $template, $parameters ), true ),
           $parameters
         );
 
@@ -1529,7 +1529,7 @@ class CCS_Loop {
               $params .= ' '.$key.'="'.$value.'"';
             }
 
-            $this_template .= do_shortcode(
+            $this_template .= do_local_shortcode( 'ccs',
               '[if children]'
                 .'[loop'.$params.']'
                   .$template
@@ -1910,7 +1910,7 @@ class CCS_Loop {
      */
 
     $template = self::render_field_tags( $template, self::$parameters );
-
+    $template = do_local_shortcode( 'ccs', $template, false );
     return apply_filters('ccs_loop_each_result',
       do_local_shortcode( 'loop', $template, true ), self::$parameters );
   }
@@ -2164,7 +2164,7 @@ class CCS_Loop {
       if (!empty($each_row)) {
         $each_row .= $clear;
         $each_row = apply_filters('ccs_loop_each_row',
-          do_shortcode($each_row), self::$parameters);
+          do_local_shortcode( 'ccs', $each_row, true ), self::$parameters);
         $out .= $each_row;
       }
     }
@@ -2505,7 +2505,7 @@ class CCS_Loop {
       if (isset( $all_ids[$find_key + 1] )) { // Next in loop
         $prev_id = $all_ids[$find_key + 1];
         self::$state['current_post_id'] = $prev_id;
-        $result = do_shortcode($content);
+        $result = do_local_shortcode( 'ccs', $content, true );
         self::$state['current_post_id'] = $current_id; // Restore
       }
     }
@@ -2528,7 +2528,7 @@ class CCS_Loop {
       if (isset( $all_ids[$find_key - 1] )) { // Prev in loop
         $prev_id = $all_ids[$find_key - 1];
         self::$state['current_post_id'] = $prev_id;
-        $result = do_shortcode($content);
+        $result = do_local_shortcode( 'ccs', $content, true );
         self::$state['current_post_id'] = $current_id; // Restore
       }
     }
