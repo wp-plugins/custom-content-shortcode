@@ -121,8 +121,8 @@ class CCS_Content {
 
       // Field value
       'field' => '',
-
       'page' => '',
+      'link_text' => '',
 
       // Taxonomy value
 
@@ -454,7 +454,7 @@ class CCS_Content {
       if(!empty($parameters['class']))
         $result = '<div class="' . $parameters['class'] . '">' . $result . '</div>';
 
-      return do_shortcode( $result );
+      return do_local_shortcode( 'ccs',  $result );
 
     } elseif ( $parameters['gallery'] == 'carousel' ) {
 
@@ -487,7 +487,7 @@ class CCS_Content {
       if (!empty($parameters['class']))
         $result = '<div class="' . $class . '">' . $result . '</div>';
 
-      return do_shortcode( $result );
+      return do_local_shortcode( 'ccs',  $result );
     }
 
 
@@ -832,6 +832,8 @@ class CCS_Content {
         $parameters['dots'] = '&hellip;';
       }
 
+      $result = do_local_shortcode( 'ccs', $result, false );
+
       if (intval($parameters['words']) < 0) {
 
         // Remove X words from beginning and return the rest
@@ -846,6 +848,7 @@ class CCS_Content {
           $whole_result = wp_trim_words( $result, 9999, '' );
           $result = wp_trim_words( $result, 0 - $parameters['words'], '' );
         }
+
         // Offset and get the rest
         $result = substr($whole_result, strlen($result));
 
@@ -910,6 +913,13 @@ class CCS_Content {
 
     $post_id = isset(self::$state['current_post_id']) ? self::$state['current_post_id'] : get_the_ID();
 
+    $link_text_fields = array(
+      'link', 'edit-link', 'edit-link-self', 'title-link', 'title-link-out'
+    );
+    if ( in_array( $parameters['field'], $link_text_fields ) && !empty($parameters['link_text']) ) {
+      $result = $parameters['link_text'];
+    }
+
     switch ($parameters['field']) {
 
       case "edit-link":
@@ -933,6 +943,7 @@ class CCS_Content {
       case "image-link":        // Link image to post
       case "thumbnail-link":      // Link thumbnail to post
       case "title-link":        // Link title to post
+      case "link":        // Link to post
 
         $url = isset(self::$state['current_link_url']) ?
           self::$state['current_link_url'] : post_permalink( $post_id );
@@ -973,7 +984,7 @@ class CCS_Content {
     // Shortcode
 
     if ( $parameters['field'] != 'debug' && $parameters['shortcode'] != 'false' ) {    // Shortcode
-      $result = do_local_shortcode( 'ccs',  $result );
+      $result = do_local_shortcode( 'ccs',  $result, true );
     }
 
     if ($parameters['http'] == 'true') {         // Add "http://" for links
@@ -992,7 +1003,7 @@ class CCS_Content {
         $result = $wp_embed->autoembed($result);
 
         // Run [audio], [video] in embed
-        $result = do_shortcode( $result );
+        $result = do_local_shortcode( 'ccs',  $result );
       }
     }
 
@@ -1209,6 +1220,7 @@ class CCS_Content {
         }
         break;
 
+      case 'link':
       case 'title-link':
       case 'title-link-out':
       case 'title': $result = $post->post_title; break;
@@ -1748,8 +1760,8 @@ class CCS_Content {
     }
 
     // Pass it to [content]
-    $out = do_shortcode('[content '.$field_param.$rest.']');
-//echo '[content '.$field_param.$rest.'] -> '.do_shortcode('[content '.$field_param.$rest.']').'<br>';
+    $out = do_local_shortcode( 'ccs', '[content '.$field_param.$rest.']', true );
+//echo '[content '.$field_param.$rest.'] -> '.do_local_shortcode( 'ccs', '[content '.$field_param.$rest.']').'<br>';
     return $out;
   }
 
@@ -1772,7 +1784,7 @@ class CCS_Content {
           $i++;
         }
       }
-      $out = do_shortcode('[content taxonomy="'.$atts[0].'"'.$rest.']');
+      $out = do_local_shortcode( 'ccs', '[content taxonomy="'.$atts[0].'"'.$rest.']');
     }
     return $out;
   }
@@ -1846,7 +1858,7 @@ class CCS_Content {
             $cmd .= ' type='.$type;
           }
 
-          $key = do_shortcode( $cmd.' count=1][field _'.$choices.'][/loop]');
+          $key = do_local_shortcode( 'ccs',  $cmd.' count=1][field _'.$choices.'][/loop]');
         }
 
         $field = get_field_object( $key );
@@ -1906,7 +1918,7 @@ class CCS_Content {
           $this_content = str_replace('{LABEL}', @$each_array['label'], $this_content);
         }
 
-        $out .= do_shortcode( $this_content );
+        $out .= do_local_shortcode( 'ccs',  $this_content );
 
       }
 

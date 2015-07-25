@@ -43,13 +43,17 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 
 > *url* - post URL
 
-> *edit-url* - post edit URL
+> *link* - link to post URL; set parameter *link_text* to change link text from post title (default) to, for example, "Read More"
 
 > *post-type* - post type
 
 > *post-status* - post status
 
 > *excerpt* - post excerpt; if excerpt doesn't exist, it will display post content with *words=25*
+
+> *edit-url* - post edit URL
+
+> *edit-link* - post title with link to edit URL; set parameter *link_text* to change link text from post title to, for example, "Edit"
 
 
 ### Title
@@ -59,7 +63,6 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 > *title-link* - post title with link to the post
 
 > *title-link-out* - post title with link to the post, in new tab: *target=_blank*
-
 
 
 ### Date
@@ -111,10 +114,9 @@ For available parameters, refer to [`[content]`](options-general.php?page=ccs_re
 > *next-link* - next post in the loop
 
 
-
+&nbsp;
 
 ## Currency
-
 
 
 To format a currency value, you can use the following parameters.

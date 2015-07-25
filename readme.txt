@@ -6,8 +6,8 @@ Plugin URI: wordpress.org/plugins/custom-content-shortcode/
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T3H8XVEMEA73Y
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
-Tested up to: 4.2.2
-Stable tag: 2.5.1
+Tested up to: 4.2.3
+Stable tag: 2.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,11 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 2.5.2 =
+
+* [field] - Add predefined field *link* and parameter *link_text*, to avoid using shortcodes in HTML attributes
+* [url] - Improve compatibility with WP 4.2.3
 
 = 2.5.1 =
 
