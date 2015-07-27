@@ -177,7 +177,8 @@ class CCS_Content {
 
       // Formatting
 
-      'format' => '', 'shortcode' => '', 'escape' => '',
+      'format' => '', 'shortcode' => '',
+      'escape' => '', 'unescape' => '',
       'filter' => '',
       'embed' => '', 'http' => '',
       'nl' => '', // Remove \r and \n
@@ -896,12 +897,18 @@ class CCS_Content {
 
     /*---------------------------------------------
      *
-     * Escape HTML and shortcodes
+     * Escape/unescape HTML and shortcodes
      *
      */
 
     if ( $parameters['escape'] == 'true' ) {
-      $result = str_replace(array('[',']'), array('&#91;','&#93;'), esc_html($result));
+      $result = str_replace( array('[',']'), array('&#91;','&#93;'),
+        esc_html($result));
+    }
+
+    if ( $parameters['unescape'] == 'true' ) {
+      $result = str_replace( array('&#91;','&#93;'), array('[',']'),
+        htmlspecialchars_decode($result));
     }
 
 

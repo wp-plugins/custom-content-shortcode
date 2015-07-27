@@ -117,6 +117,8 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **embed** - set *true* to embed URLs like YouTube, Vimeo, etc. By default, such URLs in post content are auto-embedded.
 
+> **escape** or **unescape** - Escape/unescape HTML special characters
+
 > **class** - add &lt;div&gt; class to the output
 
 > **currency** - format as currency; see [the field section](options-general.php?page=ccs_reference&tab=field#currency) for details

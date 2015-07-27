@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.3
-Stable tag: 2.5.4
+Stable tag: 2.5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,11 @@ Support for other plugins:
 
 
 == Changelog ==
+
+= 2.5.5 =
+
+* [field] - Add parameters *escape* and *unescape*
+* [loop-count] - Output current index of the loop, starting from 1
 
 = 2.5.4 =
 

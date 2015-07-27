@@ -279,9 +279,14 @@ Use `[loop]` to get posts and loop through each one.
 > **x** - repeat the loop x times - no query
 
 
+
+## Loop count
+
+Use `[loop-count]` to display the current index of the loop, starting from 1.
+
+This can be useful, for example, to create unique element ID or class to wrap each post.
+
 ## Field tags
-
-
 
 This is a feature to expand a list of fields to their values.
 
