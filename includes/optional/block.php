@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*---------------------------------------------
  *
@@ -16,7 +16,7 @@ class CCS_Blocks {
       'a',
       'aside',
       'b',
-      'br',
+      // 'br',
       'button',
       'article',
       'block',
@@ -26,7 +26,7 @@ class CCS_Blocks {
       'em',
       'footer',
       'form',
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
       'header',
       'hr',
       'i',
@@ -34,7 +34,7 @@ class CCS_Blocks {
       'label',
       'li',
       'ol',
-      'p',
+      // 'p',
       'pre',
       'section',
       'select',
@@ -52,20 +52,20 @@ class CCS_Blocks {
     );
 
     foreach ($tags as $tag) {
-      add_shortcode($tag, array($this, 'block_shortcode'));
+      add_local_shortcode( 'ccs', $tag, array($this, 'block_shortcode'), true );
     }
 
     $nested = array('div','ol','li','ul');
 
     foreach ($nested as $tag) {
-      for ($i=1; $i < 6; $i++) { 
+      for ($i=1; $i < 6; $i++) {
         $prefix = str_repeat('-', $i);
-        add_shortcode($prefix.$tag, array($this, 'block_shortcode'));
+        add_local_shortcode( 'ccs', $prefix.$tag, array($this, 'block_shortcode'), true );
       }
     }
   }
 
-  function block_shortcode( $atts, $content = '', $tag ) {
+  function block_shortcode( $atts = array(), $content = '', $tag ) {
 
     // Remove prefix
     while (isset($tag[0]) && $tag[0]=='-') {
@@ -97,7 +97,7 @@ class CCS_Blocks {
     $out .= '>';
 
     if (!empty($content)) {
-      $out .= do_shortcode($content);
+      $out .= do_local_shortcode( 'ccs', $content, true );
       $out .= '</'.$tag.'>';
     }
 
