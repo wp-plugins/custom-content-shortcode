@@ -266,6 +266,7 @@ class CCS_Loop {
 
       'strip_tags' => '', 'strip' => '', 'allow' => '',
       'clean' => 'false', 'trim' => '',
+      'escape' => '', 'unescape' => '',
 
       // Columns
 
@@ -1987,6 +1988,29 @@ class CCS_Loop {
         $results = $new_results;
       }
     }
+
+    /*---------------------------------------------
+     *
+     * Escape/unescape HTML
+     *
+     */
+
+    if ( $parameters['escape'] == 'true' ) {
+      $new_results = array();
+      foreach ($results as $result) {
+        $new_results[] = esc_html($result);
+      }
+      $results = $new_results;
+    }
+
+    if ( $parameters['unescape'] == 'true' ) {
+      $new_results = array();
+      foreach ($results as $result) {
+        $new_results[] = htmlspecialchars_decode($result);
+      }
+      $results = $new_results;
+    }
+
 
     /*---------------------------------------------
      *

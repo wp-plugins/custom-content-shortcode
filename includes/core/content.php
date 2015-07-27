@@ -1365,7 +1365,7 @@ class CCS_Content {
             self::$parameters['words'] = 25;
           }
         }
-        break;
+      break;
 
       case 'debug' :
         ob_start();
@@ -1374,7 +1374,11 @@ class CCS_Content {
           echo '<pre>'; print_r( acf_get_fields_by_id($post_id) ); echo '</pre>';
         }
         $result = ob_get_clean();
-        break;
+      break;
+
+      case 'loop-count' :
+        $result = CCS_Loop::$state['loop_count'];
+      break;
 
       default :
 
