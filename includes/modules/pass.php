@@ -11,9 +11,12 @@ new CCS_Pass;
 class CCS_Pass {
 
   function __construct() {
-    add_local_shortcode( 'ccs',  'pass', array($this, 'pass_shortcode'), true );
-    add_local_shortcode( 'ccs',  '-pass', array($this, 'pass_shortcode'), true );
-    add_local_shortcode( 'ccs',  '--pass', array($this, 'pass_shortcode'), true );
+
+    CCS_Plugin::add( array(
+      'pass' => array($this, 'pass_shortcode'),
+      '-pass' => array($this, 'pass_shortcode'),
+      '--pass' => array($this, 'pass_shortcode'),
+    ));
   }
 
   public static function pass_shortcode( $atts, $content, $shortcode_name ) {

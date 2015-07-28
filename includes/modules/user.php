@@ -17,16 +17,17 @@ class CCS_User {
 
 	function __construct() {
 
-		add_shortcode('users', array($this, 'users_shortcode'));
-		add_shortcode('user', array($this, 'user_shortcode'));
+    CCS_Plugin::add( array(
+			'users' => array($this, 'users_shortcode'),
+			'user' => array($this, 'user_shortcode'),
+			'is' => array($this, 'is_shortcode'),
+			'isnt' => array($this, 'is_shortcode'),
+			'blog' => array($this, 'blog_shortcode'),
+			'list_shortcodes' => array($this, 'list_shortcodes'),
+			'search_form' => array($this, 'search_form_shortcode'),
+		) );
 
 		self::$state['is_users_loop'] = false;
-
-		add_shortcode('is', array($this, 'is_shortcode'));
-		add_shortcode('isnt', array($this, 'is_shortcode'));
-		add_shortcode('blog', array($this, 'blog_shortcode'));
-		add_shortcode('list_shortcodes', array($this, 'list_shortcodes'));
-		add_shortcode('search_form', array($this, 'search_form_shortcode'));
 	}
 
 

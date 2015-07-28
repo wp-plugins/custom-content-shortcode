@@ -19,10 +19,13 @@ class CCS_If {
 	}
 
 	function register() {
-		add_local_shortcode( 'ccs',  'if', array( $this, 'if_shortcode' ), true );
-		add_local_shortcode( 'ccs',  '-if', array( $this, 'if_shortcode' ), true );
-    add_local_shortcode( 'ccs',  '--if', array( $this, 'if_shortcode' ), true );
-    add_local_shortcode( 'ccs',  '---if', array( $this, 'if_shortcode' ), true );
+
+    CCS_Plugin::add( array(
+			'if' => array( $this, 'if_shortcode' ),
+			'-if' => array( $this, 'if_shortcode' ),
+	    '--if' => array( $this, 'if_shortcode' ),
+	    '---if' => array( $this, 'if_shortcode' ),
+		));
 	}
 
 	function if_shortcode( $atts, $content = null, $shortcode_name ) {

@@ -95,7 +95,7 @@ class CCS_ForEach {
 		$query = array(
 			'orderby' => !empty($orderby) ? $orderby : 'name',
 			'order' => $order,
-			'number' => $count,
+			'number' => $count, // Doesn't work?
 			'parent' => ( $parents=='true' ) ? 0 : '', // Exclude children or not
 			'hide_empty' => ( $empty=='true' ) ? 0 : 1,
 		);
@@ -131,7 +131,7 @@ class CCS_ForEach {
 			}
 		}
 
-
+		// Inside loop, or current is true
 		if ( ( CCS_Loop::$state['is_loop'] && $current!="false") || ($current=="true") ) {
 
 			if ($current=="true") $post_id = get_the_ID();
@@ -168,6 +168,7 @@ class CCS_ForEach {
 				}
 			}
 
+		// Not inside loop
 		} else {
 
 			if ( empty($parent) ) {
@@ -221,6 +222,8 @@ class CCS_ForEach {
 			$each_term['taxonomy'] = $each; // Taxonomy name
 
 			$excludes = CCS_Loop::explode_list( $exclude );
+			$index = 0;
+			if (empty($count)) $count = 9999; // Show all
 
 			foreach ($taxonomies as $term_object) {
 
@@ -241,7 +244,7 @@ class CCS_ForEach {
 					}
 				}
 
-				if ( $condition ) {
+				if ( $condition && ++$index <= $count ) {
 
 					$each_term['id'] = $term_object->term_id;
 					$each_term['name'] = $term_object->name;
@@ -272,7 +275,7 @@ class CCS_ForEach {
 
 					$out .= do_local_shortcode( 'ccs', $replaced_content, true );
 				}
-			}
+			} // For each term
 		} else {
 			$out .= do_local_shortcode( 'ccs', $else, true );
 		}

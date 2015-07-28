@@ -14,18 +14,21 @@ class CCS_Format {
 
 	function __construct() {
 
-    add_local_shortcode( 'ccs', 'direct', array($this, 'direct_shortcode'), true  );
-    add_local_shortcode( 'ccs', 'format', array($this, 'format_shortcode'), true  );
-		add_local_shortcode( 'ccs', 'clean', array($this, 'clean_shortcode'), true  );
-		add_local_shortcode( 'ccs', 'br', array($this, 'br_shortcode'), true  );
-		add_local_shortcode( 'ccs', 'p', array($this, 'p_shortcode'), true  );
-    add_local_shortcode( 'ccs', 'slugify', array($this, 'slugify_shortcode'), true  );
-    add_local_shortcode( 'ccs', 'today', array($this, 'today_shortcode'), true  );
-    add_local_shortcode( 'ccs', 'http', array($this, 'http_shortcode'), true  );
-    add_local_shortcode( 'ccs', 'embed', array($this, 'embed_shortcode'), true  );
-    add_local_shortcode( 'ccs', 'escape', array($this, 'escape_shortcode'), true  );
-    add_local_shortcode( 'ccs', 'random', array($this, 'random_shortcode'), true  );
-		add_local_shortcode( 'ccs', 'x', array($this, 'x_shortcode') );
+    CCS_Plugin::add( array(
+			'direct' => array($this, 'direct_shortcode'),
+	    'format' => array($this, 'format_shortcode'),
+			'clean' => array($this, 'clean_shortcode'),
+			'br' => array($this, 'br_shortcode'),
+			'p' => array($this, 'p_shortcode'),
+	    'slugify' => array($this, 'slugify_shortcode'),
+	    'today' => array($this, 'today_shortcode'),
+	    'http' => array($this, 'http_shortcode'),
+	    'embed' => array($this, 'embed_shortcode'),
+	    'escape' => array($this, 'escape_shortcode'),
+	    'random' => array($this, 'random_shortcode'),
+			'x' => array($this, 'x_shortcode')
+		) );
+
 		self::$state['x_loop'] = 0;
 	}
 
@@ -96,7 +99,7 @@ class CCS_Format {
 			$format = get_option('date_format');
 		}
 
-		return date($format);
+		return date_i18n($format);
 	}
 
 	// Convert title to slug
@@ -203,7 +206,7 @@ class CCS_Format {
    *
    * Currency format
    *
-   * TODO: Make this optional
+   * TODO: Separate into optional module
    *
    * @param flatcurr  float integer to convert
    * @param curr  string of desired currency format
@@ -342,7 +345,7 @@ class CCS_Format {
     }
   }
 
-  // Format Indian Rupees!
+  // Format Indian Rupees!!!
   static function formatinr($input){
     //CUSTOM FUNCTION TO GENERATE ##,##,###.##
     $dec = "";

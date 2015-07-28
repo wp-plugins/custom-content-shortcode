@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.3
-Stable tag: 2.5.7
+Stable tag: 2.5.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,28 +80,23 @@ Support for other plugins:
 
 == Upgrade Notice ==
 
-
+This update includes extensive changes to improve shortcode compatibility. Please test that your code works properly before using it in production.
 
 == Changelog ==
 
-= 2.5.7 =
+= 2.5.8 =
 
-* Improve compatibility for shortcodes in widgets/sidebar
+* [for] - Fix *count* parameter to limit number of terms
+* [today] - Use `date_i18n` for date internationalization
 
 = 2.5.6 =
 
 * [loop], [field] - Add parameters *escape* and *unescape*
 * [loop-count] - Output current index of the loop, starting from 1
-* [raw] - Improve compatibility
-
-= 2.5.4 =
-
-* Further improve shortcodes for compatibility
 
 = 2.5.2 =
 
 * [field] - Add predefined field *link* and parameter *link_text*, to avoid using shortcodes in HTML attributes
-* [url] - Improve compatibility
 
 = 2.5.1 =
 

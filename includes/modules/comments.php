@@ -17,10 +17,11 @@ class CCS_Comments {
 
   function __construct() {
 
-    add_local_shortcode( 'ccs', 'comments', array($this, 'comments_shortcode'), true );
-    add_local_shortcode( 'ccs', 'comment', array($this, 'comment_shortcode'), true );
-
-    add_local_shortcode( 'ccs', 'comment-form', array($this, 'comment_form_shortcode'), true );
+    CCS_Plugin::add( array(
+      'comments' => array( $this, 'comments_shortcode'),
+      'comment' => array( $this, 'comment_shortcode'),
+      'comment-form' => array( $this, 'comment_form_shortcode'),
+    ));
 
     add_local_shortcode( 'comment-form',
       'input', array($this, 'comment_form_input_shortcode') );

@@ -34,9 +34,15 @@ class CCS_Loop {
 
     self::init();
 
-    add_local_shortcode( 'ccs', 'loop', array($this, 'the_loop_shortcode'), true );
-    add_local_shortcode( 'ccs',  '-loop', array($this, 'the_loop_shortcode'), true );
-    add_local_shortcode( 'ccs',  '--loop', array($this, 'the_loop_shortcode'), true );
+    CCS_Plugin::add( array(
+      'loop' => array( $this, 'the_loop_shortcode'),
+      '-loop' => array( $this, 'the_loop_shortcode'),
+      '--loop' => array( $this, 'the_loop_shortcode'),
+      'prev-next' => array( $this, 'prev_next_shortcode'),
+      'loop-count' => array( $this, 'loop_count_shortcode'),
+      'found-posts' => array( $this, 'found_posts_shortcode'),
+      'search-keyword' => array( $this, 'search_keyword_shortcode'),
+    ));
 
     add_local_shortcode( 'loop', 'prev', array($this, 'prev_shortcode') );
     add_local_shortcode( 'loop', 'next', array($this, 'next_shortcode') );
@@ -44,12 +50,6 @@ class CCS_Loop {
     // newer/older - default order DESC (new to old)
     add_local_shortcode( 'loop', 'newer', array($this, 'prev_shortcode') );
     add_local_shortcode( 'loop', 'older', array($this, 'next_shortcode') );
-
-    add_local_shortcode( 'ccs', 'prev-next', array($this, 'prev_next_shortcode'), true );
-
-    add_local_shortcode( 'ccs', 'loop-count', array($this, 'loop_count_shortcode'), true );
-    add_local_shortcode( 'ccs', 'found-posts', array($this, 'found_posts_shortcode'), true );
-    add_local_shortcode( 'ccs', 'search-keyword', array($this, 'search_keyword_shortcode'), true );
 
     add_shortcode( '*', array($this, 'shortcode_comment') );
     add_shortcode( '!', array($this, 'shortcode_comment') );
@@ -265,7 +265,7 @@ class CCS_Loop {
       // Format
 
       'strip_tags' => '', 'strip' => '', 'allow' => '',
-      'clean' => 'false', 'trim' => '',
+      'clean' => 'false', 'trim' => '', 'local' => 'true',
       'escape' => '', 'unescape' => '',
 
       // Columns
@@ -1912,8 +1912,12 @@ class CCS_Loop {
 
     $template = self::render_field_tags( $template, self::$parameters );
     $template = do_local_shortcode( 'loop', $template, false );
-    return apply_filters('ccs_loop_each_result',
-      do_local_shortcode( 'ccs', $template, true ), self::$parameters );
+    if (self::$parameters['local']=='true')
+      $template = do_local_shortcode( 'ccs', $template, true );
+    else
+      $template = do_shortcode( $template );
+
+    return apply_filters('ccs_loop_each_result', $template, self::$parameters );
   }
 
 

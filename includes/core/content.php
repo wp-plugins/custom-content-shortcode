@@ -19,10 +19,12 @@ class CCS_Content {
 
   function __construct() {
 
-    add_local_shortcode( 'ccs', 'content', array($this, 'content_shortcode'), true );
-    add_local_shortcode( 'ccs', 'field', array($this, 'field_shortcode'), true );
-    add_local_shortcode( 'ccs', 'taxonomy', array($this, 'taxonomy_shortcode'), true );
-    add_local_shortcode( 'ccs', 'array', array($this, 'array_field_shortcode'), true );
+    CCS_Plugin::add( array(
+      'content' => array( $this, 'content_shortcode'),
+      'field' => array( $this, 'field_shortcode'),
+      'taxonomy' => array( $this, 'taxonomy_shortcode'),
+      'array' => array( $this, 'array_field_shortcode'),
+    ));
 
     self::$state = array();
     self::$state['is_array_field'] = false;
@@ -38,7 +40,9 @@ class CCS_Content {
   function content_shortcode( $parameters ) {
 
     $result = $this->before_anything( $parameters );
-    if ( $result != false ) return $result;
+    if ( $result != false ) {
+      return $result;
+    }
 
     $parameters = $this->merge_with_defaults( $parameters );
     self::$parameters = $parameters;
@@ -320,6 +324,10 @@ class CCS_Content {
 
         $post_id = CCS_Loop::$state['current_post_id']; // Current post in loop
 
+      } elseif ( !empty(self::$state['current_post_id']) ) {
+
+        $post_id = self::$state['current_post_id'];
+
       } else {
         $post_id = get_the_ID(); // Current post
       }
@@ -548,7 +556,7 @@ class CCS_Content {
     if ( !empty($parameters['exclude']) && ($parameters['exclude']=='this') ) {
 
       // Exclude current post ID
-      if (self::$state['current_post_id'] == get_the_ID())
+      if ( self::$state['current_post_id'] == get_the_ID() )
         return false;
 
     }
@@ -753,6 +761,10 @@ class CCS_Content {
        */
 
       $result = self::$state['current_post']->post_content;
+
+      // Do shortcode by default
+      self::$parameters['shortcode'] = empty(self::$parameters['shortcode']) ?
+        'true' : self::$parameters['shortcode'];
 
       // Format post content by default - except when trimmed
       if ( empty($parameters['words']) && empty($parameters['length']) ) {
@@ -997,9 +1009,24 @@ class CCS_Content {
 
     // Shortcode
 
-    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] != 'false' ) {    // Shortcode
+    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
+
       $result = do_local_shortcode( 'ccs',  $result, true );
+
+    } else {
+
+      // Protect from global do_shortcode
+    	global $doing_local_shortcode;
+      if ($doing_local_shortcode) {
+        $result = '[direct]'.$result.'[/direct]';
+      }
     }
+
+    // Reset current post id
+    if ( empty($parameters['field']) ) {
+      self::$state['current_post_id'] = 0;
+    }
+
 
     if ( $parameters['http'] == 'true' ) {         // Add "http://" for links
 

@@ -24,27 +24,28 @@ class CCS_To_ACF {
 
 		// Available to themes
 
-    add_local_shortcode( 'ccs', 'acf_sub', array($this, 'acf_sub_field'));
-    add_local_shortcode( 'ccs', 'flex', array($this, 'loop_through_acf_field'));
-    add_local_shortcode( 'ccs', '-flex', array($this, 'loop_through_acf_field'));
-    add_local_shortcode( 'ccs', '--flex', array($this, 'loop_through_acf_field'));
+    CCS_Plugin::add( array(
+	    'acf_sub' => array( $this, 'acf_sub_field'),
+	    'flex' => array( $this, 'loop_through_acf_field'),
+	    '-flex' => array( $this, 'loop_through_acf_field'),
+	    '--flex' => array( $this, 'loop_through_acf_field'),
+
+	    '-repeater' => array( $this, 'loop_through_acf_field'), // Nested repeater
+
+	    'acf_gallery' => array( $this, 'loop_through_acf_gallery_field'),
+	    'acf_image' => array( $this, 'get_image_details_from_acf_gallery'),
+	 // Alias
+	    'layout' => array( $this, 'if_get_row_layout'),
+	    '-layout' => array( $this, 'if_get_row_layout'),
+	    '--layout' => array( $this, 'if_get_row_layout'),
+		));
 
     // This will be called by [repeater] if not inside WCK metabox
     // add_local_shortcode( 'ccs', 'repeater', array($this, 'loop_through_acf_field'));
-    add_local_shortcode( 'ccs', '-repeater', array($this, 'loop_through_acf_field')); // Nested repeater
-
-    add_local_shortcode( 'ccs', 'acf_gallery', array($this, 'loop_through_acf_gallery_field'), true );
-    add_local_shortcode( 'ccs', 'acf_image', array($this, 'get_image_details_from_acf_gallery'), true );
-    // add_local_shortcode( 'ccs', 'sub_image', array($this, 'get_image_details_from_acf_gallery')); // Alias
-    add_local_shortcode( 'ccs', 'layout', array($this, 'if_get_row_layout'));
-    add_local_shortcode( 'ccs', '-layout', array($this, 'if_get_row_layout'));
-    add_local_shortcode( 'ccs', '--layout', array($this, 'if_get_row_layout'));
-
-    // This will be called by [related] when relationship field is specified
+    // add_local_shortcode( 'ccs', 'sub_image', array($this, 'get_image_details_from_acf_gallery'));    // This will be called by [related] when relationship field is specified
     // add_local_shortcode( 'ccs', 'related', array($this, 'loop_relationship_field'));
 
     add_filter( 'ccs_loop_parameters', array($this, 'acf_date_parameters_for_loop') );
-
 	}
 
   function init() {

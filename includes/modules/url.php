@@ -16,8 +16,10 @@ class CCS_URL {
 
     self::$urls = array();
 
-    add_local_shortcode( 'ccs', 'url', array($this, 'url_shortcode'), true );
-    add_shortcode( 'redirect', array($this, 'redirect_shortcode') );
+    CCS_Plugin::add( array(
+      'url' => array($this, 'url_shortcode'),
+      'redirect' => array($this, 'redirect_shortcode')
+    ));
   }
 
   public static function url_shortcode( $atts ) {

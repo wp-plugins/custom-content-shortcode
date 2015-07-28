@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 2.5.7
+Version: 2.5.8
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -178,8 +178,10 @@ class CCS_Plugin {
     $settings = self::$settings;
 
 
-    // Render plugin shortcodes before content is passed to default filters
-    add_filter( 'the_content', array($this, 'render_local_shortcodes'), 5 );
+    // Render plugin shortcodes after wpautop and before do_shortcode
+    add_filter( 'the_content', array($this, 'render_local_shortcodes'), 11 );
+    remove_filter( 'the_content', 'do_shortcode' );
+    add_filter( 'the_content', 'do_shortcode', 12 ); // 11 -> 12
 
 
     /*---------------------------------------------
@@ -191,8 +193,8 @@ class CCS_Plugin {
     if ( isset( $settings['shortcodes_in_widget'] ) &&
       ($settings['shortcodes_in_widget'] == "on") ) {
 
-      add_filter('widget_text', array($this, 'render_local_shortcodes'), 5 );
-      add_filter('widget_text', 'do_shortcode');
+      add_filter('widget_text', array($this, 'render_local_shortcodes') );
+      add_filter('widget_text', 'do_shortcode', 11 );
     }
 
     // Exempt [loop] from wptexturize()
@@ -206,11 +208,21 @@ class CCS_Plugin {
     return $shortcodes;
   }
 
-
   function render_local_shortcodes( $content ) {
     return do_local_shortcode( 'ccs', $content );
   }
 
+  static function add( $tag, $func = null, $global = true ) {
+
+    if (is_array($tag)) {
+      if ($func === false) $global = false;
+      foreach ($tag as $this_tag => $this_func) {
+        add_local_shortcode( 'ccs', $this_tag, $this_func, $global );
+      }
+    } else {
+      add_local_shortcode( 'ccs', $tag, $func, $global );
+    }
+  }
 
 } // End CCS_Plugin
 
