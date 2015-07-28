@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 2.6.0
+Version: 2.6.1
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -178,7 +178,7 @@ class CCS_Plugin {
     $settings = self::$settings;
 
 
-    // Render plugin shortcodes after wpautop and before do_shortcode
+    // Render plugin shortcodes after wpautop but before do_shortcode
     add_filter( 'the_content', array($this, 'render_local_shortcodes'), 11 );
     remove_filter( 'the_content', 'do_shortcode' );
     add_filter( 'the_content', 'do_shortcode', 12 ); // 11 -> 12
@@ -213,15 +213,7 @@ class CCS_Plugin {
   }
 
   static function add( $tag, $func = null, $global = true ) {
-
-    if (is_array($tag)) {
-      if ($func === false) $global = false;
-      foreach ($tag as $this_tag => $this_func) {
-        add_local_shortcode( 'ccs', $this_tag, $this_func, $global );
-      }
-    } else {
-      add_local_shortcode( 'ccs', $tag, $func, $global );
-    }
+    add_ccs_shortcode( $tag, $func, $global );
   }
 
 } // End CCS_Plugin
@@ -235,7 +227,7 @@ class CCS_Plugin {
 
 if (!function_exists('do_short')) {
   function do_short($content) {
-    echo do_shortcode($content);
+    echo do_ccs_shortcode( $content );
   }
 }
 
@@ -248,6 +240,17 @@ if (!function_exists('start_short')) {
 if (!function_exists('end_short')) {
   function end_short() {
     do_short( ob_get_clean() );
+  }
+}
+
+function add_ccs_shortcode( $tag, $func = null, $global = true ) {
+  if (is_array($tag)) {
+    if ($func === false) $global = false;
+    foreach ($tag as $this_tag => $this_func) {
+      add_local_shortcode( 'ccs', $this_tag, $this_func, $global );
+    }
+  } else {
+    add_local_shortcode( 'ccs', $tag, $func, $global );
   }
 }
 

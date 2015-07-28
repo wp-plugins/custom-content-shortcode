@@ -34,8 +34,6 @@ class CCS_Format {
 		self::$state['x_loop'] = 0;
 	}
 
-	function noop( $atts, $content ) { return do_local_shortcode('ccs', $content, true); }
-
   // Don't run shortcodes inside
   function direct_shortcode( $atts, $content ) {
     return $content;
