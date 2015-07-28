@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 2.1.9
+Version: 2.6.1
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -47,19 +47,19 @@ class CCS_Plugin {
       'load_acf_module' => array(
         'module' => 'acf',
         'default' => 'on',
-        'tab' => 'acf', 
+        'tab' => 'acf',
         'text' => '<b>ACF</b> shortcodes',
       ),
       'load_bootstrap_module' => array(
         'module' => 'bootstrap',
         'default' => 'off',
-        'tab' => 'other#bootstrap-navbar', 
+        'tab' => 'bootstrap',
         'text' => '<b>Bootstrap</b> shortcodes',
       ),
       'load_file_loader' => array(
         'module' => 'load',
         'default' => 'on',
-        'tab' => 'load',         
+        'tab' => 'load',
         'text' => '<b>File Loader</b> module',
       ),
       'load_gallery_field' => array(
@@ -77,7 +77,7 @@ class CCS_Plugin {
       'raw_shortcode' => array(
         'default' => 'off',
         'module' => 'raw',
-        'tab' => 'other#raw',
+        'tab' => 'raw',
         'text' => '<b>[raw]</b> shortcode',
       ),
       'block_shortcode' => array(
@@ -115,12 +115,13 @@ class CCS_Plugin {
 
   function load_module( $module ) {
 
-    require_once ( CCS_PATH.'/includes/'.$module.'.php' );
+    include_once ( CCS_PATH.'/includes/'.$module.'.php' );
   }
 
   function load_main_modules() {
 
     $modules = array(
+      'core/local-shortcodes', // Local shortcodes
       'core/content',       // Content shortcode
       'core/loop',          // Loop shortcode
       'docs/docs',          // Documentation under Settings -> Custom Content
@@ -130,7 +131,7 @@ class CCS_Plugin {
       'modules/foreach',    // For/each loop
       'modules/format',     // Format shortcodes: br, p, x, clean, direct, format
       'modules/if',         // If shortcode
-      'modules/paged',      // Pagination shortcode
+      'modules/paging',     // Pagination shortcode
       'modules/pass',       // Pass shortcode
       'modules/related',    // Related posts loop
       'modules/url',        // URL shortcode
@@ -171,10 +172,17 @@ class CCS_Plugin {
    * Set up WP filters
    *
    */
-  
+
   function setup_wp_filters() {
 
     $settings = self::$settings;
+
+
+    // Render plugin shortcodes after wpautop but before do_shortcode
+    add_filter( 'the_content', array($this, 'render_local_shortcodes'), 11 );
+    remove_filter( 'the_content', 'do_shortcode' );
+    add_filter( 'the_content', 'do_shortcode', 12 ); // 11 -> 12
+
 
     /*---------------------------------------------
      *
@@ -184,8 +192,9 @@ class CCS_Plugin {
 
     if ( isset( $settings['shortcodes_in_widget'] ) &&
       ($settings['shortcodes_in_widget'] == "on") ) {
-        
-      add_filter('widget_text', 'do_shortcode');
+
+      add_filter('widget_text', array($this, 'render_local_shortcodes') );
+      add_filter('widget_text', 'do_shortcode', 11 );
     }
 
     // Exempt [loop] from wptexturize()
@@ -198,8 +207,17 @@ class CCS_Plugin {
     $shortcodes[] = 'loop';
     return $shortcodes;
   }
-  
+
+  function render_local_shortcodes( $content ) {
+    return do_local_shortcode( 'ccs', $content );
+  }
+
+  static function add( $tag, $func = null, $global = true ) {
+    add_ccs_shortcode( $tag, $func, $global );
+  }
+
 } // End CCS_Plugin
+
 
 /*---------------------------------------------
  *
@@ -209,7 +227,7 @@ class CCS_Plugin {
 
 if (!function_exists('do_short')) {
   function do_short($content) {
-    echo do_shortcode($content);
+    echo do_ccs_shortcode( $content );
   }
 }
 
@@ -225,3 +243,17 @@ if (!function_exists('end_short')) {
   }
 }
 
+function add_ccs_shortcode( $tag, $func = null, $global = true ) {
+  if (is_array($tag)) {
+    if ($func === false) $global = false;
+    foreach ($tag as $this_tag => $this_func) {
+      add_local_shortcode( 'ccs', $this_tag, $this_func, $global );
+    }
+  } else {
+    add_local_shortcode( 'ccs', $tag, $func, $global );
+  }
+}
+
+function do_ccs_shortcode( $content, $global = true ) {
+  return do_local_shortcode( 'ccs', $content, $global );
+}

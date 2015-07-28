@@ -10,50 +10,112 @@ new CCS_Format;
 
 class CCS_Format {
 
+	public static $state;
+
 	function __construct() {
 
-    add_shortcode( 'direct', array($this, 'direct_shortcode') );
-    add_shortcode( 'format', array($this, 'format_shortcode') );
-		add_shortcode( 'x', array($this, 'x_shortcode') );
+    CCS_Plugin::add( array(
+			'direct' => array($this, 'direct_shortcode'),
+			'raw' => array($this, 'direct_shortcode'),
+	    'format' => array($this, 'format_shortcode'),
+			'clean' => array($this, 'clean_shortcode'),
+			'br' => array($this, 'br_shortcode'),
+			'p' => array($this, 'p_shortcode'),
+	    'slugify' => array($this, 'slugify_shortcode'),
+	    'today' => array($this, 'today_shortcode'),
+	    'http' => array($this, 'http_shortcode'),
+	    'embed' => array($this, 'embed_shortcode'),
+	    'escape' => array($this, 'escape_shortcode'),
+	    'random' => array($this, 'random_shortcode'),
+			'x' => array($this, 'x_shortcode')
+		) );
 
-    // @todo Deprecate these
-		add_shortcode( 'br', array($this, 'br_shortcode') );
-		add_shortcode( 'p', array($this, 'p_shortcode') );
-		add_shortcode('clean', array($this, 'clean_shortcode') );
+		// add_shortcode( 'raw', array($this, 'noop') );
+		self::$state['x_loop'] = 0;
 	}
-
 
   // Don't run shortcodes inside
   function direct_shortcode( $atts, $content ) {
     return $content;
   }
 
+	function br_shortcode() { return '<br />'; }
+
+	function p_shortcode( $atts, $content ) {
+
+		$tag = 'p';
+
+    // Construct block
+    $out = '<'.$tag;
+
+		if (!empty($atts)) {
+	    foreach ($atts as $key => $value) {
+	      if (is_numeric($key)) {
+	        $out .= ' '.$value; // Attribute with no value
+	      } else {
+	        $out .= ' '.$key.'="'.$value.'"';
+	      }
+	    }
+		}
+
+    $out .= '>';
+
+    if (!empty($content)) {
+      $out .= do_local_shortcode( 'ccs', $content, true );
+      $out .= '</'.$tag.'>';
+    }
+		return $out;
+	}
+
+
+	// Do shortcode, then format
   function format_shortcode( $atts, $content ) {
-    return wpautop(do_shortcode($content)); // Do shortcode, then format
+    return wpautop(do_local_shortcode( 'ccs', $content, true ));
   }
 
   // Repeat x times: [x 10]..[/x]
 	function x_shortcode( $atts, $content ) {
 
+		if (!isset($atts[0])) return $content;
+
+		$x = $atts[0];
 		$out = '';
 
-		if (isset($atts[0])) {
-			$x = $atts[0];
-			for ($i=0; $i <$x ; $i++) { 
-				$out .= do_shortcode($content);
-			}
+		// Start index from 1
+		for ($i=1; $i <= $x; $i++) {
+			self::$state['x_loop'] = $i;
+			$rendered = str_replace('{X}', $i, $content);
+			$out .= do_local_shortcode( 'ccs', $rendered, true );
 		}
+
+		self::$state['x_loop'] = 0;
 		return $out;
 	}
 
-	function br_shortcode( $atts, $content ) {
-		return '<br>';
+	// Display current date
+	function today_shortcode( $atts, $content ) {
+		if ( isset($atts['format']) ) {
+			$format = str_replace("//", "\\", $atts['format']);
+		} else {
+			$format = get_option('date_format');
+		}
+
+		return date_i18n($format);
 	}
 
-	function p_shortcode( $atts, $content ) {
-		return '<p>' . do_shortcode($content) . '</p>';
+	// Convert title to slug
+
+	function slugify_shortcode( $atts, $content ) {
+
+  	// The Example Title -> the_example_title
+    return strtolower( str_replace(array(' ','-'), '_', self::alphanumeric(do_shortcode($content)) ) );
 	}
 
+	public static function alphanumeric( $str ) {
+
+		// Remove any character that is not alphanumeric, white-space, or a hyphen
+    	return preg_replace("/[^a-z0-9\s\-_]/i", "", $str );
+	}
 
 	/*---------------------------------------------
 	 *
@@ -62,39 +124,90 @@ class CCS_Format {
 	 */
 
 	function strip_tag_list( $content, $tags ) {
-
 		$tags = implode("|", $tags);
-		$out = preg_replace('!<\s*('.$tags.').*?>((.*?)</\1>)?!is', '\3', $content); 
-
+		$out = preg_replace('!<\s*('.$tags.').*?>((.*?)</\1>)?!is', '\3', $content);
 		return $out;
 	}
 
-	function clean_content($content){   
-
+	function clean_content($content){
 	    $content = self::strip_tag_list( $content, array('p','br') );
-
 	    return $content;
 	}
 
 	function clean_shortcode( $atts, $content ) {
-
 		$content = self::strip_tag_list( $content, array('p','br') );
-
-		return do_shortcode($content);
+		return do_local_shortcode( 'ccs', $content, true );
 	}
 
-
   static function trim( $content, $trim = '' ) {
-
     if ($trim=='true') $trim = '';
-
     return trim($content, " \t\n\r\0\x0B,".$trim);
+  }
+
+
+
+  /*---------------------------------------------
+   *
+   * Add http:// if necessary
+   *
+   * [http]..[/http]
+   *
+   */
+
+  function http_shortcode( $atts, $content ) {
+    $content = do_shortcode($content);
+    if ( substr($content, 0, 4) !== 'http' ) {
+      $content = 'http://'.$content;
+    }
+    return $content;
   }
 
 
   /*---------------------------------------------
    *
+   * Embed audio/video link from field
+   *
+   */
+
+  function embed_shortcode( $atts, $content ) {
+
+    $content = do_shortcode($content);
+
+    if (isset($GLOBALS['wp_embed'])) {
+      $wp_embed = $GLOBALS['wp_embed'];
+      $content = $wp_embed->autoembed($content);
+      // Run [audio], [video] in embed
+      $content = do_shortcode($content);
+    }
+
+    return $content;
+  }
+
+  function escape_shortcode( $atts, $content ) {
+		if ($atts['shortcode']=='true')
+			$content = do_local_shortcode( 'ccs',  $content, true );
+		return str_replace(array('[',']'), array('&#91;','&#93;'), esc_html($content));
+	}
+
+	function random_shortcode( $atts, $content ) {
+		if (!isset($atts[0])) $atts[0] = '0-99'; // default
+	  $range = explode('-', $atts[0]);
+		$min = $range[0];
+		$max = @$range[1];
+
+		return rand($min, $max);
+	}
+
+
+
+
+
+
+  /*---------------------------------------------
+   *
    * Currency format
+   *
+   * TODO: Separate into optional module
    *
    * @param flatcurr  float integer to convert
    * @param curr  string of desired currency format
@@ -199,7 +312,7 @@ class CCS_Format {
       'KRW' => array(0,'',','),     //  South Korea, Won
       'SZL' => array(2,'.',', '),     //  Swaziland, Lilangeni
       'SEK' => array(2,',','.'),      //  Swedish Krona
-      'CHF' => array(2,'.','\''),     //  Swiss Franc 
+      'CHF' => array(2,'.','\''),     //  Swiss Franc
       'TZS' => array(2,'.',','),      //  Tanzanian Shilling
       'THB' => array(2,'.',','),      //  Thailand, Baht
       'TOP' => array(2,'.',','),      //  Tonga, Paanga
@@ -216,14 +329,14 @@ class CCS_Format {
 
     $curr = strtoupper($curr);
 
-    if ($curr == "INR"){  
+    if ($curr == "INR"){
       return self::formatinr($floatcurr);
     } else {
 
       if (!empty($curr)) {
 
         if (!isset($currencies[$curr])) return $floatcurr;
-        
+
         $decimals = $currencies[$curr][0];
         $point = $currencies[$curr][1];
         $thousands = $currencies[$curr][2];
@@ -233,13 +346,13 @@ class CCS_Format {
     }
   }
 
-  // Format Indian Rupees
+  // Format Indian Rupees!!!
   static function formatinr($input){
     //CUSTOM FUNCTION TO GENERATE ##,##,###.##
     $dec = "";
     $pos = strpos($input, ".");
     if ($pos === false){
-      //no decimals 
+      //no decimals
     } else {
       //decimals
       $dec = substr(round(substr($input,$pos),2),1);
