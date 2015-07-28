@@ -28,8 +28,6 @@ class CCS_Content {
 
     self::$state = array();
     self::$state['is_array_field'] = false;
-    self::$state['current_post_id'] = 0;
-    self::$state['previous_post_id'] = 0;
   }
 
 
@@ -309,8 +307,6 @@ class CCS_Content {
 
   function before_query( $parameters ) {
 
-    self::$state['previous_post_id'] = self::$state['current_post_id'];
-
     if ( ! CCS_Loop::$state['is_loop'] ) {
       $orig_post = get_the_ID();
     } else {
@@ -328,10 +324,6 @@ class CCS_Content {
 
         $post_id = CCS_Loop::$state['current_post_id']; // Current post in loop
 
-      } elseif ( self::$state['current_post_id'] !== 0 ) {
-
-        $post_id = self::$state['current_post_id'];
-
       } else {
         $post_id = get_the_ID(); // Current post
       }
@@ -339,9 +331,6 @@ class CCS_Content {
     } else {
       $post_id = $parameters['id'];
     }
-
-    if ( !empty($parameters['field']) )
-      self::$state['current_post_id'] = $post_id;
 
     $result = '';
 
@@ -468,7 +457,7 @@ class CCS_Content {
       if(!empty($parameters['class']))
         $result = '<div class="' . $parameters['class'] . '">' . $result . '</div>';
 
-      return do_local_shortcode( 'ccs',  $result );
+      return do_ccs_shortcode(  $result );
 
     } elseif ( $parameters['gallery'] == 'carousel' ) {
 
@@ -501,7 +490,7 @@ class CCS_Content {
       if (!empty($parameters['class']))
         $result = '<div class="' . $class . '">' . $result . '</div>';
 
-      return do_local_shortcode( 'ccs',  $result );
+      return do_ccs_shortcode(  $result );
     }
 
 
@@ -554,8 +543,8 @@ class CCS_Content {
 
       // Current post
 
-      self::$state['current_post'] = get_post(self::$state['current_post_id']);
-
+      self::$state['current_post'] = get_post();
+      self::$state['current_post_id'] = get_the_ID();
     }
 
     if ( !empty($parameters['exclude']) && ($parameters['exclude']=='this') ) {
@@ -850,7 +839,7 @@ class CCS_Content {
         $parameters['dots'] = '&hellip;';
       }
 
-      $result = do_local_shortcode( 'ccs', $result, false );
+      $result = do_ccs_shortcode( $result, false );
 
       if (intval($parameters['words']) < 0) {
 
@@ -1065,7 +1054,13 @@ class CCS_Content {
 
     if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
 
-      $result = do_local_shortcode( 'ccs',  $result, true );
+      global $post;
+      $prev_post = $post;
+      $post = self::$state['current_post'];
+
+      $result = do_ccs_shortcode( $result, true );
+
+      $post = $prev_post;
 
     } else {
 
@@ -1076,9 +1071,8 @@ class CCS_Content {
       }
     }
 
-    // Reset current post id
-    // if ( empty($parameters['field']) && !CCS_Loop::$state['is_loop']) {}
-    self::$state['current_post_id'] = self::$state['previous_post_id'];
+    // Reset current post id?
+
 
     /*---------------------------------------------
      *
@@ -1202,10 +1196,8 @@ class CCS_Content {
       $post = get_post($post_id);
 
     } else {
-
-      $post_id = self::$state['current_post_id'];
-      if ($post_id == 0) $post_id = get_the_ID();
-      $post = get_post($post_id);
+      global $post;
+      $post_id = $post->ID;
     }
 
     if (empty($post)) return null; // No post
@@ -1817,8 +1809,8 @@ class CCS_Content {
     }
 
     // Pass it to [content]
-    $out = do_local_shortcode( 'ccs', '[content '.$field_param.$rest.']', true );
-//echo '[content '.$field_param.$rest.'] -> '.do_local_shortcode( 'ccs', '[content '.$field_param.$rest.']').'<br>';
+    $out = do_ccs_shortcode( '[content '.$field_param.$rest.']', true );
+//echo '[content '.$field_param.$rest.'] -> '.do_ccs_shortcode( '[content '.$field_param.$rest.']').'<br>';
     return $out;
   }
 
@@ -1841,7 +1833,7 @@ class CCS_Content {
           $i++;
         }
       }
-      $out = do_local_shortcode( 'ccs', '[content taxonomy="'.$atts[0].'"'.$rest.']');
+      $out = do_ccs_shortcode( '[content taxonomy="'.$atts[0].'"'.$rest.']');
     }
     return $out;
   }
@@ -1915,7 +1907,7 @@ class CCS_Content {
             $cmd .= ' type='.$type;
           }
 
-          $key = do_local_shortcode( 'ccs',  $cmd.' count=1][field _'.$choices.'][/loop]');
+          $key = do_ccs_shortcode(  $cmd.' count=1][field _'.$choices.'][/loop]');
         }
 
         $field = get_field_object( $key );
@@ -1975,7 +1967,7 @@ class CCS_Content {
           $this_content = str_replace('{LABEL}', @$each_array['label'], $this_content);
         }
 
-        $out .= do_local_shortcode( 'ccs',  $this_content );
+        $out .= do_ccs_shortcode(  $this_content );
 
       }
 

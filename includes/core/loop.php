@@ -91,7 +91,7 @@ class CCS_Loop {
       // Merge parameters with defaults
       $parameters = self::merge_with_defaults( $parameters );
       // Store merged parameters
-      self::$parameters = $parameters;
+      self::$state['parameters'] = $parameters;
 
 
       // Check cache - if loaded, return result
@@ -1016,8 +1016,8 @@ class CCS_Loop {
     if ( !empty($parameters['orderby']) && $parameters['orderby']=='comment-date' ) {
 
       // WP_Query doesn't support it, so sort after getting all posts
-      self::$parameters['orderby_comment_date'] = 'true';
-      self::$parameters['order_comment_date'] = !empty($parameters['order']) ?
+      self::$state['parameters']['orderby_comment_date'] = 'true';
+      self::$state['parameters']['order_comment_date'] = !empty($parameters['order']) ?
         strtoupper($parameters['order']) : 'DESC';
 
       $parameters['orderby'] = '';
@@ -1454,7 +1454,7 @@ class CCS_Loop {
 
   public static function prepare_posts( $posts ) {
 
-    $parameters = self::$parameters;
+    $parameters = self::$state['parameters'];
 
     // Sort by series
 
@@ -1615,7 +1615,7 @@ class CCS_Loop {
 
   public static function prepare_all_posts( $query_object ) {
 
-    $parameters = self::$parameters;
+    $parameters = self::$state['parameters'];
     $query = self::$query;
     $state =& self::$state; // Update global state directly
 
@@ -1868,7 +1868,7 @@ class CCS_Loop {
   public static function prepare_each_template( $template ) {
 
     $state = self::$state;
-    $parameters = self::$parameters;
+    $parameters = self::$state['parameters'];
 
     /*---------------------------------------------
      *
@@ -1885,7 +1885,7 @@ class CCS_Loop {
 
     // Make sure to limit by count parameter
 
-    if ( !empty(self::$parameters['count']) &&
+    if ( !empty(self::$state['parameters']['count']) &&
       ( $state['loop_count'] > $parameters['count']) )
       return null;
 
@@ -1910,14 +1910,14 @@ class CCS_Loop {
      *
      */
 
-    $template = self::render_field_tags( $template, self::$parameters );
+    $template = self::render_field_tags( $template, self::$state['parameters'] );
     $template = do_local_shortcode( 'loop', $template, false );
-    if (self::$parameters['local']=='true')
+    if (self::$state['parameters']['local']=='true')
       $template = do_local_shortcode( 'ccs', $template, true );
     else
       $template = do_shortcode( $template );
 
-    return apply_filters('ccs_loop_each_result', $template, self::$parameters );
+    return apply_filters('ccs_loop_each_result', $template, self::$state['parameters'] );
   }
 
 
@@ -1929,7 +1929,7 @@ class CCS_Loop {
 
   public static function process_results( $results ) {
 
-    $parameters = self::$parameters;
+    $parameters = self::$state['parameters'];
 
     if ( !is_array($results) ) {
       $results = array($results);
@@ -2088,7 +2088,7 @@ class CCS_Loop {
   public static function close_loop(){
 
     $state =& self::$state;
-    $parameters = self::$parameters;
+    $parameters = self::$state['parameters'];
 
     /*---------------------------------------------
      *
@@ -2096,7 +2096,7 @@ class CCS_Loop {
      *
      */
 
-    if ( self::$parameters['timer'] == 'true' ) {
+    if ( self::$state['parameters']['timer'] == 'true' ) {
 
       echo CCS_Cache::stop_timer('<br><b>Loop result</b>: ');
 
@@ -2112,8 +2112,8 @@ class CCS_Loop {
     if (self::$state['do_reset_postdata']) {
       wp_reset_postdata();
       self::$state['do_reset_postdata'] = false;
-      global $post;
-      $post = $state['prev_post'];
+      //global $post;
+      //$post = $state['prev_post'];
     }
 
     /*---------------------------------------------
@@ -2192,7 +2192,7 @@ class CCS_Loop {
       if (!empty($each_row)) {
         $each_row .= $clear;
         $each_row = apply_filters('ccs_loop_each_row',
-          do_local_shortcode( 'ccs', $each_row, true ), self::$parameters);
+          do_local_shortcode( 'ccs', $each_row, true ), self::$state['parameters']);
         $out .= $each_row;
       }
     }
@@ -2246,7 +2246,6 @@ class CCS_Loop {
           if (is_array($field_value)) {
             $field_value = ucwords(implode(', ', $field_value));
           }
-
           $template = str_replace($search, $field_value, $template);
         }
       }
@@ -2426,8 +2425,8 @@ class CCS_Loop {
 
   public static function orderby_comment_date( $a, $b ) {
 
-    $parameters = self::$parameters;
-    $order = self::$parameters['order_comment_date'];
+    $parameters = self::$state['parameters'];
+    $order = $parameters['order_comment_date'];
 
     $a_comment_date = self::get_comment_timestamp( $a );
     $b_comment_date = self::get_comment_timestamp( $b );
@@ -2521,7 +2520,7 @@ class CCS_Loop {
   public static function next_shortcode( $atts, $content, $tag ) {
 
     // Flip when looking for older and order is ASC (old to new)
-    if ( $tag == 'older' && strtolower(self::$parameters['order'])=='asc' ) {
+    if ( $tag == 'older' && strtolower(self::$state['parameters']['order'])=='asc' ) {
         self::prev_shortcode( $atts, $content, $tag );
     }
 
@@ -2544,7 +2543,7 @@ class CCS_Loop {
   public static function prev_shortcode( $atts, $content, $tag ) {
 
     // Flip when looking for newer and order is ASC (old to new)
-    if ( $tag == 'newer' && strtolower(self::$parameters['order'])=='asc' ) {
+    if ( $tag == 'newer' && strtolower(self::$state['parameters']['order'])=='asc' ) {
         self::next_shortcode( $atts, $content, $tag );
     }
 
