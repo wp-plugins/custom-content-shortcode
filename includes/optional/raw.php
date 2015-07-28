@@ -21,9 +21,10 @@ function ccs_raw_format( $content ) {
 			$new_content .= wptexturize(wpautop($piece));
 		}
 	}
-	return do_local_shortcode( 'ccs', $new_content, true );
+  return $new_content;
+//  return do_local_shortcode( 'ccs', $new_content, true );
 }
 
-remove_filter('the_content', 'wpautop');
-remove_filter('the_content', 'wptexturize');
-add_filter('the_content', 'ccs_raw_format', 1);
+remove_filter( 'the_content', 'wpautop' );
+remove_filter( 'the_content', 'wptexturize' );
+add_filter( 'the_content', 'ccs_raw_format' );

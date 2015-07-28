@@ -28,6 +28,8 @@ class CCS_Content {
 
     self::$state = array();
     self::$state['is_array_field'] = false;
+    self::$state['current_post_id'] = 0;
+    self::$state['previous_post_id'] = 0;
   }
 
 
@@ -307,6 +309,8 @@ class CCS_Content {
 
   function before_query( $parameters ) {
 
+    self::$state['previous_post_id'] = self::$state['current_post_id'];
+
     if ( ! CCS_Loop::$state['is_loop'] ) {
       $orig_post = get_the_ID();
     } else {
@@ -324,7 +328,7 @@ class CCS_Content {
 
         $post_id = CCS_Loop::$state['current_post_id']; // Current post in loop
 
-      } elseif ( !empty(self::$state['current_post_id']) ) {
+      } elseif ( self::$state['current_post_id'] !== 0 ) {
 
         $post_id = self::$state['current_post_id'];
 
@@ -336,7 +340,8 @@ class CCS_Content {
       $post_id = $parameters['id'];
     }
 
-    self::$state['current_post_id'] = $post_id;
+    if ( !empty($parameters['field']) )
+      self::$state['current_post_id'] = $post_id;
 
     $result = '';
 
@@ -930,7 +935,7 @@ class CCS_Content {
      *
      */
 
-    $post_id = isset(self::$state['current_post_id']) ? self::$state['current_post_id'] : get_the_ID();
+    $post_id = !empty(self::$state['current_post_id']) ? self::$state['current_post_id'] : get_the_ID();
 
     $link_text_fields = array(
       'link', 'edit-link', 'edit-link-self', 'title-link', 'title-link-out'
@@ -1007,25 +1012,9 @@ class CCS_Content {
     if (!empty($parameters['class']))
       $result = '<div class="' . $parameters['class'] . '">' . $result . '</div>';
 
-    // Shortcode
 
-    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
 
-      $result = do_local_shortcode( 'ccs',  $result, true );
 
-    } else {
-
-      // Protect from global do_shortcode
-    	global $doing_local_shortcode;
-      if ($doing_local_shortcode) {
-        $result = '[direct]'.$result.'[/direct]';
-      }
-    }
-
-    // Reset current post id
-    if ( empty($parameters['field']) ) {
-      self::$state['current_post_id'] = 0;
-    }
 
 
     if ( $parameters['http'] == 'true' ) {         // Add "http://" for links
@@ -1044,7 +1033,7 @@ class CCS_Content {
         $result = $wp_embed->autoembed($result);
 
         // Run [audio], [video] in embed
-        $result = do_local_shortcode( 'ccs',  $result );
+        $result = do_shortcode( $result );
       }
     }
 
@@ -1069,6 +1058,27 @@ class CCS_Content {
     if ($parameters['nl']=='true') {
       $result = trim(preg_replace('/\s+/', ' ', $result));
     }
+
+
+
+    // After formatting, do shortcode
+
+    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
+
+      $result = do_local_shortcode( 'ccs',  $result, true );
+
+    } else {
+
+      // Protect from global do_shortcode
+    	global $doing_local_shortcode;
+      if ($doing_local_shortcode) {
+        $result = '[direct]'.$result.'[/direct]';
+      }
+    }
+
+    // Reset current post id
+    // if ( empty($parameters['field']) && !CCS_Loop::$state['is_loop']) {}
+    self::$state['current_post_id'] = self::$state['previous_post_id'];
 
     /*---------------------------------------------
      *
@@ -1193,10 +1203,9 @@ class CCS_Content {
 
     } else {
 
-      // In a loop
-
-      $post = self::$state['current_post'];
       $post_id = self::$state['current_post_id'];
+      if ($post_id == 0) $post_id = get_the_ID();
+      $post = get_post($post_id);
     }
 
     if (empty($post)) return null; // No post
@@ -1325,6 +1334,7 @@ class CCS_Content {
         break;
 
       case 'image-url':
+
         $parameters['size'] = (isset($parameters['size']) && !empty($parameters['size'])) ?
           $parameters['size'] : 'full';
         $src = wp_get_attachment_image_src(
