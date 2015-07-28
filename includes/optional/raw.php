@@ -1,9 +1,9 @@
-<?php 
+<?php
 
 /*---------------------------------------------
  *
  * [raw]..[/raw]
- * 
+ *
  * Protect shortcode content from wpautop and wptexturize
  *
  */
@@ -21,7 +21,7 @@ function ccs_raw_format( $content ) {
 			$new_content .= wptexturize(wpautop($piece));
 		}
 	}
-	return $new_content;
+	return do_local_shortcode( 'ccs', $new_content, true );
 }
 
 remove_filter('the_content', 'wpautop');
