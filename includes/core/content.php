@@ -746,6 +746,10 @@ class CCS_Content {
 
       $result = self::get_the_field( $parameters );
 
+      // Do shortcode by default
+      self::$parameters['shortcode'] = empty(self::$parameters['shortcode']) ?
+        'true' : self::$parameters['shortcode'];
+
     } elseif ( !empty(self::$state['current_post']) ) {
 
       /*---------------------------------------------
