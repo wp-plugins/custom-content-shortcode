@@ -1488,7 +1488,11 @@ class CCS_Loop {
 
   public static function compile_templates( $posts, $template, $check_posts = true ) {
 
+
+    // Store current post reference
     global $post;
+    $prev_post = $post;
+
 
     $templates = array();
 
@@ -1530,7 +1534,7 @@ class CCS_Loop {
               $params .= ' '.$key.'="'.$value.'"';
             }
 
-            $this_template .= do_local_shortcode( 'ccs',
+            $this_template .= do_ccs_shortcode(
               '[if children]'
                 .'[loop'.$params.']'
                   .$template
@@ -1557,6 +1561,9 @@ class CCS_Loop {
         $templates[] = self::render_template($this_template);
       }
     }
+
+    // Restore post reference
+    $post = $prev_post;
 
     return $templates;
   }
@@ -1902,8 +1909,6 @@ class CCS_Loop {
 
   public static function render_template( $template ) {
 
-    $post_id = self::$state['current_post_id'];
-
     /*---------------------------------------------
      *
      * Expand {FIELD} tags
@@ -1913,7 +1918,7 @@ class CCS_Loop {
     $template = self::render_field_tags( $template, self::$state['parameters'] );
     $template = do_local_shortcode( 'loop', $template, false );
     if (self::$state['parameters']['local']=='true')
-      $template = do_local_shortcode( 'ccs', $template, true );
+      $template = do_ccs_shortcode( $template );
     else
       $template = do_shortcode( $template );
 

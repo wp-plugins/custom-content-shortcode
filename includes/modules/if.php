@@ -695,8 +695,8 @@ class CCS_If {
 
 		self::$state['is_if_block'] = true;
 		$out = $condition ?
-			do_local_shortcode( 'ccs',  $content, true ) :
-			do_local_shortcode( 'ccs',  $else, true ); // [if]..[else]..[/if]
+			do_ccs_shortcode( $content ) :
+			do_ccs_shortcode( $else ); // [if]..[else]..[/if]
 		self::$state['is_if_block'] = false;
 
 		return $out;

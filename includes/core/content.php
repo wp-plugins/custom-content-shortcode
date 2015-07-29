@@ -75,9 +75,10 @@ class CCS_Content {
 
     $out = false;
 
-    //
+
     // @todo Put a filter here and move below to optional/wck.php
-    //
+
+
     if ( CCS_To_WCK::$state['is_wck_loaded'] == 'true' ) {
 
       if (
@@ -102,6 +103,7 @@ class CCS_Content {
         }
       }
     }
+
     return $out;
   }
 
@@ -935,9 +937,11 @@ class CCS_Content {
         $result = $parameters['link_text'];
       }
 
+      // ???
+      /*
       if ( empty($parameters['escape']) || $parameters['escape']=='false' ) {
         $result = esc_html($result);
-      }
+      } */
     }
 
     switch ($parameters['field']) {
@@ -1026,6 +1030,30 @@ class CCS_Content {
       }
     }
 
+
+    // Do shortcode before formatting
+
+    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
+
+      global $post;
+      $prev_post = $post;
+      $post = self::$state['current_post'];
+
+      $result = do_ccs_shortcode( $result );
+
+      $post = $prev_post;
+
+    } else {
+
+      // Protect from global do_shortcode
+    	global $doing_local_shortcode;
+      if ($doing_local_shortcode) {
+        $result = '[direct]'.$result.'[/direct]';
+      }
+    }
+
+
+
     // Then the_content filter or format
 
     if ($parameters['filter']=='true') {
@@ -1041,7 +1069,13 @@ class CCS_Content {
         array($this, 'siteorigin_support') );
 
     } elseif ($parameters['format'] == 'true' && empty($parameters['words'])) {
-      $result = wpautop( $result );
+
+      $result = ccs_raw_format( $result, false );
+    } else {
+      // Remove [raw]..[/raw]
+      add_local_shortcode('ccs', 'raw', array('CCS_Format', 'direct_shortcode'));
+      $result = do_ccs_shortcode( $result, false );
+      remove_local_shortcode('ccs', 'raw');
     }
 
     if ($parameters['nl']=='true') {
@@ -1049,29 +1083,6 @@ class CCS_Content {
     }
 
 
-
-    // After formatting, do shortcode
-
-    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
-
-      global $post;
-      $prev_post = $post;
-      $post = self::$state['current_post'];
-
-      $result = do_ccs_shortcode( $result, true );
-
-      $post = $prev_post;
-
-    } else {
-
-      // Protect from global do_shortcode
-    	global $doing_local_shortcode;
-      if ($doing_local_shortcode) {
-        $result = '[direct]'.$result.'[/direct]';
-      }
-    }
-
-    // Reset current post id?
 
 
     /*---------------------------------------------
@@ -1197,7 +1208,12 @@ class CCS_Content {
 
     } else {
       global $post;
-      $post_id = $post->ID;
+      if (!empty($post)) {
+        $post_id = $post->ID;
+      }
+      else {
+        $post_id = get_the_ID();
+      }
     }
 
     if (empty($post)) return null; // No post

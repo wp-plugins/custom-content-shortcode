@@ -16,7 +16,6 @@ class CCS_Format {
 
     CCS_Plugin::add( array(
 			'direct' => array($this, 'direct_shortcode'),
-			'raw' => array($this, 'direct_shortcode'),
 	    'format' => array($this, 'format_shortcode'),
 			'clean' => array($this, 'clean_shortcode'),
 			'br' => array($this, 'br_shortcode'),
@@ -30,12 +29,11 @@ class CCS_Format {
 			'x' => array($this, 'x_shortcode')
 		) );
 
-		// add_shortcode( 'raw', array($this, 'noop') );
 		self::$state['x_loop'] = 0;
 	}
 
   // Don't run shortcodes inside
-  function direct_shortcode( $atts, $content ) {
+  static function direct_shortcode( $atts, $content ) {
     return $content;
   }
 

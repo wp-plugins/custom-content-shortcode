@@ -386,7 +386,7 @@ function do_shortcode_file( $file, $dir = null, $return = false ) {
 
 	if ( !empty($output) ) {
 
-		$output = do_shortcode( $output );
+		$output = do_ccs_shortcode( $output );
 
 		if ($return) {
 			return $output;
