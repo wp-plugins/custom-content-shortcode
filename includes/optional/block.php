@@ -92,13 +92,13 @@ class CCS_Blocks {
 
         // Attribute values can have shortcodes with syntax: <shortcode>
         $value = str_replace( array('<','>'), array('[',']'), $value);
-        $out .= ' '.$key.'="'.do_shortcode($value).'"';
+        $out .= ' '.$key.'="'.do_ccs_shortcode($value).'"';
       }
     }
     $out .= '>';
 
     if (!empty($content)) {
-      $out .= do_local_shortcode( 'ccs', $content, true );
+      $out .= do_ccs_shortcode( $content );
       $out .= '</'.$tag.'>';
     }
 

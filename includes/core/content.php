@@ -916,6 +916,7 @@ class CCS_Content {
     if ( $parameters['escape'] == 'true' ) {
       $result = str_replace( array('[',']'), array('&#91;','&#93;'),
         esc_html($result));
+      if (empty($parameters['shortcode'])) $parameters['shortcode'] = 'false';
     }
 
     if ( $parameters['unescape'] == 'true' ) {
@@ -1074,7 +1075,12 @@ class CCS_Content {
 
     } elseif ($parameters['format'] == 'true' && empty($parameters['words'])) {
 
-      $result = ccs_raw_format( $result, false );
+      if (function_exists('ccs_raw_format'))
+        $result = ccs_raw_format( $result, false );
+      else {
+        $result = wpautop( $result );
+      }
+
     } else {
       // Remove [raw]..[/raw]
       add_local_shortcode('ccs', 'raw', array('CCS_Format', 'direct_shortcode'));
