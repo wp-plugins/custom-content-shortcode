@@ -744,7 +744,7 @@ class CCS_Content {
 
     elseif (!empty($parameters['field'])) {
 
-      $result = self::get_the_field( $parameters );
+      $result = self::get_the_field( $parameters, self::$state['current_post_id'] );
 
       // Do shortcode by default
       self::$parameters['shortcode'] = empty(self::$parameters['shortcode']) ?
@@ -1215,14 +1215,19 @@ class CCS_Content {
 
       $post_id = $id;
       $post = get_post($post_id);
+//      echo 'ID:'.$post_id;
 
     } else {
       global $post;
       if (!empty($post)) {
         $post_id = $post->ID;
+
+        // echo '$POST:'.$post_id;
       }
       else {
         $post_id = get_the_ID();
+
+        // echo 'DEFAULT:'.$post_id;
       }
     }
 
