@@ -16,7 +16,7 @@ class CCS_URL {
 
     self::$urls = array();
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
       'url' => array($this, 'url_shortcode'),
       'redirect' => array($this, 'redirect_shortcode')
     ));

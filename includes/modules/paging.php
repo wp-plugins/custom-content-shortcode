@@ -18,7 +18,7 @@ class CCS_Paged {
 
     self::$prefix = 'lpage';
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
       'loopage' => array($this, 'loopage_shortcode'),
       'loopage-now' => array($this, 'loopage_now_shortcode'),
       'loopage-total' => array($this, 'loopage_total_shortcode'),
@@ -79,9 +79,12 @@ class CCS_Paged {
     $pagination_return = '';
 
     if (class_exists('CCS_Loop') && !empty(CCS_Loop::$state['wp_query'])) {
+
       $query = CCS_Loop::$state['wp_query'];
 
       $id = CCS_Loop::$state['paged_index'];
+
+      if ($id == 0) return;
 
       if (empty($max) && !empty(CCS_Loop::$state['maxpage'])) {
         $max = CCS_Loop::$state['maxpage'];

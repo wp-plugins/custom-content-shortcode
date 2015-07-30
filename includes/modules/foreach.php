@@ -27,15 +27,16 @@ class CCS_ForEach {
 	}
 
 	function register() {
+		add_ccs_shortcode(array(
+			'for' => array( $this, 'for_shortcode' ),
+			'each' => array( $this, 'each_shortcode' ),
 
-		add_local_shortcode( 'ccs',  'for', array( $this, 'for_shortcode' ), true );
-		add_local_shortcode( 'ccs',  'each', array( $this, 'each_shortcode' ) );
-
-		// Nested shortcodes
-		add_local_shortcode( 'ccs', '-for', array( $this, 'for_shortcode' ) );
-		add_local_shortcode( 'ccs', '--for', array( $this, 'for_shortcode' ) );
-		add_local_shortcode( 'ccs', '-each', array( $this, 'each_shortcode' ) );
-		add_local_shortcode( 'ccs', '--each', array( $this, 'each_shortcode' ) );
+			// Nested shortcodes
+			'-for' => array( $this, 'for_shortcode' ),
+			'--for' => array( $this, 'for_shortcode' ),
+			'-each' => array( $this, 'each_shortcode' ),
+			'--each' => array( $this, 'each_shortcode' ),
+		));
 	}
 
 	function for_shortcode( $atts, $content = null, $shortcode_name ) {
@@ -127,7 +128,7 @@ class CCS_ForEach {
 				if ( self::$index > 0 ) self::$index--;
 				// Or finished
 				else self::$state['is_for_loop'] = false;
-				return do_local_shortcode( 'ccs', $else, true );
+				return do_ccs_shortcode( $else );
 			}
 		}
 
@@ -276,7 +277,9 @@ class CCS_ForEach {
 					$out .= do_local_shortcode( 'ccs', $replaced_content, true );
 				}
 			} // For each term
+
 		} else {
+			// No taxonomy found
 			$out .= do_local_shortcode( 'ccs', $else, true );
 		}
 

@@ -12,7 +12,7 @@ class CCS_Pass {
 
   function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
       'pass' => array($this, 'pass_shortcode'),
       '-pass' => array($this, 'pass_shortcode'),
       '--pass' => array($this, 'pass_shortcode'),

@@ -15,7 +15,7 @@ class CCS_Related {
 	function __construct() {
 
 		$this->init();
-		CCS_Plugin::add('related', array($this, 'loop_related_posts'));
+		add_ccs_shortcode('related', array($this, 'loop_related_posts'));
 	}
 
 	function init() {

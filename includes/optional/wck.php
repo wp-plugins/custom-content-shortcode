@@ -37,17 +37,19 @@ class CCS_To_WCK {
 		if ( function_exists('get_cfc_field') && function_exists('get_cfc_meta') ) {
 
 			self::$state['is_wck_loaded'] = 'true';
-			CCS_Plugin::add(array(
+
+			add_ccs_shortcode(array(
 				'metabox'=> array($this, 'wck_metabox_shortcode'),
 				'wck-field'=> array($this, 'wck_field_shortcode'),
 				'post-field'=> array($this, 'wck_field_shortcode'),
 				'wck-repeat'=> array($this, 'wck_repeater_shortcode'),
 				'repeater'=> array($this, 'general_repeater_shortcode'),
 			));
+
 		} else {
 
 			if (class_exists('CCS_To_ACF')) {
-				CCS_Plugin::add( 'repeater', array('CCS_To_ACF', 'loop_through_acf_field') );
+				add_ccs_shortcode( 'repeater', array('CCS_To_ACF', 'loop_through_acf_field') );
 			}
 		}
 

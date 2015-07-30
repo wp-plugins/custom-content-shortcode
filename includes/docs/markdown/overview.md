@@ -42,11 +42,10 @@
 
 ---
 
-<center>
+## **News**
 
-### Recent additions
+<div style="text-align:justify">
+WordPress 4.2.3 introduces some changes in the Shortcode API which are not backward compatible. This affects all plugins that provide shortcodes, especially this one. Recent updates have included extensive changes in plugin behavior to address compatibility, but certain advanced use cases may still need to be adapted to work correctly.
 
-[Today's date](options-general.php?page=ccs_reference&tab=extras#today) &bullet;
-[Link to previous/next post](options-general.php?page=ccs_reference&tab=paged#previous---next)
-
-</center>
+If you're experiencing an issue, please post a description to the [support forum](http://wordpress.org/support/plugin/custom-content-shortcode), with details on how the shortcodes are being used. Thank you for your patience during this transition.
+</div>

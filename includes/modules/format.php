@@ -14,7 +14,7 @@ class CCS_Format {
 
 	function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
 			'direct' => array($this, 'direct_shortcode'),
 	    'format' => array($this, 'format_shortcode'),
 			'clean' => array($this, 'clean_shortcode'),

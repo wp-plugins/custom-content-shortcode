@@ -17,7 +17,7 @@ class CCS_User {
 
 	function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
 			'users' => array($this, 'users_shortcode'),
 			'user' => array($this, 'user_shortcode'),
 			'is' => array($this, 'is_shortcode'),

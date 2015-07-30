@@ -19,7 +19,7 @@ class CCS_Cache {
 
 	function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
 			'cache' => array( $this, 'cache_shortcode'),
 			'timer' => array( $this, 'timer_shortcode')
 		));

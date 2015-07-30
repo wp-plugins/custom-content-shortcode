@@ -14,7 +14,7 @@ class CCS_Attached {
 
 	function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
 			'attached' => array( $this, 'attached_shortcode' ),
 			'-attached' => array( $this, 'attached_shortcode' ),
 			'attached-field' => array( $this, 'attached_field_shortcode' ),

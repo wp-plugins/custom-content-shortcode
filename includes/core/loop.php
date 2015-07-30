@@ -34,7 +34,7 @@ class CCS_Loop {
 
     self::init();
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
       'loop' => array( $this, 'the_loop_shortcode'),
       '-loop' => array( $this, 'the_loop_shortcode'),
       '--loop' => array( $this, 'the_loop_shortcode'),
@@ -70,6 +70,7 @@ class CCS_Loop {
     self::$state['is_attachment_loop'] = false;
     self::$state['do_reset_postdata'] = false;
     self::$state['wp_query'] = null;
+    self::$state['paged_index'] = 0;
     self::$previous_state = array();
   }
 
@@ -818,7 +819,7 @@ class CCS_Loop {
 
         // Get from query var
         $query_var = CCS_Paged::$prefix;
-        if (!isset(self::$state['paged_index']))
+        if ( self::$state['paged_index'] == 0 )
           self::$state['paged_index'] = 1;
         else
           self::$state['paged_index']++;
@@ -1909,20 +1910,29 @@ class CCS_Loop {
 
   public static function render_template( $template ) {
 
-    /*---------------------------------------------
-     *
-     * Expand {FIELD} tags
-     *
-     */
-
     $template = self::render_field_tags( $template, self::$state['parameters'] );
+
     $template = do_local_shortcode( 'loop', $template, false );
+
+
+    // Inform [content]
+    $depth = ++CCS_Content::$state['depth'];
+    CCS_Content::$state['current_ids'][ $depth ] = self::$state['current_post_id'];
+
+
     if (self::$state['parameters']['local']=='true')
       $template = do_ccs_shortcode( $template );
     else
       $template = do_shortcode( $template );
 
-    return apply_filters('ccs_loop_each_result', $template, self::$state['parameters'] );
+    $template = apply_filters('ccs_loop_each_result', $template, self::$state['parameters'] );
+
+
+    // Restore [content] depth
+    CCS_Content::$state['depth']--;
+    unset(CCS_Content::$state['current_ids'][ $depth ]);
+
+    return $template;
   }
 
 

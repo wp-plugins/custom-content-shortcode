@@ -12,7 +12,7 @@ class CCS_Load {
 
 	function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
 			'load' => array($this, 'load'),
 			'css' => array($this, 'css_wrap'),
 			'js' => array($this, 'js_wrap')

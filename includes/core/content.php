@@ -16,10 +16,11 @@ class CCS_Content {
   public static $original_parameters; // Before merge with defaults
   public static $parameters; // with defaults
   public static $state;
+  public static $previous_state;
 
   function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
       'content' => array( $this, 'content_shortcode'),
       'field' => array( $this, 'field_shortcode'),
       'taxonomy' => array( $this, 'taxonomy_shortcode'),
@@ -27,6 +28,8 @@ class CCS_Content {
     ));
 
     self::$state = array();
+    self::$state['depth'] = 0;
+    self::$state['current_ids'] = array();
     self::$state['is_array_field'] = false;
   }
 
@@ -58,6 +61,15 @@ class CCS_Content {
 
     return $result;
   }
+
+  static function save_state() {
+    self::$previous_state = self::$state;
+  }
+
+  static function restore_state() {
+    self::$state = self::$previous_state;
+  }
+
 
   /**
    *
@@ -315,6 +327,9 @@ class CCS_Content {
       $orig_post = '';
     }
 
+
+
+
     if (empty($parameters['id'])) {
 
       if ( CCS_Related::$state['is_related_posts_loop'] == 'true' ) {
@@ -327,14 +342,19 @@ class CCS_Content {
         $post_id = CCS_Loop::$state['current_post_id']; // Current post in loop
 
       } else {
-        $post_id = get_the_ID(); // Current post
+
+        $post_id = get_the_ID(); // Current post by default
       }
 
     } else {
       $post_id = $parameters['id'];
     }
 
+
+
     $result = '';
+
+
 
 
     /*---------------------------------------------
@@ -406,6 +426,10 @@ class CCS_Content {
       return $result;
     }
 
+
+
+
+    // TODO: Move this to after current post is determined
 
     /*---------------------------------------------
      *
@@ -507,6 +531,9 @@ class CCS_Content {
 
   function prepare_post( $parameters = array() ) {
 
+    // Keep track of depth in nested posts/fields
+    $depth = self::$state['depth'];
+
     // Get post from ID
 
     if (!empty($parameters['id'])) {
@@ -543,17 +570,35 @@ class CCS_Content {
 
     } else {
 
-      // Current post
+      // Determine current post
 
-      self::$state['current_post'] = get_post();
-      self::$state['current_post_id'] = get_the_ID();
+      if ( isset(self::$state['current_ids'][ $depth ]) ) {
+
+        $post_id = self::$state['current_post_id'] = self::$state['current_ids'][ $depth ];
+        self::$state['current_post'] = get_post($post_id);
+
+      } else {
+        // Default
+
+        self::$state['current_post'] = get_post();
+        self::$state['current_post_id'] = get_the_ID();
+      }
     }
+
+
+// echo '### Depth: '.self::$state['depth'].' - Current ID: '.self::$state['current_post_id'].'<br>';
+
 
     if ( !empty($parameters['exclude']) && ($parameters['exclude']=='this') ) {
 
-      // Exclude current post ID
-      if ( self::$state['current_post_id'] == get_the_ID() )
+      // Exclude if current post ID is the same as parent
+      if ( isset(self::$state['current_post_id'][ $depth - 1 ])) {
+        if ( self::$state['current_post_id'] == self::$state['current_post_id'][ $depth - 1 ] ) {
+          return false;
+        }
+      } elseif ( self::$state['current_post_id'] == get_the_ID() ) {
         return false;
+      }
 
     }
 
@@ -1039,14 +1084,20 @@ class CCS_Content {
     // Do shortcode before formatting
 
     if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
-
+/*
       global $post;
       $prev_post = $post;
       $post = self::$state['current_post'];
+*/
+      $depth = ++self::$state['depth'];
+      self::$state['current_ids'][$depth] = self::$state['current_post_id'];
 
       $result = do_ccs_shortcode( $result );
 
-      $post = $prev_post;
+      self::$state['depth']--;
+      unset(self::$state['current_ids'][$depth]);
+
+//      $post = $prev_post;
 
     } else {
 

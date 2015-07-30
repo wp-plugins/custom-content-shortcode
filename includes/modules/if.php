@@ -20,7 +20,7 @@ class CCS_If {
 
 	function register() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
 			'if' => array( $this, 'if_shortcode' ),
 			'-if' => array( $this, 'if_shortcode' ),
 	    '--if' => array( $this, 'if_shortcode' ),
@@ -103,6 +103,9 @@ class CCS_If {
 		 *
 		 */
 
+	  $current_post_id = do_shortcode('[field id]');
+
+/*
 		global $post;
 
 		$current_post_id = isset($post->ID) ? $post->ID : null;
@@ -111,6 +114,7 @@ class CCS_If {
     if ( CCS_Loop::$state['is_loop'] ) {
       $current_post_id = CCS_Loop::$state['current_post_id'];
     }
+*/
 
 		/*---------------------------------------------
 		 *

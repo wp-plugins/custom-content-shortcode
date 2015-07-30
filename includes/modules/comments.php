@@ -17,7 +17,7 @@ class CCS_Comments {
 
   function __construct() {
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
       'comments' => array( $this, 'comments_shortcode'),
       'comment' => array( $this, 'comment_shortcode'),
       'comment-form' => array( $this, 'comment_form_shortcode'),

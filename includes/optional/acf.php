@@ -24,7 +24,7 @@ class CCS_To_ACF {
 
 		// Available to themes
 
-    CCS_Plugin::add( array(
+    add_ccs_shortcode( array(
 	    'acf_sub' => array( $this, 'acf_sub_field'),
 	    'flex' => array( $this, 'loop_through_acf_field'),
 	    '-flex' => array( $this, 'loop_through_acf_field'),
