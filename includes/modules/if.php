@@ -412,9 +412,17 @@ class CCS_If {
     if ( !empty($id) ) {
 
       $ids = self::comma_list_to_array($id); // Enable comma-separated list
-			if ( CCS_Loop::$state['is_loop'] && ($find_key = array_search('this', $ids)) !== false ) {
-				$ids[$find_key] = CCS_Loop::$state['original_post_id'];
+			if ( ($find_key = array_search('this', $ids)) !== false ) {
+				$depth = CCS_Content::$state['depth'];
+	      if ( isset(CCS_Content::$state['current_post_id'][ $depth - 1 ])) {
+					$ids[$find_key] = CCS_Content::$state['current_post_id'][ $depth - 1 ];
+				} elseif (CCS_Loop::$state['is_loop']) {
+					$ids[$find_key] = CCS_Loop::$state['original_post_id'];
+				} else {
+					$ids[$find_key] = get_the_ID();
+				}
 			}
+
       $condition = in_array($current_post_id, $ids) ? true : false;
     }
 

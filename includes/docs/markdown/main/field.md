@@ -28,10 +28,16 @@ Additional parameters can be placed after the field name.
 [field image=image_field size=thumbnail]
 ~~~
 
-For available parameters, refer to [`[content]`](options-general.php?page=ccs_reference&tab=content#field).
-
-
 &nbsp;
+
+## Parameters
+
+Almost all [parameters for `[content]`](options-general.php?page=ccs_reference&tab=content#field) can be used for `[field]`.
+
+> *shortcode* - set *false* to prevent running shortcodes inside the field
+
+> *import* - when displaying a field from outside the current post, set *import=false* to run shortcodes inside the field in the context of the post where it came from
+
 
 ## Predefined fields
 

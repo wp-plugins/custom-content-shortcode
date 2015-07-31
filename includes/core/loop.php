@@ -407,7 +407,7 @@ class CCS_Loop {
         self::$state['loop_count']++;
 
         $outs[] = apply_filters( 'ccs_loop_each_result',
-          do_local_shortcode( 'ccs',  self::render_field_tags( $template, $parameters ), true ),
+          do_ccs_shortcode( self::render_field_tags( $template, $parameters ) ),
           $parameters
         );
 
@@ -1518,6 +1518,12 @@ class CCS_Loop {
 
           self::$state['loop_count']++;
 
+
+          // Inform [content]
+          $depth = ++CCS_Content::$state['depth'];
+          CCS_Content::$state['current_ids'][ $depth ] = self::$state['current_post_id'];
+
+
           $this_template = self::render_template(
             self::prepare_each_template($template)
           );
@@ -1546,6 +1552,12 @@ class CCS_Loop {
 
           $templates[] = $this_template;
 
+
+          // Restore [content] depth
+          CCS_Content::$state['depth']--;
+          unset(CCS_Content::$state['current_ids'][ $depth ]);
+
+
         } // End: if this post not empty
 
       } // End: while loop through each post
@@ -1562,6 +1574,9 @@ class CCS_Loop {
         $templates[] = self::render_template($this_template);
       }
     }
+
+
+
 
     // Restore post reference
     $post = $prev_post;
@@ -1914,23 +1929,12 @@ class CCS_Loop {
 
     $template = do_local_shortcode( 'loop', $template, false );
 
-
-    // Inform [content]
-    $depth = ++CCS_Content::$state['depth'];
-    CCS_Content::$state['current_ids'][ $depth ] = self::$state['current_post_id'];
-
-
     if (self::$state['parameters']['local']=='true')
       $template = do_ccs_shortcode( $template );
     else
       $template = do_shortcode( $template );
 
     $template = apply_filters('ccs_loop_each_result', $template, self::$state['parameters'] );
-
-
-    // Restore [content] depth
-    CCS_Content::$state['depth']--;
-    unset(CCS_Content::$state['current_ids'][ $depth ]);
 
     return $template;
   }
@@ -2207,7 +2211,7 @@ class CCS_Loop {
       if (!empty($each_row)) {
         $each_row .= $clear;
         $each_row = apply_filters('ccs_loop_each_row',
-          do_local_shortcode( 'ccs', $each_row, true ), self::$state['parameters']);
+          do_ccs_shortcode( $each_row ), self::$state['parameters']);
         $out .= $each_row;
       }
     }
@@ -2546,9 +2550,7 @@ class CCS_Loop {
     if ( ($find_key = array_search($current_id, $all_ids)) !== false) {
       if (isset( $all_ids[$find_key + 1] )) { // Next in loop
         $prev_id = $all_ids[$find_key + 1];
-        self::$state['current_post_id'] = $prev_id;
-        $result = do_local_shortcode( 'ccs', $content, true );
-        self::$state['current_post_id'] = $current_id; // Restore
+        $result = do_ccs_shortcode( '[loop id='.$prev_id.']'.$content.'[/loop]' );
       }
     }
     return $result;
@@ -2563,23 +2565,23 @@ class CCS_Loop {
     }
 
     $current_id = self::$state['current_post_id'];
+
     $all_ids = self::$state['all_ids'];
     $result = '';
 
     if ( ($find_key = array_search($current_id, $all_ids)) !== false) {
       if (isset( $all_ids[$find_key - 1] )) { // Prev in loop
         $prev_id = $all_ids[$find_key - 1];
-        self::$state['current_post_id'] = $prev_id;
-        $result = do_local_shortcode( 'ccs', $content, true );
-        self::$state['current_post_id'] = $current_id; // Restore
+        $result = do_ccs_shortcode( '[loop id='.$prev_id.']'.$content.'[/loop]' );
       }
     }
     return $result;
   }
 
+
   public static function prev_next_shortcode( $atts, $content ) {
 
-    $content = '[if id="this"]'.$content.'[/if]';
+    $content = '[if id=this]'.$content.'[/if]';
     if (!isset($atts['type'])) $atts['type'] = get_post_type();
 
     return self::the_loop_shortcode( $atts, $content );

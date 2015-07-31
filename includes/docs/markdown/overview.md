@@ -45,7 +45,16 @@
 ## **News**
 
 <div style="text-align:justify">
-WordPress 4.2.3 introduces some changes in the Shortcode API which are not backward compatible. This affects all plugins that provide shortcodes, especially this one. Recent updates have included extensive changes in plugin behavior to address compatibility, but certain advanced use cases may still need to be adapted to work correctly.
+
+<small>July 31st, 2015</small> - There has been a **change in how templates are loaded**. When loading another post's content (not field) as a template, add *import=true* to run the template in the context of the post that loads it. Otherwise, the template will get fields from the template post itself - same as displaying a normal post.
+
+&nbsp;
+
+---
+
+&nbsp;
+
+<small>July 23rd, 2015</small> - **WordPress 4.2.3** introduces some changes in the Shortcode API which are not backward compatible. This affects all plugins that provide shortcodes, especially this one. Recent updates have included extensive changes in plugin behavior to address compatibility, but certain advanced use cases may still need to be adapted to work correctly.
 
 If you're experiencing an issue, please post a description to the [support forum](http://wordpress.org/support/plugin/custom-content-shortcode), with details on how the shortcodes are being used. Thank you for your patience during this transition.
 </div>

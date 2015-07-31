@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 2.6.6
+Version: 2.6.8
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -21,6 +21,7 @@ class CCS_Plugin {
   public static $settings;
   public static $settings_name;
   public static $settings_definitions;
+  public static $state;
 
   function __construct() {
 
@@ -28,6 +29,8 @@ class CCS_Plugin {
     $this->load_main_modules();
     $this->load_optional_modules();
     $this->setup_wp_filters();
+    self::$state['did_content_filter'] = false;
+    self::$state['original_post_id'] = 0;
   }
 
 
@@ -179,9 +182,9 @@ class CCS_Plugin {
 
 
     // Render plugin shortcodes after wpautop but before do_shortcode
-    add_filter( 'the_content', array($this, 'render_local_shortcodes'), 11 );
     remove_filter( 'the_content', 'do_shortcode' );
     add_filter( 'the_content', 'do_shortcode', 12 ); // 11 -> 12
+    add_filter( 'the_content', array($this, 'ccs_content_filter'), 11 );
 
 
     /*---------------------------------------------
@@ -208,7 +211,12 @@ class CCS_Plugin {
     return $shortcodes;
   }
 
-  function render_local_shortcodes( $content ) {
+  static function ccs_content_filter( $content ) {
+
+    return self::render_local_shortcodes( $content );
+  }
+
+  static function render_local_shortcodes( $content ) {
     return do_ccs_shortcode( $content, false );
   }
 
@@ -255,5 +263,8 @@ function add_ccs_shortcode( $tag, $func = null, $global = true ) {
 }
 
 function do_ccs_shortcode( $content, $global = true ) {
-  return do_local_shortcode( 'ccs', $content, $global );
+  $content = CCS_Format::protect_script($content, $global);
+  $content = do_local_shortcode( 'ccs', $content, false );
+  if ($global) $content = do_shortcode( $content );
+  return $content;
 }

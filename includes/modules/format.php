@@ -16,6 +16,7 @@ class CCS_Format {
 
     add_ccs_shortcode( array(
 			'direct' => array($this, 'direct_shortcode'),
+			//'raw' => array($this, 'direct_shortcode'),
 	    'format' => array($this, 'format_shortcode'),
 			'clean' => array($this, 'clean_shortcode'),
 			'br' => array($this, 'br_shortcode'),
@@ -29,6 +30,8 @@ class CCS_Format {
 			'x' => array($this, 'x_shortcode')
 		) );
 
+		add_local_shortcode( 'ccs', 'protect', array($this, 'protect_local') );
+		add_shortcode( 'protect', array($this, 'protect_global') );
 		self::$state['x_loop'] = 0;
 	}
 
@@ -143,6 +146,36 @@ class CCS_Format {
   }
 
 
+	static function protect_script( $content, $global = true ) {
+		global $doing_local_shortcode;
+	  // Protect JS inside content
+	  $begin = '<script';
+	  $end = '</script>';
+	  $parts = explode($begin, $content);
+	  if ( is_array($parts) && count($parts)>0 ) {
+
+			$depth = 1;
+
+	    $new_content = array_shift( $parts ); // First element
+	    foreach ($parts as $index => $part) {
+	      $new_content .= str_repeat('[protect]',$depth);
+	      $new_content .= $begin;
+	      $after_end = str_repeat('[/protect]',$depth);
+	      $new_content .= str_replace( $end, $end.$after_end, $part );
+	    }
+	  }
+//echo esc_html($new_content).'<br>';
+		return $new_content;
+	}
+
+	function protect_local( $atts, $content ) {
+		global $doing_local_shortcode;
+		$depth = CCS_Content::$state['depth']+1;
+		return str_repeat('[protect]',$depth).$content.str_repeat('[/protect]',$depth);
+	}
+	function protect_global( $atts, $content ) {
+		return $content;
+	}
 
   /*---------------------------------------------
    *

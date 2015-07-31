@@ -216,20 +216,20 @@ function do_local_shortcode($global_tag, $content, $do_global = false) {
 	global $current_local_shortcode_context;
 	global $doing_local_shortcode;
 
-	$doing_local_shortcode = true;
+	$doing_local_shortcode = false;
 
 	// No shortcode in content, or no local shortcode registered in this namespace
 	if ( false === strpos( $content, '[' )  || !isset($local_shortcode_tags[$global_tag])) {
-		$doing_local_shortcode = false;
 		return $content;
 	}
 
 	$current_local_shortcodes = $local_shortcode_tags[$global_tag];
 
 	if ( empty( $current_local_shortcodes ) || ! is_array( $current_local_shortcodes ) ) {
-		$doing_local_shortcode = false;
 		return $content;
 	}
+
+	$doing_local_shortcode = true;
 
 	// Store previous namespace and declare current one
 	$previous_context = $current_local_shortcode_context;
@@ -245,6 +245,7 @@ function do_local_shortcode($global_tag, $content, $do_global = false) {
 	$current_local_shortcode_context = $previous_context;
 
 	$doing_local_shortcode = false;
+
 	if ($do_global) {
 		return do_shortcode($content);
 	} else {

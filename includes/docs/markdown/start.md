@@ -59,13 +59,15 @@ Shortcode templates can be loaded from a number of places.
 **Custom post type**
 
 ~~~
-[content type=template name=home-page]
+[content type=template name=single-product import=true]
 ~~~
+
+When loading another post's content (not field) as a template, set *import=true* to run the template in the context of the post that loads it.
 
 **Custom field**
 
 ~~~
-[field code_block shortcode=true]
+[field code_block]
 ~~~
 
 **File**

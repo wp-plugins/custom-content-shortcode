@@ -113,13 +113,15 @@ When inside a loop, it can be used without parameter to show each post's content
 
 > **sentence=true** - trim to the last sentence
 
-> **filter** - set *true* to apply *the_content* filter; this may be useful when using plugins that filter the post content, for example, [Page Builder](https://wordpress.org/plugins/siteorigin-panels).
+> **class** - add `<div>` class to the output
+
+> **escape** or **unescape** - Escape/unescape HTML special characters; this also sets *shortcode=false* unless specified otherwise
+
+> **shortcode** - set *true/false* for shortcodes inside post content or field
 
 > **embed** - set *true* to embed URLs like YouTube, Vimeo, etc. By default, such URLs in post content are auto-embedded.
 
-> **escape** or **unescape** - Escape/unescape HTML special characters
-
-> **class** - add &lt;div&gt; class to the output
+> **filter** - set *true* to apply *the_content* filter; this may be useful when using plugins that filter the post content, for example, [Page Builder](https://wordpress.org/plugins/siteorigin-panels).
 
 > **currency** - format as currency; see [the field section](options-general.php?page=ccs_reference&tab=field#currency) for details
 
@@ -133,7 +135,9 @@ When inside a loop, it can be used without parameter to show each post's content
 
 >> Use *in=timestamp* to format a unix timestamp value.
 
+### Template
 
+> **import** - set *true* to use another post's content as a template and run its shortcodes in the context of the current post; true by default when displaying a field
 
 ### Read more
 

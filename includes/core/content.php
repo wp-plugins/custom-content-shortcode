@@ -198,6 +198,7 @@ class CCS_Content {
       'format' => '', 'shortcode' => '',
       'escape' => '', 'unescape' => '',
       'filter' => '',
+      'import' => '',
       'embed' => '', 'http' => '',
       'nl' => '', // Remove \r and \n
       'align' => '', 'class' => '', 'height' => '',
@@ -578,10 +579,17 @@ class CCS_Content {
         self::$state['current_post'] = get_post($post_id);
 
       } else {
-        // Default
 
-        self::$state['current_post'] = get_post();
-        self::$state['current_post_id'] = get_the_ID();
+        // In global loop
+        global $post;
+        if (!empty($post)) {
+          self::$state['current_post'] = $post;
+          self::$state['current_post_id'] = $post->ID;
+        } else {
+          // Resort to default
+          self::$state['current_post'] = get_post();
+          self::$state['current_post_id'] = get_the_ID();
+        }
       }
     }
 
@@ -795,6 +803,10 @@ class CCS_Content {
       self::$parameters['shortcode'] = empty(self::$parameters['shortcode']) ?
         'true' : self::$parameters['shortcode'];
 
+      // Import to current post by default when running shortcodes inside
+      self::$parameters['import'] = empty(self::$parameters['import']) ?
+        'true' : self::$parameters['import'];
+
     } elseif ( !empty(self::$state['current_post']) ) {
 
       /*---------------------------------------------
@@ -890,7 +902,7 @@ class CCS_Content {
         $parameters['dots'] = '&hellip;';
       }
 
-      $result = do_ccs_shortcode( $result, false );
+      $result = self::process_shortcodes( $result, $parameters );
 
       if (intval($parameters['words']) < 0) {
 
@@ -986,12 +998,6 @@ class CCS_Content {
       if ( !empty($parameters['link_text']) ) {
         $result = $parameters['link_text'];
       }
-
-      // ???
-      /*
-      if ( empty($parameters['escape']) || $parameters['escape']=='false' ) {
-        $result = esc_html($result);
-      } */
     }
 
     switch ($parameters['field']) {
@@ -1081,23 +1087,16 @@ class CCS_Content {
     }
 
 
+
+
+
+
+
     // Do shortcode before formatting
 
-    if ( $parameters['field'] != 'debug' && $parameters['shortcode'] == 'true' ) {    // Shortcode
-/*
-      global $post;
-      $prev_post = $post;
-      $post = self::$state['current_post'];
-*/
-      $depth = ++self::$state['depth'];
-      self::$state['current_ids'][$depth] = self::$state['current_post_id'];
+    if ( $parameters['shortcode'] == 'true' ) {
 
-      $result = do_ccs_shortcode( $result );
-
-      self::$state['depth']--;
-      unset(self::$state['current_ids'][$depth]);
-
-//      $post = $prev_post;
+      $result = self::process_shortcodes( $result, $parameters );
 
     } else {
 
@@ -1107,6 +1106,8 @@ class CCS_Content {
         $result = '[direct]'.$result.'[/direct]';
       }
     }
+
+
 
 
 
@@ -1133,10 +1134,12 @@ class CCS_Content {
       }
 
     } else {
+
       // Remove [raw]..[/raw]
-      add_local_shortcode('ccs', 'raw', array('CCS_Format', 'direct_shortcode'));
-      $result = do_ccs_shortcode( $result, false );
-      remove_local_shortcode('ccs', 'raw');
+//      add_local_shortcode('ccs', 'raw', array('CCS_Format', 'direct_shortcode'));
+      $result = str_replace( array('[raw]','[/raw]'), '', $result );
+//      $result = do_ccs_shortcode( $result, false );
+//      remove_local_shortcode('ccs', 'raw');
     }
 
     if ($parameters['nl']=='true') {
@@ -1202,6 +1205,26 @@ class CCS_Content {
 
     return $result;
   }
+
+
+  static function process_shortcodes( $content, $parameters ) {
+
+    $depth = ++self::$state['depth'];
+    if ( $parameters['import'] != 'true' ) {
+      // Set post ID for shortcodes inside
+      self::$state['current_ids'][$depth] = self::$state['current_post_id'];
+    }
+
+    $content = do_ccs_shortcode( $content );
+
+    self::$state['depth']--;
+    if ( $parameters['import'] != 'true' ) {
+      unset(self::$state['current_ids'][$depth]);
+    }
+
+    return $content;
+  }
+
 
 
   /*---------------------------------------------
