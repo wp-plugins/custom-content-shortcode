@@ -71,6 +71,7 @@ class CCS_Loop {
     self::$state['do_reset_postdata'] = false;
     self::$state['wp_query'] = null;
     self::$state['paged_index'] = 0;
+    self::$state['current_post_id'] = 0;
     self::$previous_state = array();
   }
 

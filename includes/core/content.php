@@ -329,7 +329,7 @@ class CCS_Content {
     }
 
 
-
+    // Get current post
 
     if (empty($parameters['id'])) {
 
@@ -351,12 +351,13 @@ class CCS_Content {
       $post_id = $parameters['id'];
     }
 
+    self::$state['current_post_id'] = $post_id;
+
+
+
 
 
     $result = '';
-
-
-
 
     /*---------------------------------------------
      *
@@ -521,8 +522,13 @@ class CCS_Content {
     }
 
 
+
+
     return $result;
   }
+
+
+
 
   /*---------------------------------------------
    *
@@ -532,8 +538,10 @@ class CCS_Content {
 
   function prepare_post( $parameters = array() ) {
 
+
     // Keep track of depth in nested posts/fields
     $depth = self::$state['depth'];
+
 
     // Get post from ID
 
@@ -575,7 +583,15 @@ class CCS_Content {
 
       if ( isset(self::$state['current_ids'][ $depth ]) ) {
 
+        // Get it from current nesting depth
         $post_id = self::$state['current_post_id'] = self::$state['current_ids'][ $depth ];
+
+        self::$state['current_post_id'] = $post_id;
+        self::$state['current_post'] = get_post($post_id);
+
+      } elseif ( CCS_Loop::$state['is_loop'] ) {
+        $post_id = CCS_Loop::$state['current_post_id'];
+        self::$state['current_post_id'] = $post_id;
         self::$state['current_post'] = get_post($post_id);
 
       } else {
@@ -594,7 +610,9 @@ class CCS_Content {
     }
 
 
+
 // echo '### Depth: '.self::$state['depth'].' - Current ID: '.self::$state['current_post_id'].'<br>';
+
 
 
     if ( !empty($parameters['exclude']) && ($parameters['exclude']=='this') ) {

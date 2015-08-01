@@ -146,6 +146,9 @@ class CCS_Format {
   }
 
 
+
+
+
 	static function protect_script( $content, $global = true ) {
 		global $doing_local_shortcode;
 	  // Protect JS inside content
@@ -154,7 +157,7 @@ class CCS_Format {
 	  $parts = explode($begin, $content);
 	  if ( is_array($parts) && count($parts)>0 ) {
 
-			$depth = 1;
+			$depth = CCS_Content::$state['depth']+1;
 
 	    $new_content = array_shift( $parts ); // First element
 	    foreach ($parts as $index => $part) {
@@ -164,18 +167,25 @@ class CCS_Format {
 	      $new_content .= str_replace( $end, $end.$after_end, $part );
 	    }
 	  }
-//echo esc_html($new_content).'<br>';
+//echo 'PROTECT FILTER:'.esc_html($new_content).'<br>';
 		return $new_content;
 	}
 
 	function protect_local( $atts, $content ) {
+//echo 'PROTECT:LOCAL'.esc_html($content).'<br>';
 		global $doing_local_shortcode;
 		$depth = CCS_Content::$state['depth']+1;
 		return str_repeat('[protect]',$depth).$content.str_repeat('[/protect]',$depth);
 	}
+
 	function protect_global( $atts, $content ) {
+//echo 'PROTECT:GLOBAL:'.esc_html($content).'<br>';
 		return $content;
 	}
+
+
+
+
 
   /*---------------------------------------------
    *
