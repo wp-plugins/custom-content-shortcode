@@ -18,30 +18,40 @@ class CCS_To_ACF {
 
 		self::$state['is_relationship_loop'] = 'false';
 		self::$state['is_repeater_or_flex_loop'] = 'false';
+		self::$state['repeater_index'] = 0;
 
-    add_action( 'init', array($this, 'init') ); // Wait until plugins and theme loaded
+//    add_action( 'init', array($this, 'init') ); // Wait until plugins and theme loaded
+
+		// Available to themes
+
+    add_ccs_shortcode( array(
+	    'acf_sub' => array( $this, 'acf_sub_field'),
+	    'flex' => array( $this, 'loop_through_acf_field'),
+	    '-flex' => array( $this, 'loop_through_acf_field'),
+	    '--flex' => array( $this, 'loop_through_acf_field'),
+
+	    '-repeater' => array( $this, 'loop_through_acf_field'), // Nested repeater
+
+	    'acf_gallery' => array( $this, 'loop_through_acf_gallery_field'),
+	    'acf_image' => array( $this, 'get_image_details_from_acf_gallery'),
+	 // Alias
+	    'layout' => array( $this, 'if_get_row_layout'),
+	    '-layout' => array( $this, 'if_get_row_layout'),
+	    '--layout' => array( $this, 'if_get_row_layout'),
+		));
+
+    // This will be called by [repeater] if not inside WCK metabox
+    // add_local_shortcode( 'ccs', 'repeater', array($this, 'loop_through_acf_field'));
+    // add_local_shortcode( 'ccs', 'sub_image', array($this, 'get_image_details_from_acf_gallery'));    // This will be called by [related] when relationship field is specified
+    // add_local_shortcode( 'ccs', 'related', array($this, 'loop_relationship_field'));
+
+    add_filter( 'ccs_loop_parameters', array($this, 'acf_date_parameters_for_loop') );
 	}
 
   function init() {
 
     if (!class_exists('acf')) return; // If ACF is not installed
 
-    add_shortcode('acf_sub', array($this, 'acf_sub_field'));
-    add_shortcode('flex', array($this, 'loop_through_acf_field'));
-
-    // This will be called by [repeater] if not inside WCK metabox
-    // add_shortcode('repeater', array($this, 'loop_through_acf_field'));
-    add_shortcode('-repeater', array($this, 'loop_through_acf_field')); // Nested repeater
-
-    add_shortcode('acf_gallery', array($this, 'loop_through_acf_gallery_field'));
-    add_shortcode('acf_image', array($this, 'get_image_details_from_acf_gallery'));
-    // add_shortcode('sub_image', array($this, 'get_image_details_from_acf_gallery')); // Alias
-    add_shortcode('layout', array($this, 'if_get_row_layout'));
-
-    // This will be called by [related] when relationship field is specified
-    // add_shortcode('related', array($this, 'loop_relationship_field'));
-
-    add_filter( 'ccs_loop_parameters', array($this, 'acf_date_parameters_for_loop') );
   }
 
 	public static function acf_sub_field( $atts ) {
@@ -53,6 +63,8 @@ class CCS_To_ACF {
 			'in' => '',
 			'size' => '',
 		), $atts));
+
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		if ($image!='') {
 
@@ -76,7 +88,7 @@ class CCS_To_ACF {
 
 		} else {
 
-			$output = do_shortcode(get_sub_field($field));
+			$output = do_ccs_shortcode( get_sub_field($field) );
 
 			if ( ($format=='true') && ($output!='') ) {
 				$output = wpautop($output);
@@ -95,21 +107,21 @@ class CCS_To_ACF {
 			'count' => '',
 			'start' => '',
 			'num' => '',
+			'row' => '',
 			'sub' => '',
 			'sub_image' => '',
 			'size' => '',
 			'format' => '',
-			'columns' => '', 'pad' => '', 'between' => '', 
+			'columns' => '', 'pad' => '', 'between' => '',
 		), $atts ));
 
-		if ( !empty($num) ) {
+		if ( !empty($row) ) $num = $row; // Alias
+		if ( !empty($num) && $num != 'rand' ) {
 			$start = $num;
 			$count = 1;
 		}
 
-    if (empty($field) && isset($atts[0])) {
-      $field = $atts[0];
-    }
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		if ( empty($content) && (!empty($sub) || !empty($sub_image))) {
 
@@ -126,37 +138,46 @@ class CCS_To_ACF {
 			$content .= ']';
 		}
 
-		if ( have_rows( $field )) {
+		if ( have_rows( $field ) ) {
 
 			$index_now = 0;
+			self::$state['repeater_index'] = 0;
+
 			$outputs = array();
 
 			if ( $start == '' ) $start='1';
 
 			while ( have_rows( $field ) ) {
 
-				self::$state['is_repeater_or_flex_loop'] = 'true'; // Keep true for each row in case nested
+				// Keep true for each row in case nested
+				self::$state['is_repeater_or_flex_loop'] = 'true';
 
 				the_row(); // Move index forward
 
 				$index_now++;
+				self::$state['repeater_index']++;
 
 				if ( $index_now >= $start ) { /* Start loop */
 
 					if ( ( !empty($count) ) && ( $index_now >= ($start+$count) ) ) {
 							/* If over count, continue empty looping for has_sub_field */
 					} else {
-
-						$outputs[] = str_replace( '{COUNT}', $index_now, do_shortcode($content) );
-
+						$outputs[] = str_replace( '{COUNT}', $index_now, do_ccs_shortcode( $content ) );
 					}
 				}
 			}
 
 			self::$state['is_repeater_or_flex_loop'] = 'false';
+			self::$state['repeater_index'] = 0;
 
 		} else {
 			return null;
+		}
+
+		if ( $num == 'rand' ) {
+			shuffle( $outputs );
+			$item = array_pop($outputs);
+			$outputs = array($item);
 		}
 
 		if( !empty($outputs) && is_array($outputs)) {
@@ -170,8 +191,11 @@ class CCS_To_ACF {
 				$output = implode( '', $outputs );
 			}
 		}
+
+
+
 		return $output;
-	}
+	} //
 
 	public static function loop_through_acf_gallery_field( $atts, $content ) {
 
@@ -181,9 +205,11 @@ class CCS_To_ACF {
 			'start' => '',
 			'subfield' => '',
 			'sub' => '',
-			'columns' => '', 'pad' => '', 'between' => '', 
+			'columns' => '', 'pad' => '', 'between' => '',
 		), $atts ));
 
+
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		// If in repeater or flexible content, get subfield by default
 		if ( self::$state['is_repeater_or_flex_loop']=='true' ) {
@@ -196,10 +222,24 @@ class CCS_To_ACF {
 			$sub = 'true';
 		}
 
+
+		// TODO: Improve getting current post
+
+		global $post;
+		$prev_post = $post;
+		if (CCS_Loop::$state['is_loop']) {
+			$post = get_post(CCS_Loop::$state['current_post_id']);
+		}
+
+
 		if (empty($sub)) {
 			$images = get_field( $field );
 		} else {
 			$images = get_sub_field( $field );
+		}
+
+		if (CCS_Loop::$state['is_loop']) {
+			$post = $prev_post;
 		}
 
 		$outputs = array();
@@ -220,7 +260,7 @@ class CCS_To_ACF {
 							break;				/* If over count, break the loop */
 					}
 
-					$outputs[] = str_replace( '{COUNT}', $index_now, do_shortcode($content) );
+					$outputs[] = str_replace( '{COUNT}', $index_now, do_ccs_shortcode( $content ) );
 				}
 			}
 		}
@@ -235,6 +275,8 @@ class CCS_To_ACF {
 		}
 
 		self::$state['current_image'] = '';
+
+
 		return $output;
 	}
 
@@ -243,9 +285,12 @@ class CCS_To_ACF {
 		extract(shortcode_atts(array(
 			'field' => '',
 			'size' => '',
+			'class' => ''
 		), $atts));
 
-    if ( empty($size) || 
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
+
+    if ( empty($size) ||
       (!empty($size) && !isset(self::$state['current_image']['sizes'][$size]))) {
 
       $image_url = self::$state['current_image']['url'];
@@ -263,7 +308,9 @@ class CCS_To_ACF {
 
 		} else {
 
-			$output = '<img src="' . $image_url . '">';
+			$output = '<img ';
+			if (!empty($class)) $output .= ' class="'.$class.'"';
+			$output .= 'src="' . $image_url . '">';
 
 		}
 		return $output;
@@ -275,8 +322,13 @@ class CCS_To_ACF {
 			'name' => '',
 		), $atts));
 
-		if( get_row_layout() == $name ) {
-			return do_shortcode( $content );
+    if (empty($name) && isset($atts[0])) $name = $atts[0];
+
+		$names = CCS_Loop::explode_list($name);
+		$layout = get_row_layout();
+
+		if ( in_array($layout, $names) ) {
+			return do_ccs_shortcode( $content );
 		} else {
 			return null;
 		}
@@ -291,6 +343,8 @@ class CCS_To_ACF {
 		), $atts ) );
 
 		$output = array();
+
+    if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		// If in repeater or flexible content, get subfield by default
 		if ( self::$state['is_repeater_or_flex_loop']=='true' ) {
@@ -323,7 +377,7 @@ class CCS_To_ACF {
 
 				self::$state['relationship_id'] = $post->ID;
 
-				$output[] = str_replace('{COUNT}', $index_now, do_shortcode($content));
+				$output[] = str_replace('{COUNT}', $index_now, do_local_shortcode( 'ccs', $content, true ));
 			}
 
 		}
@@ -356,4 +410,3 @@ class CCS_To_ACF {
 	}
 
 }
-
