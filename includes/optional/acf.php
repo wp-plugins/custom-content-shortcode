@@ -88,7 +88,7 @@ class CCS_To_ACF {
 
 		} else {
 
-			$output = do_shortcode( get_sub_field($field) );
+			$output = do_ccs_shortcode( get_sub_field($field) );
 
 			if ( ($format=='true') && ($output!='') ) {
 				$output = wpautop($output);
@@ -162,7 +162,7 @@ class CCS_To_ACF {
 					if ( ( !empty($count) ) && ( $index_now >= ($start+$count) ) ) {
 							/* If over count, continue empty looping for has_sub_field */
 					} else {
-						$outputs[] = str_replace( '{COUNT}', $index_now, do_local_shortcode( 'ccs', $content, true ) );
+						$outputs[] = str_replace( '{COUNT}', $index_now, do_ccs_shortcode( $content ) );
 					}
 				}
 			}
@@ -222,11 +222,15 @@ class CCS_To_ACF {
 			$sub = 'true';
 		}
 
+
+		// TODO: Improve getting current post
+
 		global $post;
 		$prev_post = $post;
 		if (CCS_Loop::$state['is_loop']) {
 			$post = get_post(CCS_Loop::$state['current_post_id']);
 		}
+
 
 		if (empty($sub)) {
 			$images = get_field( $field );
@@ -256,7 +260,7 @@ class CCS_To_ACF {
 							break;				/* If over count, break the loop */
 					}
 
-					$outputs[] = str_replace( '{COUNT}', $index_now, do_local_shortcode( 'ccs', $content, true ) );
+					$outputs[] = str_replace( '{COUNT}', $index_now, do_ccs_shortcode( $content ) );
 				}
 			}
 		}
@@ -324,7 +328,7 @@ class CCS_To_ACF {
 		$layout = get_row_layout();
 
 		if ( in_array($layout, $names) ) {
-			return do_local_shortcode( 'ccs',  $content, true );
+			return do_ccs_shortcode( $content );
 		} else {
 			return null;
 		}

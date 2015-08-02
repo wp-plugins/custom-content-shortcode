@@ -1310,16 +1310,11 @@ class CCS_Content {
 //      echo 'ID:'.$post_id;
 
     } else {
+
+      // Default
       global $post;
       if (!empty($post)) {
         $post_id = $post->ID;
-
-        // echo '$POST:'.$post_id;
-      }
-      else {
-        $post_id = get_the_ID();
-
-        // echo 'DEFAULT:'.$post_id;
       }
     }
 

@@ -104,6 +104,7 @@ class CCS_If {
 		 */
 
 	  $current_post_id = do_shortcode('[field id]');
+		$post = get_post($current_post_id);
 
 /*
 		global $post;
