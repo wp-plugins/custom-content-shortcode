@@ -32,7 +32,7 @@ class CCS_Related {
 
 		if (CCS_Loop::$state['is_loop']) {
       $post_id = CCS_Loop::$state['current_post_id'];
-			$post_type = do_local_shortcode( 'ccs', '[field post-type]');
+			$post_type = do_ccs_shortcode( '[field post-type]', false );
 		} elseif (!empty($post)) {
 			$post_id = $post->ID;
 			$post_type = $post->post_type;
@@ -65,7 +65,7 @@ class CCS_Related {
 
 		if ( !empty($taxonomy_field) ) {
 
-			$terms = do_local_shortcode( 'ccs', '[field '.$taxonomy_field.']' );
+			$terms = do_ccs_shortcode( '[field '.$taxonomy_field.']', false );
 			$terms = CCS_Loop::explode_list($terms);
 
 			if (empty($terms) || count($terms)==0) return;
@@ -90,10 +90,8 @@ class CCS_Related {
 		 *
 		 */
 
-		if ( ( !empty($field) || !empty($subfield) ) && (empty($value)) ){
-			if (class_exists('CCS_To_ACF')) {
-				return CCS_To_ACF::loop_relationship_field( $atts, $content );
-			}
+		if ( ( !empty($field) || !empty($subfield) ) && empty($value) && class_exists('CCS_To_ACF') ){
+			return CCS_To_ACF::loop_relationship_field( $atts, $content );
 		}
 
 		/*---------------------------------------------
@@ -212,7 +210,7 @@ class CCS_Related {
 							self::$state['current_related_post_id'] = $post->ID;
 							$current_count++;
 							if ($current_count<=$count) {
-								$outputs[] = do_local_shortcode( 'ccs',  $content, true );
+								$outputs[] = do_ccs_shortcode( $content );
 							}
 						}
 					}

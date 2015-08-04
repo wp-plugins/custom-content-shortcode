@@ -30,13 +30,16 @@ class CCS_Format {
 			'x' => array($this, 'x_shortcode')
 		) );
 
-		add_local_shortcode( 'ccs', 'protect', array($this, 'protect_local') );
-		add_shortcode( 'protect', array($this, 'protect_global') );
 		self::$state['x_loop'] = 0;
 	}
 
   // Don't run shortcodes inside
   static function direct_shortcode( $atts, $content ) {
+    // Protect from global do_shortcode
+  	global $doing_local_shortcode;
+    if ($doing_local_shortcode) {
+      return '[direct]'.$content.'[/direct]';
+    }
     return $content;
   }
 
@@ -71,7 +74,7 @@ class CCS_Format {
 
 	// Do shortcode, then format
   function format_shortcode( $atts, $content ) {
-    return wpautop(do_local_shortcode( 'ccs', $content, true ));
+    return wpautop(do_ccs_shortcode( $content ));
   }
 
   // Repeat x times: [x 10]..[/x]
@@ -149,41 +152,23 @@ class CCS_Format {
 
 
 
+  // Protect JS inside content
 	static function protect_script( $content, $global = true ) {
-		global $doing_local_shortcode;
-	  // Protect JS inside content
 	  $begin = '<script';
 	  $end = '</script>';
-	  $parts = explode($begin, $content);
-	  if ( is_array($parts) && count($parts)>0 ) {
 
-			$depth = CCS_Content::$state['depth']+1;
+		if ( $global ) $pre = '[direct][direct]';
+		else $pre = '[direct]';
+		$pre .= $begin;
+		$post = $end;
+		if ($global) $post .= '[/direct][/direct]';
+		else $post .= '[/direct]';
 
-	    $new_content = array_shift( $parts ); // First element
-	    foreach ($parts as $index => $part) {
-	      $new_content .= str_repeat('[protect]',$depth);
-	      $new_content .= $begin;
-	      $after_end = str_repeat('[/protect]',$depth);
-	      $new_content .= str_replace( $end, $end.$after_end, $part );
-	    }
-	  }
-//echo 'PROTECT FILTER:'.esc_html($new_content).'<br>';
-		return $new_content;
-	}
+		$content = str_replace( $begin, $pre, $content );
+		$content = str_replace( $end, $post, $content );
 
-	function protect_local( $atts, $content ) {
-//echo 'PROTECT:LOCAL'.esc_html($content).'<br>';
-		global $doing_local_shortcode;
-		$depth = CCS_Content::$state['depth']+1;
-		return str_repeat('[protect]',$depth).$content.str_repeat('[/protect]',$depth);
-	}
-
-	function protect_global( $atts, $content ) {
-//echo 'PROTECT:GLOBAL:'.esc_html($content).'<br>';
 		return $content;
 	}
-
-
 
 
 

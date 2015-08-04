@@ -223,24 +223,12 @@ class CCS_To_ACF {
 		}
 
 
-		// TODO: Improve getting current post
-
-		global $post;
-		$prev_post = $post;
-		if (CCS_Loop::$state['is_loop']) {
-			$post = get_post(CCS_Loop::$state['current_post_id']);
-		}
-
-
 		if (empty($sub)) {
 			$images = get_field( $field );
 		} else {
 			$images = get_sub_field( $field );
 		}
 
-		if (CCS_Loop::$state['is_loop']) {
-			$post = $prev_post;
-		}
 
 		$outputs = array();
 
@@ -279,6 +267,8 @@ class CCS_To_ACF {
 
 		return $output;
 	}
+
+
 
 	public static function get_image_details_from_acf_gallery( $atts ) {
 
@@ -371,13 +361,13 @@ class CCS_To_ACF {
 				$posts = array( $posts ); // Single post
 			}
 
-			foreach ($posts as $post) { // must be named $post
+			foreach ($posts as $post) { // must be named $post ???
 
 				$index_now++;
 
 				self::$state['relationship_id'] = $post->ID;
 
-				$output[] = str_replace('{COUNT}', $index_now, do_local_shortcode( 'ccs', $content, true ));
+				$output[] = str_replace('{COUNT}', $index_now, do_ccs_shortcode( $content ));
 			}
 
 		}

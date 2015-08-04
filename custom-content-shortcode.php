@@ -3,7 +3,7 @@
 Plugin Name: Custom Content Shortcode
 Plugin URI: http://wordpress.org/plugins/custom-content-shortcode/
 Description: Display posts, pages, custom post types, custom fields, files, images, comments, attachments, menus, or widget areas
-Version: 2.7.1
+Version: 2.7.2
 Shortcodes: loop, content, field, taxonomy, if, for, each, comments, user, url, load
 Author: Eliot Akira
 Author URI: eliotakira.com
@@ -28,7 +28,7 @@ class CCS_Plugin {
     $this->load_settings();
     $this->load_main_modules();
     $this->load_optional_modules();
-    self::$state['did_content_filter'] = false;
+    self::$state['doing_ccs_filter'] = false;
     self::$state['original_post_id'] = 0;
     add_action('init',array($this,'init'));
   }
@@ -200,7 +200,7 @@ class CCS_Plugin {
     if ( isset( $settings['shortcodes_in_widget'] ) &&
       ($settings['shortcodes_in_widget'] == "on") ) {
 
-      add_filter('widget_text', array($this, 'render_local_shortcodes') );
+      add_filter('widget_text', array($this, 'ccs_content_filter') );
       add_filter('widget_text', 'do_shortcode', 11 );
     }
 
@@ -217,11 +217,11 @@ class CCS_Plugin {
 
   static function ccs_content_filter( $content ) {
 
-    return self::render_local_shortcodes( $content );
-  }
+    $content = CCS_Format::protect_script($content, false);
+    $content = do_ccs_shortcode( $content, false );
 
-  static function render_local_shortcodes( $content ) {
-    return do_ccs_shortcode( $content, false );
+    // This gets passed to do_shortcode filter
+    return $content;
   }
 
   static function add( $tag, $func = null, $global = true ) {

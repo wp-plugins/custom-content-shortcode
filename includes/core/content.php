@@ -288,7 +288,7 @@ class CCS_Content {
     }
 
 
-    if (class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_relationship_loop']=='true') {
+    if ( class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_relationship_loop']=='true' ) {
 
       // Inside ACF Relationship field
       $parameters['id'] = CCS_To_ACF::$state['relationship_id'];
@@ -1008,6 +1008,7 @@ class CCS_Content {
 
     $post_id = !empty(self::$state['current_post_id']) ? self::$state['current_post_id'] : get_the_ID();
 
+
     $link_text_fields = array(
       'link', 'edit-link', 'edit-link-self', 'title-link', 'title-link-out'
     );
@@ -1118,15 +1119,9 @@ class CCS_Content {
 
     } else {
 
-      // Protect from global do_shortcode
-    	global $doing_local_shortcode;
-      if ($doing_local_shortcode) {
-        $result = '[direct]'.$result.'[/direct]';
-      }
+      // Gets passed to global do_shortcode..
+      // TODO: How to protect field value?
     }
-
-
-
 
 
     // Then the_content filter or format
@@ -1153,11 +1148,7 @@ class CCS_Content {
 
     } else {
 
-      // Remove [raw]..[/raw]
-//      add_local_shortcode('ccs', 'raw', array('CCS_Format', 'direct_shortcode'));
       $result = str_replace( array('[raw]','[/raw]'), '', $result );
-//      $result = do_ccs_shortcode( $result, false );
-//      remove_local_shortcode('ccs', 'raw');
     }
 
     if ($parameters['nl']=='true') {
