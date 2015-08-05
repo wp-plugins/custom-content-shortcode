@@ -1120,7 +1120,10 @@ class CCS_Content {
     } else {
 
       // Gets passed to global do_shortcode..
+
       // TODO: How to protect field value?
+      // This won't work if it's inside HTML attribute..
+      // $result = '[direct]'.$result.'[/direct]';
     }
 
 

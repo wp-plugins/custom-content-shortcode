@@ -29,19 +29,10 @@ class CCS_Format {
 	    'random' => array($this, 'random_shortcode'),
 			'x' => array($this, 'x_shortcode')
 		) );
-
+		//add_shortcode('direct',array($this, 'direct_shortcode'));
 		self::$state['x_loop'] = 0;
 	}
 
-  // Don't run shortcodes inside
-  static function direct_shortcode( $atts, $content ) {
-    // Protect from global do_shortcode
-  	global $doing_local_shortcode;
-    if ($doing_local_shortcode) {
-      return '[direct]'.$content.'[/direct]';
-    }
-    return $content;
-  }
 
 	function br_shortcode() { return '<br />'; }
 
@@ -65,7 +56,7 @@ class CCS_Format {
     $out .= '>';
 
     if (!empty($content)) {
-      $out .= do_local_shortcode( 'ccs', $content, true );
+      $out .= do_ccs_shortcode( $content );
       $out .= '</'.$tag.'>';
     }
 		return $out;
@@ -74,7 +65,7 @@ class CCS_Format {
 
 	// Do shortcode, then format
   function format_shortcode( $atts, $content ) {
-    return wpautop(do_ccs_shortcode( $content ));
+    return wpautop( do_ccs_shortcode( $content ) );
   }
 
   // Repeat x times: [x 10]..[/x]
@@ -89,7 +80,7 @@ class CCS_Format {
 		for ($i=1; $i <= $x; $i++) {
 			self::$state['x_loop'] = $i;
 			$rendered = str_replace('{X}', $i, $content);
-			$out .= do_local_shortcode( 'ccs', $rendered, true );
+			$out .= do_ccs_shortcode( $rendered );
 		}
 
 		self::$state['x_loop'] = 0;
@@ -140,7 +131,7 @@ class CCS_Format {
 
 	function clean_shortcode( $atts, $content ) {
 		$content = self::strip_tag_list( $content, array('p','br') );
-		return do_local_shortcode( 'ccs', $content, true );
+		return do_ccs_shortcode( $content );
 	}
 
   static function trim( $content, $trim = '' ) {
@@ -150,19 +141,27 @@ class CCS_Format {
 
 
 
+  // Don't run shortcodes inside
+  static function direct_shortcode( $atts, $content ) {
+    // Protect from global do_shortcode
+  	global $doing_local_shortcode;
+    if ( $doing_local_shortcode || CCS_Plugin::$state['doing_ccs_filter'] ) {
+      return '[direct]'.$content.'[/direct]';
+    }
+    return $content;
+  }
 
 
   // Protect JS inside content
 	static function protect_script( $content, $global = true ) {
+
 	  $begin = '<script';
 	  $end = '</script>';
 
-		if ( $global ) $pre = '[direct][direct]';
-		else $pre = '[direct]';
+		$pre = '[direct]';
 		$pre .= $begin;
 		$post = $end;
-		if ($global) $post .= '[/direct][/direct]';
-		else $post .= '[/direct]';
+		$post .= '[/direct]';
 
 		$content = str_replace( $begin, $pre, $content );
 		$content = str_replace( $end, $post, $content );
@@ -211,7 +210,7 @@ class CCS_Format {
 
   function escape_shortcode( $atts, $content ) {
 		if ($atts['shortcode']=='true')
-			$content = do_local_shortcode( 'ccs',  $content, true );
+			$content = do_ccs_shortcode( $content );
 		return str_replace(array('[',']'), array('&#91;','&#93;'), esc_html($content));
 	}
 
