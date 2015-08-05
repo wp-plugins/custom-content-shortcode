@@ -288,7 +288,7 @@ class CCS_Content {
     }
 
 
-    if ( class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_relationship_loop']=='true' ) {
+    if ( class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_relationship_loop'] ) {
 
       // Inside ACF Relationship field
       $parameters['id'] = CCS_To_ACF::$state['relationship_id'];
@@ -1276,7 +1276,7 @@ class CCS_Content {
       }
 
     } elseif ( class_exists('CCS_To_ACF') &&
-        CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true' ) {
+        CCS_To_ACF::$state['is_repeater_or_flex_loop'] ) {
 
       /*---------------------------------------------
        *
@@ -1285,7 +1285,7 @@ class CCS_Content {
        */
 
       // If not inside relationship loop
-      if ( CCS_To_ACF::$state['is_relationship_loop']!='true' ) {
+      if ( ! CCS_To_ACF::$state['is_relationship_loop'] ) {
 
         // Get sub field
         if (function_exists('get_sub_field')) {
@@ -1731,7 +1731,7 @@ class CCS_Content {
 
     $post_id = self::$state['current_post_id'];
 
-    if (class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true') {
+    if (class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_repeater_or_flex_loop'] ) {
 
       // Repeater or flexible content field: then get sub field
 
@@ -1993,8 +1993,8 @@ class CCS_Content {
 
     // Inside ACF repeater/flex
     if ( class_exists('CCS_To_ACF') &&
-      CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true' &&
-//      CCS_To_ACF::$state['is_relationship_loop']!='true' ) &&
+      CCS_To_ACF::$state['is_repeater_or_flex_loop'] &&
+//      ! CCS_To_ACF::$state['is_relationship_loop' ) &&
       $field != 'GLOBAL' ) {
 
       // Get sub field

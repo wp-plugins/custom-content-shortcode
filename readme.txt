@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.3
-Stable tag: 2.7.3
+Stable tag: 2.7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -84,7 +84,7 @@ This update includes extensive changes to improve shortcode compatibility with W
 
 == Changelog ==
 
-= 2.7.3 =
+= 2.7.4 =
 
 * Continued efforts to improve compatibility for all shortcodes
 

@@ -16,8 +16,8 @@ class CCS_To_ACF {
 
 	function __construct() {
 
-		self::$state['is_relationship_loop'] = 'false';
-		self::$state['is_repeater_or_flex_loop'] = 'false';
+		self::$state['is_relationship_loop'] = false;
+		self::$state['is_repeater_or_flex_loop'] = false;
 		self::$state['repeater_index'] = 0;
 
 //    add_action( 'init', array($this, 'init') ); // Wait until plugins and theme loaded
@@ -150,7 +150,7 @@ class CCS_To_ACF {
 			while ( have_rows( $field ) ) {
 
 				// Keep true for each row in case nested
-				self::$state['is_repeater_or_flex_loop'] = 'true';
+				self::$state['is_repeater_or_flex_loop'] = true;
 
 				the_row(); // Move index forward
 
@@ -167,7 +167,7 @@ class CCS_To_ACF {
 				}
 			}
 
-			self::$state['is_repeater_or_flex_loop'] = 'false';
+			self::$state['is_repeater_or_flex_loop'] = false;
 			self::$state['repeater_index'] = 0;
 
 		} else {
@@ -212,7 +212,7 @@ class CCS_To_ACF {
     if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		// If in repeater or flexible content, get subfield by default
-		if ( self::$state['is_repeater_or_flex_loop']=='true' ) {
+		if ( self::$state['is_repeater_or_flex_loop'] ) {
 			$sub = 'true';
 		}
 
@@ -337,7 +337,7 @@ class CCS_To_ACF {
     if (empty($field) && isset($atts[0])) $field = $atts[0];
 
 		// If in repeater or flexible content, get subfield by default
-		if ( self::$state['is_repeater_or_flex_loop']=='true' ) {
+		if ( self::$state['is_repeater_or_flex_loop'] ) {
 			if (empty($subfield)) {
 				$subfield = $field;
 				$field = null;
@@ -353,7 +353,7 @@ class CCS_To_ACF {
 
 		if ($posts) {
 
-			self::$state['is_relationship_loop'] = 'true';
+			self::$state['is_relationship_loop'] = true;
 
 			$index_now = 0;
 
@@ -372,7 +372,7 @@ class CCS_To_ACF {
 
 		}
 
-		self::$state['is_relationship_loop'] = 'false';
+		self::$state['is_relationship_loop'] = false;
 
 		if (is_array($output)) {
 			$output = implode('', $output);

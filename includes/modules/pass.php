@@ -139,7 +139,7 @@ class CCS_Pass {
           }
         }
 
-      } elseif (class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true') {
+      } elseif (class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_repeater_or_flex_loop'] ) {
         // Repeater or flexible content field: then get sub field
         if (function_exists('get_sub_field')) {
           $field_value = get_sub_field( $field );

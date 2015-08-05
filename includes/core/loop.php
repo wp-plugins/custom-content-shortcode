@@ -2249,7 +2249,7 @@ class CCS_Loop {
         if (strpos($template, $search)!==false) {
 
           if ( class_exists('CCS_To_ACF') &&
-              CCS_To_ACF::$state['is_repeater_or_flex_loop']=='true' ) {
+              CCS_To_ACF::$state['is_repeater_or_flex_loop'] ) {
 
             // Repeater or flexible content field: then get sub field
             if (function_exists('get_sub_field')) {
