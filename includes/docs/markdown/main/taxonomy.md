@@ -59,7 +59,7 @@ The current post is not included in the result.
 
 > **order** - ASC (ascending/alphabetical) or DESC (descending/from most recent date)
 
-> **children** - include children for hierarchical taxonomies - *true* (default) or *false*
+> **children** - include posts related by child terms - *true* or *false* (default)
 
 
 ## For / each

@@ -108,7 +108,13 @@ Use `[loop]` to get posts and loop through each one.
   - Use *compare=and* to get posts whose taxonomy contains all terms
   - Use *compare=not* to get posts whose taxonomy does not contain the term(s)
 
+---
+
 > #### Multiple taxonomies
+
+> ~~~
+> [loop taxonomy=color term=blue relation=or taxonomy_2=size term_2=small]
+> ~~~
 
 > **relation** - additional taxonomy query, where relation is *and* (default) or *or*
 
@@ -130,13 +136,17 @@ Use `[loop]` to get posts and loop through each one.
 
 > **compare=between** - query for a range of values; for example, value=0,100
 
+---
+
 > #### Multiple fields
+
+> ~~~
+> [loop field=color value=blue relation=or field_2=size value_2=small]
+> ~~~
 
 > **relation** - additional field query, where relation is *and* (default) or *or*
 
 > **field_2, value_2, compare_2, field_3, value_3, compare_3...**
-
-
 
 
 ### Date field

@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.3
-Stable tag: 2.7.4
+Stable tag: 2.7.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,9 +80,13 @@ Support for other plugins:
 
 == Upgrade Notice ==
 
-This update includes extensive changes to improve shortcode compatibility with WordPress 4.2.3. Please test that your code works properly before using it in production.
-
 == Changelog ==
+
+= 2.7.5 =
+
+* [attached] - Improve getting current attachment ID
+* [if] - Add parameters *first* and *every* for ACF repeater field
+* [related] - Set parameter *children=true* to include posts related by child terms
 
 = 2.7.4 =
 

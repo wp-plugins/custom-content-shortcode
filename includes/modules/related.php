@@ -49,7 +49,7 @@ class CCS_Related {
 			'value' => '', // For future update: related post by field value
 			'subfield' => '',
 			'count' => '',
-			'children' => 'true',
+			'children' => '', // Include child terms
 			'order' => 'DESC',
 			'orderby' => 'date',
 			'relation' => 'or',
@@ -61,7 +61,7 @@ class CCS_Related {
 			$post_type = CCS_Loop::explode_list($type);
 		}
 
-		if ( !empty($field) && isset($atts[0]) ) $field = $atts[0];
+		if ( empty($field) && isset($atts[0]) ) $field = $atts[0];
 
 		if ( !empty($taxonomy_field) ) {
 
@@ -117,8 +117,7 @@ class CCS_Related {
 				'posts_per_page'   => -1,
 				'order' => $order,
 				'orderby' => $orderby,
-				'include_children' => $children == 'true' ? true : false,
-				'tax_query' => array ()
+				'tax_query' => array()
 			);
 
 			$target_terms = array();
@@ -149,7 +148,8 @@ class CCS_Related {
 						'taxonomy' => $current_taxonomy,
 						'field' => 'id',
 						'terms' => $target_terms[$current_taxonomy],
-						'operator' => strtoupper($operator)
+						'operator' => strtoupper($operator),
+						'include_children' => ($children == 'true'),
 					);
 
 					$tax_count++;
@@ -179,12 +179,26 @@ class CCS_Related {
 						$condition = false;
 
 						$tax_count = 0;
+
 						foreach ($taxonomies as $current_taxonomy) {
 
 							if ($current_taxonomy == 'tag')
 								$current_taxonomy = 'post_tag';
 
-							if (isset($terms[$current_taxonomy])) {
+							// Include child terms
+							if ($children == 'true' && isset($terms[$current_taxonomy])) {
+								foreach ($terms[$current_taxonomy] as $this_term) {
+									$child_terms = get_term_children( $this_term, $current_taxonomy );
+									if (!empty($child_terms)) {
+										foreach ($child_terms as $child_term) {
+											if ( !in_array($child_term, $terms[$current_taxonomy]) )
+												$terms[$current_taxonomy][] = $child_term;
+										}
+									}
+								}
+							}
+
+							if ( isset($terms[$current_taxonomy]) ) {
 								$tax_count++;
 
 								if ($relation == 'AND') {

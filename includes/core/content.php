@@ -1257,7 +1257,7 @@ class CCS_Content {
      */
 
     if ( (!empty($parameters['type']) && $parameters['type']=='attachment') ||
-      CCS_Loop::$state['is_attachment_loop'] ||
+      CCS_Loop::$state['is_attachment_loop'] || // gallery field
       CCS_Attached::$state['is_attachment_loop'] ) {
 
       return self::get_the_attachment_field( $parameters );
@@ -1586,16 +1586,14 @@ class CCS_Content {
   public static function get_the_attachment_field( $parameters ) {
 
 
-
     // TODO: Improve getting current post
-
 
     if (!empty($parameters['id'])) {
       $post_id = $parameters['id'];
-    } elseif (CCS_Loop::$state['is_loop']) {
-      $post_id = CCS_Loop::$state['current_post_id'];
     } elseif (CCS_Attached::$state['is_attachment_loop']) {
       $post_id = CCS_Attached::$state['current_attachment_id'];
+    } elseif (CCS_Loop::$state['is_loop']) {
+      $post_id = CCS_Loop::$state['current_post_id'];
     } elseif (isset(self::$state['current_post_id'])) {
       $post_id = self::$state['current_post_id'];
     } else {
@@ -1604,9 +1602,8 @@ class CCS_Content {
 
     if (empty($post_id)) return; // Needs attachment ID
 
+
     $post = get_post($post_id);
-
-
 
 
     if (empty($parameters['size'])) {

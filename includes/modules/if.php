@@ -71,6 +71,7 @@ class CCS_If {
 
       'pass' => '',
       'pass_empty' => 'true', // deprecated
+
 		);
 
 		extract( shortcode_atts( $args , $atts, true ) );
@@ -662,8 +663,14 @@ class CCS_If {
 	   *
 	   */
 
-    if ( CCS_To_ACF::$state['is_repeater_or_flex_loop'] && !empty($every) ) {
-			$condition = ( CCS_To_ACF::$state['repeater_index'] % $every == 0 );
+    if ( CCS_To_ACF::$state['is_repeater_or_flex_loop'] ) {
+
+			if ( !empty($every) ) {
+				$condition = ( CCS_To_ACF::$state['repeater_index'] % $every == 0 );
+			}
+			if ( isset($atts['first']) ) {
+				$condition = ( CCS_To_ACF::$state['repeater_index'] == 1 );
+			}
 		}
 
 

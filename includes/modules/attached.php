@@ -107,7 +107,7 @@ class CCS_Attached {
 		foreach ( $attachment_ids as $index => $attachment_id ) {
 
 			self::$state['current_attachment_id'] = $attachment_id;
-			$out[] = do_shortcode( $content );
+			$out[] = do_ccs_shortcode( $content );
 		}
 
 		self::$state['is_attachment_loop'] = false;

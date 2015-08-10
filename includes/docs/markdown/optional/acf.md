@@ -173,6 +173,14 @@ For an image field inside, use the *image* parameter to display the field. You c
 > **row=rand** - a randomly selected row
 
 
+### If repeater is not empty
+
+~~~
+[if field=repeater_field]
+  ..Repeater field has value..
+[/if]
+~~~
+
 
 ### Display a specific row
 
@@ -199,7 +207,6 @@ For an image field inside, use the *image* parameter to display the field. You c
 ~~~
 
 This displays a sub-field from a specific row. It's used by itself without a closing tag.
-
 
 
 ### Nested repeaters
