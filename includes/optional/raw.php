@@ -1,14 +1,14 @@
-<?php 
+<?php
 
 /*---------------------------------------------
  *
  * [raw]..[/raw]
- * 
+ *
  * Protect shortcode content from wpautop and wptexturize
  *
  */
 
-function ccs_raw_format( $content ) {
+function ccs_raw_format( $content, $texturize = true ) {
 
 	$new_content = null;
 	$pattern_full = '{(\[raw\].*?\[/raw\])}is';
@@ -18,12 +18,15 @@ function ccs_raw_format( $content ) {
 		if (preg_match($pattern_contents, $piece, $matches)) {
 			$new_content .= $matches[1];
 		} else {
-			$new_content .= wptexturize(wpautop($piece));
+			$result = wpautop($piece);
+			if ($texturize) $result = wptexturize($result);
+			$new_content .= $result;
 		}
 	}
-	return $new_content;
+  return $new_content;
+//  return do_ccs_shortcode( $new_content, false );
 }
 
-remove_filter('the_content', 'wpautop');
-remove_filter('the_content', 'wptexturize');
-add_filter('the_content', 'ccs_raw_format', 1);
+remove_filter( 'the_content', 'wpautop' );
+remove_filter( 'the_content', 'wptexturize' );
+add_filter( 'the_content', 'ccs_raw_format', 1 );
