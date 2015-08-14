@@ -3,10 +3,10 @@
 /*---------------------------------------------
  *
  * For each taxonomy
- * 
+ *
  * [for each="category"]
  * [each name,id,slug]
- * 
+ *
  */
 
 
@@ -27,15 +27,16 @@ class CCS_ForEach {
 	}
 
 	function register() {
+		add_ccs_shortcode(array(
+			'for' => array( $this, 'for_shortcode' ),
+			'each' => array( $this, 'each_shortcode' ),
 
-		add_shortcode( 'for', array( $this, 'for_shortcode' ) );
-		add_shortcode( 'each', array( $this, 'each_shortcode' ) );
-
-		// Nested shortcodes
-		add_shortcode( '-for', array( $this, 'for_shortcode' ) );
-		add_shortcode( '--for', array( $this, 'for_shortcode' ) );
-		add_shortcode( '-each', array( $this, 'each_shortcode' ) );
-		add_shortcode( '--each', array( $this, 'each_shortcode' ) );
+			// Nested shortcodes
+			'-for' => array( $this, 'for_shortcode' ),
+			'--for' => array( $this, 'for_shortcode' ),
+			'-each' => array( $this, 'each_shortcode' ),
+			'--each' => array( $this, 'each_shortcode' ),
+		));
 	}
 
 	function for_shortcode( $atts, $content = null, $shortcode_name ) {
@@ -48,6 +49,7 @@ class CCS_ForEach {
 			'count' => '',
 			'parent' => '',
 			'parents' => '', // Don't return term children
+			'children' => '', // Get all descendants if true
 			'current' => '',
 			'trim' => '',
 			'empty' => 'true', // Show taxonomy terms with no post
@@ -90,12 +92,12 @@ class CCS_ForEach {
 
 		// Get terms according to parameters
 		// @todo Refactor - keep it DRY
-		// @todo Consolidate to CCS_Content::get_taxonomies
+		// @todo Consolidate with CCS_Content::get_taxonomies
 
 		$query = array(
 			'orderby' => !empty($orderby) ? $orderby : 'name',
 			'order' => $order,
-			'number' => $count,
+			'number' => $count, // Doesn't work?
 			'parent' => ( $parents=='true' ) ? 0 : '', // Exclude children or not
 			'hide_empty' => ( $empty=='true' ) ? 0 : 1,
 		);
@@ -117,7 +119,7 @@ class CCS_ForEach {
 						$term_ids[] = $term_id->term_id;
 				}
 			}
-			if ($term_ids != array()) {
+			if (!empty($term_ids)) {
 				$query['include'] = $term_ids;
 			}
 			else {
@@ -127,12 +129,12 @@ class CCS_ForEach {
 				if ( self::$index > 0 ) self::$index--;
 				// Or finished
 				else self::$state['is_for_loop'] = false;
-				return do_shortcode($else);
+				return do_ccs_shortcode( $else );
 			}
 		}
 
-
-		if ( CCS_Loop::$state['is_loop'] || ($current=="true")) {
+		// Inside loop, or current is true
+		if ( ( CCS_Loop::$state['is_loop'] && $current!="false") || ($current=="true") ) {
 
 			if ($current=="true") $post_id = get_the_ID();
 			else $post_id = CCS_Loop::$state['current_post_id']; // Inside [loop]
@@ -142,15 +144,14 @@ class CCS_ForEach {
 			// Current and parent parameters together
 
 			if ( !empty($parent) ) {
-				
+
 				if ( is_numeric($parent) ) {
 
-					/* Get parent term ID */
 					$parent_term_id = $parent;
 
 				} else {
 
-					/* Get parent term ID from slug */
+					// Get parent term ID from slug
 					$term = get_term_by( 'slug', $parent, $each );
 					if (!empty($term))
 						$parent_term_id = $term->term_id;
@@ -158,31 +159,60 @@ class CCS_ForEach {
 				}
 
 				if ( !empty($parent_term_id) ) {
-					/* Filter out terms that do not have the specified parent */
+
+					// Filter out terms that do not have the specified parent
+
+					// TODO: Why not set this as query for wp_get_post_terms above..?
+
 					foreach($taxonomies as $key => $term) {
+
+						// TODO: What about children parameter for all descendants..?
+
 						if ($term->parent != $parent_term_id) {
 							unset($taxonomies[$key]);
 						}
 					}
-
 				}
 			}
 
+		// Not inside loop
 		} else {
 
 			if ( empty($parent) ) {
 
 				$taxonomies = get_terms( $each, $query );
 
-			} else {
+				if ( !empty($term) && $children=='true' ) {
 
-				/* Get parent term ID from slug */
+					if (isset($query['include'])) unset($query['include']);
+
+					// Get descendants of each term
+
+					$new_taxonomies = $taxonomies;
+
+					foreach ($taxonomies as $term_object) {
+						$query['child_of'] = $term_object->term_id;
+						$new_terms = get_terms( $each, $query );
+						if (!empty($new_terms)) {
+							$new_taxonomies += $new_terms;
+							foreach ($new_terms as $new_term) {
+								$term_ids[] = $new_term->term_id;
+							}
+						}
+					}
+
+					$taxonomies = $new_taxonomies;
+				}
+
+			// Get terms by parent
+			} else {
 
 				if ( is_numeric($parent) ) {
 
 					$parent_term_id = $parent;
 
 				} else {
+					// Get parent term ID from slug
 					$term = get_term_by( 'slug', $parent, $each );
 					if (!empty($term))
 						$parent_term_id = $term->term_id;
@@ -193,7 +223,14 @@ class CCS_ForEach {
 
 					/* Get direct children */
 
-					$query['parent'] = $parent_term_id;
+					if ( $children !== 'true' ) {
+						// Direct children only
+						$query['parent'] = $parent_term_id;
+					} else {
+						// All descendants
+						$query['child_of'] = $parent_term_id;
+					}
+
 					$taxonomies = get_terms( $each, $query );
 
 				} else $taxonomies = null; // No parent found
@@ -201,7 +238,8 @@ class CCS_ForEach {
 			}
 		}
 
-		if ($term_ids != array()) {
+
+		if ( count($term_ids) > 0 ) {
 
 			$new_taxonomies = array();
 			// Sort terms according to given ID order: get_terms doesn't do order by ID
@@ -221,6 +259,8 @@ class CCS_ForEach {
 			$each_term['taxonomy'] = $each; // Taxonomy name
 
 			$excludes = CCS_Loop::explode_list( $exclude );
+			$index = 0;
+			if (empty($count)) $count = 9999; // Show all
 
 			foreach ($taxonomies as $term_object) {
 
@@ -241,7 +281,7 @@ class CCS_ForEach {
 					}
 				}
 
-				if ( $condition ) {
+				if ( $condition && ++$index <= $count ) {
 
 					$each_term['id'] = $term_object->term_id;
 					$each_term['name'] = $term_object->name;
@@ -270,11 +310,13 @@ class CCS_ForEach {
 					// Make term data available to [each]
 					self::$current_term[ self::$index ] = $each_term;
 
-					$out .= do_shortcode($replaced_content);
+					$out .= do_ccs_shortcode( $replaced_content );
 				}
-			}
+			} // For each term
+
 		} else {
-			$out .= do_shortcode($else);
+			// No taxonomy found
+			$out .= do_ccs_shortcode( $else );
 		}
 
 		// Trim final output
@@ -325,4 +367,3 @@ class CCS_ForEach {
 	}
 
 }
-
