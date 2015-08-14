@@ -32,6 +32,7 @@ class CCS_Attached {
 			'count' => '',
 			'offset' => '',
 			'trim' => '',
+			'id' => '',
 			'columns' => '', 'pad' => '', 'between' => ''
 		);
 
@@ -74,6 +75,11 @@ class CCS_Attached {
 			if (!empty($category)) $attach_args['category'] = $category;
 			if (!empty($count)) $attach_args['posts_per_page'] = $count;
 			if (!empty($offset)) $attach_args['offset'] = $offset;
+			if (!empty($id)) {
+				$attach_args['post__in'] = CCS_Loop::explode_list($id);
+        $attach_args['orderby'] = empty($orderby) ? 'post__in' : $orderby;
+				unset($attach_args['post_parent']);
+			}
 
 			// Get attachments for current post
 

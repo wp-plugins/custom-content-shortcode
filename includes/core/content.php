@@ -158,6 +158,7 @@ class CCS_Content {
       'image_class' => '',
       'nopin' => '',
       'url' => '', // Option for image-link
+      'cropped' => '', // ACF cropped image field
 
       // Author meta
       'meta' => '',
@@ -281,6 +282,12 @@ class CCS_Content {
     if ($parameters['size']=='middle') {
       $parameters['size'] = 'medium';
     }
+
+    // ACF cropped image field
+    if (!empty($parameters['cropped'])) {
+      $parameters['field'] = $parameters['cropped'];
+    }
+
 
     // Checkbox
     if (!empty($parameters['checkbox'])) {
@@ -903,6 +910,18 @@ class CCS_Content {
 
       $result = mysql2date($parameters['date_format'], $result);
 
+    }
+
+    // ACF cropped image field
+    if (!empty($parameters['cropped'])) {
+
+      // Get attachment ID
+      $result = json_decode( $result, true );
+      $result = $result['cropped_image'];
+
+      // Attachment field
+      $return = !empty($parameters['return']) ? $parameters['return'] : 'image';
+      $result = do_shortcode('[attached-field '.$return.' id='.$result.']');
     }
 
 
@@ -1912,6 +1931,8 @@ class CCS_Content {
 
     if (!empty($atts['image'])) {
       $field_param = 'image="'.$atts['image'].'"';
+    } elseif (!empty($atts['cropped'])) {
+      $field_param = 'cropped="'.$atts['cropped'].'"';
     } elseif (!empty($atts['link'])) {
       $field_param = 'link="'.$atts['link'].'"';
     } elseif (!empty($atts['acf_date'])) {

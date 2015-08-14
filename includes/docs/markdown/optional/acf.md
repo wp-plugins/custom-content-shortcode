@@ -9,6 +9,7 @@
 - [Checkbox, select, radio](#checkbox-select-radio), [true/false](#true-false), [date](#date-field)
 - [Page link](#page-link), [relationship/post object](#relationship), [taxonomy](#related-by-taxonomy-field)
 - [Gallery](#gallery), [repeater](#repeater), [flexible content](#flexible-content)
+- [Cropped image](#cropped-image)
 
 &nbsp;
 
@@ -100,6 +101,23 @@ Use the *link* parameter to display a page link field. This will display the URL
 
 ~~~
 [field link=page_link]
+~~~
+
+
+## Cropped image
+
+With [ACF Image Crop](https://wordpress.org/plugins/acf-image-crop-add-on/) add-on, use the *cropped* parameter to display a cropped image field.
+
+*Display cropped image*
+
+~~~
+[field cropped=field_name]
+~~~
+
+*Display cropped image URL*
+
+~~~
+[field cropped=field_name return=url]
 ~~~
 
 

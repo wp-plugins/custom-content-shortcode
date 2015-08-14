@@ -7,7 +7,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: loop, query, content, shortcode, post type, field, attachment, comment, sidebar, taxonomy
 Requires at least: 3.6
 Tested up to: 4.2.3
-Stable tag: 2.7.7
+Stable tag: 2.7.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,10 @@ Support for other plugins:
 == Upgrade Notice ==
 
 == Changelog ==
+
+= 2.7.8 =
+
+* [field] - Support [ACF Image Crop](https://wordpress.org/plugins/acf-image-crop-add-on/) field; see documentation under Optional -> ACF
 
 = 2.7.7 =
 

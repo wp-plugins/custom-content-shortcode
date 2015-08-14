@@ -28,6 +28,7 @@ Use `[attached]` to loop through attachments.
 
 > **order** - *ASC* (ascending/alphabetical) or *DESC* (descending/from most recent date)
 
+> **id** - get attachments by attachment ID(s), even if it's not attached to current post
 
 &nbsp;
 
