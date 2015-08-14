@@ -14,11 +14,16 @@ class CCS_Attached {
 
 	function __construct() {
 
-		add_shortcode( 'attached', array( $this, 'attached_shortcode' ) );
+    add_ccs_shortcode( array(
+			'attached' => array( $this, 'attached_shortcode' ),
+			'-attached' => array( $this, 'attached_shortcode' ),
+			'attached-field' => array( $this, 'attached_field_shortcode' ),
+		));
+
 		self::$state['is_attachment_loop'] = false;
 	}
 
-	function attached_shortcode($atts, $content) {
+	public static function attached_shortcode( $atts, $content, $tag ) {
 
 		$args = array(
 			'orderby' => '',
@@ -27,9 +32,11 @@ class CCS_Attached {
 			'count' => '',
 			'offset' => '',
 			'trim' => '',
+			'id' => '',
 			'columns' => '', 'pad' => '', 'between' => ''
 		);
-		extract( shortcode_atts( $args , $atts, true ) );		
+
+		extract( shortcode_atts( $args , $atts, true ) );
 
 		/*---------------------------------------------
 		 *
@@ -68,6 +75,11 @@ class CCS_Attached {
 			if (!empty($category)) $attach_args['category'] = $category;
 			if (!empty($count)) $attach_args['posts_per_page'] = $count;
 			if (!empty($offset)) $attach_args['offset'] = $offset;
+			if (!empty($id)) {
+				$attach_args['post__in'] = CCS_Loop::explode_list($id);
+        $attach_args['orderby'] = empty($orderby) ? 'post__in' : $orderby;
+				unset($attach_args['post_parent']);
+			}
 
 			// Get attachments for current post
 
@@ -81,7 +93,7 @@ class CCS_Attached {
 		}
 
 		// If no images in gallery field
-		if (count($attachment_ids)==0) return null; 
+		if (count($attachment_ids)==0) return null;
 
 
 		/*---------------------------------------------
@@ -92,15 +104,23 @@ class CCS_Attached {
 
 		$out = array();
 
+
+    // if nested, save previous state
+    if ($tag[0]=='-') $prev_state = self::$state;
+
 		self::$state['is_attachment_loop'] = true;
 
 		foreach ( $attachment_ids as $index => $attachment_id ) {
 
 			self::$state['current_attachment_id'] = $attachment_id;
-			$out[] = do_shortcode( $content );
+			$out[] = do_ccs_shortcode( $content );
 		}
 
 		self::$state['is_attachment_loop'] = false;
+
+    // if nested, restore previous state
+    if ($tag[0]=='-') self::$state = $prev_state;
+
 
 		/*---------------------------------------------
 		 *
@@ -128,6 +148,17 @@ class CCS_Attached {
     $b_title = CCS_Content::wp_get_attachment_field( $b, 'title' );
 
     return ( $a_title < $b_title ) ? -1 : 1;
+  }
+
+  // Field from a specific attachment
+  public static function attached_field_shortcode( $atts ) {
+
+    if ( !isset($atts['offset']) ) $atts['offset'] = '0';
+    if ( !isset($atts['count']) ) $atts['count'] = '1';
+
+    $content = '[field '.@$atts[0].']';
+
+    return self::attached_shortcode( $atts, $content, $tag = '-attached' );
   }
 
 }
