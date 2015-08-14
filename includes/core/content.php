@@ -693,16 +693,19 @@ class CCS_Content {
         $terms = get_the_terms( self::$state['current_post_id'], $taxonomy );
       }
 
+
+      $tax_field = !empty($parameters['field']) ? $parameters['field'] : 'name';
+      // Backward compatibility
+      if ( !empty($parameters['out']) ) $tax_field = $parameters['out'];
+      // Remove field parameter from global to avoid confusion with custom field
+      if (!empty($parameters['field'])) self::$parameters['field'] = '';
+
       if ( !empty( $terms ) ) {
 
         $slugs = array();
         if (!empty($parameters['image'])) {
           $parameters['field'] = $parameters['image'];
         }
-
-        $tax_field = !empty($parameters['field']) ? $parameters['field'] : 'name';
-        // Backward compatibility
-        if ( !empty($parameters['out']) ) $tax_field = $parameters['out'];
 
         foreach ($terms as $term) {
 
@@ -1951,7 +1954,7 @@ class CCS_Content {
     }
 
     // Pass it to [content]
-    $out = do_ccs_shortcode( '[content '.$field_param.$rest.']', true );
+    $out = do_ccs_shortcode( '[content '.$field_param.$rest.']' );
 //echo '[content '.$field_param.$rest.'] -> '.do_ccs_shortcode( '[content '.$field_param.$rest.']').'<br>';
     return $out;
   }
@@ -1964,7 +1967,8 @@ class CCS_Content {
    */
 
   public static function taxonomy_shortcode($atts) {
-    $out = null; $rest='';
+    $out = '';
+    $rest = '';
     if (isset($atts) && !empty($atts[0])) {
 
       if (count($atts)>1) {
@@ -1975,7 +1979,7 @@ class CCS_Content {
           $i++;
         }
       }
-      $out = do_ccs_shortcode( '[content taxonomy="'.$atts[0].'"'.$rest.']');
+      $out = do_ccs_shortcode( '[content taxonomy="'.$atts[0].'"'.$rest.']' );
     }
     return $out;
   }

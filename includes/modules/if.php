@@ -663,7 +663,7 @@ class CCS_If {
 	   *
 	   */
 
-    if ( CCS_To_ACF::$state['is_repeater_or_flex_loop'] ) {
+    if ( class_exists('CCS_To_ACF') && CCS_To_ACF::$state['is_repeater_or_flex_loop'] ) {
 
 			if ( !empty($every) ) {
 				$condition = ( CCS_To_ACF::$state['repeater_index'] % $every == 0 );

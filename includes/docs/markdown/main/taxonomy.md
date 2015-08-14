@@ -99,19 +99,21 @@ Available parameters for the **[for]** shortcode are:
 
 > **count** - limit number of terms: *count=3*
 
-> **parent** - get child categories by parent slug
-
-> **parents** - set *true* to get only parent terms; see section below on child terms
-
 > **exclude** - exclude taxonomy term by ID or slug; *exlude=uncategorized*
 
 > **empty** - set *true* to include terms that have no associated posts; use outside the loop
 
-> **term/terms** - specify which term(s) to get, by ID or slug; can be a comma-separated list
-
 > **orderby** - order by *name* (default), *count* (post count), *id*, or *slug*
 
 > **order** - *ASC* (ascending - default), or *DESC* (descending)
+
+> **term/terms** - specify which term(s) to get, by ID or slug; can be a comma-separated list
+
+> **parent** - get direct children terms by parent ID or slug
+
+> **parents** - set *true* to get only parent terms; see section below on child terms
+
+> **children** - set *true* to get all descendants, when using *term* or *parent*
 
 > **trim** - set *true* to trim space or comma at the end
 

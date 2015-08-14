@@ -49,6 +49,7 @@ class CCS_ForEach {
 			'count' => '',
 			'parent' => '',
 			'parents' => '', // Don't return term children
+			'children' => '', // Get all descendants if true
 			'current' => '',
 			'trim' => '',
 			'empty' => 'true', // Show taxonomy terms with no post
@@ -91,7 +92,7 @@ class CCS_ForEach {
 
 		// Get terms according to parameters
 		// @todo Refactor - keep it DRY
-		// @todo Consolidate to CCS_Content::get_taxonomies
+		// @todo Consolidate with CCS_Content::get_taxonomies
 
 		$query = array(
 			'orderby' => !empty($orderby) ? $orderby : 'name',
@@ -118,7 +119,7 @@ class CCS_ForEach {
 						$term_ids[] = $term_id->term_id;
 				}
 			}
-			if ($term_ids != array()) {
+			if (!empty($term_ids)) {
 				$query['include'] = $term_ids;
 			}
 			else {
@@ -146,12 +147,11 @@ class CCS_ForEach {
 
 				if ( is_numeric($parent) ) {
 
-					/* Get parent term ID */
 					$parent_term_id = $parent;
 
 				} else {
 
-					/* Get parent term ID from slug */
+					// Get parent term ID from slug
 					$term = get_term_by( 'slug', $parent, $each );
 					if (!empty($term))
 						$parent_term_id = $term->term_id;
@@ -159,13 +159,19 @@ class CCS_ForEach {
 				}
 
 				if ( !empty($parent_term_id) ) {
-					/* Filter out terms that do not have the specified parent */
+
+					// Filter out terms that do not have the specified parent
+
+					// TODO: Why not set this as query for wp_get_post_terms above..?
+
 					foreach($taxonomies as $key => $term) {
+
+						// TODO: What about children parameter for all descendants..?
+
 						if ($term->parent != $parent_term_id) {
 							unset($taxonomies[$key]);
 						}
 					}
-
 				}
 			}
 
@@ -176,15 +182,37 @@ class CCS_ForEach {
 
 				$taxonomies = get_terms( $each, $query );
 
-			} else {
+				if ( !empty($term) && $children=='true' ) {
 
-				/* Get parent term ID from slug */
+					if (isset($query['include'])) unset($query['include']);
+
+					// Get descendants of each term
+
+					$new_taxonomies = $taxonomies;
+
+					foreach ($taxonomies as $term_object) {
+						$query['child_of'] = $term_object->term_id;
+						$new_terms = get_terms( $each, $query );
+						if (!empty($new_terms)) {
+							$new_taxonomies += $new_terms;
+							foreach ($new_terms as $new_term) {
+								$term_ids[] = $new_term->term_id;
+							}
+						}
+					}
+
+					$taxonomies = $new_taxonomies;
+				}
+
+			// Get terms by parent
+			} else {
 
 				if ( is_numeric($parent) ) {
 
 					$parent_term_id = $parent;
 
 				} else {
+					// Get parent term ID from slug
 					$term = get_term_by( 'slug', $parent, $each );
 					if (!empty($term))
 						$parent_term_id = $term->term_id;
@@ -195,7 +223,14 @@ class CCS_ForEach {
 
 					/* Get direct children */
 
-					$query['parent'] = $parent_term_id;
+					if ( $children !== 'true' ) {
+						// Direct children only
+						$query['parent'] = $parent_term_id;
+					} else {
+						// All descendants
+						$query['child_of'] = $parent_term_id;
+					}
+
 					$taxonomies = get_terms( $each, $query );
 
 				} else $taxonomies = null; // No parent found
@@ -203,7 +238,8 @@ class CCS_ForEach {
 			}
 		}
 
-		if ($term_ids != array()) {
+
+		if ( count($term_ids) > 0 ) {
 
 			$new_taxonomies = array();
 			// Sort terms according to given ID order: get_terms doesn't do order by ID
@@ -274,13 +310,13 @@ class CCS_ForEach {
 					// Make term data available to [each]
 					self::$current_term[ self::$index ] = $each_term;
 
-					$out .= do_local_shortcode( 'ccs', $replaced_content, true );
+					$out .= do_ccs_shortcode( $replaced_content );
 				}
 			} // For each term
 
 		} else {
 			// No taxonomy found
-			$out .= do_local_shortcode( 'ccs', $else, true );
+			$out .= do_ccs_shortcode( $else );
 		}
 
 		// Trim final output

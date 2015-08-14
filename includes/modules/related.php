@@ -154,9 +154,8 @@ class CCS_Related {
 
 					$tax_count++;
 				}
-
-				$terms = $target_terms;
 			}
+			$terms = $target_terms;
 
 			// print_r($query); echo '<br><br>';
 
