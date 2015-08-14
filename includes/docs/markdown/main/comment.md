@@ -35,6 +35,8 @@ Available parameters for `[comments]` are:
 
 > **count** - number of comments to show, or set to *all*
 
+> **author** - get comments on posts by author ID or user name; set to *this* for current user
+
 > **status** - *approve* (default), *hold* (unapproved) or set to *all*
 
 > **exclude** - exclude post ID

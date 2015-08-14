@@ -34,11 +34,6 @@ Additional parameters can be placed after the field name.
 
 Almost all [parameters for `[content]`](options-general.php?page=ccs_reference&tab=content#field) can be used for `[field]`.
 
-> *shortcode* - set *false* to prevent running shortcodes inside the field
-
-> *import* - when displaying a field from outside the current post, set *import=false* to run shortcodes inside the field in the context of the post where it came from
-
-
 ## Predefined fields
 
 ### Post
@@ -119,6 +114,30 @@ Almost all [parameters for `[content]`](options-general.php?page=ccs_reference&t
 
 > *next-link* - next post in the loop
 
+
+&nbsp;
+
+## Link to field value
+
+Use `[link]` to create a link using field value.
+
+~~~
+[link field=link_field]
+  Click here to go to [field link_title]
+[/link]
+~~~
+
+### Parameters
+
+> **field** - name of predefined or custom field; default is *url*
+
+> **url** - use direct URL instead of field value; can also be used with `[pass]`
+
+> **alt**, **title**, **target** - set link attributes
+
+> **open=new** - same as *target=_blank*
+
+> **http** - set *true* to add `http://` in front of field value, if it's not there already
 
 &nbsp;
 

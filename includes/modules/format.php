@@ -21,6 +21,7 @@ class CCS_Format {
 			'clean' => array($this, 'clean_shortcode'),
 			'br' => array($this, 'br_shortcode'),
 			'p' => array($this, 'p_shortcode'),
+			'link' => array($this, 'link_shortcode'),
 	    'slugify' => array($this, 'slugify_shortcode'),
 	    'today' => array($this, 'today_shortcode'),
 	    'http' => array($this, 'http_shortcode'),
@@ -180,12 +181,15 @@ class CCS_Format {
    */
 
   function http_shortcode( $atts, $content ) {
-    $content = do_shortcode($content);
-    if ( substr($content, 0, 4) !== 'http' ) {
+    return self::maybe_add_http( do_shortcode($content) );
+  }
+
+	static function maybe_add_http( $content ) {
+    if ( !empty($content) && substr($content, 0, 4) !== 'http' ) {
       $content = 'http://'.$content;
     }
-    return $content;
-  }
+  	return $content;
+	}
 
 
   /*---------------------------------------------
@@ -223,10 +227,38 @@ class CCS_Format {
 		return rand($min, $max);
 	}
 
+	function link_shortcode( $atts, $content ) {
 
+		extract( shortcode_atts( array(
+			'field' => '',
+			'url' => '', // URL directly; overrides parameter field
+			'alt' => '',
+			'title' => '',
+			'target' => '',
+			'open' => '', // new
+			'http' => '' // true/false
+		), $atts ) );
 
+		if (empty($field)) $field = isset($atts[0]) ? $atts[0] : 'url'; // default
 
+		if (empty($url)) $value = do_shortcode('[field '.$field.']');
+		else $value = $url;
 
+		if ($http=='true') $value = self::maybe_add_http( $value );
+
+		$out = '<a href="'.$value.'"';
+		if (!empty($alt)) $out .= ' alt="'.$alt.'"';
+		if (!empty($title)) $out .= ' title="'.$title.'"';
+		if ($open=='new') $target = '_blank';
+		if (!empty($target)) $out .= ' target="'.$target.'"';
+		$out .= '>';
+
+		$out .= do_ccs_shortcode($content);
+
+		$out .= '</a>';
+
+		return $out;
+	}
 
   /*---------------------------------------------
    *

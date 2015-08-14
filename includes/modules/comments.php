@@ -119,7 +119,23 @@ class CCS_Comments {
     if ( !empty( $orderby ) ) $args['orderby'] = $orderby;
     if ( !empty( $order ) ) $args['order'] = $order;
     if ( !empty( $parent ) ) $args['post_parent'] = CCS_Loop::explode_list( $parent );
-    if ( !empty( $author ) ) $args['post_author'] = CCS_Loop::explode_list( $author );
+    if ( !empty( $author ) ) {
+      $authors = CCS_Loop::explode_list( $author );
+      $author_ids = array();
+      foreach ($authors as $this_author) {
+        if ( $this_author=='this' ) {
+          // current author ID
+          $author_ids[] = do_shortcode('[user id]');
+        } elseif (is_numeric( $this_author )) {
+          $author_ids[] = $this_author;
+        } else {
+          // get author ID from user name
+          $author_ids[] = do_shortcode('[users search='.$this_author.' search_column=login][user id][/users]');
+        }
+      }
+
+      $args['post_author'] = $author_ids;
+    }
     if ( !empty( $name ) ) $args['name'] = $name;
     if ( !empty( $status ) && $status != 'all' ) $args['status'] = $status;
     if ( !empty( $user_id ) ) $args['user_id'] = CCS_Loop::explode_list( $user_id );
@@ -478,7 +494,7 @@ class CCS_Comments {
     $inputs = self::$state['inputs'];
 
     if (in_array($atts[0], $inputs)) {
-      self::$state['comment_form_fields'][ $atts[0] ] = do_shortcode($content);
+      self::$state['comment_form_fields'][ $atts[0] ] = do_ccs_shortcode($content);
     }
   }
 

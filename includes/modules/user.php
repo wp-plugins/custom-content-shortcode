@@ -212,14 +212,14 @@ class CCS_User {
       $content = str_replace('{USER_ID}', do_shortcode('[user id]'), $content);
       $content = str_replace('{USER_ROLE}', do_shortcode('[user role out="slug"]'), $content);
 
-			$outputs[] = do_shortcode( $content );
+			$outputs[] = do_ccs_shortcode( $content );
 		}
 
     // [if empty]..[else]..[/if]
     if (count($users) == 0 && isset(self::$state['if_empty'])) {
-      $outputs[] = do_shortcode( self::$state['if_empty'] );
+      $outputs[] = do_ccs_shortcode( self::$state['if_empty'] );
     } elseif (isset(self::$state['if_empty_else']) && count($users) > 0) {
-      $outputs[] = do_shortcode( self::$state['if_empty_else'] );
+      $outputs[] = do_ccs_shortcode( self::$state['if_empty_else'] );
     }
 
     $result = implode('', $outputs);
